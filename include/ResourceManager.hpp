@@ -14,14 +14,30 @@ InversePalindrome.com
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
 
+#include <functional>
+#include <unordered_map>
+
  
 enum class TexturesID { SplashScreen, StartBackground, Particles };
-enum class ImagesID {};
+enum class ImagesID { PlayButton, SettingsButton, CharactersButton };
 enum class SoundsID {};
 
-struct ResourceManager
+class ResourceManager
 {
+public:
+	ResourceManager();
+	ResourceManager(const std::string& resourcesFilePath);
+
+	void loadResources(const std::string& resourcesFilePath);
+
+	sf::Texture& getTexture(TexturesID textureID);
+	sf::Image& getImage(ImagesID imageID);
+	sf::SoundBuffer& getSound(SoundsID soundID);
+
+private:
 	thor::ResourceHolder<sf::Texture, TexturesID> textures;
 	thor::ResourceHolder<sf::Image, ImagesID> images;
 	thor::ResourceHolder<sf::SoundBuffer, SoundsID> sounds;
+
+	std::unordered_map<std::string, std::function<void(std::size_t, const std::string&)>> resourceFactory;
 };

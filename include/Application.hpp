@@ -34,6 +34,4 @@ private:
 	void handleEvents();
 	void update(float deltaTime);
 	void render();
-
-	void loadResources();
 };
