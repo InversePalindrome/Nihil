@@ -12,7 +12,7 @@ InversePalindrome.com
 SplashState::SplashState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
 	splashTime(3u),
-	splashScreen(stateData.resourceManager.textures[TexturesID::SplashScreen])
+	splashScreen(stateData.resourceManager.getTexture(TexturesID::SplashScreen))
 {
 	splashScreen.setOrigin(splashScreen.getLocalBounds().width / 2.f, splashScreen.getLocalBounds().height / 2.f);
 	splashScreen.setPosition(stateData.window.getSize().x / 2.f, stateData.window.getSize().y / 2.f);

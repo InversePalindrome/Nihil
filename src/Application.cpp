@@ -9,6 +9,9 @@ InversePalindrome.com
 #include "SplashState.hpp"
 #include "StartState.hpp"
 #include "MenuState.hpp"
+#include "GameState.hpp"
+#include "SettingsState.hpp"
+#include "CharactersState.hpp"
 
 #include <Thor/Resources/SfmlLoaders.hpp>
 
@@ -19,15 +22,17 @@ InversePalindrome.com
 
 Application::Application() :
 	window(sf::VideoMode(2048u, 1536u), "Nihil", sf::Style::Close | sf::Style::Titlebar),
+	resourceManager("Resources/Files/ResourcePaths.txt"),
 	guiManager(window),
 	stateData(resourceManager, guiManager, window),
 	stateMachine(stateData)
 {
-	loadResources();
-
 	stateMachine.registerState<SplashState>(StateID::Splash);
 	stateMachine.registerState<StartState>(StateID::Start);
 	stateMachine.registerState<MenuState>(StateID::Menu);
+	stateMachine.registerState<GameState>(StateID::Game);
+	stateMachine.registerState<SettingsState>(StateID::Settings);
+	stateMachine.registerState<CharactersState>(StateID::Characters);
 
 	stateMachine.pushState(StateID::Splash);
 }
@@ -80,11 +85,4 @@ void Application::render()
 	this->stateMachine.draw();
 	this->guiManager.display();
 	this->window.display();
-}
-
-void Application::loadResources()
-{
-	this->resourceManager.textures.acquire(TexturesID::SplashScreen, thor::Resources::fromFile<sf::Texture>("Resources/Textures/SplashScreen.png"));
-	this->resourceManager.textures.acquire(TexturesID::StartBackground, thor::Resources::fromFile<sf::Texture>("Resources/Textures/StartBackground.png"));
-	this->resourceManager.textures.acquire(TexturesID::Particles, thor::Resources::fromFile<sf::Texture>("Resources/Textures/Particles.png"));
 }

@@ -21,13 +21,13 @@ StartState::StartState(StateMachine& stateMachine, StateData& stateData) :
 	titleLabel(sfg::Label::Create("Nihil")),
 	continueLabel(sfg::Label::Create("Press a Key to Continue"))
 {
-	auto& backgroundTexture = stateData.resourceManager.textures[TexturesID::StartBackground];
+	auto& backgroundTexture = stateData.resourceManager.getTexture(TexturesID::StartBackground);
 
 	backgroundTexture.setRepeated(true);
 	
 	background.setTexture(backgroundTexture);
 
-	particleSystem.setTexture(stateData.resourceManager.textures[TexturesID::Particles]);
+	particleSystem.setTexture(stateData.resourceManager.getTexture(TexturesID::Particles));
 	particleSystem.addTextureRect(sf::IntRect(0u, 0u, 400u, 400u));
 	particleSystem.addTextureRect(sf::IntRect(0u, 400u, 100u, 96u));
 	particleSystem.addTextureRect(sf::IntRect(400u, 0u, 256u, 256u));
