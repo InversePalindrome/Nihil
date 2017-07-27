@@ -99,9 +99,5 @@ void StartState::draw()
 
 void StartState::transitionToMenu()
 {
-	this->titleLabel->Show(false);
-	this->continueLabel->Show(false);
-
-	this->stateMachine.popState();
-	this->stateMachine.pushState(StateID::Menu);
+	this->stateMachine.changeState(StateID::Menu);
 }

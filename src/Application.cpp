@@ -82,7 +82,9 @@ void Application::update(float deltaTime)
 void Application::render()
 {
 	this->window.clear();
+
 	this->stateMachine.draw();
 	this->guiManager.display();
+
 	this->window.display();
 }

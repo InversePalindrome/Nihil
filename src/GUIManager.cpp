@@ -30,15 +30,14 @@ void GUIManager::display()
 
 void GUIManager::addWidget(widgetPtr widget)
 {
-	this->hud.Add(widget);
+	this->widgets.push_back(std::move(widget));
+	this->hud.Add(this->widgets.back());
 }
 
-void GUIManager::removeWidget(widgetPtr widget)
+void GUIManager::hideAllWidgets()
 {
-	this->hud.Remove(widget);
-}
-
-void GUIManager::removeAllWidgets()
-{
-	this->hud.RemoveAll();
+	for (auto& widget : this->widgets)
+	{
+		widget->Show(false);
+	}
 }

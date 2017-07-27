@@ -8,13 +8,21 @@ InversePalindrome.com
 #include "Map.hpp"
 
 
-Map::Map(const std::string& filePath, const sf::Vector2f& chunkSize)
+Map::Map(const std::string& filePath, const sf::Vector2f& chunkSize) :
+	chunkSize(chunkSize)
 {
+	load(filePath);
+}
+
+void Map::load(const std::string& filePath)
+{
+	this->layers.clear();
+
 	map.load(filePath);
 
-	for (std::size_t i = 0; i < map.getLayers().size(); ++i)
+	for (std::size_t i = 0; i < this->map.getLayers().size(); ++i)
 	{
-		layers.push_back(std::make_unique<Layer>(map, i, chunkSize));
+		layers.push_back(std::make_unique<Layer>(map, i, this->chunkSize));
 	}
 }
 

@@ -64,6 +64,12 @@ void StateMachine::draw()
 	}
 }
 
+void StateMachine::changeState(StateID stateID)
+{
+	this->popState();
+	this->pushState(stateID);
+}
+
 void StateMachine::pushState(StateID stateID)
 {
 	this->stateActions.push_back([this, stateID] { this->states.push_back(this->getState(stateID)); });
@@ -71,11 +77,15 @@ void StateMachine::pushState(StateID stateID)
 
 void StateMachine::popState()
 {
+	this->stateData.guiManager.hideAllWidgets();
+
 	this->stateActions.push_back([this] { this->states.pop_back(); });
 }
 
 void StateMachine::clearStates()
 {
+	this->stateData.guiManager.hideAllWidgets();
+
 	this->stateActions.push_back([this] { this->states.clear(); });
 }
 

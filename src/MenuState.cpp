@@ -45,7 +45,6 @@ void MenuState::handleEvent(const sf::Event& event)
 
 void MenuState::update(float deltaTime)
 {
-	
 }
 
 void MenuState::draw()
@@ -54,27 +53,15 @@ void MenuState::draw()
 
 void MenuState::transitionToPlay()
 {
-	this->playButton->Show(false);
-	this->settingsButton->Show(false);
-	this->charactersButton->Show(false);
-
-	this->stateMachine.pushState(StateID::Game);
+	this->stateMachine.changeState(StateID::Game);
 }
 
 void MenuState::transitionToSettings()
 {
-	this->playButton->Show(false);
-	this->settingsButton->Show(false);
-	this->charactersButton->Show(false);
-
-	this->stateMachine.pushState(StateID::Settings);
+	this->stateMachine.changeState(StateID::Settings);
 }
 
 void MenuState::transitionToCharacters()
 {
-	this->playButton->Show(false);
-	this->settingsButton->Show(false);
-	this->charactersButton->Show(false);
-
-	this->stateMachine.pushState(StateID::Characters);
+	this->stateMachine.changeState(StateID::Characters);
 }
