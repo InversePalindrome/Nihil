@@ -8,6 +8,7 @@ InversePalindrome.com
 #pragma once
 
 #include <SFGUI/SFGUI.hpp>
+#include <SFGUI/Widget.hpp>
 #include <SFGUI/Desktop.hpp>
 
 #include <SFML/Graphics/Sprite.hpp>
@@ -29,17 +30,18 @@ public:
 	void display();
 
 	void addWidget(widgetPtr widget);
-	void removeWidget(widgetPtr widget);
 
-	void removeAllWidgets();
+	void hideAllWidgets();
 
 	template<typename T>
 	void setProperty(const std::string& selector, const std::string& property, const T& value);
 
 private:
-	sf::RenderWindow& window;
+	std::vector<widgetPtr> widgets;
 	sfg::SFGUI gui;
 	sfg::Desktop hud;
+
+	sf::RenderWindow& window;
 };
 
 

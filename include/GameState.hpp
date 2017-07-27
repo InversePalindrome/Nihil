@@ -9,6 +9,7 @@ InversePalindrome.com
 
 #include "State.hpp"
 #include "Map.hpp"
+#include "EntityManager.hpp"
 
 
 class GameState : public State
@@ -21,5 +22,6 @@ public:
 	virtual void draw() override;
 
 private:
+	EntityManager entityManager;
 	Map map;
 };

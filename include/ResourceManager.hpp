@@ -19,7 +19,7 @@ InversePalindrome.com
 
  
 enum class TexturesID { SplashScreen, StartBackground, Particles };
-enum class ImagesID { PlayButton, SettingsButton, CharactersButton };
+enum class ImagesID { PlayButton, SettingsButton, CharactersButton, BackButton };
 enum class SoundsID {};
 
 class ResourceManager

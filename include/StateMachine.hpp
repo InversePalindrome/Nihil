@@ -29,6 +29,8 @@ public:
 	void update(float deltaTime);
 	void draw();
 
+	void changeState(StateID stateID);
+
 	void pushState(StateID stateID);
 	void popState();
 	void clearStates();
