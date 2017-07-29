@@ -11,6 +11,7 @@ InversePalindrome.com
 SpriteComponent::SpriteComponent(sf::Texture& texture) :
 	sprite(texture)
 {
+	sprite.setOrigin(sprite.getLocalBounds().width / 2.f, sprite.getLocalBounds().height / 2.f);
 }
 
 void SpriteComponent::setPosition(const sf::Vector2f& position)

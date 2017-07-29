@@ -8,9 +8,10 @@ InversePalindrome.com
 #include "StateData.hpp"
 
 
-StateData::StateData(ResourceManager& resourceManager, GUIManager& guiManager, sf::RenderWindow& window) :
+StateData::StateData(ResourceManager& resourceManager, GUIManager& guiManager, InputHandler& inputHandler, sf::RenderWindow& window) :
 	resourceManager(resourceManager),
 	guiManager(guiManager),
+	inputHandler(inputHandler),
 	window(window)
 {
 }

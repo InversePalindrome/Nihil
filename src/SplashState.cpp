@@ -29,8 +29,7 @@ void SplashState::update(float deltaTime)
 	
 	if (this->splashTime <= 0.f)
 	{
-		this->stateMachine.popState();
-		this->stateMachine.pushState(StateID::Start);
+		this->stateMachine.changeState(StateID::Start);
 	}
 }
 

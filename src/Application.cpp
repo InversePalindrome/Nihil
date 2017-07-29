@@ -24,7 +24,7 @@ Application::Application() :
 	window(sf::VideoMode(2048u, 1536u), "Nihil", sf::Style::Close | sf::Style::Titlebar),
 	resourceManager("Resources/Files/ResourcePaths.txt"),
 	guiManager(window),
-	stateData(resourceManager, guiManager, window),
+	stateData(resourceManager, guiManager, inputHandler, window),
 	stateMachine(stateData)
 {
 	stateMachine.registerState<SplashState>(StateID::Splash);
@@ -59,6 +59,8 @@ void Application::handleEvents()
 {
 	sf::Event event;
 
+	this->inputHandler.clearEvents();
+
 	while (this->window.pollEvent(event))
 	{
 		switch (event.type)
@@ -68,6 +70,8 @@ void Application::handleEvents()
 			break;
 		}
 
+		this->inputHandler.pushEvent(event);
+
 		this->stateMachine.handleEvent(event);
 		this->guiManager.handleEvent(event);
 	}
@@ -75,6 +79,7 @@ void Application::handleEvents()
 
 void Application::update(float deltaTime)
 {
+	this->inputHandler.update(this->window);
 	this->stateMachine.update(deltaTime);
 	this->guiManager.update(deltaTime);
 }

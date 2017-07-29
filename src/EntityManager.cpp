@@ -7,16 +7,21 @@ InversePalindrome.com
 
 #include "EntityManager.hpp"
 #include "RenderSystem.hpp"
+#include "PhysicsSystem.hpp"
+#include "ControlSystem.hpp"
 
 
-EntityManager::EntityManager(ResourceManager& resourceManager) :
-	resourceManager(resourceManager)
+EntityManager::EntityManager(b2World& world, ResourceManager& resourceManager, InputHandler& inputHandler) :
+	resourceManager(resourceManager),
+	inputHandler(inputHandler)
 {
 	entityManager.set_event_manager(eventManager);
 
 	systems["Render"] = std::make_unique<RenderSystem>(entityManager, eventManager);
-
-	entityManager.create_entity(PositionComponent{ sf::Vector2f(100.f, 100.f) }, SpriteComponent{ resourceManager.getTexture(TexturesID::SplashScreen) });
+	systems["Control"] = std::make_unique<ControlSystem>(entityManager, eventManager, inputHandler);
+	systems["Physics"] = std::make_unique<PhysicsSystem>(entityManager, eventManager, world);
+	
+	entityManager.create_entity<Controllable>(PhysicsComponent(world, b2Vec2(0.1f, 0.1f), b2Vec2(0.f, 0.f), 0.2f, 0.02f), PositionComponent{ {} }, SpriteComponent{ resourceManager.getTexture(TexturesID::SplashScreen) });
 }
 
 void EntityManager::update(float deltaTime)

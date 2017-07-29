@@ -17,8 +17,12 @@ Layer::Layer(const tmx::Map& map, std::size_t layerID, sf::Vector2f chunkSize) :
 	chunkSize.x = std::floor(chunkSize.x / tileSize.x) * tileSize.x;
 	chunkSize.y = std::floor(chunkSize.y / tileSize.y) * tileSize.y;
 
-	const auto& layer = *dynamic_cast<tmx::TileLayer*>(layers[layerID].get());
-	createChunks(map, layer);
+	const auto& layer = layers[layerID].get();
+
+	if (layer->getType() == tmx::Layer::Type::Tile)
+	{
+		createChunks(map, *dynamic_cast<tmx::TileLayer*>(layer));
+	}
 
 	const auto& mapSize = map.getBounds();
 	globalBounds.width = mapSize.width;
@@ -44,7 +48,7 @@ void Layer::createChunks(const tmx::Map& map, const tmx::TileLayer& layer)
 {
 	const auto& tileSets = map.getTilesets();
 	const auto& layerIDs = layer.getTiles();
-
+	
 	std::uint32_t maxID = std::numeric_limits<std::uint32_t>::max();
 	std::vector<const tmx::Tileset*> usedTileSets;
 
@@ -83,7 +87,7 @@ void Layer::createChunks(const tmx::Map& map, const tmx::TileLayer& layer)
 			}
 			newTexture->loadFromImage(image);
 		}
-
+		
 		this->textures.emplace(path, std::move(newTexture));
 	}
 

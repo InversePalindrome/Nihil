@@ -56,6 +56,7 @@ Chunk::Chunk(const tmx::TileLayer& layer, std::vector<const tmx::Tileset*> tiles
 					sf::Vector2f tileIndex(idIndex % tsTileCount.x, idIndex / tsTileCount.x);
 					tileIndex.x *= tileSize.x;
 					tileIndex.y *= tileSize.y;
+					
 					Tile tile =
 					{
 						sf::Vertex(tileOffset, vertexColor, tileIndex),
