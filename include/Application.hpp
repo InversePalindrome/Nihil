@@ -9,6 +9,7 @@ InversePalindrome.com
 
 #include "StateData.hpp"
 #include "StateMachine.hpp"
+#include "InputHandler.hpp"
 #include "ResourceManager.hpp"
 #include "GUIManager.hpp"
 
@@ -25,6 +26,8 @@ public:
 private:
 	StateData stateData;
 	StateMachine stateMachine;
+
+	InputHandler inputHandler;
 
 	ResourceManager resourceManager;
 	GUIManager guiManager;

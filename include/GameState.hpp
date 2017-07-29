@@ -9,7 +9,10 @@ InversePalindrome.com
 
 #include "State.hpp"
 #include "Map.hpp"
+#include "CollisionHandler.hpp"
 #include "EntityManager.hpp"
+
+#include <Box2D/Dynamics/b2World.h>
 
 
 class GameState : public State
@@ -22,6 +25,9 @@ public:
 	virtual void draw() override;
 
 private:
-	EntityManager entityManager;
+    b2World world;
+	CollisionHandler collisionHandler;
 	Map map;
+	
+	EntityManager entityManager;
 };

@@ -7,18 +7,20 @@ InversePalindrome.com
 
 #pragma once
 
-#include "ResourceManager.hpp"
 #include "GUIManager.hpp"
+#include "InputHandler.hpp"
+#include "ResourceManager.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
 
 
 struct StateData
 {
-	StateData(ResourceManager& resourceManager, GUIManager& guiManager, sf::RenderWindow& window);
+	StateData(ResourceManager& resourceManager, GUIManager& guiManager, InputHandler& inputHandler, sf::RenderWindow& window);
 
 	ResourceManager& resourceManager;
+	GUIManager& guiManager;
+	InputHandler& inputHandler;
 
 	sf::RenderWindow& window;
-	GUIManager& guiManager;
 }; 

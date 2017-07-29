@@ -9,7 +9,10 @@ InversePalindrome.com
 
 #include "ECS.hpp"
 #include "System.hpp"
+#include "InputHandler.hpp"
 #include "ResourceManager.hpp"
+
+#include <Box2D/Dynamics/b2World.h>
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -23,7 +26,7 @@ InversePalindrome.com
 class EntityManager 
 {
 public:
-	EntityManager(ResourceManager& resourceManager);
+	EntityManager(b2World& world, ResourceManager& resourceManager, InputHandler& inputHandler);
 
 	void update(float deltaTime);
 	void draw(sf::RenderTarget& target);
@@ -33,6 +36,7 @@ private:
 	Events eventManager;
 
 	ResourceManager& resourceManager;
+	InputHandler& inputHandler;
 
 	std::unordered_map<std::string, std::unique_ptr<System>> systems;
 };

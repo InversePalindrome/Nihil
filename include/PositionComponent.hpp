@@ -13,6 +13,7 @@ InversePalindrome.com
 class PositionComponent
 {
 public:
+	PositionComponent();
 	PositionComponent(const sf::Vector2f& position);
 
 	sf::Vector2f getPosition() const;
