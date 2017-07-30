@@ -7,8 +7,10 @@ InversePalindrome.com
 
 #include "EntityManager.hpp"
 #include "RenderSystem.hpp"
-#include "PhysicsSystem.hpp"
+#include "StateSystem.hpp"
 #include "ControlSystem.hpp"
+#include "PhysicsSystem.hpp"
+#include "AnimatorSystem.hpp"
 
 
 EntityManager::EntityManager(b2World& world, ResourceManager& resourceManager, InputHandler& inputHandler) :
@@ -19,9 +21,11 @@ EntityManager::EntityManager(b2World& world, ResourceManager& resourceManager, I
 
 	systems["Render"] = std::make_unique<RenderSystem>(entityManager, eventManager);
 	systems["Control"] = std::make_unique<ControlSystem>(entityManager, eventManager, inputHandler);
+	systems["State"] = std::make_unique<StateSystem>(entityManager, eventManager);
 	systems["Physics"] = std::make_unique<PhysicsSystem>(entityManager, eventManager, world);
+	systems["Animator"] = std::make_unique<AnimatorSystem>(entityManager, eventManager);
 	
-	entityManager.create_entity<Controllable>(PhysicsComponent(world, b2Vec2(5.f, 5.f), b2Vec2(0.f, 0.f), 10.f, 1.f), PositionComponent{ {} }, SpriteComponent{ resourceManager.getTexture(TexturesID::Skeleton) });
+	entityManager.create_entity<Controllable>(PhysicsComponent(world, b2Vec2(1.25, 2.3f), b2Vec2(0.f, 0.f), 10.f, 1.f), PositionComponent{ {} }, SpriteComponent{ resourceManager.getTexture(TexturesID::Character), sf::IntRect(5, 100, 20, 32), sf::Vector2f(3.f, 3.f) }, StateComponent{}, AnimationComponent{ "Resources/Files/CharacterAnimations.txt" });
 }
 
 Entities& EntityManager::getEntities()

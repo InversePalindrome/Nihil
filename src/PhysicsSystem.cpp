@@ -6,7 +6,6 @@ InversePalindrome.com
 
 
 #include "PhysicsSystem.hpp"
-#include "EntityEvents.hpp"
 #include "PhysicsComponent.hpp"
 #include "UnitConverter.hpp"
 
@@ -15,7 +14,8 @@ PhysicsSystem::PhysicsSystem(Entities& entities, Events& events, b2World& world)
 	System(entities, events),
 	world(world)
 {
-	events.subscribe<DirectionChanged>([this](const auto& event) { moveEntity(event.direction); });
+	events.subscribe<DirectionChanged>([this](const auto& event) { moveEntity(event.entity, event.direction); });
+	events.subscribe<Jumped>([this](const auto& event) { moveEntity(event.entity, Direction::Up); });
 }
 
 void PhysicsSystem::update(float deltaTime)
@@ -24,13 +24,13 @@ void PhysicsSystem::update(float deltaTime)
 		[this](auto entity, const auto& physics, auto& position)
 	{
 		this->convertPositionCoordinates(physics, position);
+		this->checkIfStatic(entity, physics);
 	});
 }
 
-void PhysicsSystem::moveEntity(Direction direction)
+void PhysicsSystem::moveEntity(Entity entity, Direction direction)
 {
-	auto& physics = this->entities.get_entities<Controllable, PhysicsComponent>().back()
-		.get_component<PhysicsComponent>();
+	auto& physics = entity.get_component<PhysicsComponent>();
 
 	const auto& currentVelocity = physics.getVelocity();
 	
@@ -40,13 +40,16 @@ void PhysicsSystem::moveEntity(Direction direction)
 	{
 	case Direction::Right:
 		newVelocity.x = b2Min(currentVelocity.x + physics.getAccelerationRate(), physics.getMaxVelocity());
+		this->events.broadcast(ChangeState{ entity, EntityState::Walking });
 		break;
 	case Direction::Left:
 		newVelocity.x = b2Max(currentVelocity.x - physics.getAccelerationRate(), -physics.getMaxVelocity());
+		this->events.broadcast(ChangeState{ entity, EntityState::Walking });
 		break;
 	case Direction::Up:
 		const float jumpVelocity = 1.5 * physics.getMaxVelocity();
 		newVelocity.y = jumpVelocity;
+		this->events.broadcast(ChangeState{ entity, EntityState::Jumping });
 		break;
 	}
 
@@ -59,4 +62,12 @@ void PhysicsSystem::moveEntity(Direction direction)
 void PhysicsSystem::convertPositionCoordinates(const PhysicsComponent& physics, PositionComponent& position)
 {
 	position.setPosition(sf::Vector2f(UnitConverter::metersToPixels(physics.getPosition().x), UnitConverter::metersToPixels(-physics.getPosition().y)));
+}
+
+void PhysicsSystem::checkIfStatic(Entity entity, const PhysicsComponent& physics)
+{
+	if (physics.getVelocity() == b2Vec2(0.f, 0.f))
+	{
+		this->events.broadcast(ChangeState{ entity, EntityState::Idle });
+	}
 }
