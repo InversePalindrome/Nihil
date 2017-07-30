@@ -22,11 +22,11 @@ void ChunkTiles::addTile(const Tile& tile)
 }
 
 sf::Vector2u ChunkTiles::getTextureSize() const
-{ 
+{
 	return this->texture.getSize();
 }
 
-void ChunkTiles::draw(sf::RenderTarget& renderTarget, sf::RenderStates states) const 
+void ChunkTiles::draw(sf::RenderTarget& renderTarget, sf::RenderStates states) const
 {
 	states.texture = &this->texture;
 

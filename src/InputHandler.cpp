@@ -12,6 +12,7 @@ InputHandler::InputHandler()
 {
 	keyBindings[ActionID::Left] = thor::Action(sf::Keyboard::A);
 	keyBindings[ActionID::Right] = thor::Action(sf::Keyboard::D);
+	keyBindings[ActionID::Jump] = thor::Action(sf::Keyboard::Space);
 }
 
 void InputHandler::update(sf::Window& window)

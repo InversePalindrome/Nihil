@@ -18,8 +18,8 @@ InversePalindrome.com
 StartState::StartState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
 	view(stateData.window.getDefaultView()),
-	titleLabel(sfg::Label::Create("Nihil")),
-	continueLabel(sfg::Label::Create("Press a Key to Continue"))
+	titleLabel("Nihil", stateData.resourceManager.getFont(FontsID::BITWONDER), 220u),
+	continueLabel("Press a key to Continue", stateData.resourceManager.getFont(FontsID::BITWONDER), 40u)
 {
 	auto& backgroundTexture = stateData.resourceManager.getTexture(TexturesID::StartBackground);
 
@@ -51,19 +51,13 @@ StartState::StartState(StateMachine& stateMachine, StateData& stateData) :
 	particleSystem.addAffector(thor::AnimationAffector(thor::FadeAnimation(0.2f, 0.2f)));
 	particleSystem.addAffector(thor::ForceAffector(sf::Vector2f(0.f, 20.f)));
 
-	titleLabel->SetId("Title");
-	titleLabel->SetPosition(sf::Vector2f(680.f, 630.f));
+	titleLabel.setOrigin(titleLabel.getGlobalBounds().width / 2.f, titleLabel.getGlobalBounds().height / 2.f);
+	titleLabel.setPosition(this->view.getCenter());
 	
-	continueLabel->SetId("Continue");
-	continueLabel->SetPosition(sf::Vector2f(620.f, 1250.f));
+	continueLabel.setOrigin(continueLabel.getGlobalBounds().width / 2.f, continueLabel.getGlobalBounds().height / 2.f);
+	continueLabel.setPosition(sf::Vector2f(this->view.getCenter().x, 1250.f));
 
-	stateData.guiManager.setProperty("Label", "FontName", "Resources/Fonts/8-BIT-WONDER.ttf");
-	stateData.guiManager.setProperty("#Title", "FontSize", 180u);
-	stateData.guiManager.setProperty("#Continue", "FontSize", 40u);
-	stateData.guiManager.setProperty("#Continue", "Color", sf::Color::Black);
-
-	stateData.guiManager.addWidget(titleLabel);
-	stateData.guiManager.addWidget(continueLabel);
+	continueLabel.setFillColor(sf::Color::Black);
 }
 
 void StartState::handleEvent(const sf::Event& event)
@@ -88,6 +82,9 @@ void StartState::update(float deltaTime)
 	this->emitter.setParticlePosition(thor::Distributions::rect(sf::Vector2f(this->view.getCenter().x -  this->view.getSize().x / 2.f - 200.f, 
 		0.f), sf::Vector2f(this->view.getSize().x, this->view.getSize().y - 200.f)));
 	
+	this->titleLabel.setPosition(this->view.getCenter());
+	continueLabel.setPosition(sf::Vector2f(this->view.getCenter().x, 1250.f));
+
 	this->stateData.window.setView(view);
 }
 
@@ -95,6 +92,8 @@ void StartState::draw()
 {
 	this->stateData.window.draw(this->background);
 	this->stateData.window.draw(this->particleSystem);
+	this->stateData.window.draw(this->titleLabel);
+	this->stateData.window.draw(this->continueLabel);
 }
 
 void StartState::transitionToMenu()

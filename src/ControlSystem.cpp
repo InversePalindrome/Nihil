@@ -11,20 +11,21 @@ InversePalindrome.com
 
 ControlSystem::ControlSystem(Entities& entities, Events& events, InputHandler& inputHandler) :
 	System(entities, events),
-	inputHandler(inputHandler)
+	inputHandler(inputHandler),
+	timeSinceJump(0.f)
 {
 }
 
 void ControlSystem::update(float deltaTime)
 {
 	entities.for_each<Controllable>(
-		[this](auto entity)
+		[this, deltaTime](auto entity)
 	{
-		this->reactToInput();
+		this->reactToInput(deltaTime);
 	});
 }
 
-void ControlSystem::reactToInput()
+void ControlSystem::reactToInput(float deltaTime)
 {
 	if (this->inputHandler.isActive(ActionID::Left))
 	{
@@ -34,4 +35,11 @@ void ControlSystem::reactToInput()
 	{
 		this->events.broadcast(DirectionChanged{ Direction::Right });
 	}
+	else if (this->inputHandler.isActive(ActionID::Jump) && this->timeSinceJump > this->jumpInterval)
+	{
+		this->events.broadcast(DirectionChanged{ Direction::Up });
+		this->timeSinceJump = 0.f;
+	}
+
+	this->timeSinceJump += deltaTime;
 }

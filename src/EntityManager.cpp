@@ -21,7 +21,12 @@ EntityManager::EntityManager(b2World& world, ResourceManager& resourceManager, I
 	systems["Control"] = std::make_unique<ControlSystem>(entityManager, eventManager, inputHandler);
 	systems["Physics"] = std::make_unique<PhysicsSystem>(entityManager, eventManager, world);
 	
-	entityManager.create_entity<Controllable>(PhysicsComponent(world, b2Vec2(0.1f, 0.1f), b2Vec2(0.f, 0.f), 0.2f, 0.02f), PositionComponent{ {} }, SpriteComponent{ resourceManager.getTexture(TexturesID::SplashScreen) });
+	entityManager.create_entity<Controllable>(PhysicsComponent(world, b2Vec2(5.f, 5.f), b2Vec2(0.f, 0.f), 10.f, 1.f), PositionComponent{ {} }, SpriteComponent{ resourceManager.getTexture(TexturesID::Skeleton) });
+}
+
+Entities& EntityManager::getEntities()
+{
+	return this->entityManager;
 }
 
 void EntityManager::update(float deltaTime)

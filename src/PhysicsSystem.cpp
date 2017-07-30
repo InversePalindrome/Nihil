@@ -8,6 +8,7 @@ InversePalindrome.com
 #include "PhysicsSystem.hpp"
 #include "EntityEvents.hpp"
 #include "PhysicsComponent.hpp"
+#include "UnitConverter.hpp"
 
 
 PhysicsSystem::PhysicsSystem(Entities& entities, Events& events, b2World& world) :
@@ -43,15 +44,19 @@ void PhysicsSystem::moveEntity(Direction direction)
 	case Direction::Left:
 		newVelocity.x = b2Max(currentVelocity.x - physics.getAccelerationRate(), -physics.getMaxVelocity());
 		break;
+	case Direction::Up:
+		const float jumpVelocity = 1.5 * physics.getMaxVelocity();
+		newVelocity.y = jumpVelocity;
+		break;
 	}
 
-	b2Vec2 deltaVelocity = newVelocity - currentVelocity;
-	b2Vec2 impulse = b2Vec2(deltaVelocity.x * physics.getMass(), deltaVelocity.y * physics.getMass());
-
+	const auto& deltaVelocity = newVelocity - currentVelocity;
+	const auto& impulse = b2Vec2(deltaVelocity.x * physics.getMass(), deltaVelocity.y * physics.getMass());
+	
 	physics.applyImpulse(impulse);
 }
 
 void PhysicsSystem::convertPositionCoordinates(const PhysicsComponent& physics, PositionComponent& position)
 {
-	position.setPosition(sf::Vector2f(this->pixelsPerMeter * physics.getPosition().x, this->pixelsPerMeter * -physics.getPosition().y));
+	position.setPosition(sf::Vector2f(UnitConverter::metersToPixels(physics.getPosition().x), UnitConverter::metersToPixels(-physics.getPosition().y)));
 }

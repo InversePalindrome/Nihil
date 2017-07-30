@@ -56,7 +56,7 @@ Chunk::Chunk(const tmx::TileLayer& layer, std::vector<const tmx::Tileset*> tiles
 					sf::Vector2f tileIndex(idIndex % tsTileCount.x, idIndex / tsTileCount.x);
 					tileIndex.x *= tileSize.x;
 					tileIndex.y *= tileSize.y;
-					
+
 					Tile tile =
 					{
 						sf::Vertex(tileOffset, vertexColor, tileIndex),
@@ -78,7 +78,7 @@ bool Chunk::isEmpty() const
 	return this->chunkTilesContainer.empty();
 }
 
-void Chunk::draw(sf::RenderTarget& renderTarget, sf::RenderStates states) const 
+void Chunk::draw(sf::RenderTarget& renderTarget, sf::RenderStates states) const
 {
 	states.transform *= getTransform();
 

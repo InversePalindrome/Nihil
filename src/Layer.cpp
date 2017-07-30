@@ -48,7 +48,7 @@ void Layer::createChunks(const tmx::Map& map, const tmx::TileLayer& layer)
 {
 	const auto& tileSets = map.getTilesets();
 	const auto& layerIDs = layer.getTiles();
-	
+
 	std::uint32_t maxID = std::numeric_limits<std::uint32_t>::max();
 	std::vector<const tmx::Tileset*> usedTileSets;
 
@@ -87,7 +87,7 @@ void Layer::createChunks(const tmx::Map& map, const tmx::TileLayer& layer)
 			}
 			newTexture->loadFromImage(image);
 		}
-		
+
 		this->textures.emplace(path, std::move(newTexture));
 	}
 

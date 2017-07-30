@@ -27,6 +27,10 @@ ResourceManager::ResourceManager(const std::string& resourcesFilePath)
 	(std::size_t ID, const std::string& resourceFilePath)
 	{ images.acquire(static_cast<ImagesID>(ID), thor::Resources::fromFile<sf::Image>(resourceFilePath)); });
 
+	resourceFactory.emplace("Font", [this]
+	(std::size_t ID, const std::string& resourceFilePath)
+	{ fonts.acquire(static_cast<FontsID>(ID), thor::Resources::fromFile<sf::Font>(resourceFilePath)); });
+
 	resourceFactory.emplace("Sound", [this]
 	(std::size_t ID, const std::string& resourceFilePath)
 	{ sounds.acquire(static_cast<SoundsID>(ID), thor::Resources::fromFile<sf::SoundBuffer>(resourceFilePath)); });
@@ -56,6 +60,11 @@ sf::Texture& ResourceManager::getTexture(TexturesID textureID)
 sf::Image& ResourceManager::getImage(ImagesID imageID)
 {
 	return this->images[imageID];
+}
+
+sf::Font& ResourceManager::getFont(FontsID fontID)
+{
+	return this->fonts[fontID];
 }
 
 sf::SoundBuffer& ResourceManager::getSound(SoundsID soundID)
