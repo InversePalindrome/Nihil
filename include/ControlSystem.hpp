@@ -24,5 +24,5 @@ private:
 	float timeSinceJump;
 	static constexpr float jumpInterval = 0.6f;
 
-	void reactToInput(float deltaTime);
+	void reactToInput(Entity entity, float deltaTime);
 };

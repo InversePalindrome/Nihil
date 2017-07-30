@@ -23,6 +23,8 @@ public:
 private:
 	b2World& world;
 
-	void moveEntity(Direction direction);
+	void moveEntity(Entity entity, Direction direction);
+
 	void convertPositionCoordinates(const PhysicsComponent& physics, PositionComponent& position);
+	void checkIfStatic(Entity entity, const PhysicsComponent& physics);
 };

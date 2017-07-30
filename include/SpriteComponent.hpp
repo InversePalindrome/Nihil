@@ -18,6 +18,10 @@ class SpriteComponent
 {
 public:
 	SpriteComponent(sf::Texture& texture);
+	SpriteComponent(sf::Texture& texuture, const sf::IntRect& textureRect);
+	SpriteComponent(sf::Texture& texture, const sf::IntRect& textureRect, const sf::Vector2f& scale);
+
+	sf::Sprite& getSprite();
 
 	void draw(sf::RenderTarget& target);
 

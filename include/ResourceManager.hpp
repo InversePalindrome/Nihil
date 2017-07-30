@@ -19,7 +19,7 @@ InversePalindrome.com
 #include <unordered_map>
 
  
-enum class TexturesID { SplashScreen, StartBackground, Particles, Skeleton };
+enum class TexturesID { SplashScreen, StartBackground, Particles, Character };
 enum class ImagesID { PlayButton, SettingsButton, CharactersButton, BackButton };
 enum class FontsID { BITWONDER };
 enum class SoundsID {};
