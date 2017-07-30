@@ -21,5 +21,8 @@ public:
 private:
 	InputHandler& inputHandler;
 
-	void reactToInput();
+	float timeSinceJump;
+	static constexpr float jumpInterval = 0.6f;
+
+	void reactToInput(float deltaTime);
 };

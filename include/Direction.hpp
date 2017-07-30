@@ -8,4 +8,4 @@ InversePalindrome.com
 #pragma once
 
 
-enum class Direction { Right, Left };
+enum class Direction { Right, Left, Up, Down };

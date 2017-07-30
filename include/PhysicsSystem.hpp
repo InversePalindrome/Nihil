@@ -23,8 +23,6 @@ public:
 private:
 	b2World& world;
 
-	static constexpr float pixelsPerMeter = 100.f;
-
 	void moveEntity(Direction direction);
 	void convertPositionCoordinates(const PhysicsComponent& physics, PositionComponent& position);
 };

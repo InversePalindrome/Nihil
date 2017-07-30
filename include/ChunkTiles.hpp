@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2017 InversePalindrome
-Nihil - ChunkContainer.hpp
+Nihil - ChunkTiles.hpp
 InversePalindrome.com
 */
 
@@ -21,7 +21,7 @@ InversePalindrome.com
 class ChunkTiles : public sf::Drawable
 {
 	using Tile = std::array<sf::Vertex, 4u>;
-	
+
 public:
 	ChunkTiles(const sf::Texture& texture);
 
@@ -35,4 +35,3 @@ private:
 
 	void draw(sf::RenderTarget& renderTarget, sf::RenderStates states) const override;
 };
-

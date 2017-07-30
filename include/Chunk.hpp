@@ -38,5 +38,3 @@ private:
 
 	void draw(sf::RenderTarget& rt, sf::RenderStates states) const override;
 };
-
-

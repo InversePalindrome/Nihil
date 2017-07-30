@@ -12,9 +12,8 @@ InversePalindrome.com
 #include <Thor/Particles/Emitters.hpp>
 #include <Thor/Particles/ParticleSystem.hpp>
 
-#include <SFGUI/Label.hpp>
-
 #include <SFML/Graphics/View.hpp>
+#include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
 
@@ -33,8 +32,8 @@ private:
 	sf::Sprite background;
 	sf::View view;
 
-	sfg::Label::Ptr titleLabel;
-	sfg::Label::Ptr continueLabel;
+	sf::Text titleLabel;
+	sf::Text continueLabel;
 
 	thor::ParticleSystem particleSystem;
 	thor::UniversalEmitter emitter;

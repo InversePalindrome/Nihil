@@ -25,15 +25,16 @@ public:
 	Map(const std::string& filePath, const sf::Vector2f& chunkSize, b2World& world);
 
 	void load(const std::string& filePath);
+	
+	sf::FloatRect getBounds() const;
 
 private:
 	tmx::Map map;
 	sf::Vector2f chunkSize;
+	sf::FloatRect bounds;
 	std::vector<std::unique_ptr<Layer>> layers;
 
 	b2World& world;
-
-	static constexpr float metersPerPixel = 0.01f;
 
 	void addTileCollisions();
 

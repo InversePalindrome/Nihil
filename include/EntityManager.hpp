@@ -28,6 +28,8 @@ class EntityManager
 public:
 	EntityManager(b2World& world, ResourceManager& resourceManager, InputHandler& inputHandler);
 
+	Entities& getEntities();
+
 	void update(float deltaTime);
 	void draw(sf::RenderTarget& target);
 

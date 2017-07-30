@@ -1,18 +1,22 @@
 /*
 Copyright (c) 2017 InversePalindrome
-Nihil - State.hpp
+Nihil - GameState.hpp
 InversePalindrome.com
 */
 
 
 #pragma once
 
-#include "State.hpp"
 #include "Map.hpp"
+#include "State.hpp"
 #include "CollisionHandler.hpp"
 #include "EntityManager.hpp"
 
 #include <Box2D/Dynamics/b2World.h>
+
+#include <SFML/Graphics/View.hpp>
+
+#include <memory>
 
 
 class GameState : public State
@@ -26,8 +30,11 @@ public:
 
 private:
     b2World world;
-	CollisionHandler collisionHandler;
 	Map map;
-	
+	CollisionHandler collisionHandler;
+	sf::View camera;
+
 	EntityManager entityManager;
+
+	void updateCamera();
 };

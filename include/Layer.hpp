@@ -34,7 +34,7 @@ private:
 	sf::Vector2u chunkCount;
 	sf::FloatRect globalBounds;
 
-    std::map<std::string, std::unique_ptr<sf::Texture>> textures;
+	std::map<std::string, std::unique_ptr<sf::Texture>> textures;
 
 	std::vector<std::unique_ptr<Chunk>> chunks;
 	mutable std::vector<const Chunk*> visibleChunks;
