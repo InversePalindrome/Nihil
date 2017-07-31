@@ -15,7 +15,7 @@ PhysicsSystem::PhysicsSystem(Entities& entities, Events& events, b2World& world)
 	world(world)
 {
 	events.subscribe<DirectionChanged>([this](const auto& event) { moveEntity(event.entity, event.direction); });
-	events.subscribe<Jumped>([this](const auto& event) { moveEntity(event.entity, Direction::Up); });
+	events.subscribe<Jumped>([this](const auto& event) { makeJump(event.entity); });
 }
 
 void PhysicsSystem::update(float deltaTime)
@@ -46,16 +46,32 @@ void PhysicsSystem::moveEntity(Entity entity, Direction direction)
 		newVelocity.x = b2Max(currentVelocity.x - physics.getAccelerationRate(), -physics.getMaxVelocity());
 		this->events.broadcast(ChangeState{ entity, EntityState::Walking });
 		break;
-	case Direction::Up:
-		const float jumpVelocity = 1.5 * physics.getMaxVelocity();
-		newVelocity.y = jumpVelocity;
-		this->events.broadcast(ChangeState{ entity, EntityState::Jumping });
-		break;
 	}
+	
+	const auto& deltaVelocity = newVelocity - currentVelocity;
+
+	const auto& impulse = b2Vec2(deltaVelocity.x * physics.getMass(), 0.f);
+
+	physics.applyImpulse(impulse);
+}
+
+void PhysicsSystem::makeJump(Entity entity)
+{
+	auto& physics = entity.get_component<PhysicsComponent>();
+
+	const auto& currentVelocity = physics.getVelocity();
+
+	b2Vec2 newVelocity(0.f, 0.f);
+
+	const float jumpVelocity = 1.5 * physics.getMaxVelocity();
+	newVelocity.y = jumpVelocity;
+
+	this->events.broadcast(ChangeState{ entity, EntityState::Jumping });
 
 	const auto& deltaVelocity = newVelocity - currentVelocity;
-	const auto& impulse = b2Vec2(deltaVelocity.x * physics.getMass(), deltaVelocity.y * physics.getMass());
-	
+
+	const auto& impulse = b2Vec2(0.f, deltaVelocity.y * physics.getMass());
+
 	physics.applyImpulse(impulse);
 }
 

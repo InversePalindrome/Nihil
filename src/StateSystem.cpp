@@ -23,9 +23,6 @@ void StateSystem::changeState(Entity entity, EntityState state)
 {
 	auto& stateComponent = entity.get_component<StateComponent>();
 	
-	if (stateComponent.getState() != state)
-	{
-		stateComponent.setState(state);
-		this->events.broadcast(StateChanged{ entity, state });
-	}
+	stateComponent.setState(state);
+	this->events.broadcast(StateChanged{ entity, state });
 }

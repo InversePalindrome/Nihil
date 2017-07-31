@@ -32,7 +32,7 @@ void GameState::update(float deltaTime)
 	const std::size_t positionIterations = 2u;
 
 	this->world.Step(timeStep, velocityIterations, positionIterations);
-
+	
 	this->entityManager.update(deltaTime);
 	this->updateCamera();
 }

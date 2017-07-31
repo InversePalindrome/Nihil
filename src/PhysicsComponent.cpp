@@ -71,5 +71,5 @@ void PhysicsComponent::setAccelerationRate(float accelerationRate)
 
 void PhysicsComponent::applyImpulse(const b2Vec2& impulse)
 {
-	this->body->ApplyLinearImpulse(impulse, this->body->GetPosition(), true);
+	this->body->ApplyLinearImpulseToCenter(impulse, true);
 }
