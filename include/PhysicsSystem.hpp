@@ -24,6 +24,7 @@ private:
 	b2World& world;
 
 	void moveEntity(Entity entity, Direction direction);
+	void makeJump(Entity entity);
 
 	void convertPositionCoordinates(const PhysicsComponent& physics, PositionComponent& position);
 	void checkIfStatic(Entity entity, const PhysicsComponent& physics);

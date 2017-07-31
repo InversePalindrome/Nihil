@@ -18,6 +18,7 @@ InversePalindrome.com
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 
+#include <tuple>
 #include <string>
 #include <memory>
 #include <unordered_map>
@@ -33,6 +34,8 @@ public:
 	void update(float deltaTime);
 	void draw(sf::RenderTarget& target);
 
+	void createEntity(const std::string& filePath);
+
 private:
 	Entities entityManager;
 	Events eventManager;
@@ -41,4 +44,13 @@ private:
 	InputHandler& inputHandler;
 
 	std::unordered_map<std::string, std::unique_ptr<System>> systems;
+
+	template<typename Component, typename Tuple>
+	Component makeComponent(Tuple& tuple);
 };
+
+template<typename Component, typename Tuple>
+Component EntityManager::makeComponent(Tuple& tuple)
+{
+	return std::make_from_tuple<Component>(tuple);
+}
