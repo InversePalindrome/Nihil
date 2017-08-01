@@ -11,6 +11,7 @@ InversePalindrome.com
 #include "System.hpp"
 #include "InputHandler.hpp"
 #include "ResourceManager.hpp"
+#include "ComponentParser.hpp"
 
 #include <Box2D/Dynamics/b2World.h>
 
@@ -36,6 +37,9 @@ public:
 
 	void createEntity(const std::string& filePath);
 
+	template<typename Component, typename Tuple>
+	Component makeComponent(Tuple& tuple);
+
 private:
 	Entities entityManager;
 	Events eventManager;
@@ -43,10 +47,9 @@ private:
 	ResourceManager& resourceManager;
 	InputHandler& inputHandler;
 
-	std::unordered_map<std::string, std::unique_ptr<System>> systems;
+	ComponentParser componentParser;
 
-	template<typename Component, typename Tuple>
-	Component makeComponent(Tuple& tuple);
+	std::unordered_map<std::string, std::unique_ptr<System>> systems;
 };
 
 template<typename Component, typename Tuple>

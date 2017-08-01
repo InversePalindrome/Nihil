@@ -14,7 +14,6 @@ class StateComponent
 {
 public:
 	StateComponent();
-	StateComponent(EntityState state);
 
 	EntityState getState() const;
 
