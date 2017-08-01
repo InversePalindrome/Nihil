@@ -9,12 +9,7 @@ InversePalindrome.com
 
 
 StateComponent::StateComponent() :
-	StateComponent(EntityState::Idle)
-{
-}
-
-StateComponent::StateComponent(EntityState state) :
-	state(state)
+	state(EntityState::Idle)
 {
 }
 
