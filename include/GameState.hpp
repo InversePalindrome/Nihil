@@ -9,6 +9,7 @@ InversePalindrome.com
 
 #include "Map.hpp"
 #include "State.hpp"
+#include "CollisionData.hpp"
 #include "CollisionHandler.hpp"
 #include "EntityManager.hpp"
 
@@ -30,11 +31,12 @@ public:
 
 private:
     b2World world;
+	CollisionsData collisionsData;
 	Map map;
-	CollisionHandler collisionHandler;
 	sf::View camera;
 
 	EntityManager entityManager;
+	CollisionHandler collisionHandler;
 
 	void updateCamera();
 };

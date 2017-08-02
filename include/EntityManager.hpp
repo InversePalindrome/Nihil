@@ -10,6 +10,7 @@ InversePalindrome.com
 #include "ECS.hpp"
 #include "System.hpp"
 #include "InputHandler.hpp"
+#include "CollisionData.hpp"
 #include "ResourceManager.hpp"
 #include "ComponentParser.hpp"
 
@@ -28,9 +29,10 @@ InversePalindrome.com
 class EntityManager 
 {
 public:
-	EntityManager(b2World& world, ResourceManager& resourceManager, InputHandler& inputHandler);
+	EntityManager(b2World& world, ResourceManager& resourceManager, InputHandler& inputHandler, CollisionsData& collisionData);
 
 	Entities& getEntities();
+	Events& getEvents();
 
 	void update(float deltaTime);
 	void draw(sf::RenderTarget& target);
@@ -43,9 +45,6 @@ public:
 private:
 	Entities entityManager;
 	Events eventManager;
-
-	ResourceManager& resourceManager;
-	InputHandler& inputHandler;
 
 	ComponentParser componentParser;
 

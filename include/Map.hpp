@@ -8,6 +8,7 @@ InversePalindrome.com
 #pragma once
 
 #include "Layer.hpp"
+#include "CollisionData.hpp"
 
 #include <tmxlite/Map.hpp>
 
@@ -22,7 +23,7 @@ InversePalindrome.com
 class Map : public sf::Drawable
 {
 public:
-	Map(const std::string& filePath, const sf::Vector2f& chunkSize, b2World& world);
+	Map(const std::string& filePath, const sf::Vector2f& chunkSize, b2World& world, CollisionsData& collisionsData);
 
 	void load(const std::string& filePath);
 	
@@ -35,8 +36,10 @@ private:
 	std::vector<std::unique_ptr<Layer>> layers;
 
 	b2World& world;
+	CollisionsData& collisionsData;
 
 	void addTileCollisions();
+	ObjectType findObjectType(const std::string& tileName);
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

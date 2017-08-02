@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #pragma once
 
+#include "ObjectType.hpp"
+
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2World.h>
 
@@ -16,9 +18,11 @@ InversePalindrome.com
 class PhysicsComponent
 {
 public:
-	PhysicsComponent(b2World& world, const b2Vec2& bodySize,
-		const b2Vec2& initialPosition, float maxVelocity, float accelerationRate);
+	PhysicsComponent(b2World& world, const b2Vec2& bodySize, const b2Vec2& initialPosition,
+		float maxVelocity, float accelerationRate, ObjectType objectType);
 	
+	b2Body& getBody();
+
 	b2Vec2 getPosition() const;
 	b2Vec2 getVelocity() const;
 	float getMass() const;
@@ -31,8 +35,12 @@ public:
 
 	void applyImpulse(const b2Vec2& impulse);
 
+	ObjectType getObjectType() const;
+
 private:
 	b2Body* body;
 	float maxVelocity;
 	float accelerationRate;
+
+	ObjectType objectType;
 };
