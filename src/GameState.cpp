@@ -12,9 +12,10 @@ InversePalindrome.com
 GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
 	world(b2Vec2(0.f, -9.8f)),
-	map("Resources/Files/Level1.tmx", sf::Vector2f(8172.f, 1536.f), world),
+	map("Resources/Files/Level1.tmx", sf::Vector2f(8172.f, 1536.f), world, collisionsData),
 	camera(stateData.window.getDefaultView()),
-	entityManager(world, stateData.resourceManager, stateData.inputHandler)
+	entityManager(world, stateData.resourceManager, stateData.inputHandler, collisionsData),
+	collisionHandler(entityManager.getEvents())
 {
 	world.SetContactListener(&collisionHandler);
 

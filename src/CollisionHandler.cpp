@@ -6,10 +6,20 @@ InversePalindrome.com
 
 
 #include "CollisionHandler.hpp"
+#include "CollisionData.hpp"
 
+
+CollisionHandler::CollisionHandler(Events& events) :
+	events(events)
+{
+}
 
 void CollisionHandler::BeginContact(b2Contact* contact)
 {
+	auto* objectA = static_cast<CollisionData*>(contact->GetFixtureA()->GetBody()->GetUserData());
+	auto* objectB = static_cast<CollisionData*>(contact->GetFixtureB()->GetBody()->GetUserData());
+	
+	
 
 }
 

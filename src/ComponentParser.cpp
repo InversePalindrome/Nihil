@@ -49,10 +49,11 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 		std::stringstream iStream(line);
 		
 		float sizeX = 0.f, sizeY = 0.f, positionX = 0.f, positionY = 0.f, maxVelocity = 0.f, accelerationRate = 0.f;
+		std::size_t objectType = 0u;
 
-		iStream >> sizeX >> sizeY >> positionX >> positionY >> maxVelocity >> accelerationRate;
+		iStream >> sizeX >> sizeY >> positionX >> positionY >> maxVelocity >> accelerationRate >> objectType;
 
-		entity.add_component<PhysicsComponent>(world, b2Vec2(sizeX, sizeY), b2Vec2(positionX, positionY), maxVelocity, accelerationRate);
+		entity.add_component<PhysicsComponent>(world, b2Vec2(sizeX, sizeY), b2Vec2(positionX, positionY), maxVelocity, accelerationRate, static_cast<ObjectType>(objectType));
 	};
 
 	componentParsers["Sprite1"] = [this, &resourceManager](auto& entity, const auto& line)

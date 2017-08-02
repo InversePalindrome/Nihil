@@ -10,10 +10,12 @@ InversePalindrome.com
 #include "UnitConverter.hpp"
 
 
-PhysicsSystem::PhysicsSystem(Entities& entities, Events& events, b2World& world) :
+PhysicsSystem::PhysicsSystem(Entities& entities, Events& events, b2World& world, CollisionsData& collisionsData) :
 	System(entities, events),
-	world(world)
+	world(world),
+	collisionsData(collisionsData)
 {
+	events.subscribe<entityplus::component_added<Entity, PhysicsComponent>>([this](const auto& event) { addCollisionData(event.entity, event.component); });
 	events.subscribe<DirectionChanged>([this](const auto& event) { moveEntity(event.entity, event.direction); });
 	events.subscribe<Jumped>([this](const auto& event) { makeJump(event.entity); });
 }
@@ -86,4 +88,10 @@ void PhysicsSystem::checkIfStatic(Entity entity, const PhysicsComponent& physics
 	{
 		this->events.broadcast(ChangeState{ entity, EntityState::Idle });
 	}
+}
+
+void PhysicsSystem::addCollisionData(Entity entity, PhysicsComponent& physics)
+{
+	this->collisionsData.push_back(CollisionData(entity, physics.getBody(), physics.getObjectType()));
+	this->collisionsData.back().body.SetUserData(&this->collisionsData.back());
 }

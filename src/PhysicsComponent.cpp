@@ -12,10 +12,11 @@ InversePalindrome.com
 
 
 PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, const b2Vec2& initialPosition,
-	float maxVelocity, float accelerationRate)  :
+	float maxVelocity, float accelerationRate, ObjectType objectType)  :
 	body(nullptr),
 	maxVelocity(maxVelocity),
-	accelerationRate(accelerationRate)
+	accelerationRate(accelerationRate),
+	objectType(objectType)
 {
 	b2BodyDef bodyDefinition;
 	bodyDefinition.type = b2_dynamicBody;
@@ -29,9 +30,14 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, const
 	fixture.shape = &shape;
 	fixture.density = 1.f;
 	fixture.friction = 0.3f;
-
+	
 	body = world.CreateBody(&bodyDefinition);
 	body->CreateFixture(&fixture);
+}
+
+b2Body& PhysicsComponent::getBody()
+{
+	return *this->body;
 }
 
 b2Vec2 PhysicsComponent::getPosition() const
@@ -72,4 +78,9 @@ void PhysicsComponent::setAccelerationRate(float accelerationRate)
 void PhysicsComponent::applyImpulse(const b2Vec2& impulse)
 {
 	this->body->ApplyLinearImpulseToCenter(impulse, true);
+}
+
+ObjectType PhysicsComponent::getObjectType() const
+{
+	return this->objectType;
 }

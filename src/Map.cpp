@@ -13,9 +13,10 @@ InversePalindrome.com
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
 
-Map::Map(const std::string& filePath, const sf::Vector2f& chunkSize, b2World& world) :
+Map::Map(const std::string& filePath, const sf::Vector2f& chunkSize, b2World& world, CollisionsData& collisionsData) :
 	chunkSize(chunkSize),
-	world(world)
+	world(world),
+	collisionsData(collisionsData)
 {
 	load(filePath);
 
@@ -36,6 +37,11 @@ void Map::load(const std::string& filePath)
 	this->addTileCollisions();
 }
 
+sf::FloatRect Map::getBounds() const
+{
+	return this->bounds;
+}
+
 void Map::addTileCollisions()
 {
 	const auto& layers = this->map.getLayers();
@@ -49,7 +55,7 @@ void Map::addTileCollisions()
 			for (const auto& object : objects)
 			{
 				const auto& AABB = object.getAABB();
-
+				
 				b2BodyDef bodyDefinition;
 				bodyDefinition.type = b2_staticBody;
 				bodyDefinition.position.Set(UnitConverter::pixelsToMeters(AABB.left + AABB.width / 2.f), UnitConverter::pixelsToMeters(-(AABB.top + AABB.height / 2.f)));
@@ -62,14 +68,25 @@ void Map::addTileCollisions()
 
 				auto* tile = this->world.CreateBody(&bodyDefinition);
 				tile->CreateFixture(&fixture);
+				
+				this->collisionsData.push_back(CollisionData(*tile, this->findObjectType(object.getName())));
+
+				this->collisionsData.back().body.SetUserData(&this->collisionsData.back());
 			}
 		}
 	}
 }
 
-sf::FloatRect Map::getBounds() const
+ObjectType Map::findObjectType(const std::string& tileName)
 {
-	return this->bounds;
+	if (tileName == "Trap")
+	{
+		return ObjectType::Trap;
+	}
+	else
+	{
+		return ObjectType::Tile;
+	}
 }
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const
