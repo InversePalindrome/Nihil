@@ -13,7 +13,7 @@ InversePalindrome.com
 #include <SFML/Window/Window.hpp>
 
 
-enum class ActionID { Left, Right, Jump};
+enum class ActionID { Left, Right, Jump, ESC, Retry };
 
 class InputHandler
 {

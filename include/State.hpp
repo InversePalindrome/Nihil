@@ -22,7 +22,7 @@ public:
 	virtual void update(float deltaTime) = 0;
 	virtual void draw() = 0;
 
-	virtual bool isTransparent();
+	virtual bool isTransparent() const;
 
 protected:
 	StateMachine& stateMachine;

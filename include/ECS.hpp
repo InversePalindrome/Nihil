@@ -11,6 +11,7 @@ InversePalindrome.com
 #include "PhysicsComponent.hpp"
 #include "StateComponent.hpp"
 #include "PositionComponent.hpp"
+#include "AIComponent.hpp"
 #include "AnimationComponent.hpp"
 #include "Direction.hpp"
 
@@ -24,7 +25,7 @@ struct Jumped;
 struct ChangeState;
 struct StateChanged;
 
-using Components = entityplus::component_list<PositionComponent, StateComponent, PhysicsComponent, SpriteComponent, AnimationComponent>;
+using Components = entityplus::component_list<PositionComponent, StateComponent, PhysicsComponent, AIComponent, SpriteComponent, AnimationComponent>;
 using Tags = entityplus::tag_list<Controllable>;
 using Entities = entityplus::entity_manager<Components, Tags>;
 using Events = entityplus::event_manager<Components, Tags, DirectionChanged, Jumped, ChangeState, StateChanged>;
