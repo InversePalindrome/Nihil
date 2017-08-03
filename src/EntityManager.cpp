@@ -10,6 +10,7 @@ InversePalindrome.com
 #include "StateSystem.hpp"
 #include "ControlSystem.hpp"
 #include "PhysicsSystem.hpp"
+#include "NeuralSystem.hpp"
 #include "AnimatorSystem.hpp"
 
 
@@ -22,9 +23,11 @@ EntityManager::EntityManager(b2World& world, ResourceManager& resourceManager, I
 	systems["Control"] = std::make_unique<ControlSystem>(entityManager, eventManager, inputHandler);
 	systems["State"] = std::make_unique<StateSystem>(entityManager, eventManager);
 	systems["Physics"] = std::make_unique<PhysicsSystem>(entityManager, eventManager, world, collisionsData);
+	systems["AI"] = std::make_unique<NeuralSystem>(entityManager, eventManager);
 	systems["Animator"] = std::make_unique<AnimatorSystem>(entityManager, eventManager);
 	
 	createEntity("Resources/Files/Player.txt");
+	createEntity("Resources/Files/Mushroom.txt");
 }
 
 Entities& EntityManager::getEntities()

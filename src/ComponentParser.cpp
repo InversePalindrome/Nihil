@@ -56,6 +56,17 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 		entity.add_component<PhysicsComponent>(world, b2Vec2(sizeX, sizeY), b2Vec2(positionX, positionY), maxVelocity, accelerationRate, static_cast<ObjectType>(objectType));
 	};
 
+	componentParsers["AI"] = [this](auto& entity, const auto& line)
+	{
+		std::stringstream iStream(line);
+
+		float visionRange = 0.f, pathPointA = 0.f, pathPointB = 0.f;
+
+		iStream >> visionRange >> pathPointA >> pathPointB;
+
+		entity.add_component<AIComponent>(visionRange, std::make_pair(pathPointA, pathPointB));
+	};
+
 	componentParsers["Sprite1"] = [this, &resourceManager](auto& entity, const auto& line)
 	{
 		std::istringstream iStream(line);

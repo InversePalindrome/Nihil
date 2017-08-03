@@ -12,6 +12,8 @@ InversePalindrome.com
 #include "GameState.hpp"
 #include "SettingsState.hpp"
 #include "CharactersState.hpp"
+#include "PauseState.hpp"
+#include "GameOverState.hpp"
 
 #include <Thor/Resources/SfmlLoaders.hpp>
 
@@ -33,6 +35,8 @@ Application::Application() :
 	stateMachine.registerState<GameState>(StateID::Game);
 	stateMachine.registerState<SettingsState>(StateID::Settings);
 	stateMachine.registerState<CharactersState>(StateID::Characters);
+	stateMachine.registerState<PauseState>(StateID::Pause);
+	stateMachine.registerState<GameOverState>(StateID::GameOver);
 
 	stateMachine.pushState(StateID::Splash);
 }

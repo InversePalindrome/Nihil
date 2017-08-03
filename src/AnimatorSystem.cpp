@@ -31,20 +31,26 @@ void AnimatorSystem::update(float deltaTime)
 
 void AnimatorSystem::changeAnimationState(Entity entity, EntityState state)
 {
-	auto& animation = entity.get_component<AnimationComponent>();
-
-	if (animation.getCurrentAnimation().first != state)
+	if (entity.has_component<AnimationComponent>())
 	{
-		animation.playAnimation(state, animation.getCurrentAnimation().second, true);
+		auto& animation = entity.get_component<AnimationComponent>();
+
+		if (animation.getCurrentAnimation().first != state)
+		{
+			animation.playAnimation(state, animation.getCurrentAnimation().second, true);
+		}
 	}
 }
 
 void AnimatorSystem::changeAnimationDirection(Entity entity, Direction direction)
 {
-	auto& animation = entity.get_component<AnimationComponent>();
-
-	if (animation.getCurrentAnimation().second != direction)
+	if (entity.has_component<AnimationComponent>())
 	{
-		animation.playAnimation(animation.getCurrentAnimation().first, direction, true);
+		auto& animation = entity.get_component<AnimationComponent>();
+
+		if (animation.getCurrentAnimation().second != direction)
+		{
+			animation.playAnimation(animation.getCurrentAnimation().first, direction, true);
+		}
 	}
 }

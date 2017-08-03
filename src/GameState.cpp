@@ -24,6 +24,14 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 
 void GameState::handleEvent(const sf::Event& event)
 {
+	if (this->stateData.inputHandler.isActive(ActionID::ESC))
+	{
+		this->stateMachine.pushState(StateID::Pause);
+	}
+	else if (this->stateData.inputHandler.isActive(ActionID::Retry))
+	{
+		this->stateMachine.changeState(StateID::Game);
+	}
 }
 
 void GameState::update(float deltaTime)

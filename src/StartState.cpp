@@ -76,7 +76,7 @@ void StartState::update(float deltaTime)
 
 	this->view.move(this->viewSpeed * deltaTime, 0.f);
 
-	this->background.setTextureRect(sf::IntRect(this->view.getCenter().x - this->view.getSize().x / 2.f, 0.f, this->view.getSize().x, this->view.getSize().y));
+	this->background.setTextureRect(sf::IntRect(this->view.getCenter().x - this->view.getSize().x / 2u, 0u, this->view.getSize().x, this->view.getSize().y));
 	this->background.setPosition(this->view.getCenter().x - this->view.getSize().x / 2.f, 0.f);
 
 	this->emitter.setParticlePosition(thor::Distributions::rect(sf::Vector2f(this->view.getCenter().x -  this->view.getSize().x / 2.f - 200.f, 

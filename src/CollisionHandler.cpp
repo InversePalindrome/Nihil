@@ -6,7 +6,6 @@ InversePalindrome.com
 
 
 #include "CollisionHandler.hpp"
-#include "CollisionData.hpp"
 
 
 CollisionHandler::CollisionHandler(Events& events) :
@@ -20,7 +19,10 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 	auto* objectB = static_cast<CollisionData*>(contact->GetFixtureB()->GetBody()->GetUserData());
 	
 	
-
+	if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Trap))
+	{
+		
+	}
 }
 
 void CollisionHandler::EndContact(b2Contact* contact)
@@ -35,4 +37,21 @@ void CollisionHandler::PreSolve(b2Contact* contact, const b2Manifold* oldManifol
 void CollisionHandler::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) 
 {
 
+}
+
+std::optional<CollisionHandler::OrderedCollision> CollisionHandler::getOrderedCollision(CollisionData* objectA, 
+	CollisionData* objectB, ObjectType type1, ObjectType type2)
+{
+	if (objectA->objectType == type1 && objectB->objectType == type2)
+	{
+		return OrderedCollision(*objectA, *objectB);
+	}
+	else if (objectA->objectType == type2 && objectB->objectType == type1)
+	{
+		return OrderedCollision(*objectB, *objectA);
+	}
+	else
+	{
+		return {};
+	}
 }

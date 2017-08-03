@@ -15,7 +15,7 @@ State::State(StateMachine& stateMachine, StateData& stateData) :
 {
 }
 
-bool State::isTransparent()
+bool State::isTransparent() const
 {
 	return false;
 }
