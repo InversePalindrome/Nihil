@@ -27,6 +27,7 @@ private:
 
 	void moveEntity(Entity entity, Direction direction);
 	void makeJump(Entity entity);
+	void applyKnockback(Entity attacker, Entity victim);
 
 	void convertPositionCoordinates(const PhysicsComponent& physics, PositionComponent& position);
 	void checkIfStatic(Entity entity, const PhysicsComponent& physics);

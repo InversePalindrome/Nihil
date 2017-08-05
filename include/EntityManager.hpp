@@ -12,6 +12,7 @@ InversePalindrome.com
 #include "InputHandler.hpp"
 #include "CollisionData.hpp"
 #include "ResourceManager.hpp"
+#include "SoundManager.hpp"
 #include "ComponentParser.hpp"
 
 #include <Box2D/Dynamics/b2World.h>
@@ -29,7 +30,9 @@ InversePalindrome.com
 class EntityManager 
 {
 public:
-	EntityManager(b2World& world, ResourceManager& resourceManager, InputHandler& inputHandler, CollisionsData& collisionData);
+	EntityManager(b2World& world, ResourceManager& resourceManager, SoundManager& soundManager, InputHandler& inputHandler, CollisionsData& collisionData);
+	EntityManager(const EntityManager& entityManager) = delete;
+	EntityManager& operator=(const EntityManager& entityManager) = delete;
 
 	Entities& getEntities();
 	Events& getEvents();

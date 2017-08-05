@@ -13,6 +13,7 @@ InversePalindrome.com
 #include "PositionComponent.hpp"
 #include "AIComponent.hpp"
 #include "AnimationComponent.hpp"
+#include "SoundComponent.hpp"
 #include "Direction.hpp"
 
 #include <entityplus/entity.h>
@@ -22,13 +23,14 @@ InversePalindrome.com
 struct Controllable;
 struct DirectionChanged;
 struct Jumped;
+struct Knockback;
 struct ChangeState;
 struct StateChanged;
 
-using Components = entityplus::component_list<PositionComponent, StateComponent, PhysicsComponent, AIComponent, SpriteComponent, AnimationComponent>;
+using Components = entityplus::component_list<PositionComponent, StateComponent, PhysicsComponent, AIComponent, SpriteComponent, AnimationComponent, SoundComponent>;
 using Tags = entityplus::tag_list<Controllable>;
 using Entities = entityplus::entity_manager<Components, Tags>;
-using Events = entityplus::event_manager<Components, Tags, DirectionChanged, Jumped, ChangeState, StateChanged>;
+using Events = entityplus::event_manager<Components, Tags, DirectionChanged, Jumped, Knockback, ChangeState, StateChanged>;
 using Entity = Entities::entity_t;
 
 
@@ -41,6 +43,12 @@ struct DirectionChanged
 struct Jumped
 {
 	Entity entity;
+};
+
+struct Knockback
+{
+	Entity attacker;
+	Entity victim;
 };
 
 struct ChangeState
