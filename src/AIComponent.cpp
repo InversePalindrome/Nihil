@@ -9,7 +9,7 @@ InversePalindrome.com
 #include "AIComponent.hpp"
 
 
-AIComponent::AIComponent(float visionRange, const Path& path) :
+AIComponent::AIComponent(float visionRange, float attackTime, const Path& path) :
 	visionRange(visionRange),
 	path(path)
 {

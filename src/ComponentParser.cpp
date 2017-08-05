@@ -60,11 +60,11 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 	{
 		std::stringstream iStream(line);
 
-		float visionRange = 0.f, pathPointA = 0.f, pathPointB = 0.f;
+		float visionRange = 0.f, attackTime = 0.f, pathPointA = 0.f, pathPointB = 0.f;
 
-		iStream >> visionRange >> pathPointA >> pathPointB;
+		iStream >> visionRange >> attackTime >> pathPointA >> pathPointB;
 
-		entity.add_component<AIComponent>(visionRange, std::make_pair(pathPointA, pathPointB));
+		entity.add_component<AIComponent>(visionRange, attackTime, std::make_pair(pathPointA, pathPointB));
 	};
 
 	componentParsers["Sprite1"] = [this, &resourceManager](auto& entity, const auto& line)
@@ -111,6 +111,11 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 		iStream >> animationFile;
 
 		entity.add_component<AnimationComponent>(animationFile);
+	};
+
+	componentParsers["Sound"] = [this](auto& entity, const auto& line)
+	{
+		entity.add_component<SoundComponent>();
 	};
 }
 

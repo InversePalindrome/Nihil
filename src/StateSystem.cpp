@@ -16,13 +16,16 @@ StateSystem::StateSystem(Entities& entities, Events& events) :
 
 void StateSystem::update(float deltaTime)
 {
-
+	
 }
 
 void StateSystem::changeState(Entity entity, EntityState state)
 {
 	auto& stateComponent = entity.get_component<StateComponent>();
 	
-	stateComponent.setState(state);
-	this->events.broadcast(StateChanged{ entity, state });
+	if (stateComponent.getState() != state)
+	{
+		stateComponent.setState(state);
+		this->events.broadcast(StateChanged{ entity, state });
+	}
 }

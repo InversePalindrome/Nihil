@@ -11,7 +11,7 @@ InversePalindrome.com
 NeuralSystem::NeuralSystem(Entities& entities, Events& events) :
 	System(entities, events)
 {
-	
+
 }
 
 void NeuralSystem::update(float deltaTime)

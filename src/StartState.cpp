@@ -58,6 +58,8 @@ StartState::StartState(StateMachine& stateMachine, StateData& stateData) :
 	continueLabel.setPosition(sf::Vector2f(this->view.getCenter().x, 1250.f));
 
 	continueLabel.setFillColor(sf::Color::Black);
+
+	stateData.soundManager.playMusic("StartElectro.wav", true);
 }
 
 void StartState::handleEvent(const sf::Event& event)

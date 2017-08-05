@@ -36,6 +36,8 @@ MenuState::MenuState(StateMachine& stateMachine, StateData& stateData) :
 	stateData.guiManager.addWidget(playButton);
 	stateData.guiManager.addWidget(settingsButton);
 	stateData.guiManager.addWidget(charactersButton);
+
+	stateData.soundManager.playMusic("MenuDisco.wav", true);
 }
 
 void MenuState::handleEvent(const sf::Event& event)

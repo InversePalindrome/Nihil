@@ -12,9 +12,10 @@ InversePalindrome.com
 #include "PhysicsSystem.hpp"
 #include "NeuralSystem.hpp"
 #include "AnimatorSystem.hpp"
+#include "SoundSystem.hpp"
 
 
-EntityManager::EntityManager(b2World& world, ResourceManager& resourceManager, InputHandler& inputHandler, CollisionsData& collisionsData) :
+EntityManager::EntityManager(b2World& world, ResourceManager& resourceManager, SoundManager& soundManager, InputHandler& inputHandler, CollisionsData& collisionsData) :
 	componentParser(entityManager, resourceManager, world)
 {
 	entityManager.set_event_manager(eventManager);
@@ -25,6 +26,7 @@ EntityManager::EntityManager(b2World& world, ResourceManager& resourceManager, I
 	systems["Physics"] = std::make_unique<PhysicsSystem>(entityManager, eventManager, world, collisionsData);
 	systems["AI"] = std::make_unique<NeuralSystem>(entityManager, eventManager);
 	systems["Animator"] = std::make_unique<AnimatorSystem>(entityManager, eventManager);
+	systems["Sound"] = std::make_unique<SoundSystem>(entityManager, eventManager, soundManager);
 	
 	createEntity("Resources/Files/Player.txt");
 	createEntity("Resources/Files/Mushroom.txt");

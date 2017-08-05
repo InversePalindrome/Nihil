@@ -18,10 +18,17 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 	auto* objectA = static_cast<CollisionData*>(contact->GetFixtureA()->GetBody()->GetUserData());
 	auto* objectB = static_cast<CollisionData*>(contact->GetFixtureB()->GetBody()->GetUserData());
 	
-	
 	if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Trap))
 	{
 		
+	}
+	else if(auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Enemy))
+	{
+		orderedCollision.value().first.get().entity.sync();
+		orderedCollision.value().second.get().entity.sync();
+
+     	this->events.broadcast(Knockback{ orderedCollision.value().second.get().entity, orderedCollision.value().first.get().entity });
+		this->events.broadcast(ChangeState{ orderedCollision.value().second.get().entity, EntityState::Attacking });
 	}
 }
 

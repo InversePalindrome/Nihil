@@ -33,7 +33,7 @@ ResourceManager::ResourceManager(const std::string& resourcesFilePath)
 
 	resourceFactory.emplace("Sound", [this]
 	(std::size_t ID, const std::string& resourceFilePath)
-	{ sounds.acquire(static_cast<SoundsID>(ID), thor::Resources::fromFile<sf::SoundBuffer>(resourceFilePath)); });
+	{ sounds.acquire(static_cast<SoundBuffersID>(ID), thor::Resources::fromFile<sf::SoundBuffer>(resourceFilePath)); });
 
 	loadResources(resourcesFilePath);
 }
@@ -67,7 +67,7 @@ sf::Font& ResourceManager::getFont(FontsID fontID)
 	return this->fonts[fontID];
 }
 
-sf::SoundBuffer& ResourceManager::getSound(SoundsID soundID)
+sf::SoundBuffer& ResourceManager::getSound(SoundBuffersID soundBuffersID)
 {
-	return this->sounds[soundID];
+	return this->sounds[soundBuffersID];
 }

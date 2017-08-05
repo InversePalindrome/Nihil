@@ -23,14 +23,14 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, const
 	bodyDefinition.position = initialPosition;
 	bodyDefinition.fixedRotation = true;
 	
-	b2PolygonShape shape;
-	shape.SetAsBox(bodySize.x, bodySize.y);
+	b2PolygonShape fixtureShape;
+	fixtureShape.SetAsBox(bodySize.x, bodySize.y);
 	
  	b2FixtureDef fixture;
-	fixture.shape = &shape;
+	fixture.shape = &fixtureShape;
 	fixture.density = 1.f;
 	fixture.friction = 0.3f;
-	
+
 	body = world.CreateBody(&bodyDefinition);
 	body->CreateFixture(&fixture);
 }

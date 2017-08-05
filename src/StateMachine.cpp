@@ -77,6 +77,8 @@ void StateMachine::pushState(StateID stateID)
 
 void StateMachine::popState()
 {
+	this->stateData.soundManager.stopAllMusic();
+	this->stateData.soundManager.stopAllSounds();
 	this->stateData.guiManager.hideAllWidgets();
 
 	this->stateActions.push_back([this] { this->states.pop_back(); });
