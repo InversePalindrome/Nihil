@@ -94,6 +94,7 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 		std::istringstream iStream(line);
 
 		std::size_t textureID = 0u, left = 0u, top = 0u, width = 0u, height = 0u;
+
 		float scaleX = 0.f, scaleY = 0.f;
 		
 		iStream >> textureID >> left >> top >> width >> height >> scaleX >> scaleY;
@@ -102,6 +103,28 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 			sf::IntRect(left, top, width, height), sf::Vector2f(scaleX, scaleY));
 	};
 	
+	componentParsers["Health"] = [this](auto& entity, const auto& line)
+	{
+		std::istringstream iStream(line);
+
+		std::size_t hitpoints = 0u;
+
+		iStream >> hitpoints;
+
+		entity.add_component<HealthComponent>(hitpoints);
+	};
+
+	componentParsers["Attack"] = [this](auto& entity, const auto& line)
+	{
+		std::istringstream iStream(line);
+
+		std::size_t damagePoints = 0u;
+
+		iStream >> damagePoints;
+
+		entity.add_component<AttackComponent>(damagePoints);
+	};
+
 	componentParsers["Animation"] = [this](auto& entity, const auto& line)
 	{
 		std::istringstream iStream(line);

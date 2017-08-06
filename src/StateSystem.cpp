@@ -8,6 +8,7 @@ InversePalindrome.com
 #include "StateSystem.hpp"
 
 
+
 StateSystem::StateSystem(Entities& entities, Events& events) :
 	System(entities, events)
 {

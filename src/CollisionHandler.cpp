@@ -27,7 +27,7 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 		orderedCollision.value().first.get().entity.sync();
 		orderedCollision.value().second.get().entity.sync();
 
-     	this->events.broadcast(Knockback{ orderedCollision.value().second.get().entity, orderedCollision.value().first.get().entity });
+     	this->events.broadcast(CombatOcurred{ orderedCollision.value().second.get().entity, orderedCollision.value().first.get().entity });
 		this->events.broadcast(ChangeState{ orderedCollision.value().second.get().entity, EntityState::Attacking });
 	}
 }

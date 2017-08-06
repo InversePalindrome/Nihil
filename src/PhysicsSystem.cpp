@@ -18,7 +18,7 @@ PhysicsSystem::PhysicsSystem(Entities& entities, Events& events, b2World& world,
 	events.subscribe<entityplus::component_added<Entity, PhysicsComponent>>([this](const auto& event) { addCollisionData(event.entity, event.component); });
 	events.subscribe<DirectionChanged>([this](const auto& event) { moveEntity(event.entity, event.direction); });
 	events.subscribe<Jumped>([this](const auto& event) { makeJump(event.entity); });
-	events.subscribe<Knockback>([this](const auto& event) { applyKnockback(event.attacker, event.victim); });
+	events.subscribe<CombatOcurred>([this](const auto& event) { applyKnockback(event.attacker, event.victim); });
 }
 
 void PhysicsSystem::update(float deltaTime)
