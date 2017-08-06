@@ -8,7 +8,7 @@ InversePalindrome.com
 #pragma once
 
 
-enum class EntityState { Idle, Walking, Jumping, Attacking };
+enum class EntityState { Idle, Walking, Jumping, Attacking, Dead };
 
 class StateComponent
 {
