@@ -51,6 +51,9 @@ void MenuState::update(float deltaTime)
 
 void MenuState::draw()
 {
+	this->playButton->Show(true);
+	this->settingsButton->Show(true);
+	this->charactersButton->Show(true);
 }
 
 void MenuState::transitionToPlay()
@@ -60,10 +63,10 @@ void MenuState::transitionToPlay()
 
 void MenuState::transitionToSettings()
 {
-	this->stateMachine.changeState(StateID::Settings);
+	this->stateMachine.pushState(StateID::Settings);
 }
 
 void MenuState::transitionToCharacters()
 {
-	this->stateMachine.changeState(StateID::Characters);
+	this->stateMachine.pushState(StateID::Characters);
 }

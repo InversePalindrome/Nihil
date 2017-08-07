@@ -100,5 +100,6 @@ void StartState::draw()
 
 void StartState::transitionToMenu()
 {
+	this->stateData.soundManager.stopAllMusic();
 	this->stateMachine.changeState(StateID::Menu);
 }

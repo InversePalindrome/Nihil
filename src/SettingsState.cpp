@@ -39,5 +39,5 @@ void SettingsState::draw()
 
 void SettingsState::transitionToMenu()
 {
-	this->stateMachine.changeState(StateID::Menu);
+	this->stateMachine.popState();
 }

@@ -39,5 +39,5 @@ void CharactersState::draw()
 
 void CharactersState::transitionToMenu()
 {
-	this->stateMachine.changeState(StateID::Menu);
+	this->stateMachine.popState();
 }

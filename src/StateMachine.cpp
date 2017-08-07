@@ -66,19 +66,21 @@ void StateMachine::draw()
 
 void StateMachine::changeState(StateID stateID)
 {
+	this->stateData.soundManager.stopAllMusic();
+
 	this->popState();
 	this->pushState(stateID);
 }
 
 void StateMachine::pushState(StateID stateID)
 {
+	this->stateData.guiManager.hideAllWidgets();
+
 	this->stateActions.push_back([this, stateID] { this->states.push_back(this->getState(stateID)); });
 }
 
 void StateMachine::popState()
 {
-	this->stateData.soundManager.stopAllMusic();
-	this->stateData.soundManager.stopAllSounds();
 	this->stateData.guiManager.hideAllWidgets();
 
 	this->stateActions.push_back([this] { this->states.pop_back(); });
@@ -87,6 +89,7 @@ void StateMachine::popState()
 void StateMachine::clearStates()
 {
 	this->stateData.guiManager.hideAllWidgets();
+	this->stateData.soundManager.stopAllMusic();
 
 	this->stateActions.push_back([this] { this->states.clear(); });
 }
