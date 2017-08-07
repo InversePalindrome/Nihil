@@ -9,6 +9,8 @@ InversePalindrome.com
 
 #include "State.hpp"
 
+#include <SFGUI/Button.hpp>
+
 
 class PauseState : public State
 {
@@ -19,6 +21,14 @@ public:
 	virtual void update(float deltaTime) override;
 	virtual void draw() override;
 
-private:
 	virtual bool isTransparent() const override;
+
+private:
+	sfg::Button::Ptr resumeButton;
+	sfg::Button::Ptr restartButton;
+	sfg::Button::Ptr settingsButton;
+	sfg::Button::Ptr quitButton;
+	
+	void transitionToMenu();
+	void transitionToSettings();
 };
