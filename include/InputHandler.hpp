@@ -13,8 +13,6 @@ InversePalindrome.com
 #include <SFML/Window/Window.hpp>
 
 
-enum class ActionID { Left, Right, Jump, ESC, Retry };
-
 class InputHandler
 {
 public:
@@ -24,12 +22,12 @@ public:
 
 	void pushEvent(const sf::Event& event);
 
-	bool isActive(ActionID actionID) const;
+	bool isActive(const std::string& actionID) const;
 
-	void changeKey(ActionID actionID, thor::Action action);
+	void changeKey(const std::string& actionID, thor::Action action);
 
 	void clearEvents();
 
 private:
-	thor::ActionMap<ActionID> keyBindings;
+	thor::ActionMap<std::string> keyBindings;
 };

@@ -7,7 +7,7 @@ InversePalindrome.com
 
 #pragma once
 
-#include "SoundProperties.hpp"
+#include "AudioProperties.hpp"
 #include "ResourceManager.hpp"
 
 #include <SFML/Audio/Sound.hpp>
@@ -31,6 +31,8 @@ public:
 	SoundManager& operator=(const SoundManager& soundManager) = delete;
 
 	SoundID getCurrentSoundID() const;
+	const AudioProperties& getSoundProperties() const;
+	const AudioProperties& getMusicProperties() const;
 
 	void update();
 
@@ -47,10 +49,13 @@ public:
 	void setListenerPosition(const sf::Vector3f& position);
 	void setListenerDirection(const sf::Vector3f& direction);
 
-	void setVolume(float volume);
+	void setSoundVolume(float volume);
+	void setMusicVolume(float volume);
 	
 private:
-	SoundProperties soundProperties;
+	AudioProperties soundProperties;
+	AudioProperties musicProperties;
+
 	ResourceManager& resourceManager;
 
 	SoundID currentSoundID;
