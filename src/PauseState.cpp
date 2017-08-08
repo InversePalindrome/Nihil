@@ -42,7 +42,7 @@ PauseState::PauseState(StateMachine& stateMachine, StateData& stateData) :
 
 void PauseState::handleEvent(const sf::Event& event)
 {
-	if (this->stateData.inputHandler.isActive(ActionID::ESC))
+	if (this->stateData.inputHandler.isActive("Escape"))
 	{
 		this->stateMachine.popState();
 	}

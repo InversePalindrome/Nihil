@@ -10,11 +10,11 @@ InversePalindrome.com
 
 InputHandler::InputHandler()
 {
-	keyBindings[ActionID::Left] = thor::Action(sf::Keyboard::A);
-	keyBindings[ActionID::Right] = thor::Action(sf::Keyboard::D);
-	keyBindings[ActionID::Jump] = thor::Action(sf::Keyboard::Space);
-	keyBindings[ActionID::ESC] = thor::Action(sf::Keyboard::Escape, thor::Action::ReleaseOnce);
-	keyBindings[ActionID::Retry] = thor::Action(sf::Keyboard::R) && thor::Action(sf::Keyboard::LShift);
+	keyBindings["Move Left"] = thor::Action(sf::Keyboard::A);
+	keyBindings["Move Right"] = thor::Action(sf::Keyboard::D);
+	keyBindings["Jump"] = thor::Action(sf::Keyboard::Space);
+	keyBindings["Escape"] = thor::Action(sf::Keyboard::Escape, thor::Action::ReleaseOnce);
+	keyBindings["Retry"] = thor::Action(sf::Keyboard::R) && thor::Action(sf::Keyboard::LShift);
 }
 
 void InputHandler::update(sf::Window& window)
@@ -27,12 +27,12 @@ void InputHandler::pushEvent(const sf::Event& event)
 	this->keyBindings.pushEvent(event);
 }
 
-bool InputHandler::isActive(ActionID actionID) const
+bool InputHandler::isActive(const std::string& actionID) const
 {
 	return this->keyBindings.isActive(actionID);
 }
 
-void InputHandler::changeKey(ActionID actionID, thor::Action action)
+void InputHandler::changeKey(const std::string& actionID, thor::Action action)
 {
 	this->keyBindings[actionID] = action;
 }

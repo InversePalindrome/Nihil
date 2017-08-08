@@ -35,9 +35,12 @@ void AnimatorSystem::changeAnimationState(Entity entity, EntityState state)
 	{
 		auto& animation = entity.get_component<AnimationComponent>();
 
-		if (animation.getCurrentAnimation().first != state)
+		const auto& currentAnimation = animation.getCurrentAnimation();
+
+		if (currentAnimation.has_value() && animation.hasAnimation(std::make_pair(state, currentAnimation.value().second)) &&
+			currentAnimation.value().first != state)
 		{
-			animation.playAnimation(state, animation.getCurrentAnimation().second, true);
+			animation.playAnimation(state, currentAnimation.value().second, true);
 		}
 	}
 }
@@ -48,9 +51,12 @@ void AnimatorSystem::changeAnimationDirection(Entity entity, Direction direction
 	{
 		auto& animation = entity.get_component<AnimationComponent>();
 
-		if (animation.getCurrentAnimation().second != direction)
+		const auto& currentAnimation = animation.getCurrentAnimation();
+
+		if (currentAnimation.has_value() && animation.hasAnimation(std::make_pair(currentAnimation.value().first, direction)) && 
+			currentAnimation.value().second != direction)
 		{
-			animation.playAnimation(animation.getCurrentAnimation().first, direction, true);
+			animation.playAnimation(currentAnimation.value().first, direction, true);
 		}
 	}
 }

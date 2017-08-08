@@ -26,15 +26,15 @@ void ControlSystem::update(float deltaTime)
 
 void ControlSystem::reactToInput(Entity entity, float deltaTime)
 {
-	if (this->inputHandler.isActive(ActionID::Left))
+	if (this->inputHandler.isActive("Move Left"))
 	{
 		this->events.broadcast(DirectionChanged{ entity, Direction::Left });
 	}
-	else if (this->inputHandler.isActive(ActionID::Right))
+	else if (this->inputHandler.isActive("Move Right"))
 	{
 		this->events.broadcast(DirectionChanged{ entity, Direction::Right });
 	}
-	else if (this->inputHandler.isActive(ActionID::Jump) && this->timeSinceJump > this->jumpInterval)
+	else if (this->inputHandler.isActive("Jump") && this->timeSinceJump > this->jumpInterval)
 	{
 		this->events.broadcast(Jumped{ entity });
 		this->timeSinceJump = 0.f;

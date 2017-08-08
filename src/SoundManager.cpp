@@ -14,6 +14,7 @@ InversePalindrome.com
 
 SoundManager::SoundManager(ResourceManager& resourceManager) :
 	soundProperties(100.f, 1.f, 8.f, 200.f),
+	musicProperties(100.f, 1.f, 8.f, 200.f),
 	currentSoundID(0u),
 	resourceManager(resourceManager)
 {
@@ -22,6 +23,16 @@ SoundManager::SoundManager(ResourceManager& resourceManager) :
 SoundID SoundManager::getCurrentSoundID() const
 {
 	return this->currentSoundID;
+}
+
+const AudioProperties& SoundManager::getSoundProperties() const
+{
+	return this->soundProperties;
+}
+
+const AudioProperties& SoundManager::getMusicProperties() const
+{
+	return this->musicProperties;
 }
 
 void SoundManager::update()
@@ -70,7 +81,7 @@ void SoundManager::playMusic(const std::string& name, bool loop)
 		std::cerr << "Failed to open Music: " + name << std::endl;
 	}
 
-	music->setVolume(this->soundProperties.volume);
+	music->setVolume(this->musicProperties.volume);
 	music->setLoop(loop);
 
 	this->music.emplace(name, std::move(music));
@@ -114,7 +125,7 @@ void SoundManager::setListenerDirection(const sf::Vector3f& direction)
 	sf::Listener::setDirection(direction);
 }
 
-void SoundManager::setVolume(float volume)
+void SoundManager::setSoundVolume(float volume)
 {
 	this->soundProperties.volume = volume;
 
@@ -122,6 +133,12 @@ void SoundManager::setVolume(float volume)
 	{
 		sound.second->setVolume(volume);
 	}
+}
+
+void SoundManager::setMusicVolume(float volume)
+{
+	this->musicProperties.volume = volume;
+
 	for (auto& music : this->music)
 	{
 		music.second->setVolume(volume);
