@@ -19,8 +19,8 @@ InversePalindrome.com
 #include <unordered_map>
 
  
-enum class TexturesID { SplashScreen, StartBackground, Particles, Character, Mushroom, RedMonster };
-enum class ImagesID { PlayButton, SettingsButton, CharactersButton, BackButton, ResumeButton, RestartButton, QuitButton, SettingsSmall };
+enum class TexturesID { SplashScreen, StartBackground, Particles, Character, Mushroom, RedMonster, MenuBackground };
+enum class ImagesID { };
 enum class FontsID { BITWONDER };
 enum class SoundBuffersID { Jump, Footsteps };
 

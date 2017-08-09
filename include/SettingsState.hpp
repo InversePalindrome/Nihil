@@ -17,6 +17,8 @@ InversePalindrome.com
 #include <SFGUI/RadioButton.hpp>
 #include <SFGUI/RadioButtonGroup.hpp>
 
+#include <SFML/Graphics/Sprite.hpp>
+
 
 class SettingsState : public State
 {
@@ -28,6 +30,8 @@ public:
 	virtual void draw() override;
 
 private:
+	sf::Sprite background;
+
 	sfg::Button::Ptr backButton;
 	sfg::Label::Ptr soundLabel;
 	sfg::Label::Ptr musicLabel;

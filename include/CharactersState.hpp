@@ -11,6 +11,8 @@ InversePalindrome.com
 
 #include <SFGUI/Button.hpp>
 
+#include <SFML/Graphics/Sprite.hpp>
+
 
 class CharactersState : public State
 {
@@ -22,6 +24,8 @@ public:
 	virtual void draw() override;
 
 private:
+	sf::Sprite background;
+
 	sfg::Button::Ptr backButton;
 
 	void transitionToMenu();
