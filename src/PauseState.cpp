@@ -8,30 +8,24 @@ InversePalindrome.com
 #include "PauseState.hpp"
 #include "StateMachine.hpp"
 
-#include <SFGUI/Image.hpp>
-
 
 PauseState::PauseState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
-	resumeButton(sfg::Button::Create()),
-	restartButton(sfg::Button::Create()),
-	settingsButton(sfg::Button::Create()),
-	quitButton(sfg::Button::Create())
+	resumeButton(sfg::Button::Create(" Resume ")),
+	restartButton(sfg::Button::Create("Restart ")),
+	settingsButton(sfg::Button::Create("Settings")),
+	quitButton(sfg::Button::Create("\t\tQuit\t\t"))
 {
-	resumeButton->SetPosition(sf::Vector2f(900.f, 600.f));
-	resumeButton->SetImage(sfg::Image::Create(stateData.resourceManager.getImage(ImagesID::ResumeButton)));
+	resumeButton->SetPosition(sf::Vector2f(825.f, 500.f));
 	resumeButton->GetSignal(sfg::Widget::OnLeftClick).Connect([&stateMachine]() { stateMachine.popState(); });
 
-	restartButton->SetPosition(sf::Vector2f(900.f, 680.f));
-	restartButton->SetImage(sfg::Image::Create(stateData.resourceManager.getImage(ImagesID::RestartButton)));
+	restartButton->SetPosition(sf::Vector2f(825.f, 650.f));
 	restartButton->GetSignal(sfg::Widget::OnLeftClick).Connect([&stateMachine]() { stateMachine.changeState(StateID::Game); });
 
-	settingsButton->SetPosition(sf::Vector2f(900.f, 760.f));
-	settingsButton->SetImage(sfg::Image::Create(stateData.resourceManager.getImage(ImagesID::SettingsSmall)));
+	settingsButton->SetPosition(sf::Vector2f(825.f, 800.f));
 	settingsButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { transitionToSettings(); });
 
-	quitButton->SetPosition(sf::Vector2f(900.f, 840.f));
-	quitButton->SetImage(sfg::Image::Create(stateData.resourceManager.getImage(ImagesID::QuitButton)));
+	quitButton->SetPosition(sf::Vector2f(825.f, 950.f));
 	quitButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { transitionToMenu(); });
 
 	stateData.guiManager.addWidget(resumeButton);

@@ -8,12 +8,11 @@ InversePalindrome.com
 #include "SettingsState.hpp"
 #include "StateMachine.hpp"
 
-#include <SFGUI/Image.hpp>
-
 
 SettingsState::SettingsState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
-	backButton(sfg::Button::Create()),
+	background(stateData.resourceManager.getTexture(TexturesID::MenuBackground)),
+	backButton(sfg::Button::Create("BACK")),
 	soundLabel(sfg::Label::Create("Sound")),
 	musicLabel(sfg::Label::Create("Music")),
 	soundVolumeScale(sfg::Scale::Create(sfg::Scale::Orientation::VERTICAL)),
@@ -27,7 +26,8 @@ SettingsState::SettingsState(StateMachine& stateMachine, StateData& stateData) :
 	moveLeftButton(sfg::RadioButton::Create("Move Left", keyButtons)),
 	jumpButton(sfg::RadioButton::Create("Jump", keyButtons))
 {
-	backButton->SetImage(sfg::Image::Create(stateData.resourceManager.getImage(ImagesID::BackButton)));
+	background.setScale(stateData.window.getSize().x / background.getGlobalBounds().width, stateData.window.getSize().y / background.getGlobalBounds().height);
+
 	backButton->SetPosition(sf::Vector2f(12.f, 65.f));
 	backButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { transitionToMenu(); });
 
@@ -55,9 +55,6 @@ SettingsState::SettingsState(StateMachine& stateMachine, StateData& stateData) :
 	moveLeftButton->SetPosition(sf::Vector2f(1150.f, 1000.f));
 	jumpButton->SetPosition(sf::Vector2f(600.f, 1100.f));
 
-	stateData.guiManager.setProperty("*", "FontName", "Resources/Fonts/8-BIT-WONDER.ttf");
-	stateData.guiManager.setProperty("*", "Color", sf::Color(255u, 255u, 0u));
-	stateData.guiManager.setProperty("*", "FontSize", 40.f);
 	stateData.guiManager.setProperty("Scrollbar", "TroughColor", sf::Color(102u, 0u, 204u));
 	stateData.guiManager.setProperty("Scrollbar", "SliderColor", sf::Color(15u, 192u, 252u));
 	stateData.guiManager.setProperty("Scrollbar", "BorderColor", sf::Color(75u, 0u, 130u));
@@ -96,7 +93,7 @@ void SettingsState::update(float deltaTime)
 
 void SettingsState::draw()
 {
-	
+	this->stateData.window.draw(this->background);
 }
 
 void SettingsState::adjustSoundVolume()
