@@ -8,4 +8,4 @@ InversePalindrome.com
 #pragma once
 
 
-enum class ObjectType { Tile, Player, Trap, Enemy };
+enum class ObjectType { Tile, Player, Trap, Enemy, Portal };

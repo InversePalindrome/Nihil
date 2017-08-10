@@ -28,12 +28,13 @@ struct Jumped;
 struct CombatOcurred;
 struct ChangeState;
 struct StateChanged;
+struct FinishedLevel;
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, 
 	PhysicsComponent, AIComponent, HealthComponent, AttackComponent, SpriteComponent, AnimationComponent, SoundComponent>;
 using Tags = entityplus::tag_list<Controllable>;
 using Entities = entityplus::entity_manager<Components, Tags>;
-using Events = entityplus::event_manager<Components, Tags, DirectionChanged, Jumped, CombatOcurred, ChangeState, StateChanged>;
+using Events = entityplus::event_manager<Components, Tags, DirectionChanged, Jumped, CombatOcurred, ChangeState, StateChanged, FinishedLevel>;
 using Entity = Entities::entity_t;
 
 
@@ -64,4 +65,8 @@ struct StateChanged
 {
 	Entity entity; 
 	EntityState state;
+};
+
+struct FinishedLevel
+{
 };

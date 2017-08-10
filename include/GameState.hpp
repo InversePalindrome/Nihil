@@ -38,5 +38,9 @@ private:
 	EntityManager entityManager;
 	CollisionHandler collisionHandler;
 
+	std::size_t level;
+	bool isReadyToloadLevel;
+
 	void updateCamera();
+	void advanceToNextLevel();
 };

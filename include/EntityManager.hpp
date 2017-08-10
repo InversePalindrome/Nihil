@@ -32,7 +32,7 @@ class EntityManager
 public:
 	EntityManager(b2World& world, ResourceManager& resourceManager, SoundManager& soundManager, InputHandler& inputHandler, CollisionsData& collisionData);
 	EntityManager(const EntityManager& entityManager) = delete;
-	EntityManager& operator=(const EntityManager& entityManager) = delete;
+    EntityManager& operator=(const EntityManager& entityManager) = delete;
 
 	Entities& getEntities();
 	Events& getEvents();
@@ -41,6 +41,9 @@ public:
 	void draw(sf::RenderTarget& target);
 
 	void createEntity(const std::string& filePath);
+	void createEntities(const std::string& filePath);
+
+	void destroyEntities();
 
 	template<typename Component, typename Tuple>
 	Component makeComponent(Tuple& tuple);
@@ -48,6 +51,8 @@ public:
 private:
 	Entities entityManager;
 	Events eventManager;
+
+	b2World& world;
 
 	ComponentParser componentParser;
 
