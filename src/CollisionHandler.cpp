@@ -20,15 +20,19 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 	
 	if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Trap))
 	{
-		
+
 	}
-	else if(auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Enemy))
+	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Enemy))
 	{
 		orderedCollision.value().first.get().entity.sync();
 		orderedCollision.value().second.get().entity.sync();
 
-     	this->events.broadcast(CombatOcurred{ orderedCollision.value().second.get().entity, orderedCollision.value().first.get().entity });
+		this->events.broadcast(CombatOcurred{ orderedCollision.value().second.get().entity, orderedCollision.value().first.get().entity });
 		this->events.broadcast(ChangeState{ orderedCollision.value().second.get().entity, EntityState::Attacking });
+	}
+	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Portal))
+	{
+		this->events.broadcast(FinishedLevel{});
 	}
 }
 
@@ -41,12 +45,12 @@ void CollisionHandler::PreSolve(b2Contact* contact, const b2Manifold* oldManifol
 
 }
 
-void CollisionHandler::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) 
+void CollisionHandler::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)
 {
 
 }
 
-std::optional<CollisionHandler::OrderedCollision> CollisionHandler::getOrderedCollision(CollisionData* objectA, 
+std::optional<CollisionHandler::OrderedCollision> CollisionHandler::getOrderedCollision(CollisionData* objectA,
 	CollisionData* objectB, ObjectType type1, ObjectType type2)
 {
 	if (objectA->objectType == type1 && objectB->objectType == type2)

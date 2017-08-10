@@ -15,9 +15,12 @@ InversePalindrome.com
 #include "AnimatorSystem.hpp"
 #include "SoundSystem.hpp"
 
+#include <fstream>
+
 
 EntityManager::EntityManager(b2World& world, ResourceManager& resourceManager, SoundManager& soundManager, InputHandler& inputHandler, CollisionsData& collisionsData) :
-	componentParser(entityManager, resourceManager, world)
+	componentParser(entityManager, resourceManager, world),
+	world(world)
 {
 	entityManager.set_event_manager(eventManager);
 	
@@ -29,9 +32,6 @@ EntityManager::EntityManager(b2World& world, ResourceManager& resourceManager, S
 	systems["Combat"] = std::make_unique<CombatSystem>(entityManager, eventManager);
 	systems["Animator"] = std::make_unique<AnimatorSystem>(entityManager, eventManager);
 	systems["Sound"] = std::make_unique<SoundSystem>(entityManager, eventManager, soundManager);
-	
-	createEntity("Resources/Files/Player.txt");
-	createEntity("Resources/Files/Mushroom.txt");
 }
 
 Entities& EntityManager::getEntities()
@@ -60,4 +60,37 @@ void EntityManager::draw(sf::RenderTarget& target)
 void EntityManager::createEntity(const std::string& filePath)
 {
 	this->componentParser.parseComponents(filePath);
+}
+
+void EntityManager::createEntities(const std::string& filePath)
+{
+	std::ifstream inFile(filePath);
+	std::string line;
+
+	while (std::getline(inFile, line))
+	{
+		this->componentParser.parseComponents(line);
+	}
+}
+
+void EntityManager::destroyEntities()
+{
+	auto& entities = this->entityManager.get_entities();
+
+	for (auto* body = this->world.GetBodyList(); body; )
+	{
+		if (body)
+		{
+			auto* nextBody = body->GetNext();
+
+			this->world.DestroyBody(body);
+
+			body = nextBody;
+		}
+	}
+
+	for (auto& entity : entities)
+	{
+		entity.destroy();
+	}
 }

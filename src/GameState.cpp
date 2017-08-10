@@ -12,14 +12,20 @@ InversePalindrome.com
 GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
 	world(b2Vec2(0.f, -9.8f)),
-	map("Resources/Files/Level1.tmx", sf::Vector2f(8172.f, 1536.f), world, collisionsData),
+	map(sf::Vector2f(8172.f, 1536.f), world, stateData.resourceManager, collisionsData),
 	camera(stateData.window.getDefaultView()),
 	entityManager(world, stateData.resourceManager, stateData.soundManager, stateData.inputHandler, collisionsData),
-	collisionHandler(entityManager.getEvents())
+	collisionHandler(entityManager.getEvents()),
+	level(0u),
+	isReadyToloadLevel(false)
 {
 	world.SetContactListener(&collisionHandler);
 
+	entityManager.getEvents().subscribe<FinishedLevel>([this](const auto& event) { isReadyToloadLevel = true; });
+
 	stateData.window.setView(this->camera);
+
+	advanceToNextLevel();
 }
 
 void GameState::handleEvent(const sf::Event& event)
@@ -41,6 +47,11 @@ void GameState::update(float deltaTime)
 	const std::size_t positionIterations = 2u;
 
 	this->world.Step(timeStep, velocityIterations, positionIterations);
+
+	if (isReadyToloadLevel)
+	{
+		this->advanceToNextLevel();
+	}
 	
 	this->entityManager.update(deltaTime);
 	this->updateCamera();
@@ -62,4 +73,19 @@ void GameState::updateCamera()
 		this->camera.setCenter(playerPosition.x, this->camera.getCenter().y);
 		this->stateData.window.setView(this->camera);
 	}
+}
+
+void GameState::advanceToNextLevel()
+{
+	++this->level;
+
+	this->entityManager.destroyEntities();
+
+	this->map.load("Resources/Files/Level" + std::to_string(this->level) + ".tmx");
+	this->entityManager.createEntities("Resources/Files/EntitiesLevel" + std::to_string(this->level) + ".txt");
+
+	this->stateData.window.setView(this->stateData.window.getDefaultView());
+	this->stateData.soundManager.stopAllSounds();
+
+	this->isReadyToloadLevel = false;
 }
