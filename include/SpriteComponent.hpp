@@ -14,7 +14,7 @@ InversePalindrome.com
 #include <SFML/Graphics/RenderStates.hpp>
 
 
-class SpriteComponent 
+class SpriteComponent : public sf::Drawable
 {
 public:
 	SpriteComponent(sf::Texture& texture);
@@ -22,11 +22,12 @@ public:
 	SpriteComponent(sf::Texture& texture, const sf::IntRect& textureRect, const sf::Vector2f& scale);
 
 	sf::Sprite& getSprite();
-
-	void draw(sf::RenderTarget& target);
+	const sf::Transform& getTransform() const;
 
 	void setPosition(const sf::Vector2f& position);
 
 private:
 	sf::Sprite sprite;
+
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

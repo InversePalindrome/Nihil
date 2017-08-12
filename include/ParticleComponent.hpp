@@ -15,19 +15,19 @@ InversePalindrome.com
 #include <Thor/Particles/Emitters.hpp>
 #include <Thor/Particles/ParticleSystem.hpp>
 
+#include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/RenderStates.hpp>
 
 #include <unordered_map>
 
 
-class ParticleComponent
+class ParticleComponent : public sf::Drawable
 {
 public:
 	ParticleComponent(const std::string& filePath, ResourceManager& resourceManager);
 
 	void update(float deltaTime);
-
-	void draw(sf::RenderTarget& target);
     
 	ParticleData getParticleData(EntityState state) const;
 	sf::Vector2f getEmissionOffset() const;
@@ -48,4 +48,6 @@ private:
 	sf::Vector2f emissionOffset;
 
 	std::unordered_map<EntityState, ParticleData> particleEffects;
+
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

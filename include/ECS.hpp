@@ -17,6 +17,8 @@ InversePalindrome.com
 #include "AnimationComponent.hpp"
 #include "SoundComponent.hpp"
 #include "ParticleComponent.hpp"
+#include "ParentComponent.hpp"
+#include "ChildComponent.hpp"
 #include "Direction.hpp"
 
 #include <entityplus/entity.h>
@@ -33,7 +35,7 @@ struct FinishedLevel;
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, 
 	PhysicsComponent, AIComponent, HealthComponent, AttackComponent, SpriteComponent, AnimationComponent, SoundComponent,
-    ParticleComponent>;
+    ParticleComponent, ParentComponent, ChildComponent>;
 using Tags = entityplus::tag_list<Controllable>;
 using Entities = entityplus::entity_manager<Components, Tags>;
 using Events = entityplus::event_manager<Components, Tags, DirectionChanged, Jumped, CombatOcurred, ChangeState, StateChanged, FinishedLevel>;
