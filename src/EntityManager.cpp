@@ -14,6 +14,7 @@ InversePalindrome.com
 #include "CombatSystem.hpp"
 #include "AnimatorSystem.hpp"
 #include "SoundSystem.hpp"
+#include "EffectsSystem.hpp"
 
 #include <fstream>
 
@@ -32,6 +33,7 @@ EntityManager::EntityManager(b2World& world, ResourceManager& resourceManager, S
 	systems["Combat"] = std::make_unique<CombatSystem>(entityManager, eventManager);
 	systems["Animator"] = std::make_unique<AnimatorSystem>(entityManager, eventManager);
 	systems["Sound"] = std::make_unique<SoundSystem>(entityManager, eventManager, soundManager);
+	systems["Effects"] = std::make_unique<EffectsSystem>(entityManager, eventManager);
 }
 
 Entities& EntityManager::getEntities()

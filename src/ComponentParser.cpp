@@ -16,7 +16,6 @@ InversePalindrome.com
 
 ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceManager, b2World& world) :
 	entities(entities),
-	resourceManager(resourceManager),
 	world(world)
 {
 	componentParsers["Controllable"] = [this](auto& entity, const auto& line)
@@ -139,6 +138,17 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 	componentParsers["Sound"] = [this](auto& entity, const auto& line)
 	{
 		entity.add_component<SoundComponent>();
+	};
+
+	componentParsers["Particle"] = [this, &resourceManager](auto& entity, const auto& line)
+	{
+		std::istringstream iStream(line);
+
+		std::string particlesFile;
+
+		iStream >> particlesFile;
+		
+		entity.add_component<ParticleComponent>(particlesFile, resourceManager);
 	};
 }
 

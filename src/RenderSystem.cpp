@@ -27,4 +27,5 @@ void RenderSystem::update(float deltaTime)
 void RenderSystem::draw(sf::RenderTarget& target)
 {
 	entities.for_each<SpriteComponent>([&target](auto entity, auto& sprite) { sprite.draw(target); });
+	entities.for_each<ParticleComponent>([&target](auto entity, auto& particle) { particle.draw(target); });
 }
