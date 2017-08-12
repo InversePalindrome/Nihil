@@ -26,7 +26,6 @@ public:
 
 private:
 	Entities& entities;
-	ResourceManager& resourceManager;
 	b2World& world;
 
 	std::unordered_map<std::string, std::function<void(Entity&, const std::string&)>> componentParsers;

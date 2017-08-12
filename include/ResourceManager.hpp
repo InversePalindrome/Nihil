@@ -19,7 +19,11 @@ InversePalindrome.com
 #include <unordered_map>
 
  
-enum class TexturesID { SplashScreen, StartBackground, Particles, Character, Mushroom, RedMonster, MenuBackground };
+enum class TexturesID
+{
+	SplashScreen, StartBackground, Particles, Character, Mushroom, RedMonster, MenuBackground,                 
+    Level1, Level2, Level3, Level4, Level5, Level6
+};
 enum class ImagesID { };
 enum class FontsID { BITWONDER };
 enum class SoundBuffersID { Jump, Footsteps };
@@ -31,6 +35,7 @@ public:
 	ResourceManager(const std::string& resourcesFilePath);
 	ResourceManager(const ResourceManager& resourceManager) = delete;
 	ResourceManager& operator=(const ResourceManager& resourceManager) = delete;
+
 
 	void loadResources(const std::string& resourcesFilePath);
 
