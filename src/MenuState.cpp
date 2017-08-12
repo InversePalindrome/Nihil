@@ -29,10 +29,10 @@ MenuState::MenuState(StateMachine& stateMachine, StateData& stateData) :
 	background.setScale(stateData.window.getSize().x / background.getGlobalBounds().width, stateData.window.getSize().y / background.getGlobalBounds().height);
 
 	particleSystem.setTexture(stateData.resourceManager.getTexture(TexturesID::Particles));
-	particleSystem.addTextureRect(sf::IntRect(579u, 0u, 400u, 400u));
-	particleSystem.addTextureRect(sf::IntRect(400u, 575u, 400u, 400u));
-	particleSystem.addTextureRect(sf::IntRect(979u, 256u, 128u, 128u));
-	particleSystem.addTextureRect(sf::IntRect(800u, 783u, 128u, 128u));
+	particleSystem.addTextureRect(sf::IntRect(0u, 0u, 400u, 400u));
+	particleSystem.addTextureRect(sf::IntRect(400u, 0u, 400u, 400u));
+	particleSystem.addTextureRect(sf::IntRect(0u, 400u, 400u, 400u));
+	particleSystem.addTextureRect(sf::IntRect(656u, 528u, 128u, 128u));
 
 	thor::ColorGradient colors;
 	colors[0.f] = sf::Color(44, 221, 55);

@@ -71,11 +71,6 @@ void ParticleComponent::update(float deltaTime)
 	this->particleSystem.update(sf::seconds(deltaTime));
 }
 
-void ParticleComponent::draw(sf::RenderTarget& target)
-{
-	target.draw(this->particleSystem);
-}
-
 ParticleData ParticleComponent::getParticleData(EntityState state) const
 {
 	return this->particleEffects.at(state);
@@ -112,4 +107,9 @@ void ParticleComponent::clearParticles()
 bool ParticleComponent::hasParticleData(EntityState state) const
 {
 	return this->particleEffects.count(state);
+}
+
+void ParticleComponent::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	target.draw(this->particleSystem);
 }

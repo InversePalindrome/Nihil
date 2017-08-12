@@ -31,12 +31,17 @@ sf::Sprite& SpriteComponent::getSprite()
 	return this->sprite;
 }
 
+const sf::Transform& SpriteComponent::getTransform() const
+{
+	return this->sprite.getTransform();
+}
+
 void SpriteComponent::setPosition(const sf::Vector2f& position)
 {
 	this->sprite.setPosition(position);
 }
 
-void SpriteComponent::draw(sf::RenderTarget& target) 
+void SpriteComponent::draw(sf::RenderTarget& target, sf::RenderStates states) const 
 {
-	target.draw(this->sprite);
+	target.draw(this->sprite, states);
 }

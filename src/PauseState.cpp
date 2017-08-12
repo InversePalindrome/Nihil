@@ -16,16 +16,16 @@ PauseState::PauseState(StateMachine& stateMachine, StateData& stateData) :
 	settingsButton(sfg::Button::Create("Settings")),
 	quitButton(sfg::Button::Create("\t\tQuit\t\t"))
 {
-	resumeButton->SetPosition(sf::Vector2f(825.f, 500.f));
+	resumeButton->SetPosition(sf::Vector2f(840.f, 500.f));
 	resumeButton->GetSignal(sfg::Widget::OnLeftClick).Connect([&stateMachine]() { stateMachine.popState(); });
 
-	restartButton->SetPosition(sf::Vector2f(825.f, 650.f));
+	restartButton->SetPosition(sf::Vector2f(840.f, 650.f));
 	restartButton->GetSignal(sfg::Widget::OnLeftClick).Connect([&stateMachine]() { stateMachine.changeState(StateID::Game); });
 
-	settingsButton->SetPosition(sf::Vector2f(825.f, 800.f));
+	settingsButton->SetPosition(sf::Vector2f(840.f, 800.f));
 	settingsButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { transitionToSettings(); });
 
-	quitButton->SetPosition(sf::Vector2f(825.f, 950.f));
+	quitButton->SetPosition(sf::Vector2f(840.f, 950.f));
 	quitButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { transitionToMenu(); });
 
 	stateData.guiManager.addWidget(resumeButton);

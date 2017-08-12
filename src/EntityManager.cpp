@@ -56,7 +56,7 @@ void EntityManager::update(float deltaTime)
 
 void EntityManager::draw(sf::RenderTarget& target)
 {
-	dynamic_cast<RenderSystem*>(this->systems.at("Render").get())->draw(target);
+	target.draw(*dynamic_cast<RenderSystem*>(this->systems.at("Render").get()));
 }
 
 void EntityManager::createEntity(const std::string& filePath)

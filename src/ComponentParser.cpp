@@ -150,6 +150,28 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 		
 		entity.add_component<ParticleComponent>(particlesFile, resourceManager);
 	};
+	
+	componentParsers["Parent"] = [this](auto& entity, const auto& line)
+	{
+		std::istringstream iStream(line);
+
+		std::size_t ID = 0u;
+
+		iStream >> ID;
+
+		entity.add_component<ParentComponent>(ID);
+	};
+
+	componentParsers["Child"] = [this](auto& entity, const auto& line)
+	{
+		std::istringstream iStream(line);
+
+		std::size_t parentID = 0u;
+
+		iStream >> parentID;
+
+		entity.add_component<ChildComponent>(parentID);
+	};
 }
 
 void ComponentParser::parseComponents(const std::string& filePath)
