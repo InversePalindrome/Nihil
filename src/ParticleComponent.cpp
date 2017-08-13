@@ -111,5 +111,5 @@ bool ParticleComponent::hasParticleData(EntityState state) const
 
 void ParticleComponent::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(this->particleSystem);
+	target.draw(this->particleSystem, states);
 }

@@ -10,7 +10,6 @@ InversePalindrome.com
 #include <boost/range/algorithm_ext/erase.hpp>
 #include <boost/algorithm/string/classification.hpp>
 
-#include <sstream>
 #include <fstream>
 
 
@@ -18,24 +17,19 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 	entities(entities),
 	world(world)
 {
-	componentParsers["Controllable"] = [this](auto& entity, const auto& line)
+	componentParsers["Controllable"] = [this](auto& entity, auto& line)
 	{
 		entity.set_tag<Controllable>(true);
 	};
 	
-	componentParsers["Position1"] = [this](auto& entity, const auto& line)
+	componentParsers["Position1"] = [this](auto& entity, auto& line)
 	{
 		entity.add_component<PositionComponent>();
 	};
 
-	componentParsers["Position2"] = [this](auto& entity, const auto& line) 
+	componentParsers["Position2"] = [this](auto& entity, auto& line) 
 	{
-		std::istringstream iStream(line);
-		float xPosition = 0.f, yPosition = 0.f;
-
-		iStream >> xPosition >> yPosition;
-
-		entity.add_component<PositionComponent>(sf::Vector2f(xPosition, yPosition));
+		entity.add_component<PositionComponent>(std::make_from_tuple<PositionComponent>(this->parse<float, float>(line)));
 	};
 
 	componentParsers["State"] = [this](auto& entity, const auto& line)
@@ -43,134 +37,77 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 		entity.add_component<StateComponent>();
 	};
 
-	componentParsers["Physics"] = [this, &world](auto& entity, const auto& line)
+	componentParsers["Physics"] = [this, &world](auto& entity, auto& line)
 	{
-		std::stringstream iStream(line);
-		
-		float sizeX = 0.f, sizeY = 0.f, positionX = 0.f, positionY = 0.f, maxVelocity = 0.f, accelerationRate = 0.f;
-		std::size_t objectType = 0u;
+		auto& params = this->parse<float, float, float, float, float, float, std::size_t>(line);
 
-		iStream >> sizeX >> sizeY >> positionX >> positionY >> maxVelocity >> accelerationRate >> objectType;
-
-		entity.add_component<PhysicsComponent>(world, b2Vec2(sizeX, sizeY), b2Vec2(positionX, positionY), maxVelocity, accelerationRate, static_cast<ObjectType>(objectType));
+		entity.add_component<PhysicsComponent>(world, b2Vec2(std::get<0>(params), std::get<1>(params)), b2Vec2(std::get<2>(params), std::get<3>(params)),
+			std::get<4>(params), std::get<5>(params), static_cast<ObjectType>(std::get<6>(params)));
 	};
 
-	componentParsers["AI"] = [this](auto& entity, const auto& line)
+	componentParsers["AI"] = [this](auto& entity, auto& line)
 	{
-		std::stringstream iStream(line);
-
-		float visionRange = 0.f, attackTime = 0.f, pathPointA = 0.f, pathPointB = 0.f;
-
-		iStream >> visionRange >> attackTime >> pathPointA >> pathPointB;
-
-		entity.add_component<AIComponent>(visionRange, attackTime, std::make_pair(pathPointA, pathPointB));
+		entity.add_component<AIComponent>(std::make_from_tuple<AIComponent>(this->parse<float, float, float, float>(line)));
 	};
 
-	componentParsers["Sprite1"] = [this, &resourceManager](auto& entity, const auto& line)
+	componentParsers["Sprite1"] = [this, &resourceManager](auto& entity, auto& line)
 	{
-		std::istringstream iStream(line);
+		auto& params = this->parse<std::size_t>(line);
 
-		std::size_t textureID = 0u;
-
-		iStream >> textureID;
-
-		entity.add_component<SpriteComponent>(resourceManager.getTexture(static_cast<TexturesID>(textureID)));
+		entity.add_component<SpriteComponent>(resourceManager.getTexture(static_cast<TexturesID>(std::get<0>(params))));
 	};
 
-	componentParsers["Sprite2"] = [this, &resourceManager](auto& entity, const auto& line)
+	componentParsers["Sprite2"] = [this, &resourceManager](auto& entity, auto& line)
 	{
-		std::istringstream iStream(line);
+		auto& params = this->parse<std::size_t, std::size_t, std::size_t, std::size_t, std::size_t>(line);
 
-		std::size_t textureID = 0u, left = 0u, top = 0u, width = 0u, height = 0u;
-
-		iStream >> textureID >> left >> top >> width >> height;
-
-		entity.add_component<SpriteComponent>(resourceManager.getTexture(static_cast<TexturesID>(textureID)), sf::IntRect(left, top, width, height));
+		entity.add_component<SpriteComponent>(resourceManager.getTexture(static_cast<TexturesID>(std::get<0>(params))),
+			sf::IntRect(std::get<1>(params), std::get<2>(params), std::get<3>(params), std::get<4>(params)));
 	};
 		
-	componentParsers["Sprite3"] = [this, &resourceManager](auto& entity, const auto& line)
+	componentParsers["Sprite3"] = [this, &resourceManager](auto& entity, auto& line)
 	{
-		std::istringstream iStream(line);
-
-		std::size_t textureID = 0u, left = 0u, top = 0u, width = 0u, height = 0u;
-
-		float scaleX = 0.f, scaleY = 0.f;
+		auto& params = this->parse<std::size_t, std::size_t, std::size_t, std::size_t, std::size_t, float, float>(line);
 		
-		iStream >> textureID >> left >> top >> width >> height >> scaleX >> scaleY;
-		
-		entity.add_component<SpriteComponent>(resourceManager.getTexture(static_cast<TexturesID>(textureID)),
-			sf::IntRect(left, top, width, height), sf::Vector2f(scaleX, scaleY));
+		entity.add_component<SpriteComponent>(resourceManager.getTexture(static_cast<TexturesID>(std::get<0>(params))),
+			sf::IntRect(std::get<1>(params), std::get<2>(params), std::get<3>(params), std::get<4>(params)), sf::Vector2f(std::get<5>(params), std::get<6>(params)));
 	};
 	
-	componentParsers["Health"] = [this](auto& entity, const auto& line)
+	componentParsers["Health"] = [this](auto& entity, auto& line)
 	{
-		std::istringstream iStream(line);
-
-		std::size_t hitpoints = 0u;
-
-		iStream >> hitpoints;
-
-		entity.add_component<HealthComponent>(hitpoints);
+		entity.add_component<HealthComponent>(std::make_from_tuple<HealthComponent>(this->parse<std::size_t>(line)));
 	};
 
-	componentParsers["Attack"] = [this](auto& entity, const auto& line)
+	componentParsers["Attack"] = [this](auto& entity, auto& line)
 	{
-		std::istringstream iStream(line);
-
-		std::size_t damagePoints = 0u;
-
-		iStream >> damagePoints;
-
-		entity.add_component<AttackComponent>(damagePoints);
+		entity.add_component<AttackComponent>(std::make_from_tuple<AttackComponent>(this->parse<std::size_t>(line)));
 	};
 
-	componentParsers["Animation"] = [this](auto& entity, const auto& line)
+	componentParsers["Animation"] = [this](auto& entity, auto& line)
 	{
-		std::istringstream iStream(line);
-
-		std::string animationFile;
-
-		iStream >> animationFile;
-
-		entity.add_component<AnimationComponent>(animationFile);
+		entity.add_component<AnimationComponent>(std::make_from_tuple<AnimationComponent>(this->parse<std::string>(line)));
 	};
 
-	componentParsers["Sound"] = [this](auto& entity, const auto& line)
+	componentParsers["Sound"] = [this](auto& entity, auto& line)
 	{
 		entity.add_component<SoundComponent>();
 	};
 
-	componentParsers["Particle"] = [this, &resourceManager](auto& entity, const auto& line)
+	componentParsers["Particle"] = [this, &resourceManager](auto& entity, auto& line)
 	{
-		std::istringstream iStream(line);
-
-		std::string particlesFile;
-
-		iStream >> particlesFile;
+		auto& params = this->parse<std::string>(line);
 		
-		entity.add_component<ParticleComponent>(particlesFile, resourceManager);
+		entity.add_component<ParticleComponent>(std::get<0>(params), resourceManager);
 	};
 	
-	componentParsers["Parent"] = [this](auto& entity, const auto& line)
+	componentParsers["Parent"] = [this](auto& entity, auto& line)
 	{
-		std::istringstream iStream(line);
-
-		std::size_t ID = 0u;
-
-		iStream >> ID;
-
-		entity.add_component<ParentComponent>(ID);
+		entity.add_component<ParentComponent>(std::make_from_tuple<ParentComponent>(this->parse<std::size_t>(line)));
 	};
 
-	componentParsers["Child"] = [this](auto& entity, const auto& line)
+	componentParsers["Child"] = [this](auto& entity, auto& line)
 	{
-		std::istringstream iStream(line);
-
-		std::size_t parentID = 0u;
-
-		iStream >> parentID;
-
-		entity.add_component<ChildComponent>(parentID);
+		entity.add_component<ChildComponent>(std::make_from_tuple<ChildComponent>(this->parse<std::size_t>(line)));
 	};
 }
 

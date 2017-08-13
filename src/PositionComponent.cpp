@@ -9,11 +9,11 @@ InversePalindrome.com
 
 
 PositionComponent::PositionComponent() :
-	PositionComponent(sf::Vector2f(0.f, 0.f))
+	PositionComponent(0.f, 0.f)
 {
 }
 
-PositionComponent::PositionComponent(const sf::Vector2f& position) :
+PositionComponent::PositionComponent(float xPosition, float yPosition) :
 	position(position)
 {
 }

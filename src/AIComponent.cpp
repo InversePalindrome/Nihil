@@ -9,9 +9,9 @@ InversePalindrome.com
 #include "AIComponent.hpp"
 
 
-AIComponent::AIComponent(float visionRange, float attackTime, const Path& path) :
+AIComponent::AIComponent(float visionRange, float attackTime, float initialX, float finalX) :
 	visionRange(visionRange),
-	path(path)
+	path(initialX, finalX)
 {
 }
 
