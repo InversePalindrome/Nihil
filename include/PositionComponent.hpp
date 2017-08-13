@@ -14,7 +14,7 @@ class PositionComponent
 {
 public:
 	PositionComponent();
-	PositionComponent(const sf::Vector2f& position);
+	PositionComponent(float xPosition, float yPosition);
 
 	sf::Vector2f getPosition() const;
 

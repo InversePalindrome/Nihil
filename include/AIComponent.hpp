@@ -17,7 +17,7 @@ class AIComponent
 	using Path = std::pair<float, float>;
 
 public:
-	AIComponent(float visionRange, float attackTime, const Path& path);
+	AIComponent(float visionRange, float attackTime, float initialX, float finalX);
 
 	float getVisionRange() const;
 	Path getPath() const;
