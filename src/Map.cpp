@@ -15,12 +15,16 @@ InversePalindrome.com
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
 
-Map::Map(const sf::Vector2f& chunkSize, b2World& world, ResourceManager& resourceManager, CollisionsData& collisionsData) :
+Map::Map(const sf::Vector2f& chunkSize, b2World& world, EntityManager& entityManager, ResourceManager& resourceManager, CollisionsData& collisionsData) :
 	chunkSize(chunkSize),
 	world(world),
+	entityManager(entityManager),
 	resourceManager(resourceManager),
 	collisionsData(collisionsData)
 {
+	staticObjects["Trap"] = ObjectType::Trap;
+	staticObjects["Portal"] = ObjectType::Portal;
+	staticObjects["Border"] = ObjectType::Border;
 }
 
 void Map::load(const std::string& filePath)
@@ -83,23 +87,31 @@ void Map::addTileCollisions()
 			for (const auto& object : objects)
 			{
 				const auto& AABB = object.getAABB();
-				
-				b2BodyDef bodyDefinition;
-				bodyDefinition.type = b2_staticBody;
-				bodyDefinition.position.Set(UnitConverter::pixelsToMeters(AABB.left + AABB.width / 2.f), UnitConverter::pixelsToMeters(-(AABB.top + AABB.height / 2.f)));
 
-				b2PolygonShape shape;
-				shape.SetAsBox(UnitConverter::pixelsToMeters(AABB.width / 2.f), UnitConverter::pixelsToMeters(AABB.height / 2.f));
+				if(object.getName().empty() || this->staticObjects.count(object.getName()))
+				{
+					b2BodyDef bodyDefinition;
+					bodyDefinition.type = b2_staticBody;
+					bodyDefinition.position.Set(UnitConverter::pixelsToMeters(AABB.left + AABB.width / 2.f), UnitConverter::pixelsToMeters(-(AABB.top + AABB.height / 2.f)));
 
-				b2FixtureDef fixture;
-				fixture.shape = &shape;
+					b2PolygonShape shape;
+					shape.SetAsBox(UnitConverter::pixelsToMeters(AABB.width / 2.f), UnitConverter::pixelsToMeters(AABB.height / 2.f));
 
-				auto* tile = this->world.CreateBody(&bodyDefinition);
-				tile->CreateFixture(&fixture);
-				
-				this->collisionsData.push_back(CollisionData(*tile, this->findObjectType(object.getName())));
+					b2FixtureDef fixture;
+					fixture.shape = &shape;
 
-				this->collisionsData.back().body.SetUserData(&this->collisionsData.back());
+					auto* tile = this->world.CreateBody(&bodyDefinition);
+					tile->CreateFixture(&fixture);
+
+					this->collisionsData.push_back(CollisionData(*tile, this->findObjectType(object.getName())));
+
+					this->collisionsData.back().body.SetUserData(&this->collisionsData.back());
+				}
+				else
+				{
+					this->entityManager.createEntity("Resources/Files/" + object.getName() + ".txt", 
+						sf::Vector2f(AABB.left + AABB.width / 2.f, AABB.top + AABB.height / 2.f));
+				}
 			}
 		}
 	}
@@ -107,13 +119,9 @@ void Map::addTileCollisions()
 
 ObjectType Map::findObjectType(const std::string& tileName)
 {
-	if (tileName == "Trap")
+	if (this->staticObjects.count(tileName))
 	{
-		return ObjectType::Trap;
-	}
-	else if (tileName == "Portal")
-	{
-		return ObjectType::Portal;
+		return this->staticObjects[tileName];
 	}
 	else
 	{

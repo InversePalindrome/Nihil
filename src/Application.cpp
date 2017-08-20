@@ -27,7 +27,7 @@ Application::Application() :
 	resourceManager("Resources/Files/ResourcePaths.txt"),
 	soundManager(resourceManager),
 	guiManager(window),
-	stateData(resourceManager, soundManager, guiManager, inputHandler, window),
+	stateData(resourceManager, soundManager, guiManager, inputHandler, eventManager, window),
 	stateMachine(stateData)
 {
 	stateMachine.registerState<SplashState>(StateID::Splash);

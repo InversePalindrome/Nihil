@@ -13,6 +13,7 @@ SoundSystem::SoundSystem(Entities& entities, Events& events, SoundManager& sound
 	soundManager(soundManager)
 {
 	events.subscribe<StateChanged>([this](const auto& event) { changeSound(event.entity, event.state); });
+	events.subscribe<EmitSound>([this](const auto& event) { emitSound(event.entity, event.soundBuffer, event.loop); });
 }
 
 void SoundSystem::update(float deltaTime)

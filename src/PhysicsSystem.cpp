@@ -15,7 +15,7 @@ PhysicsSystem::PhysicsSystem(Entities& entities, Events& events, b2World& world,
 	world(world),
 	collisionsData(collisionsData)
 {
-	events.subscribe<entityplus::component_added<Entity, PhysicsComponent>>([this](const auto& event) { addCollisionData(event.entity, event.component); });
+	events.subscribe<entityplus::component_added<Entity, PhysicsComponent>>([this](const auto& event) { addInitialData(event.entity, event.component); });
 	events.subscribe<DirectionChanged>([this](const auto& event) { moveEntity(event.entity, event.direction); });
 	events.subscribe<Jumped>([this](const auto& event) { makeJump(event.entity); });
 	events.subscribe<CombatOcurred>([this](const auto& event) { applyKnockback(event.attacker, event.victim); });
@@ -88,7 +88,10 @@ void PhysicsSystem::applyKnockback(Entity attacker, Entity victim)
 
 void PhysicsSystem::convertPositionCoordinates(const PhysicsComponent& physics, PositionComponent& position)
 {
-	position.setPosition(sf::Vector2f(UnitConverter::metersToPixels(physics.getPosition().x), UnitConverter::metersToPixels(-physics.getPosition().y)));
+	if (physics.getType() == b2BodyType::b2_dynamicBody || physics.getType() == b2BodyType::b2_kinematicBody)
+	{
+		position.setPosition(sf::Vector2f(UnitConverter::metersToPixels(physics.getPosition().x), UnitConverter::metersToPixels(-physics.getPosition().y)));
+	}
 }
 
 void PhysicsSystem::checkIfStatic(Entity entity, const PhysicsComponent& physics)
@@ -99,8 +102,14 @@ void PhysicsSystem::checkIfStatic(Entity entity, const PhysicsComponent& physics
 	}
 }
 
-void PhysicsSystem::addCollisionData(Entity entity, PhysicsComponent& physics)
+void PhysicsSystem::addInitialData(Entity entity, PhysicsComponent& physics)
 {
 	this->collisionsData.push_back(CollisionData(entity, physics.getBody(), physics.getObjectType()));
 	this->collisionsData.back().body.SetUserData(&this->collisionsData.back());
+
+	if (entity.has_component<PositionComponent>())
+	{
+		const auto& position = entity.get_component<PositionComponent>().getPosition();
+		physics.setPosition(b2Vec2(UnitConverter::pixelsToMeters(position.x), UnitConverter::pixelsToMeters(-position.y)));
+	}
 }

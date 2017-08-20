@@ -15,11 +15,13 @@ InversePalindrome.com
 #include "AnimatorSystem.hpp"
 #include "SoundSystem.hpp"
 #include "EffectsSystem.hpp"
+#include "UnitConverter.hpp"
 
 #include <fstream>
 
 
-EntityManager::EntityManager(b2World& world, ResourceManager& resourceManager, SoundManager& soundManager, InputHandler& inputHandler, CollisionsData& collisionsData) :
+EntityManager::EntityManager(Events& eventManager, b2World& world, ResourceManager& resourceManager, SoundManager& soundManager, InputHandler& inputHandler, CollisionsData& collisionsData) :
+	eventManager(eventManager),
 	componentParser(entityManager, resourceManager, world),
 	world(world)
 {
@@ -64,6 +66,21 @@ void EntityManager::createEntity(const std::string& filePath)
 	this->componentParser.parseComponents(filePath);
 }
 
+void EntityManager::createEntity(const std::string& filePath, const sf::Vector2f& position)
+{
+	auto& entity = this->componentParser.parseComponents(filePath);
+
+	if (entity.has_component<PositionComponent>())
+	{
+		entity.get_component<PositionComponent>().setPosition(position);
+	}
+	if (entity.has_component<PhysicsComponent>())
+	{
+		entity.get_component<PhysicsComponent>().setPosition(
+			b2Vec2(UnitConverter::pixelsToMeters(position.x), UnitConverter::pixelsToMeters(-position.y)));
+	}
+}
+
 void EntityManager::createEntities(const std::string& filePath)
 {
 	std::ifstream inFile(filePath);
@@ -73,6 +90,16 @@ void EntityManager::createEntities(const std::string& filePath)
 	{
 		this->componentParser.parseComponents(line);
 	}
+}
+
+void EntityManager::destroyEntity(Entity entity)
+{
+	if (entity.has_component<PhysicsComponent>())
+	{
+		this->world.DestroyBody(&entity.get_component<PhysicsComponent>().getBody());
+	}
+
+	entity.destroy();
 }
 
 void EntityManager::destroyEntities()

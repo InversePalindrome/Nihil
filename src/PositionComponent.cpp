@@ -14,7 +14,7 @@ PositionComponent::PositionComponent() :
 }
 
 PositionComponent::PositionComponent(float xPosition, float yPosition) :
-	position(position)
+	position(xPosition, yPosition)
 {
 }
 

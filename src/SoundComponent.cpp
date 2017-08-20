@@ -9,7 +9,7 @@ InversePalindrome.com
 
 
 SoundComponent::SoundComponent() :
-	soundID(-1u)
+	soundID(-1)
 {
 }
 

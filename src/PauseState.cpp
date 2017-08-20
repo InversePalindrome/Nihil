@@ -20,7 +20,11 @@ PauseState::PauseState(StateMachine& stateMachine, StateData& stateData) :
 	resumeButton->GetSignal(sfg::Widget::OnLeftClick).Connect([&stateMachine]() { stateMachine.popState(); });
 
 	restartButton->SetPosition(sf::Vector2f(840.f, 650.f));
-	restartButton->GetSignal(sfg::Widget::OnLeftClick).Connect([&stateMachine]() { stateMachine.changeState(StateID::Game); });
+	restartButton->GetSignal(sfg::Widget::OnLeftClick).Connect([&stateMachine, &stateData]() 
+	{ 
+		stateData.events.broadcast(GameOver{});
+		stateMachine.popState(); 
+	});
 
 	settingsButton->SetPosition(sf::Vector2f(840.f, 800.f));
 	settingsButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { transitionToSettings(); });

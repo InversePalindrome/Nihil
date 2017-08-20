@@ -21,6 +21,11 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 	{
 		entity.set_tag<Controllable>(true);
 	};
+
+	componentParsers["Pickup"] = [this](auto& entity, auto& line)
+	{
+		entity.set_tag<Pickup>(true);
+	};
 	
 	componentParsers["Position1"] = [this](auto& entity, auto& line)
 	{
@@ -37,12 +42,20 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 		entity.add_component<StateComponent>();
 	};
 
-	componentParsers["Physics"] = [this, &world](auto& entity, auto& line)
+	componentParsers["Physics1"] = [this, &world](auto& entity, auto& line)
 	{
-		auto& params = this->parse<float, float, float, float, float, float, std::size_t>(line);
+		auto& params = this->parse<float, float, std::size_t, std::size_t, std::size_t>(line);
 
-		entity.add_component<PhysicsComponent>(world, b2Vec2(std::get<0>(params), std::get<1>(params)), b2Vec2(std::get<2>(params), std::get<3>(params)),
-			std::get<4>(params), std::get<5>(params), static_cast<ObjectType>(std::get<6>(params)));
+		entity.add_component<PhysicsComponent>(world, b2Vec2(std::get<0>(params), std::get<1>(params)), 0.f, 0.f,
+			static_cast<b2BodyType>(std::get<2>(params)), static_cast<ObjectType>(std::get<3>(params)), std::get<4>(params));
+	};
+
+	componentParsers["Physics2"] = [this, &world](auto& entity, auto& line)
+	{
+		auto& params = this->parse<float, float, float, float, std::size_t, std::size_t, std::size_t>(line);
+
+		entity.add_component<PhysicsComponent>(world, b2Vec2(std::get<0>(params), std::get<1>(params)), 
+			std::get<2>(params), std::get<3>(params), static_cast<b2BodyType>(std::get<4>(params)), static_cast<ObjectType>(std::get<5>(params)), std::get<6>(params));
 	};
 
 	componentParsers["AI"] = [this](auto& entity, auto& line)
@@ -111,7 +124,7 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 	};
 }
 
-void ComponentParser::parseComponents(const std::string& filePath)
+Entity ComponentParser::parseComponents(const std::string& filePath)
 {
 	auto& entity = entities.create_entity();
 	
@@ -131,4 +144,6 @@ void ComponentParser::parseComponents(const std::string& filePath)
 		
 		this->componentParsers[component](entity, line);
 	}
+
+	return entity;
 }

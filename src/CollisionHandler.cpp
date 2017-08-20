@@ -8,6 +8,7 @@ InversePalindrome.com
 #include "CollisionHandler.hpp"
 
 
+
 CollisionHandler::CollisionHandler(Events& events) :
 	events(events)
 {
@@ -33,6 +34,19 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Portal))
 	{
 		this->events.broadcast(FinishedLevel{});
+	}
+	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Pickup))
+	{
+
+		orderedCollision.value().second.get().entity.sync();
+
+		this->events.broadcast(DestroyEntity{ orderedCollision.value().second.get().entity });
+		this->events.broadcast(EmitSound{ orderedCollision.value().second.get().entity, SoundBuffersID::Pickup, false });
+		this->events.broadcast(PickedUpCoin{});
+	}
+	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Border))
+	{
+		this->events.broadcast(GameOver{});
 	}
 }
 

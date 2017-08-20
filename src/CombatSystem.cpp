@@ -28,7 +28,10 @@ void CombatSystem::handleCombat(Entity attacker, Entity victim)
 	const auto& damagePoints = attacker.get_component<AttackComponent>().getDamagePoints();
 	auto& health = victim.get_component<HealthComponent>();
 
-	health.setHitpoints(health.getHitpoints() - damagePoints);
+	if (health.getHitpoints() > 0u)
+	{
+		health.setHitpoints(health.getHitpoints() - damagePoints);
+	}
 }
 
 void CombatSystem::checkIfDead(Entity entity, HealthComponent& health)

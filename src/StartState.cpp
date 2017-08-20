@@ -86,17 +86,17 @@ void StartState::update(float deltaTime)
 
 	this->emitter.setParticlePosition(thor::Distributions::rect(sf::Vector2f(this->view.getCenter().x -  this->view.getSize().x / 2.f - 200.f, 
 		0.f), sf::Vector2f(this->view.getSize().x, this->view.getSize().y - 200.f)));
-	
-	this->titleLabel.setPosition(this->view.getCenter());
-	this->continueLabel.setPosition(sf::Vector2f(this->view.getCenter().x, 1250.f));
-
-	this->stateData.window.setView(view);
 }
 
 void StartState::draw()
 {
+	this->stateData.window.setView(this->view);
+
 	this->stateData.window.draw(this->background);
 	this->stateData.window.draw(this->particleSystem);
+
+	this->stateData.window.setView(this->stateData.window.getDefaultView());
+
 	this->stateData.window.draw(this->titleLabel);
 	this->stateData.window.draw(this->continueLabel);
 }

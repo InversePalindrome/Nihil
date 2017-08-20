@@ -11,16 +11,21 @@ InversePalindrome.com
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
 
-PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, const b2Vec2& initialPosition,
-	float maxVelocity, float accelerationRate, ObjectType objectType)  :
+PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType physicalType, ObjectType objectType, std::int8_t collisionGroup) :
+	PhysicsComponent(world, bodySize, 0.f, 0.f, physicalType, objectType, collisionGroup)
+{
+}
+
+PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, float maxVelocity,
+	float accelerationRate, b2BodyType physicalType, ObjectType objectType, std::int8_t collisionGroup)  :
 	body(nullptr),
 	maxVelocity(maxVelocity),
 	accelerationRate(accelerationRate),
 	objectType(objectType)
 {
 	b2BodyDef bodyDefinition;
-	bodyDefinition.type = b2_dynamicBody;
-	bodyDefinition.position = initialPosition;
+	bodyDefinition.type = physicalType;
+
 	bodyDefinition.fixedRotation = true;
 	
 	b2PolygonShape fixtureShape;
@@ -30,6 +35,7 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, const
 	fixture.shape = &fixtureShape;
 	fixture.density = 1.f;
 	fixture.friction = 0.3f;
+	fixture.filter.groupIndex = collisionGroup;
 
 	body = world.CreateBody(&bodyDefinition);
 	body->CreateFixture(&fixture);
@@ -50,6 +56,11 @@ b2Vec2 PhysicsComponent::getVelocity() const
 	return this->body->GetLinearVelocity();
 }
 
+b2BodyType PhysicsComponent::getType() const
+{
+	return this->body->GetType();
+}
+
 float PhysicsComponent::getMass() const
 {
 	return this->body->GetMass();
@@ -63,6 +74,11 @@ float PhysicsComponent::getMaxVelocity() const
 float PhysicsComponent::getAccelerationRate() const
 {
 	return this->accelerationRate;
+}
+
+void PhysicsComponent::setPosition(const b2Vec2& position)
+{
+	this->body->SetTransform(position, this->body->GetAngle());
 }
 
 void PhysicsComponent::setMaxVelocity(float maxVelocity)
