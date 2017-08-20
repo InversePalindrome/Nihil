@@ -32,5 +32,5 @@ private:
 	void convertPositionCoordinates(const PhysicsComponent& physics, PositionComponent& position);
 	void checkIfStatic(Entity entity, const PhysicsComponent& physics);
 
-	void addCollisionData(Entity entity, PhysicsComponent& physics);
+	void addInitialData(Entity entity, PhysicsComponent& physics);
 };

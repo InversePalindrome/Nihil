@@ -9,6 +9,7 @@ InversePalindrome.com
 
 #include "Layer.hpp"
 #include "CollisionData.hpp"
+#include "EntityManager.hpp"
 #include "ResourceManager.hpp"
 
 #include <tmxlite/Map.hpp>
@@ -20,12 +21,13 @@ InversePalindrome.com
 
 #include <vector>
 #include <memory>
+#include <unordered_map>
 
 
 class Map : public sf::Drawable
 {
 public:
-	Map(const sf::Vector2f& chunkSize, b2World& world, ResourceManager& resourceManager, CollisionsData& collisionsData);
+	Map(const sf::Vector2f& chunkSize, b2World& world, EntityManager& entityManager, ResourceManager& resourceManager, CollisionsData& collisionsData);
 
 	void load(const std::string& filePath);
 	
@@ -39,8 +41,10 @@ private:
 	sf::FloatRect bounds;
 	std::string filePath;
 	std::vector<std::unique_ptr<Layer>> layers;
+	std::unordered_map<std::string, ObjectType> staticObjects;
 
 	b2World& world;
+	EntityManager& entityManager;
 	ResourceManager& resourceManager;
 	CollisionsData& collisionsData;
 

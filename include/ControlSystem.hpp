@@ -22,7 +22,7 @@ private:
 	InputHandler& inputHandler;
 
 	float timeSinceJump;
-	static constexpr float jumpInterval = 0.6f;
+	static constexpr float jumpInterval = 1.f;
 
 	void reactToInput(Entity entity, float deltaTime);
 };

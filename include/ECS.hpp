@@ -26,19 +26,29 @@ InversePalindrome.com
 
 
 struct Controllable;
+struct Pickup;
 struct DirectionChanged;
 struct Jumped;
 struct CombatOcurred;
 struct ChangeState;
 struct StateChanged;
 struct FinishedLevel;
+struct DestroyEntity;
+struct EmitSound;
+struct PickedUpCoin;
+struct GameOver;
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, 
 	PhysicsComponent, AIComponent, HealthComponent, AttackComponent, SpriteComponent, AnimationComponent, SoundComponent,
     ParticleComponent, ParentComponent, ChildComponent>;
-using Tags = entityplus::tag_list<Controllable>;
+
+using Tags = entityplus::tag_list<Controllable, Pickup>;
+
 using Entities = entityplus::entity_manager<Components, Tags>;
-using Events = entityplus::event_manager<Components, Tags, DirectionChanged, Jumped, CombatOcurred, ChangeState, StateChanged, FinishedLevel>;
+
+using Events = entityplus::event_manager<Components, Tags, DirectionChanged, Jumped, CombatOcurred, ChangeState,
+	StateChanged, FinishedLevel, DestroyEntity, EmitSound, PickedUpCoin, GameOver>;
+
 using Entity = Entities::entity_t;
 
 
@@ -72,5 +82,25 @@ struct StateChanged
 };
 
 struct FinishedLevel
+{
+};
+
+struct DestroyEntity
+{
+	Entity entity;
+};
+
+struct EmitSound
+{
+	Entity entity;
+	SoundBuffersID soundBuffer;
+	bool loop;
+};
+
+struct PickedUpCoin
+{
+};
+
+struct GameOver
 {
 };

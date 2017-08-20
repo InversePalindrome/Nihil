@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #pragma once
 
+#include "ECS.hpp"
 #include "StateData.hpp"
 #include "StateMachine.hpp"
 #include "InputHandler.hpp"
@@ -27,16 +28,18 @@ public:
 	void run();
 
 private:
-	StateData stateData;
-	StateMachine stateMachine;
-
 	InputHandler inputHandler;
 
 	ResourceManager resourceManager;
 	SoundManager soundManager;
 	GUIManager guiManager;
 
+	Events eventManager;
+
 	sf::RenderWindow window;
+
+	StateData stateData;
+	StateMachine stateMachine;
 
 	void handleEvents();
 	void update(float deltaTime);

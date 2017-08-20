@@ -12,12 +12,15 @@ InversePalindrome.com
 #include "CollisionData.hpp"
 #include "CollisionHandler.hpp"
 #include "EntityManager.hpp"
+#include "GameHud.hpp"
 
 #include <Box2D/Dynamics/b2World.h>
 
 #include <SFML/Graphics/View.hpp>
 
 #include <memory>
+#include <vector>
+#include <functional>
 
 
 class GameState : public State
@@ -31,16 +34,20 @@ public:
 
 private:
     b2World world;
+	EntityManager entityManager;
 	CollisionsData collisionsData;
 	Map map;
 	sf::View camera;
+	std::vector<std::function<void()>> callbacks;
 
-	EntityManager entityManager;
 	CollisionHandler collisionHandler;
 
 	std::size_t level;
-	bool isReadyToloadLevel;
+
+	GameHud gameHud;
 
 	void updateCamera();
-	void advanceToNextLevel();
+	void changeLevel(std::size_t level);
+
+	void setDisplayHitpoints(Entity entity);
 };

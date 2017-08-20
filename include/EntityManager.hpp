@@ -30,7 +30,7 @@ InversePalindrome.com
 class EntityManager 
 {
 public:
-	EntityManager(b2World& world, ResourceManager& resourceManager, SoundManager& soundManager, InputHandler& inputHandler, CollisionsData& collisionData);
+	EntityManager(Events& events, b2World& world, ResourceManager& resourceManager, SoundManager& soundManager, InputHandler& inputHandler, CollisionsData& collisionData);
 	EntityManager(const EntityManager& entityManager) = delete;
     EntityManager& operator=(const EntityManager& entityManager) = delete;
 
@@ -41,16 +41,15 @@ public:
 	void draw(sf::RenderTarget& target);
 
 	void createEntity(const std::string& filePath);
+	void createEntity(const std::string& filePath, const sf::Vector2f& position);
 	void createEntities(const std::string& filePath);
 
+	void destroyEntity(Entity entity);
 	void destroyEntities();
-
-	template<typename Component, typename Tuple>
-	Component makeComponent(Tuple& tuple);
 
 private:
 	Entities entityManager;
-	Events eventManager;
+	Events& eventManager;
 
 	b2World& world;
 
@@ -58,9 +57,3 @@ private:
 
 	std::unordered_map<std::string, std::unique_ptr<System>> systems;
 };
-
-template<typename Component, typename Tuple>
-Component EntityManager::makeComponent(Tuple& tuple)
-{
-	return std::make_from_tuple<Component>(tuple);
-}

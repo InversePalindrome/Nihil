@@ -23,7 +23,7 @@ class ComponentParser
 public:
 	ComponentParser(Entities& entities, ResourceManager& resourceManager, b2World& world);
 	
-	void parseComponents(const std::string& filePath);
+	Entity parseComponents(const std::string& filePath);
 
 private:
 	Entities& entities;

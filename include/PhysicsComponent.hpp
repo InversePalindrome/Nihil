@@ -18,18 +18,21 @@ InversePalindrome.com
 class PhysicsComponent
 {
 public:
-	PhysicsComponent(b2World& world, const b2Vec2& bodySize, const b2Vec2& initialPosition,
-		float maxVelocity, float accelerationRate, ObjectType objectType);
+	PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType physicalType, ObjectType objectType, std::int8_t collisionGroup);
+	PhysicsComponent(b2World& world, const b2Vec2& bodySize, float maxVelocity, float accelerationRate,
+		b2BodyType physicalType, ObjectType objectType, std::int8_t collisionGroup);
 	
 	b2Body& getBody();
 
 	b2Vec2 getPosition() const;
 	b2Vec2 getVelocity() const;
+	b2BodyType getType() const;
 	float getMass() const;
 
 	float getMaxVelocity() const;
 	float getAccelerationRate() const;
 
+	void setPosition(const b2Vec2& position);
 	void setMaxVelocity(float maxVelocity);
 	void setAccelerationRate(float accelerationRate);
 

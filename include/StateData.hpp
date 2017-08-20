@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #pragma once
 
+#include "ECS.hpp"
 #include "GUIManager.hpp"
 #include "InputHandler.hpp"
 #include "SoundManager.hpp"
@@ -17,12 +18,14 @@ InversePalindrome.com
 
 struct StateData
 {
-	StateData(ResourceManager& resourceManager, SoundManager& soundManager, GUIManager& guiManager, InputHandler& inputHandler, sf::RenderWindow& window);
+	StateData(ResourceManager& resourceManager, SoundManager& soundManager, GUIManager& guiManager, InputHandler& inputHandler, Events& events, sf::RenderWindow& window);
 
 	ResourceManager& resourceManager;
 	SoundManager& soundManager;
 	GUIManager& guiManager;
 	InputHandler& inputHandler;
+
+	Events& events;
 
 	sf::RenderWindow& window;
 }; 
