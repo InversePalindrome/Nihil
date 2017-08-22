@@ -18,7 +18,8 @@ PhysicsSystem::PhysicsSystem(Entities& entities, Events& events, b2World& world,
 	events.subscribe<entityplus::component_added<Entity, PhysicsComponent>>([this](const auto& event) { addInitialData(event.entity, event.component); });
 	events.subscribe<DirectionChanged>([this](const auto& event) { moveEntity(event.entity, event.direction); });
 	events.subscribe<Jumped>([this](const auto& event) { makeJump(event.entity); });
-	events.subscribe<CombatOcurred>([this](const auto& event) { applyKnockback(event.attacker, event.victim); });
+	events.subscribe<CombatOcurred>([this](const auto& event) { applyImpulse(event.victim, b2Vec2(event.attacker.get_component<PhysicsComponent>().getVelocity().x * 50.f, 0.f)); });
+	events.subscribe<TouchedTrampoline>([this](const auto& event) { applyImpulse(event.entity, b2Vec2(0.f, 250.f)); });
 }
 
 void PhysicsSystem::update(float deltaTime)
@@ -78,12 +79,12 @@ void PhysicsSystem::makeJump(Entity entity)
 	physics.applyImpulse(impulse);
 }
 
-void PhysicsSystem::applyKnockback(Entity attacker, Entity victim)
+void PhysicsSystem::applyImpulse(Entity entity, const b2Vec2& impulse)
 {
-	const auto& attackerVelocity = attacker.get_component<PhysicsComponent>().getVelocity();
-	auto& victimPhysics = victim.get_component<PhysicsComponent>();
-
-	victimPhysics.applyImpulse(b2Vec2(attackerVelocity.x * 50.f, 0.f));
+	if (entity.has_component<PhysicsComponent>())
+	{
+		entity.get_component<PhysicsComponent>().applyImpulse(impulse);
+	}
 }
 
 void PhysicsSystem::convertPositionCoordinates(const PhysicsComponent& physics, PositionComponent& position)

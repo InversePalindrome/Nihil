@@ -37,12 +37,17 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 	}
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Pickup))
 	{
-
 		orderedCollision.value().second.get().entity.sync();
 
 		this->events.broadcast(DestroyEntity{ orderedCollision.value().second.get().entity });
-		this->events.broadcast(EmitSound{ orderedCollision.value().second.get().entity, SoundBuffersID::Pickup, false });
+		this->events.broadcast(EmitSound{ SoundBuffersID::Pickup, false });
 		this->events.broadcast(PickedUpCoin{});
+	}
+	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Trampoline))
+	{
+		orderedCollision.value().first.get().entity.sync();
+
+		this->events.broadcast(TouchedTrampoline{ orderedCollision.value().first.get().entity });
 	}
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Border))
 	{

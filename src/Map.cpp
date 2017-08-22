@@ -23,6 +23,7 @@ Map::Map(const sf::Vector2f& chunkSize, b2World& world, EntityManager& entityMan
 	collisionsData(collisionsData)
 {
 	staticObjects["Trap"] = ObjectType::Trap;
+	staticObjects["Trampoline"] = ObjectType::Trampoline;
 	staticObjects["Portal"] = ObjectType::Portal;
 	staticObjects["Border"] = ObjectType::Border;
 }

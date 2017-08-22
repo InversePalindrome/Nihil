@@ -53,7 +53,7 @@ Chunk::Chunk(const tmx::TileLayer& layer, std::vector<const tmx::Tileset*> tiles
 					sf::Vector2f tileOffset(x * tileSize.x, y * tileSize.y);
 
 					auto idIndex = tileIDs[idx].ID - ts->getFirstGID();
-					sf::Vector2f tileIndex(idIndex % tsTileCount.x, idIndex / tsTileCount.x);
+					;					sf::Vector2f tileIndex(idIndex % tsTileCount.x, idIndex / tsTileCount.x);
 					tileIndex.x *= tileSize.x;
 					tileIndex.y *= tileSize.y;
 
