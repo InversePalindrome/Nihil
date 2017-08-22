@@ -36,6 +36,7 @@ public:
 	void setMaxVelocity(float maxVelocity);
 	void setAccelerationRate(float accelerationRate);
 
+	void applyForce(const b2Vec2& force);
 	void applyImpulse(const b2Vec2& impulse);
 
 	ObjectType getObjectType() const;

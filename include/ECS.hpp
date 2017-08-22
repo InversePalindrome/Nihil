@@ -36,6 +36,7 @@ struct FinishedLevel;
 struct DestroyEntity;
 struct EmitSound;
 struct PickedUpCoin;
+struct TouchedTrampoline;
 struct GameOver;
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, 
@@ -47,7 +48,7 @@ using Tags = entityplus::tag_list<Controllable, Pickup>;
 using Entities = entityplus::entity_manager<Components, Tags>;
 
 using Events = entityplus::event_manager<Components, Tags, DirectionChanged, Jumped, CombatOcurred, ChangeState,
-	StateChanged, FinishedLevel, DestroyEntity, EmitSound, PickedUpCoin, GameOver>;
+	StateChanged, FinishedLevel, DestroyEntity, EmitSound, PickedUpCoin, TouchedTrampoline, GameOver>;
 
 using Entity = Entities::entity_t;
 
@@ -92,13 +93,17 @@ struct DestroyEntity
 
 struct EmitSound
 {
-	Entity entity;
 	SoundBuffersID soundBuffer;
 	bool loop;
 };
 
 struct PickedUpCoin
 {
+};
+
+struct TouchedTrampoline
+{
+	Entity entity;
 };
 
 struct GameOver
