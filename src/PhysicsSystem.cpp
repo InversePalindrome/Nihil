@@ -39,22 +39,31 @@ void PhysicsSystem::moveEntity(Entity entity, Direction direction)
 	const auto& currentVelocity = physics.getVelocity();
 	
 	b2Vec2 newVelocity(0.f, 0.f);
+	b2Vec2 deltaVelocity(0.f, 0.f);
 	
 	switch (direction)
 	{
 	case Direction::Right:
 		newVelocity.x = b2Min(currentVelocity.x + physics.getAccelerationRate(), physics.getMaxVelocity());
+		deltaVelocity.x = newVelocity.x - currentVelocity.x;
 		this->events.broadcast(ChangeState{ entity, EntityState::Walking });
 		break;
 	case Direction::Left:
 		newVelocity.x = b2Max(currentVelocity.x - physics.getAccelerationRate(), -physics.getMaxVelocity());
+		deltaVelocity.x = newVelocity.x - currentVelocity.x;
 		this->events.broadcast(ChangeState{ entity, EntityState::Walking });
 		break;
+	case Direction::Up:
+		newVelocity.y = b2Min(currentVelocity.y + physics.getAccelerationRate(), physics.getMaxVelocity());
+		deltaVelocity.y = newVelocity.y - currentVelocity.y;
+		break;
+	case Direction::Down:
+		newVelocity.y = b2Max(currentVelocity.y - physics.getAccelerationRate(), physics.getMaxVelocity());
+		deltaVelocity.y = newVelocity.y - currentVelocity.y;
+		break;
 	}
-	
-	const auto& deltaVelocity = newVelocity - currentVelocity;
 
-	const auto& impulse = b2Vec2(deltaVelocity.x * physics.getMass(), 0.f);
+	const auto& impulse = b2Vec2(deltaVelocity.x * physics.getMass(), deltaVelocity.y * physics.getMass());
 
 	physics.applyImpulse(impulse);
 }

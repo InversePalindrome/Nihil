@@ -122,6 +122,13 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 	{
 		entity.add_component<ChildComponent>(std::make_from_tuple<ChildComponent>(this->parse<std::size_t>(line)));
 	};
+
+	componentParsers["Automated"] = [this](auto& entity, auto& line)
+	{
+		auto& params = this->parse<std::string>(line);
+
+		entity.add_component<AutomatedComponent>(std::get<0>(params));
+	};
 }
 
 Entity ComponentParser::parseComponents(const std::string& filePath)

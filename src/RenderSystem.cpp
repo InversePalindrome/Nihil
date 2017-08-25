@@ -20,7 +20,7 @@ RenderSystem::RenderSystem(Entities& entities, Events& events) :
 
 void RenderSystem::update(float deltaTime)
 {
-	entities.for_each<SpriteComponent, PositionComponent>(
+	this->entities.for_each<SpriteComponent, PositionComponent>(
 		[](auto entity, auto& sprite, auto& position)
 	{
 		sprite.setPosition(position.getPosition());
@@ -29,7 +29,7 @@ void RenderSystem::update(float deltaTime)
 
 void RenderSystem::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	entities.for_each<SpriteComponent>([this, &target, states](auto entity, auto& sprite) mutable
+	this->entities.for_each<SpriteComponent>([this, &target, states](auto entity, auto& sprite) mutable
 	{ 
 		if (entity.has_component<ChildComponent>())
 		{

@@ -91,6 +91,11 @@ void PhysicsComponent::setAccelerationRate(float accelerationRate)
 	this->accelerationRate = accelerationRate;
 }
 
+void PhysicsComponent::setGravityScale(float gravityScale)
+{
+	this->body->SetGravityScale(gravityScale);
+}
+
 void PhysicsComponent::applyForce(const b2Vec2& force)
 {
 	this->body->ApplyForceToCenter(force, true);
