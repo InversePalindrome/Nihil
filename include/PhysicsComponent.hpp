@@ -35,6 +35,7 @@ public:
 	void setPosition(const b2Vec2& position);
 	void setMaxVelocity(float maxVelocity);
 	void setAccelerationRate(float accelerationRate);
+	void setGravityScale(float gravityScale);
 
 	void applyForce(const b2Vec2& force);
 	void applyImpulse(const b2Vec2& impulse);

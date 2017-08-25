@@ -19,6 +19,7 @@ InversePalindrome.com
 #include "ParticleComponent.hpp"
 #include "ParentComponent.hpp"
 #include "ChildComponent.hpp"
+#include "AutomatedComponent.hpp"
 #include "Direction.hpp"
 
 #include <entityplus/entity.h>
@@ -41,7 +42,7 @@ struct GameOver;
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, 
 	PhysicsComponent, AIComponent, HealthComponent, AttackComponent, SpriteComponent, AnimationComponent, SoundComponent,
-    ParticleComponent, ParentComponent, ChildComponent>;
+    ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent>;
 
 using Tags = entityplus::tag_list<Controllable, Pickup>;
 
