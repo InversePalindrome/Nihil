@@ -24,7 +24,7 @@ enum class TexturesID
 	SplashScreen, StartBackground, Particles, Character, Mushroom, RedMonster, MenuBackground,                 
     Level1, Level2, Level3, Level4, Level5, Level6, Coin, Heart
 };
-enum class ImagesID { };
+enum class ImagesID { RedMonster };
 enum class FontsID { BITWONDER };
 enum class SoundBuffersID { Jump, Footsteps, Pickup };
 

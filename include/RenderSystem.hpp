@@ -25,4 +25,6 @@ private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 	void setParentTransforms(Entity entity, ChildComponent& child);
+
+	bool isInsideView(const sf::View& view, const SpriteComponent& sprite) const;
 };

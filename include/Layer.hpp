@@ -27,7 +27,7 @@ public:
 
 	const sf::FloatRect& getGlobalBounds() const;
 
-	void draw(sf::RenderTarget& rt, sf::RenderStates states) const override;
+	void draw(sf::RenderTarget& renderTarget, sf::RenderStates states) const override;
 
 private:
 	sf::Vector2f chunkSize;

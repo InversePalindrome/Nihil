@@ -14,7 +14,6 @@ InversePalindrome.com
 #include <SFGUI/Button.hpp>
 #include <SFGUI/Scrollbar.hpp>
 #include <SFGUI/Adjustment.hpp>
-#include <SFGUI/RadioButton.hpp>
 #include <SFGUI/RadioButtonGroup.hpp>
 
 #include <SFML/Graphics/Sprite.hpp>
@@ -42,9 +41,6 @@ private:
 	sfg::Scrollbar::Ptr soundScrollbar;
 	sfg::Scrollbar::Ptr musicScrollbar;
 	sfg::RadioButtonGroup::Ptr keyButtons;
-	sfg::RadioButton::Ptr moveRightButton;
-	sfg::RadioButton::Ptr moveLeftButton;
-	sfg::RadioButton::Ptr jumpButton;
 
 	void adjustSoundVolume();
 	void adjustMusicVolume();

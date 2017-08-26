@@ -22,6 +22,7 @@ public:
 	SpriteComponent(sf::Texture& texture, const sf::IntRect& textureRect, const sf::Vector2f& scale);
 
 	sf::Sprite& getSprite();
+	sf::Vector2f getPosition() const;
 	const sf::Transform& getTransform() const;
 
 	void setPosition(const sf::Vector2f& position);
