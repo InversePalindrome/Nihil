@@ -31,6 +31,11 @@ sf::Sprite& SpriteComponent::getSprite()
 	return this->sprite;
 }
 
+sf::Vector2f SpriteComponent::getPosition() const
+{
+	return this->sprite.getPosition();
+}
+
 const sf::Transform& SpriteComponent::getTransform() const
 {
 	return this->sprite.getTransform();

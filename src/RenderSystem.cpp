@@ -31,15 +31,18 @@ void RenderSystem::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	this->entities.for_each<SpriteComponent>([this, &target, states](auto entity, auto& sprite) mutable
 	{ 
-		if (entity.has_component<ChildComponent>())
+		if (this->isInsideView(target.getView(), sprite))
 		{
-			states.transform *= entity.get_component<ChildComponent>().getTransform();
-			
-			target.draw(sprite, states);
-		}
-		else
-		{
-			target.draw(sprite);
+			if (entity.has_component<ChildComponent>())
+			{
+				states.transform *= entity.get_component<ChildComponent>().getTransform();
+
+				target.draw(sprite, states);
+			}
+			else
+			{
+				target.draw(sprite);
+			}
 		}
 	});
 	entities.for_each<ParticleComponent>([&target, states](auto entity, auto& particle)
@@ -58,4 +61,15 @@ void RenderSystem::setParentTransforms(Entity entity, ChildComponent& child)
 	{
 		child.setTransform(foundEntity->get_component<SpriteComponent>().getTransform());
 	}
+}
+
+bool RenderSystem::isInsideView(const sf::View& view, const SpriteComponent& sprite) const
+{
+	const auto& left = view.getCenter().x - view.getSize().x / 2.f;
+	const auto& right = view.getCenter().x + view.getSize().x / 2.f;
+	const auto& top = view.getCenter().y - view.getSize().y / 2.f;
+	const auto& bottom = view.getCenter().y + view.getSize().y / 2.f;
+
+	return sprite.getPosition().x > left && sprite.getPosition().x < right
+		   && sprite.getPosition().y > top && sprite.getPosition().y < bottom;
 }
