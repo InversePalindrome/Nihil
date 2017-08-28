@@ -8,12 +8,12 @@ InversePalindrome.com
 #include "StateData.hpp"
 
 
-StateData::StateData(ResourceManager& resourceManager, SoundManager& soundManager, GUIManager& guiManager, InputHandler& inputHandler, Events& events, sf::RenderWindow& window) :
+StateData::StateData(Player& player, ResourceManager& resourceManager, SoundManager& soundManager, GUIManager& guiManager, InputHandler& inputHandler, sf::RenderWindow& window) :
+	player(player),
 	resourceManager(resourceManager),
 	soundManager(soundManager),
 	guiManager(guiManager),
 	inputHandler(inputHandler),
-	events(events),
 	window(window)
 {
 }

@@ -12,41 +12,48 @@ InversePalindrome.com
 GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
 	world(b2Vec2(0.f, -9.8f)),
-	entityManager(stateData.events, world, stateData.resourceManager, stateData.soundManager, stateData.inputHandler, collisionsData),
+	entityManager(world, stateData.resourceManager, stateData.soundManager, stateData.inputHandler, collisionsData),
 	map(sf::Vector2f(8192.f, 1536.f), world, entityManager, stateData.resourceManager, collisionsData),
 	camera(stateData.window.getDefaultView()),
 	collisionHandler(entityManager.getEvents()),
-	level(0u),
-	gameHud(stateData.resourceManager)
+	healthBar(stateData.resourceManager),
+	coinDisplay(stateData.resourceManager)
 {
 	world.SetContactListener(&collisionHandler);
 
+	healthBar.setPosition(150.f, 120.f);
+
+	coinDisplay.setPosition(1600.f, 120.f);
+	coinDisplay.setNumberOfCoins(stateData.player.getCoins());
+	
 	entityManager.getEvents().subscribe<DestroyEntity>([this](const auto& event) 
 	{ 
-		callbacks.push_back([this, event]{ 
-		entityManager.destroyEntity(event.entity); }); 
-	});
-	entityManager.getEvents().subscribe<FinishedLevel>([this](const auto& event)
-	{
-		callbacks.push_back([this]
+		callbacks.push_back([this, event]
 		{ 
-			gameHud.setCoinDisplayNumber(0u);
+		    entityManager.destroyEntity(event.entity);
+		}); 
+	});
+	entityManager.getEvents().subscribe<FinishedLevel>([this, &stateData](const auto& event)
+	{
+		callbacks.push_back([this, &stateData]
+		{ 
 		    entityManager.destroyEntities();
-		    changeLevel(level + 1u);
+			stateData.player.setCurrentLevel(stateData.player.getCurrentLevel() + 1u);
+			changeLevel(stateData.player.getCurrentLevel());
 		});
 	});
-	entityManager.getEvents().subscribe<GameOver>([this](const auto& event)
+	entityManager.getEvents().subscribe<GameOver>([this, &stateData](const auto& event)
 	{
-		callbacks.push_back([this] 
+		callbacks.push_back([this, &stateData] 
 		{
-			gameHud.setCoinDisplayNumber(0u);
 			entityManager.destroyEntities();
-			changeLevel(level);
+			changeLevel(stateData.player.getCurrentLevel());
 		});
 	});
-	entityManager.getEvents().subscribe<PickedUpCoin>([this](const auto& event)
+	entityManager.getEvents().subscribe<PickedUpCoin>([this, &stateData](const auto& event)
 	{
-		gameHud.addToCoinDisplayNumber();
+		stateData.player.setCoins(stateData.player.getCoins() + 1u);
+		coinDisplay.setNumberOfCoins(stateData.player.getCoins());
 	});
 	entityManager.getEvents().subscribe<CombatOcurred>([this](const auto& event)
 	{
@@ -55,7 +62,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 
 	stateData.window.setView(camera);
 
-	changeLevel(level + 1u);
+	changeLevel(stateData.player.getCurrentLevel());
 }
 
 void GameState::handleEvent(const sf::Event& event)
@@ -66,7 +73,7 @@ void GameState::handleEvent(const sf::Event& event)
 	}
 	else if (this->stateData.inputHandler.isActive("Retry"))
 	{
-		this->stateData.events.broadcast(GameOver{});
+		this->entityManager.getEvents().broadcast(GameOver{});
 	}
 }
 
@@ -86,18 +93,20 @@ void GameState::update(float deltaTime)
 	this->callbacks.clear();
 	
 	this->entityManager.update(deltaTime);
-	this->gameHud.update(deltaTime);
 	this->updateCamera();
+	this->coinDisplay.update(deltaTime);
 }
 
 void GameState::draw()
 {
 	this->stateData.window.setView(this->camera);
 	this->stateData.window.draw(this->map);
-	this->entityManager.draw(this->stateData.window);
+	this->stateData.window.draw(this->entityManager);
 
 	this->stateData.window.setView(this->stateData.window.getDefaultView());
-	this->stateData.window.draw(this->gameHud);
+
+	this->stateData.window.draw(this->healthBar);
+	this->stateData.window.draw(this->coinDisplay);
 }
 
 void GameState::updateCamera()
@@ -114,22 +123,20 @@ void GameState::updateCamera()
 
 void GameState::changeLevel(std::size_t level)
 {
-	this->level = level;
+	this->map.load("Resources/Files/Level" + std::to_string(level) + ".tmx");
+	this->entityManager.createEntities("Resources/Files/EntitiesLevel" + std::to_string(level) + ".txt");
 
-	this->map.load("Resources/Files/Level" + std::to_string(this->level) + ".tmx");
-	this->entityManager.createEntities("Resources/Files/EntitiesLevel" + std::to_string(this->level) + ".txt");
+	this->healthBar.setHitpointsDisplay(this->entityManager.getEntities().get_entities<Controllable, HealthComponent>()
+		.back().get_component<HealthComponent>().getHitpoints());
 
 	this->camera = this->stateData.window.getDefaultView();
 	this->stateData.soundManager.stopAllSounds();
-
-	this->gameHud.setNumberOfHitpoints(this->entityManager.getEntities().
-		get_entities<Controllable, HealthComponent>().back().get_component<HealthComponent>().getHitpoints());
 }
 
 void GameState::setDisplayHitpoints(Entity entity)
 {
 	if (entity.has_tag<Controllable>())
 	{
-		this->gameHud.setNumberOfHitpoints(entity.get_component<HealthComponent>().getHitpoints());
+		this->healthBar.setHitpointsDisplay(entity.get_component<HealthComponent>().getHitpoints());
 	}
 }

@@ -22,8 +22,8 @@ PauseState::PauseState(StateMachine& stateMachine, StateData& stateData) :
 	restartButton->SetPosition(sf::Vector2f(840.f, 650.f));
 	restartButton->GetSignal(sfg::Widget::OnLeftClick).Connect([&stateMachine, &stateData]() 
 	{ 
-		stateData.events.broadcast(GameOver{});
-		stateMachine.popState(); 
+		stateMachine.clearStates(); 
+		stateMachine.pushState(StateID::Game);
 	});
 
 	settingsButton->SetPosition(sf::Vector2f(840.f, 800.f));
@@ -65,7 +65,7 @@ bool PauseState::isTransparent() const
 }
 
 void PauseState::transitionToMenu()
-{
+{ 
 	this->stateMachine.clearStates();
 	this->stateMachine.pushState(StateID::Menu);
 }

@@ -104,9 +104,9 @@ void Map::addTileCollisions()
 					auto* tile = this->world.CreateBody(&bodyDefinition);
 					tile->CreateFixture(&fixture);
 
-					this->collisionsData.push_back(CollisionData(*tile, this->findObjectType(object.getName())));
+					this->collisionsData.push_back(CollisionData(tile, this->findObjectType(object.getName())));
 
-					this->collisionsData.back().body.SetUserData(&this->collisionsData.back());
+					this->collisionsData.back().body->SetUserData(&this->collisionsData.back());
 				}
 				else
 				{

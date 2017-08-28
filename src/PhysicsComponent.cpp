@@ -41,9 +41,9 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, float
 	body->CreateFixture(&fixture);
 }
 
-b2Body& PhysicsComponent::getBody()
+b2Body* PhysicsComponent::getBody()
 {
-	return *this->body;
+	return this->body;
 }
 
 b2Vec2 PhysicsComponent::getPosition() const

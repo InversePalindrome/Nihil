@@ -18,6 +18,7 @@ InversePalindrome.com
 CharactersState::CharactersState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
 	background(stateData.resourceManager.getTexture(TexturesID::MenuBackground)),
+	coinDisplay(stateData.resourceManager),
 	backButton(sfg::Button::Create("BACK")),
 	scrolledWindowBox(sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL, 400.f)),
 	scrollbarScale(sfg::Scale::Create(sfg::Scale::Orientation::VERTICAL)),
@@ -28,6 +29,9 @@ CharactersState::CharactersState(StateMachine& stateMachine, StateData& stateDat
 	loadCharacters("Resources/Files/Characters.txt");
 
 	background.setScale(stateData.window.getSize().x / background.getGlobalBounds().width, stateData.window.getSize().y / background.getGlobalBounds().height);
+
+	coinDisplay.setPosition(1600.f, 120.f);
+	coinDisplay.setNumberOfCoins(stateData.player.getCoins());
 
 	backButton->SetPosition(sf::Vector2f(12.f, 65.f));
 	backButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { transitionToMenu(); });
@@ -54,6 +58,14 @@ CharactersState::CharactersState(StateMachine& stateMachine, StateData& stateDat
 				selectedCharacter(characterButton._Get()->GetId());
 			}
 		});
+
+		characterButton._Get()->SetState(sfg::Widget::State::SELECTED);
+		characterButton._Get()->SetState(sfg::Widget::State::NORMAL);
+
+		if (stateData.player.getCharacterName() == characterButton._Get()->GetId())
+		{
+			characterButton._Get()->SetActive(true);
+		}
 	}
 
 	stateData.guiManager.setProperty("ScrolledWindow", "BorderWidth", 0.f);
@@ -80,12 +92,13 @@ void CharactersState::handleEvent(const sf::Event& event)
 
 void CharactersState::update(float deltaTime)
 {
-
+	this->coinDisplay.update(deltaTime);
 }
 
 void CharactersState::draw()
 {
 	this->stateData.window.draw(this->background);
+	this->stateData.window.draw(this->coinDisplay);
 }
 
 void CharactersState::loadCharacters(const std::string& filePath)
@@ -106,7 +119,6 @@ void CharactersState::loadCharacters(const std::string& filePath)
 
 		characterButton->SetId(characterID);
 		characterButton->SetImage(sfg::Image::Create(this->stateData.resourceManager.getImage(static_cast<ImagesID>(imageID))));
-		characterButton->GetImage()->UpdateDrawablePosition();
 
 		this->scrolledWindowBox->Pack(characterButton);
 	}
@@ -114,7 +126,7 @@ void CharactersState::loadCharacters(const std::string& filePath)
 
 void CharactersState::selectedCharacter(const std::string& character)
 {
-	
+	this->stateData.player.setCharacterName(character);
 }
 
 void CharactersState::transitionToMenu()

@@ -13,7 +13,6 @@ InversePalindrome.com
 #include "SettingsState.hpp"
 #include "CharactersState.hpp"
 #include "PauseState.hpp"
-#include "GameOverState.hpp"
 
 #include <Thor/Resources/SfmlLoaders.hpp>
 
@@ -23,11 +22,12 @@ InversePalindrome.com
 
 
 Application::Application() :
+	player("Resources/Files/PlayerData.txt"),
 	window(sf::VideoMode(2048u, 1536u), "Nihil", sf::Style::Close | sf::Style::Titlebar),
 	resourceManager("Resources/Files/ResourcePaths.txt"),
 	soundManager(resourceManager),
 	guiManager(window),
-	stateData(resourceManager, soundManager, guiManager, inputHandler, eventManager, window),
+	stateData(player, resourceManager, soundManager, guiManager, inputHandler, window),
 	stateMachine(stateData)
 {
 	stateMachine.registerState<SplashState>(StateID::Splash);
@@ -37,7 +37,6 @@ Application::Application() :
 	stateMachine.registerState<SettingsState>(StateID::Settings);
 	stateMachine.registerState<CharactersState>(StateID::Characters);
 	stateMachine.registerState<PauseState>(StateID::Pause);
-	stateMachine.registerState<GameOverState>(StateID::GameOver);
 
 	stateMachine.pushState(StateID::Splash);
 }
@@ -71,6 +70,7 @@ void Application::handleEvents()
 		switch (event.type)
 		{
 		case sf::Event::Closed:
+			this->player.saveData();
 			this->window.close();
 			break;
 		}

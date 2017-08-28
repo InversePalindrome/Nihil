@@ -115,7 +115,7 @@ void PhysicsSystem::checkIfStatic(Entity entity, const PhysicsComponent& physics
 void PhysicsSystem::addInitialData(Entity entity, PhysicsComponent& physics)
 {
 	this->collisionsData.push_back(CollisionData(entity, physics.getBody(), physics.getObjectType()));
-	this->collisionsData.back().body.SetUserData(&this->collisionsData.back());
+	this->collisionsData.back().body->SetUserData(&this->collisionsData.back());
 
 	if (entity.has_component<PositionComponent>())
 	{

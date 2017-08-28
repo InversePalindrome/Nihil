@@ -21,8 +21,7 @@ InversePalindrome.com
 #include <fstream>
 
 
-EntityManager::EntityManager(Events& eventManager, b2World& world, ResourceManager& resourceManager, SoundManager& soundManager, InputHandler& inputHandler, CollisionsData& collisionsData) :
-	eventManager(eventManager),
+EntityManager::EntityManager(b2World& world, ResourceManager& resourceManager, SoundManager& soundManager, InputHandler& inputHandler, CollisionsData& collisionsData) :
 	componentParser(entityManager, resourceManager, world),
 	world(world)
 {
@@ -58,11 +57,6 @@ void EntityManager::update(float deltaTime)
 	}
 }
 
-void EntityManager::draw(sf::RenderTarget& target)
-{
-	target.draw(*dynamic_cast<RenderSystem*>(this->systems.at("Render").get()));
-}
-
 void EntityManager::createEntity(const std::string& filePath)
 {
 	this->componentParser.parseComponents(filePath);
@@ -96,9 +90,9 @@ void EntityManager::createEntities(const std::string& filePath)
 
 void EntityManager::destroyEntity(Entity entity)
 {
-	if (entity.has_component<PhysicsComponent>())
+	if (entity.has_component<PhysicsComponent>() && entity.get_component<PhysicsComponent>().getBody())
 	{
-		this->world.DestroyBody(&entity.get_component<PhysicsComponent>().getBody());
+		this->world.DestroyBody(entity.get_component<PhysicsComponent>().getBody());
 	}
 
 	entity.destroy();
@@ -124,4 +118,9 @@ void EntityManager::destroyEntities()
 	{
 		entity.destroy();
 	}
+}
+
+void EntityManager::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	target.draw(*dynamic_cast<RenderSystem*>(this->systems.at("Render").get()));
 }
