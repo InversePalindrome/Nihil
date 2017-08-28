@@ -27,10 +27,10 @@ InversePalindrome.com
 #include <unordered_map>
 
 
-class EntityManager 
+class EntityManager : public sf::Drawable
 {
 public:
-	EntityManager(Events& events, b2World& world, ResourceManager& resourceManager, SoundManager& soundManager, InputHandler& inputHandler, CollisionsData& collisionData);
+	EntityManager(b2World& world, ResourceManager& resourceManager, SoundManager& soundManager, InputHandler& inputHandler, CollisionsData& collisionData);
 	EntityManager(const EntityManager& entityManager) = delete;
     EntityManager& operator=(const EntityManager& entityManager) = delete;
 
@@ -38,7 +38,6 @@ public:
 	Events& getEvents();
 
 	void update(float deltaTime);
-	void draw(sf::RenderTarget& target);
 
 	void createEntity(const std::string& filePath);
 	void createEntity(const std::string& filePath, const sf::Vector2f& position);
@@ -49,11 +48,13 @@ public:
 
 private:
 	Entities entityManager;
-	Events& eventManager;
+	Events eventManager;
 
 	b2World& world;
 
 	ComponentParser componentParser;
 
 	std::unordered_map<std::string, std::unique_ptr<System>> systems;
+
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

@@ -22,7 +22,7 @@ public:
 	PhysicsComponent(b2World& world, const b2Vec2& bodySize, float maxVelocity, float accelerationRate,
 		b2BodyType physicalType, ObjectType objectType, std::int8_t collisionGroup);
 	
-	b2Body& getBody();
+	b2Body* getBody();
 
 	b2Vec2 getPosition() const;
 	b2Vec2 getVelocity() const;

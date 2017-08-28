@@ -7,12 +7,13 @@ InversePalindrome.com
 
 #pragma once
 
-#include "Map.hpp"
 #include "State.hpp"
+#include "Map.hpp"
 #include "CollisionData.hpp"
 #include "CollisionHandler.hpp"
 #include "EntityManager.hpp"
-#include "GameHud.hpp"
+#include "HealthBar.hpp"
+#include "CoinDisplay.hpp"
 
 #include <Box2D/Dynamics/b2World.h>
 
@@ -42,9 +43,8 @@ private:
 
 	CollisionHandler collisionHandler;
 
-	std::size_t level;
-
-	GameHud gameHud;
+	HealthBar healthBar;
+	CoinDisplay coinDisplay;
 
 	void updateCamera();
 	void changeLevel(std::size_t level);

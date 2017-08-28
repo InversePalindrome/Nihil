@@ -17,13 +17,13 @@ InversePalindrome.com
 
 struct CollisionData
 {
-	CollisionData(b2Body& body, ObjectType objectType) :
+	CollisionData(b2Body* body, ObjectType objectType) :
 		body(body),
 		objectType(objectType)
 	{
 	}
 
-	CollisionData(Entity entity, b2Body& body, ObjectType objectType) :
+	CollisionData(Entity entity, b2Body* body, ObjectType objectType) :
 		entity(entity),
 		body(body),
 		objectType(objectType)
@@ -31,7 +31,7 @@ struct CollisionData
 	}
 
 	Entity entity;
-	b2Body& body;
+	b2Body* body;
 	ObjectType objectType;
 };
 

@@ -8,6 +8,7 @@ InversePalindrome.com
 #pragma once
 
 #include "State.hpp"
+#include "CoinDisplay.hpp"
 
 #include <SFGUI/Box.hpp>
 #include <SFGUI/Scale.hpp>
@@ -30,6 +31,7 @@ public:
 
 private:
 	sf::Sprite background;
+	CoinDisplay coinDisplay;
 
 	sfg::Button::Ptr backButton;
 	sfg::Box::Ptr scrolledWindowBox;

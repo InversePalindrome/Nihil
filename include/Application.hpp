@@ -7,7 +7,7 @@ InversePalindrome.com
 
 #pragma once
 
-#include "ECS.hpp"
+#include "Player.hpp"
 #include "StateData.hpp"
 #include "StateMachine.hpp"
 #include "InputHandler.hpp"
@@ -28,13 +28,13 @@ public:
 	void run();
 
 private:
+	Player player;
+
 	InputHandler inputHandler;
 
 	ResourceManager resourceManager;
 	SoundManager soundManager;
 	GUIManager guiManager;
-
-	Events eventManager;
 
 	sf::RenderWindow window;
 
