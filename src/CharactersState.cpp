@@ -9,7 +9,6 @@ InversePalindrome.com
 #include "StateMachine.hpp"
 
 #include <SFGUI/Image.hpp>
-#include <SFGUI/RadioButton.hpp>
 
 #include <sstream>
 #include <fstream>
@@ -20,7 +19,7 @@ CharactersState::CharactersState(StateMachine& stateMachine, StateData& stateDat
 	background(stateData.resourceManager.getTexture(TexturesID::MenuBackground)),
 	coinDisplay(stateData.resourceManager),
 	backButton(sfg::Button::Create("BACK")),
-	scrolledWindowBox(sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL, 400.f)),
+	itemsTable(sfg::Table::Create()),
 	scrollbarScale(sfg::Scale::Create(sfg::Scale::Orientation::VERTICAL)),
 	scrollbarAdjustment(sfg::Adjustment::Create(0.f, 0.f, 100.f, 1.f, 10.f, 10.f)),
 	scrolledWindow(sfg::ScrolledWindow::Create()),
@@ -36,29 +35,19 @@ CharactersState::CharactersState(StateMachine& stateMachine, StateData& stateDat
 	backButton->SetPosition(sf::Vector2f(12.f, 65.f));
 	backButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { transitionToMenu(); });
 
-	scrolledWindowBox->SetPosition(sf::Vector2f(125.f, 320.f));
-	scrolledWindowBox->SetRequisition(sf::Vector2f((characterButtons->GetMembers().size() + 0.75f) * scrolledWindowBox->GetSpacing(), 0.f));
-
 	scrolledWindow->SetPosition(sf::Vector2f(125.f, 400.f));
 	scrolledWindow->SetRequisition(sf::Vector2f(1800.f, 650.f));
 	scrolledWindow->SetScrollbarPolicy(sfg::ScrolledWindow::HORIZONTAL_ALWAYS | sfg::ScrolledWindow::VERTICAL_NEVER);
 	
 	scrolledWindow->SetHorizontalAdjustment(scrollbarAdjustment);
 	
-	scrolledWindow->AddWithViewport(scrolledWindowBox);
+	itemsTable->SetRequisition(sf::Vector2f(scrolledWindow->GetRequisition().x, scrolledWindow->GetRequisition().y));
+	scrolledWindow->AddWithViewport(itemsTable);
 	
     scrollbarScale->SetAdjustment(scrollbarAdjustment);
 
 	for (auto& characterButton : characterButtons->GetMembers())
 	{
-		characterButton._Get()->GetSignal(sfg::ToggleButton::OnToggle).Connect([this, &characterButton]() 
-		{ 
-			if (characterButton._Get()->IsActive())
-			{
-				selectedCharacter(characterButton._Get()->GetId());
-			}
-		});
-
 		characterButton._Get()->SetState(sfg::Widget::State::SELECTED);
 		characterButton._Get()->SetState(sfg::Widget::State::NORMAL);
 
@@ -106,27 +95,75 @@ void CharactersState::loadCharacters(const std::string& filePath)
 	std::ifstream inFile(filePath);
 	std::string line;
 
+	std::size_t columnIndex = 0u, rowIndex = 0u, columnSpan = 1u, rowSpan = 1u;
+
 	while (std::getline(inFile, line))
 	{
 		std::istringstream iStream(line);
 
 		std::string characterID;
-		std::size_t imageID;
-
-		iStream >> characterID >> imageID;
-
+		std::size_t imageID = 0, price = 0u;
+		bool lockStatus;
+		
+		iStream >> characterID >> imageID >> price >> lockStatus;
+		
 		auto characterButton = sfg::RadioButton::Create("", this->characterButtons);
-
+		
 		characterButton->SetId(characterID);
 		characterButton->SetImage(sfg::Image::Create(this->stateData.resourceManager.getImage(static_cast<ImagesID>(imageID))));
+	
+		this->itemsTable->Attach(characterButton, sf::Rect<sf::Uint32>(columnIndex, rowIndex, columnSpan, rowSpan),
+			sfg::Table::FILL | sfg::Table::EXPAND, sfg::Table::FILL | sfg::Table::EXPAND, sf::Vector2f(100.f, 0.f));
 
-		this->scrolledWindowBox->Pack(characterButton);
+		++rowIndex;
+
+		auto purchaseButton = sfg::Button::Create("\t\t" + std::to_string(price) + "\t\t");
+	
+		this->itemsTable->Attach(purchaseButton, sf::Rect<sf::Uint32>(columnIndex, rowIndex, columnSpan, rowSpan),
+			0u, 0u, sf::Vector2f(100.f, 0.f));
+
+		if (lockStatus)
+		{
+			purchaseButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this, characterButton, purchaseButton]() { this->purchasedCharacter(characterButton, purchaseButton); });
+		}
+		else
+		{
+			purchaseButton->Show(false);
+		}
+
+		characterButton->GetSignal(sfg::ToggleButton::OnToggle).Connect([this, characterButton, purchaseButton]()
+		{
+			if (characterButton->IsActive() && !purchaseButton->IsGloballyVisible())
+			{
+				selectedCharacter(characterButton->GetId());
+			}
+			else
+			{
+				characterButton->SetActive(false);
+			}
+		});
+
+		++columnIndex;
+		rowIndex = 0u;
 	}
 }
 
 void CharactersState::selectedCharacter(const std::string& character)
 {
 	this->stateData.player.setCharacterName(character);
+}
+
+void CharactersState::purchasedCharacter(sfg::RadioButton::Ptr characterButton, sfg::Button::Ptr purchaseButton)
+{
+	const auto& price = std::stoull(purchaseButton->GetLabel().toAnsiString());
+
+	if (this->stateData.player.getCoins() >= price)
+	{
+		this->stateData.player.setCoins(this->stateData.player.getCoins() - price);
+		this->coinDisplay.setNumberOfCoins(this->stateData.player.getCoins());
+
+		purchaseButton->Show(false);
+	}
 }
 
 void CharactersState::transitionToMenu()
