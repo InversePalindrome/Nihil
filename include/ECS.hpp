@@ -33,7 +33,7 @@ struct Jumped;
 struct CombatOcurred;
 struct ChangeState;
 struct StateChanged;
-struct FinishedLevel;
+struct Teleported;
 struct DestroyEntity;
 struct EmitSound;
 struct PickedUpCoin;
@@ -49,7 +49,7 @@ using Tags = entityplus::tag_list<Controllable, Pickup>;
 using Entities = entityplus::entity_manager<Components, Tags>;
 
 using Events = entityplus::event_manager<Components, Tags, DirectionChanged, Jumped, CombatOcurred, ChangeState,
-	StateChanged, FinishedLevel, DestroyEntity, EmitSound, PickedUpCoin, TouchedTrampoline, GameOver>;
+	StateChanged, Teleported, DestroyEntity, EmitSound, PickedUpCoin, TouchedTrampoline, GameOver>;
 
 using Entity = Entities::entity_t;
 
@@ -83,8 +83,9 @@ struct StateChanged
 	EntityState state;
 };
 
-struct FinishedLevel
+struct Teleported
 {
+	std::string level;
 };
 
 struct DestroyEntity

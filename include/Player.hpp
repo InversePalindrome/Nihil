@@ -19,16 +19,16 @@ public:
 	void saveData();
 
 	std::string getCharacterName() const;
+	std::string getCurrentLevel() const;
 	std::size_t getCoins() const;
-	std::size_t getCurrentLevel() const;
 
 	void setCharacterName(const std::string& characterName);
+	void setCurrentLevel(const std::string& currentLevel);
 	void setCoins(std::size_t coins);
-	void setCurrentLevel(std::size_t currentLevel);
 
 private:
 	std::string pathFile;
 	std::string characterName;
+	std::string currentLevel;
 	std::size_t coins;
-	std::size_t currentLevel;
 };

@@ -20,6 +20,10 @@ InversePalindrome.com
 
 #include <SFML/Graphics/Sprite.hpp>
 
+#include <unordered_map>
+
+
+struct CharacterData;
 
 class CharactersState : public State
 {
@@ -41,10 +45,25 @@ private:
 	sfg::ScrolledWindow::Ptr scrolledWindow;
 	sfg::RadioButtonGroup::Ptr characterButtons;
 
+	std::string charactersFile;
+	std::unordered_map<std::string, CharacterData> charactersData;
+
 	void loadCharacters(const std::string& filePath);
+	void saveCharactersData();
 
 	void selectedCharacter(const std::string& character);
 	void purchasedCharacter(sfg::RadioButton::Ptr characterButton, sfg::Button::Ptr purchaseButton);
 
 	void transitionToMenu();
+};
+
+struct CharacterData
+{
+	CharacterData();
+	CharacterData(const std::string& characterName, std::size_t imageID, std::size_t price, bool lockStatus);
+
+	std::string characterName;
+	std::size_t imageID;
+	std::size_t price;
+	bool lockStatus;
 };

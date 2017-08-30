@@ -47,7 +47,7 @@ private:
 	CoinDisplay coinDisplay;
 
 	void updateCamera();
-	void changeLevel(std::size_t level);
+	void changeLevel(const std::string& level);
 
 	void setDisplayHitpoints(Entity entity);
 };
