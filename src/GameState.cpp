@@ -33,13 +33,13 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 		    entityManager.destroyEntity(event.entity);
 		}); 
 	});
-	entityManager.getEvents().subscribe<FinishedLevel>([this, &stateData](const auto& event)
+	entityManager.getEvents().subscribe<Teleported>([this, &stateData](const auto& event)
 	{
-		callbacks.push_back([this, &stateData]
+		callbacks.push_back([this, &stateData, event]
 		{ 
 		    entityManager.destroyEntities();
-			stateData.player.setCurrentLevel(stateData.player.getCurrentLevel() + 1u);
-			changeLevel(stateData.player.getCurrentLevel());
+			
+			changeLevel(event.level);
 		});
 	});
 	entityManager.getEvents().subscribe<GameOver>([this, &stateData](const auto& event)
@@ -121,10 +121,11 @@ void GameState::updateCamera()
 	}
 }
 
-void GameState::changeLevel(std::size_t level)
+void GameState::changeLevel(const std::string& level)
 {
-	this->map.load("Resources/Files/Level" + std::to_string(level) + ".tmx");
-	this->entityManager.createEntities("Resources/Files/EntitiesLevel" + std::to_string(level) + ".txt");
+	this->map.load("Resources/Files/" + level + ".tmx");
+	this->entityManager.createEntities("Resources/Files/Entities-" + level + ".txt");
+	this->stateData.player.setCurrentLevel(level);
 
 	this->healthBar.setHitpointsDisplay(this->entityManager.getEntities().get_entities<Controllable, HealthComponent>()
 		.back().get_component<HealthComponent>().getHitpoints());

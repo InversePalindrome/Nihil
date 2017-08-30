@@ -92,6 +92,8 @@ void CharactersState::draw()
 
 void CharactersState::loadCharacters(const std::string& filePath)
 {
+	this->charactersFile = filePath;
+
 	std::ifstream inFile(filePath);
 	std::string line;
 
@@ -106,6 +108,8 @@ void CharactersState::loadCharacters(const std::string& filePath)
 		bool lockStatus;
 		
 		iStream >> characterID >> imageID >> price >> lockStatus;
+
+		this->charactersData.emplace(characterID, CharacterData(characterID, imageID, price, lockStatus));
 		
 		auto characterButton = sfg::RadioButton::Create("", this->characterButtons);
 		
@@ -163,10 +167,37 @@ void CharactersState::purchasedCharacter(sfg::RadioButton::Ptr characterButton, 
 		this->coinDisplay.setNumberOfCoins(this->stateData.player.getCoins());
 
 		purchaseButton->Show(false);
+
+		this->charactersData[characterButton->GetId()].lockStatus = false;
+
+		this->saveCharactersData();
+	}
+}
+
+void CharactersState::saveCharactersData()
+{
+	std::ofstream outFile(this->charactersFile);
+
+	for (const auto& characterData : this->charactersData)
+	{
+		outFile << characterData.second.characterName << ' ' << characterData.second.imageID << ' '  << characterData.second.price << ' ' << characterData.second.lockStatus << '\n';
 	}
 }
 
 void CharactersState::transitionToMenu()
 {
 	this->stateMachine.popState();
+}
+
+CharacterData::CharacterData() :
+	CharacterData("", 0u, 0u, false)
+{
+}
+
+CharacterData::CharacterData(const std::string& characterName, std::size_t imageID, std::size_t price, bool lockStatus) :
+	characterName(characterName),
+	imageID(imageID),
+	price(price),
+	lockStatus(lockStatus)
+{
 }

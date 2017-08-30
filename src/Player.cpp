@@ -12,19 +12,19 @@ InversePalindrome.com
 
 Player::Player(const std::string& pathFile) :
 	pathFile(pathFile),
-	coins(0u),
-	currentLevel(0u)
+	currentLevel(),
+	coins(0u)
 {
 	std::ifstream inFile(pathFile);
 	
-	inFile >> characterName >> coins >> currentLevel;
+	inFile >> characterName >> currentLevel >> coins;
 }
 
 void Player::saveData()
 {
 	std::ofstream outFile(this->pathFile);
 
-	outFile << this->characterName << " " << this->coins << " " << this->currentLevel;
+	outFile << this->characterName << " " << this->currentLevel << " " << this->coins;
 }
 
 std::string Player::getCharacterName() const
@@ -32,14 +32,14 @@ std::string Player::getCharacterName() const
 	return this->characterName;
 }
 
+std::string Player::getCurrentLevel() const
+{
+	return this->currentLevel;
+}
+
 std::size_t Player::getCoins() const
 {
 	return this->coins;
-}
-
-std::size_t Player::getCurrentLevel() const
-{
-	return this->currentLevel;
 }
 
 void Player::setCharacterName(const std::string& characterName)
@@ -47,12 +47,12 @@ void Player::setCharacterName(const std::string& characterName)
 	this->characterName = characterName;
 }
 
+void Player::setCurrentLevel(const std::string& currentLevel)
+{
+	this->currentLevel = currentLevel;
+}
+
 void Player::setCoins(std::size_t coins)
 {
 	this->coins = coins;
-}
-
-void Player::setCurrentLevel(std::size_t currentLevel)
-{
-	this->currentLevel = currentLevel;
 }

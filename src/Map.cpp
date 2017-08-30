@@ -64,7 +64,7 @@ void Map::addBackgroundImage()
 	{
 		if (layer->getType() == tmx::Layer::Type::Image)
 		{
-			TexturesID backgroundID = static_cast<TexturesID>(std::stoull(dynamic_cast<tmx::ImageLayer*>(layer.get())->getName()));
+			TexturesID backgroundID = static_cast<TexturesID>(dynamic_cast<tmx::ImageLayer*>(layer.get())->getProperties().back().getIntValue());
 
 			auto& backgroundTexture = this->resourceManager.getTexture(backgroundID);
 			backgroundTexture.setRepeated(true);
@@ -103,8 +103,15 @@ void Map::addTileCollisions()
 
 					auto* tile = this->world.CreateBody(&bodyDefinition);
 					tile->CreateFixture(&fixture);
-
-					this->collisionsData.push_back(CollisionData(tile, this->findObjectType(object.getName())));
+					
+					if (!object.getProperties().empty())
+					{
+						this->collisionsData.push_back(CollisionData(tile, this->findObjectType(object.getName()), object.getProperties().back()));
+					}
+					else
+					{
+						this->collisionsData.push_back(CollisionData(tile, this->findObjectType(object.getName()), {}));
+					}
 
 					this->collisionsData.back().body->SetUserData(&this->collisionsData.back());
 				}
