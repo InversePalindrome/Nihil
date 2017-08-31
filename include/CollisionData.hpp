@@ -15,11 +15,12 @@ InversePalindrome.com
 #include <Box2D/Dynamics/b2Body.h>
 
 #include <list>
+#include <vector>
 
 
 struct CollisionData
 {
-	CollisionData(b2Body* body, ObjectType objectType, const tmx::Property& properties) :
+	CollisionData(b2Body* body, ObjectType objectType, const std::vector<tmx::Property>& properties) :
 		body(body),
 		objectType(objectType),
 		properties(properties)
@@ -27,22 +28,16 @@ struct CollisionData
 	}
 
 	CollisionData(Entity entity, b2Body* body, ObjectType objectType) :
-		CollisionData(entity, body, objectType, {})
-	{
-	}
-
-	CollisionData(Entity entity, b2Body* body, ObjectType objectType, const tmx::Property& properties) :
 		entity(entity),
 		body(body),
-		objectType(objectType),
-		properties(properties)
+		objectType(objectType)
 	{
 	}
 
 	Entity entity;
 	b2Body* body;
 	ObjectType objectType;
-	tmx::Property properties;
+	std::vector<tmx::Property> properties;
 };
 
 using CollisionsData = std::list<CollisionData>;

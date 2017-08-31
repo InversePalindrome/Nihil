@@ -41,7 +41,6 @@ private:
 	sf::FloatRect bounds;
 	std::string filePath;
 	std::vector<std::unique_ptr<Layer>> layers;
-	std::unordered_map<std::string, ObjectType> staticObjects;
 
 	b2World& world;
 	EntityManager& entityManager;
@@ -50,8 +49,7 @@ private:
 
 	void addBackgroundImage();
 	void addTileCollisions();
-
-	ObjectType findObjectType(const std::string& tileName);
+	void addEntities();
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

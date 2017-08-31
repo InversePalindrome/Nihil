@@ -86,6 +86,7 @@ struct StateChanged
 struct Teleported
 {
 	std::string level;
+	sf::Vector2f position;
 };
 
 struct DestroyEntity

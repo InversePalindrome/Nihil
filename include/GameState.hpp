@@ -47,7 +47,7 @@ private:
 	CoinDisplay coinDisplay;
 
 	void updateCamera();
-	void changeLevel(const std::string& level);
+	void changeLevel(const std::string& level, const sf::Vector2f& position);
 
 	void setDisplayHitpoints(Entity entity);
 };
