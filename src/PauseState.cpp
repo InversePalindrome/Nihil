@@ -66,6 +66,8 @@ bool PauseState::isTransparent() const
 
 void PauseState::transitionToMenu()
 { 
+	this->stateData.player.saveData();
+
 	this->stateMachine.clearStates();
 	this->stateMachine.pushState(StateID::Menu);
 }

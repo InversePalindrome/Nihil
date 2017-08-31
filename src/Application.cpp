@@ -70,7 +70,6 @@ void Application::handleEvents()
 		switch (event.type)
 		{
 		case sf::Event::Closed:
-			this->player.saveData();
 			this->window.close();
 			break;
 		}

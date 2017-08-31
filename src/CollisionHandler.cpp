@@ -6,7 +6,7 @@ InversePalindrome.com
 
 
 #include "CollisionHandler.hpp"
-
+#include <iostream>
 
 
 CollisionHandler::CollisionHandler(Events& events) :
@@ -33,7 +33,8 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 	}
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Portal))
 	{
-		this->events.broadcast(Teleported{ orderedCollision.value().second.get().properties.getStringValue() });
+		this->events.broadcast(Teleported{ orderedCollision.value().second.get().properties[0].getStringValue(), 
+			sf::Vector2f(orderedCollision.value().second.get().properties[1].getFloatValue(), orderedCollision.value().second.get().properties[2].getFloatValue()) });
 	}
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Pickup))
 	{

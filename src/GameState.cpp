@@ -39,7 +39,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 		{ 
 		    entityManager.destroyEntities();
 			
-			changeLevel(event.level);
+			changeLevel(event.level, event.position);
 		});
 	});
 	entityManager.getEvents().subscribe<GameOver>([this, &stateData](const auto& event)
@@ -47,7 +47,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 		callbacks.push_back([this, &stateData] 
 		{
 			entityManager.destroyEntities();
-			changeLevel(stateData.player.getCurrentLevel());
+			changeLevel(stateData.player.getCurrentLevel(), stateData.player.getPosition());
 		});
 	});
 	entityManager.getEvents().subscribe<PickedUpCoin>([this, &stateData](const auto& event)
@@ -62,7 +62,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 
 	stateData.window.setView(camera);
 
-	changeLevel(stateData.player.getCurrentLevel());
+	changeLevel(stateData.player.getCurrentLevel(), stateData.player.getPosition());
 }
 
 void GameState::handleEvent(const sf::Event& event)
@@ -104,7 +104,6 @@ void GameState::draw()
 	this->stateData.window.draw(this->entityManager);
 
 	this->stateData.window.setView(this->stateData.window.getDefaultView());
-
 	this->stateData.window.draw(this->healthBar);
 	this->stateData.window.draw(this->coinDisplay);
 }
@@ -121,7 +120,7 @@ void GameState::updateCamera()
 	}
 }
 
-void GameState::changeLevel(const std::string& level)
+void GameState::changeLevel(const std::string& level, const sf::Vector2f& position)
 {
 	this->map.load("Resources/Files/" + level + ".tmx");
 	this->entityManager.createEntities("Resources/Files/Entities-" + level + ".txt");
@@ -129,6 +128,11 @@ void GameState::changeLevel(const std::string& level)
 
 	this->healthBar.setHitpointsDisplay(this->entityManager.getEntities().get_entities<Controllable, HealthComponent>()
 		.back().get_component<HealthComponent>().getHitpoints());
+
+	this->entityManager.getEntities().get_entities<Controllable, PositionComponent>().back()
+		.get_component<PositionComponent>().setPosition(position);
+
+	this->stateData.player.setPosition(position);
 
 	this->camera = this->stateData.window.getDefaultView();
 	this->stateData.soundManager.stopAllSounds();

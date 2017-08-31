@@ -22,10 +22,6 @@ Map::Map(const sf::Vector2f& chunkSize, b2World& world, EntityManager& entityMan
 	resourceManager(resourceManager),
 	collisionsData(collisionsData)
 {
-	staticObjects["Trap"] = ObjectType::Trap;
-	staticObjects["Trampoline"] = ObjectType::Trampoline;
-	staticObjects["Portal"] = ObjectType::Portal;
-	staticObjects["Border"] = ObjectType::Border;
 }
 
 void Map::load(const std::string& filePath)
@@ -44,6 +40,7 @@ void Map::load(const std::string& filePath)
 
 	this->addBackgroundImage();
 	this->addTileCollisions();
+	this->addEntities();
 }
 
 sf::FloatRect Map::getBounds() const
@@ -87,10 +84,10 @@ void Map::addTileCollisions()
 			
 			for (const auto& object : objects)
 			{
-				const auto& AABB = object.getAABB();
-
-				if(object.getName().empty() || this->staticObjects.count(object.getName()))
+				if (object.getType() != "Entity")
 				{
+					const auto& AABB = object.getAABB();
+
 					b2BodyDef bodyDefinition;
 					bodyDefinition.type = b2_staticBody;
 					bodyDefinition.position.Set(UnitConverter::pixelsToMeters(AABB.left + AABB.width / 2.f), UnitConverter::pixelsToMeters(-(AABB.top + AABB.height / 2.f)));
@@ -103,37 +100,46 @@ void Map::addTileCollisions()
 
 					auto* tile = this->world.CreateBody(&bodyDefinition);
 					tile->CreateFixture(&fixture);
-					
-					if (!object.getProperties().empty())
-					{
-						this->collisionsData.push_back(CollisionData(tile, this->findObjectType(object.getName()), object.getProperties().back()));
-					}
-					else
-					{
-						this->collisionsData.push_back(CollisionData(tile, this->findObjectType(object.getName()), {}));
-					}
 
-					this->collisionsData.back().body->SetUserData(&this->collisionsData.back());
-				}
-				else
-				{
-					this->entityManager.createEntity("Resources/Files/" + object.getName() + ".txt", 
-						sf::Vector2f(AABB.left + AABB.width / 2.f, AABB.top + AABB.height / 2.f));
+					for (const auto& property : object.getProperties())
+					{
+						if (property.getName() == "ID")
+						{
+							this->collisionsData.push_back(CollisionData(tile, static_cast<ObjectType>(property.getIntValue()), object.getProperties()));
+							this->collisionsData.back().body->SetUserData(&this->collisionsData.back());
+						}
+					}
 				}
 			}
+			
 		}
 	}
 }
 
-ObjectType Map::findObjectType(const std::string& tileName)
+void Map::addEntities()
 {
-	if (this->staticObjects.count(tileName))
+	const auto& layers = this->map.getLayers();
+
+	for (const auto& layer : layers)
 	{
-		return this->staticObjects[tileName];
-	}
-	else
-	{
-		return ObjectType::Tile;
+		if (layer->getType() == tmx::Layer::Type::Object)
+		{
+			const auto& objects = dynamic_cast<tmx::ObjectGroup*>(layer.get())->getObjects();
+
+			for (const auto& object : objects)
+			{
+				const auto& AABB = object.getAABB();
+
+				for (const auto& property : object.getProperties())
+				{
+					if (property.getName() == "File")
+					{
+						this->entityManager.createEntity(property.getStringValue(), sf::Vector2f(AABB.left + AABB.width / 2.f, AABB.top + AABB.height / 2.f));
+					}
+				}
+			}
+
+		}
 	}
 }
 
