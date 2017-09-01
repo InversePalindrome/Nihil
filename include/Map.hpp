@@ -13,6 +13,7 @@ InversePalindrome.com
 #include "ResourceManager.hpp"
 
 #include <tmxlite/Map.hpp>
+#include <tmxlite/ImageLayer.hpp>
 
 #include <Box2D/Dynamics/b2World.h>
 
@@ -47,9 +48,10 @@ private:
 	ResourceManager& resourceManager;
 	CollisionsData& collisionsData;
 
-	void addBackgroundImage();
-	void addTileCollisions();
-	void addEntities();
+	void parseMap();
+
+	void addImage(tmx::ImageLayer* imageLayer);
+	void addObjects(tmx::ObjectGroup* objectLayer);
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
