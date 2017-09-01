@@ -8,8 +8,6 @@ InversePalindrome.com
 #include "Map.hpp"
 #include "UnitConverter.hpp"
 
-#include <tmxlite/ImageLayer.hpp>
-
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2Fixture.h>
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
@@ -38,9 +36,25 @@ void Map::load(const std::string& filePath)
 
 	this->bounds = sf::FloatRect(this->map.getBounds().left, this->map.getBounds().top, this->map.getBounds().width, this->map.getBounds().height);
 
-	this->addBackgroundImage();
-	this->addTileCollisions();
-	this->addEntities();
+	this->parseMap();
+}
+
+void Map::parseMap()
+{
+	const auto& layers = this->map.getLayers();
+
+	for (const auto& layer : layers)
+	{
+		switch (layer->getType())
+		{
+		case tmx::Layer::Type::Image:
+			this->addImage(dynamic_cast<tmx::ImageLayer*>(layer.get()));
+			break;
+		case tmx::Layer::Type::Object:
+			this->addObjects(dynamic_cast<tmx::ObjectGroup*>(layer.get()));
+			break;
+		}
+	}
 }
 
 sf::FloatRect Map::getBounds() const
@@ -53,92 +67,58 @@ std::string Map::getCurrentFilePath() const
 	return this->filePath;
 }
 
-void Map::addBackgroundImage()
+void Map::addImage(tmx::ImageLayer* imageLayer)
 {
-	const auto& layers = this->map.getLayers();
+	auto backgroundID = static_cast<TexturesID>(imageLayer->getProperties().back().getIntValue());
 
-	for (const auto& layer : layers)
-	{
-		if (layer->getType() == tmx::Layer::Type::Image)
-		{
-			TexturesID backgroundID = static_cast<TexturesID>(dynamic_cast<tmx::ImageLayer*>(layer.get())->getProperties().back().getIntValue());
+	auto& backgroundTexture = this->resourceManager.getTexture(backgroundID);
+	backgroundTexture.setRepeated(true);
 
-			auto& backgroundTexture = this->resourceManager.getTexture(backgroundID);
-			backgroundTexture.setRepeated(true);
-
-			this->background.setTexture(backgroundTexture);
-			this->background.setTextureRect(sf::IntRect(0.f, 0.f, this->bounds.width, this->bounds.height));
-		}
-	}
+	this->background.setTexture(backgroundTexture);
+	this->background.setTextureRect(sf::IntRect(0.f, 0.f, this->bounds.width, this->bounds.height));
 }
 
-void Map::addTileCollisions()
+void Map::addObjects(tmx::ObjectGroup* objectLayer)
 {
-	const auto& layers = this->map.getLayers();
+	const auto& objects = objectLayer->getObjects();
 
-	for (const auto& layer : layers)
+	for (const auto& object : objects)
 	{
-		if (layer->getType() == tmx::Layer::Type::Object)
+		const auto& AABB = object.getAABB();
+		if (object.getType() == "Entity")
 		{
-			const auto& objects = dynamic_cast<tmx::ObjectGroup*>(layer.get())->getObjects();
-			
-			for (const auto& object : objects)
+			for (const auto& property : object.getProperties())
 			{
-				if (object.getType() != "Entity")
+				if (property.getName() == "File")
 				{
-					const auto& AABB = object.getAABB();
-
-					b2BodyDef bodyDefinition;
-					bodyDefinition.type = b2_staticBody;
-					bodyDefinition.position.Set(UnitConverter::pixelsToMeters(AABB.left + AABB.width / 2.f), UnitConverter::pixelsToMeters(-(AABB.top + AABB.height / 2.f)));
-
-					b2PolygonShape shape;
-					shape.SetAsBox(UnitConverter::pixelsToMeters(AABB.width / 2.f), UnitConverter::pixelsToMeters(AABB.height / 2.f));
-
-					b2FixtureDef fixture;
-					fixture.shape = &shape;
-
-					auto* tile = this->world.CreateBody(&bodyDefinition);
-					tile->CreateFixture(&fixture);
-
-					for (const auto& property : object.getProperties())
-					{
-						if (property.getName() == "ID")
-						{
-							this->collisionsData.push_back(CollisionData(tile, static_cast<ObjectType>(property.getIntValue()), object.getProperties()));
-							this->collisionsData.back().body->SetUserData(&this->collisionsData.back());
-						}
-					}
+					this->entityManager.createEntity(property.getStringValue(), sf::Vector2f(AABB.left + AABB.width / 2.f, AABB.top + AABB.height / 2.f));
 				}
 			}
-			
 		}
-	}
-}
-
-void Map::addEntities()
-{
-	const auto& layers = this->map.getLayers();
-
-	for (const auto& layer : layers)
-	{
-		if (layer->getType() == tmx::Layer::Type::Object)
+		else
 		{
-			const auto& objects = dynamic_cast<tmx::ObjectGroup*>(layer.get())->getObjects();
+			b2BodyDef bodyDefinition;
+			bodyDefinition.type = b2_staticBody;
+			bodyDefinition.position.Set(UnitConverter::pixelsToMeters(AABB.left + AABB.width / 2.f), UnitConverter::pixelsToMeters(-(AABB.top + AABB.height / 2.f)));
 
-			for (const auto& object : objects)
+			b2PolygonShape shape;
+			shape.SetAsBox(UnitConverter::pixelsToMeters(AABB.width / 2.f), UnitConverter::pixelsToMeters(AABB.height / 2.f));
+
+			b2FixtureDef fixture;
+			fixture.shape = &shape;
+
+			auto* tile = this->world.CreateBody(&bodyDefinition);
+			tile->CreateFixture(&fixture);
+
+			std::unordered_map<std::string, tmx::Property> properties;
+
+;			for (const auto& property : object.getProperties())
 			{
-				const auto& AABB = object.getAABB();
-
-				for (const auto& property : object.getProperties())
-				{
-					if (property.getName() == "File")
-					{
-						this->entityManager.createEntity(property.getStringValue(), sf::Vector2f(AABB.left + AABB.width / 2.f, AABB.top + AABB.height / 2.f));
-					}
-				}
+	            properties.emplace(property.getName(), property);
 			}
 
+            this->collisionsData.push_back(CollisionData(tile, static_cast<ObjectType>(properties["ID"].getIntValue()), properties));
+            this->collisionsData.back().body->SetUserData(&this->collisionsData.back());
 		}
 	}
 }

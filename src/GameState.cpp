@@ -37,8 +37,6 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	{
 		callbacks.push_back([this, &stateData, event]
 		{ 
-		    entityManager.destroyEntities();
-			
 			changeLevel(event.level, event.position);
 		});
 	});
@@ -46,7 +44,6 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	{
 		callbacks.push_back([this, &stateData] 
 		{
-			entityManager.destroyEntities();
 			changeLevel(stateData.player.getCurrentLevel(), stateData.player.getPosition());
 		});
 	});
@@ -122,6 +119,8 @@ void GameState::updateCamera()
 
 void GameState::changeLevel(const std::string& level, const sf::Vector2f& position)
 {
+	this->entityManager.destroyEntities();
+
 	this->map.load("Resources/Files/" + level + ".tmx");
 	this->entityManager.createEntities("Resources/Files/Entities-" + level + ".txt");
 	this->stateData.player.setCurrentLevel(level);
