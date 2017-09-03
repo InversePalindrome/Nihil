@@ -8,12 +8,15 @@ InversePalindrome.com
 #pragma once
 
 #include "SoundManager.hpp"
+#include "Component.hpp"
 
 
-class SoundComponent
+class SoundComponent : public Component
 {
 public:
 	SoundComponent();
+
+	virtual std::ostream& operator<<(std::ostream& os) override;
 
 	SoundID getSoundID() const;
 

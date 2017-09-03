@@ -7,8 +7,8 @@ InversePalindrome.com
 
 #pragma once
 
-
 #include "ParticleData.hpp"
+#include "Component.hpp"
 #include "StateComponent.hpp"
 #include "ResourceManager.hpp"
 
@@ -22,10 +22,12 @@ InversePalindrome.com
 #include <unordered_map>
 
 
-class ParticleComponent : public sf::Drawable
+class ParticleComponent : public Component, public sf::Drawable
 {
 public:
 	ParticleComponent(const std::string& filePath, ResourceManager& resourceManager);
+
+	virtual std::ostream& operator<<(std::ostream& os) override;
 
 	void update(float deltaTime);
     
@@ -42,6 +44,8 @@ public:
 	bool hasParticleData(EntityState state) const;
 
 private:
+	std::string pathFile;
+
 	thor::ParticleSystem particleSystem;
 	thor::UniversalEmitter emitter;
 	std::size_t rangeOfEmission;

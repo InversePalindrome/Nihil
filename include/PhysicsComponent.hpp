@@ -8,6 +8,7 @@ InversePalindrome.com
 #pragma once
 
 #include "ObjectType.hpp"
+#include "Component.hpp"
 
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2World.h>
@@ -15,22 +16,26 @@ InversePalindrome.com
 #include <SFML/System/Vector2.hpp>
 
 
-class PhysicsComponent
+class PhysicsComponent : public Component
 {
 public:
 	PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType physicalType, ObjectType objectType, std::int8_t collisionGroup);
 	PhysicsComponent(b2World& world, const b2Vec2& bodySize, float maxVelocity, float accelerationRate,
 		b2BodyType physicalType, ObjectType objectType, std::int8_t collisionGroup);
-	
+
+	virtual std::ostream& operator<<(std::ostream& os) override;
+
 	b2Body* getBody();
 
 	b2Vec2 getPosition() const;
+	b2Vec2 getBodySize() const;
 	b2Vec2 getVelocity() const;
 	b2BodyType getType() const;
-	float getMass() const;
 
+	float getMass() const;
 	float getMaxVelocity() const;
 	float getAccelerationRate() const;
+	std::int8_t getCollisionGroup() const;
 
 	void setPosition(const b2Vec2& position);
 	void setMaxVelocity(float maxVelocity);
@@ -44,8 +49,10 @@ public:
 
 private:
 	b2Body* body;
+	b2Vec2 bodySize;
 	float maxVelocity;
 	float accelerationRate;
 
 	ObjectType objectType;
+	std::int8_t collisionGroup;
 };

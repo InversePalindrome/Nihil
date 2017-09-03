@@ -14,6 +14,7 @@ InversePalindrome.com
 #include "ResourceManager.hpp"
 #include "SoundManager.hpp"
 #include "ComponentParser.hpp"
+#include "ComponentSerializer.hpp"
 
 #include <Box2D/Dynamics/b2World.h>
 
@@ -39,12 +40,15 @@ public:
 
 	void update(float deltaTime);
 
-	void createEntity(const std::string& filePath);
-	void createEntity(const std::string& filePath, const sf::Vector2f& position);
+	Entity createEntity(const std::string& filePath);
+	Entity createEntity(const std::string& filePath, const sf::Vector2f& position);
+
 	void createEntities(const std::string& filePath);
 
 	void destroyEntity(Entity entity);
 	void destroyEntities();
+
+	void saveEntities(const std::string& pathFile);
 
 private:
 	Entities entityManager;
@@ -53,6 +57,7 @@ private:
 	b2World& world;
 
 	ComponentParser componentParser;
+	ComponentSerializer componentSerializer;
 
 	std::unordered_map<std::string, std::unique_ptr<System>> systems;
 

@@ -7,13 +7,17 @@ InversePalindrome.com
 
 #pragma once
 
+#include "Component.hpp"
+
 #include <cstddef>
 
 
-class AttackComponent
+class AttackComponent : public Component
 {
 public:
 	AttackComponent(std::size_t damagePoints);
+
+	virtual std::ostream& operator<<(std::ostream& os) override;
 
 	std::size_t getDamagePoints() const;
 

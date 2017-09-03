@@ -7,13 +7,17 @@ InversePalindrome.com
 
 #pragma once
 
+#include "Component.hpp"
+
 #include <cstddef>
 
 
-class HealthComponent
+class HealthComponent : public Component
 {
 public:
 	HealthComponent(std::size_t hitpoints);
+
+	virtual std::ostream& operator<<(std::ostream& os) override;
 
 	std::size_t getHitpoints() const;
 

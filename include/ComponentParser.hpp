@@ -34,33 +34,42 @@ private:
 	template <typename T> std::tuple<T> parse(std::istream& iStream);
 
 	template <typename T, typename Arg, typename... Args>
+
 	std::tuple<T, Arg, Args...> parse(std::istream& iStream);
 
 	template <typename... Args>
+
 	std::tuple<Args...> parse(const std::string& str);
 };
 
-template <typename T> 
+template <typename T>
+
 std::tuple<T> ComponentParser::parse(std::istream& iStream)
+
 {
-	T value; 
+	T value;
+
 	iStream >> value;
 
 	return std::tuple<T>(std::move(value));
+
 }
 
 template <typename T, typename Arg, typename... Args>
 std::tuple<T, Arg, Args...> ComponentParser::parse(std::istream& iStream)
 {
 	T value;
+
 	iStream >> value;
 
 	return std::tuple_cat(std::tuple<T>(std::move(value)),
+
 		parse<Arg, Args...>(iStream));
 }
 
 template <typename... Args>
 std::tuple<Args...> ComponentParser::parse(const std::string& line)
+
 {
 	std::istringstream iStream(line);
 

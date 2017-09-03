@@ -8,6 +8,7 @@ InversePalindrome.com
 #pragma once
 
 #include "Direction.hpp"
+#include "Component.hpp"
 #include "StateComponent.hpp"
 
 #include <Thor/Animations/Animator.hpp>
@@ -19,12 +20,14 @@ InversePalindrome.com
 #include <optional>
 
 
-class AnimationComponent
+class AnimationComponent : public Component
 {
 	using Animation = std::pair<EntityState, Direction>;
 
 public:
 	AnimationComponent(const std::string& animationsFile);
+
+	virtual std::ostream& operator<<(std::ostream& os) override;
 
 	std::optional<std::pair<EntityState, Direction>> getCurrentAnimation() const;
 
@@ -36,6 +39,7 @@ public:
 	bool hasAnimation(const Animation& animation) const;
 
 private:
+	std::string animationsFile;
 	std::map<Animation, std::pair<thor::FrameAnimation, float>> animations;
 	thor::Animator<sf::Sprite, std::pair<EntityState, Direction>> animator;
 };

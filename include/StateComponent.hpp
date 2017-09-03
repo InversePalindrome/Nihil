@@ -7,13 +7,17 @@ InversePalindrome.com
 
 #pragma once
 
+#include "Component.hpp"
+
 
 enum class EntityState { Idle, Walking, Jumping, Attacking, Dead };
 
-class StateComponent
+class StateComponent : public Component
 {
 public:
 	StateComponent();
+
+	virtual std::ostream& operator<<(std::ostream& os) override;
 
 	EntityState getState() const;
 

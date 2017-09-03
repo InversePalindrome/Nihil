@@ -7,18 +7,22 @@ InversePalindrome.com
 
 #pragma once
 
+#include "Component.hpp"
+
 #include <Thor/Time/Timer.hpp>
 
 #include <vector>
 #include <string>
 
 
-class AutomatedComponent
+class AutomatedComponent : public Component
 {
 	using Task = std::pair<std::string, float>;
 
 public:
 	AutomatedComponent(const std::string& filePath);
+
+	virtual std::ostream& operator<<(std::ostream& os) override;
 
 	Task getCurrentTask() const;
 
@@ -28,6 +32,7 @@ public:
 	bool hasCurrentTaskExpired() const;
 
 private:
+	std::string filePath;
 	std::vector<Task> tasks;
 	thor::Timer timer;
 	std::size_t currentTask;

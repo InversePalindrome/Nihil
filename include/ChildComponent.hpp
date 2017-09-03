@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #pragma once
 
+#include "Component.hpp"
 
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Transform.hpp>
@@ -14,10 +15,12 @@ InversePalindrome.com
 #include <cstddef>
 
 
-class ChildComponent
+class ChildComponent : public Component
 {
 public:
 	ChildComponent(std::size_t parentID);
+
+	virtual std::ostream& operator<<(std::ostream& os) override;
 
 	std::size_t getParentID() const;
 	const sf::Transform& getTransform() const;
