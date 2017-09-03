@@ -11,7 +11,9 @@ InversePalindrome.com
 #include <sstream>
 
 
-AnimationComponent::AnimationComponent(const std::string& animationsFile) 
+AnimationComponent::AnimationComponent(const std::string& animationsFile)  :
+	Component(ComponentID::Animation),
+	animationsFile(animationsFile)
 {
 	std::ifstream inFile(animationsFile);
 	std::string line;
@@ -53,6 +55,13 @@ AnimationComponent::AnimationComponent(const std::string& animationsFile)
 	{
 		animator.playAnimation(animations.begin()->first, true);
 	}
+}
+
+std::ostream& AnimationComponent::operator<<(std::ostream& os)
+{
+	os << this->animationsFile;
+
+	return os;
 }
 
 std::optional<std::pair<EntityState, Direction>> AnimationComponent::getCurrentAnimation() const

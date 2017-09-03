@@ -13,6 +13,8 @@ InversePalindrome.com
 
 
 AutomatedComponent::AutomatedComponent(const std::string& pathFile) :
+	Component(ComponentID::Automated),
+	filePath(filePath),
 	currentTask(0u)
 {
 	std::ifstream inFile(pathFile);
@@ -29,6 +31,13 @@ AutomatedComponent::AutomatedComponent(const std::string& pathFile) :
 
 		tasks.push_back(std::make_pair(function, time));
 	}
+}
+
+std::ostream& AutomatedComponent::operator<<(std::ostream& os)
+{
+	os << this->filePath;
+
+	return os;
 }
 
 AutomatedComponent::Task AutomatedComponent::getCurrentTask() const

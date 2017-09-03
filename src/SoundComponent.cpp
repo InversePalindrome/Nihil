@@ -9,8 +9,16 @@ InversePalindrome.com
 
 
 SoundComponent::SoundComponent() :
+	Component(ComponentID::Sound),
 	soundID(-1)
 {
+}
+
+std::ostream& SoundComponent::operator<<(std::ostream& os)
+{
+	os << this->soundID;
+
+	return os;
 }
 
 SoundID SoundComponent::getSoundID() const

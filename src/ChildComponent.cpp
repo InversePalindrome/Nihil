@@ -9,8 +9,16 @@ InversePalindrome.com
 
 
 ChildComponent::ChildComponent(std::size_t parentID) :
+	Component(ComponentID::Child),
 	parentID(parentID)
 {
+}
+
+std::ostream& ChildComponent::operator<<(std::ostream& os)
+{
+	os << this->parentID;
+
+	return os;
 }
 
 std::size_t ChildComponent::getParentID() const

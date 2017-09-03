@@ -60,7 +60,7 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["AI"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component<AIComponent>(std::make_from_tuple<AIComponent>(this->parse<float, float, float, float>(line)));
+		entity.add_component<AIComponent>(std::make_from_tuple<AIComponent>(this->parse<float, float, float>(line)));
 	};
 
 	componentParsers["Sprite1"] = [this, &resourceManager](auto& entity, auto& line)

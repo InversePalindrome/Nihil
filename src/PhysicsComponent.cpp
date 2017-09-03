@@ -18,10 +18,13 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2Bod
 
 PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, float maxVelocity,
 	float accelerationRate, b2BodyType physicalType, ObjectType objectType, std::int8_t collisionGroup)  :
+	Component(ComponentID::Physics),
 	body(nullptr),
+	bodySize(bodySize),
 	maxVelocity(maxVelocity),
 	accelerationRate(accelerationRate),
-	objectType(objectType)
+	objectType(objectType),
+	collisionGroup(collisionGroup)
 {
 	b2BodyDef bodyDefinition;
 	bodyDefinition.type = physicalType;
@@ -41,6 +44,14 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, float
 	body->CreateFixture(&fixture);
 }
 
+std::ostream& PhysicsComponent::operator<<(std::ostream& os)
+{
+	os << this->bodySize.x << ' ' << this->bodySize.y << ' ' << ' ' << this->maxVelocity << ' ' << this->accelerationRate 
+		<< ' ' << static_cast<std::size_t>(this->getType()) << ' ' << static_cast<std::size_t>(this->objectType) << ' ' << this->collisionGroup;
+
+	return os;
+}
+
 b2Body* PhysicsComponent::getBody()
 {
 	return this->body;
@@ -49,6 +60,11 @@ b2Body* PhysicsComponent::getBody()
 b2Vec2 PhysicsComponent::getPosition() const
 {
 	return this->body->GetPosition();
+}
+
+b2Vec2 PhysicsComponent::getBodySize() const
+{
+	return this->bodySize;
 }
 
 b2Vec2 PhysicsComponent::getVelocity() const
@@ -74,6 +90,11 @@ float PhysicsComponent::getMaxVelocity() const
 float PhysicsComponent::getAccelerationRate() const
 {
 	return this->accelerationRate;
+}
+
+std::int8_t PhysicsComponent::getCollisionGroup() const
+{
+	return this->collisionGroup;
 }
 
 void PhysicsComponent::setPosition(const b2Vec2& position)

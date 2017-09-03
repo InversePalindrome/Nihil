@@ -22,8 +22,9 @@ InversePalindrome.com
 
 
 EntityManager::EntityManager(b2World& world, ResourceManager& resourceManager, SoundManager& soundManager, InputHandler& inputHandler, CollisionsData& collisionsData) :
+	world(world),
 	componentParser(entityManager, resourceManager, world),
-	world(world)
+	componentSerializer(entityManager)
 {
 	entityManager.set_event_manager(eventManager);
 	
@@ -57,15 +58,15 @@ void EntityManager::update(float deltaTime)
 	}
 }
 
-void EntityManager::createEntity(const std::string& filePath)
+Entity EntityManager::createEntity(const std::string& filePath)
 {
-	this->componentParser.parseComponents(filePath);
+	return this->componentParser.parseComponents(filePath);
 }
 
-void EntityManager::createEntity(const std::string& filePath, const sf::Vector2f& position)
+Entity EntityManager::createEntity(const std::string& filePath, const sf::Vector2f& position)
 {
-	auto& entity = this->componentParser.parseComponents(filePath);
-
+	auto& entity = this->createEntity(filePath);
+	
 	if (entity.has_component<PositionComponent>())
 	{
 		entity.get_component<PositionComponent>().setPosition(position);
@@ -75,6 +76,8 @@ void EntityManager::createEntity(const std::string& filePath, const sf::Vector2f
 		entity.get_component<PhysicsComponent>().setPosition(
 			b2Vec2(UnitConverter::pixelsToMeters(position.x), UnitConverter::pixelsToMeters(-position.y)));
 	}
+
+	return entity;
 }
 
 void EntityManager::createEntities(const std::string& filePath)
@@ -84,7 +87,7 @@ void EntityManager::createEntities(const std::string& filePath)
 
 	while (std::getline(inFile, line))
 	{
-		this->componentParser.parseComponents(line);
+		this->createEntity(line);
 	}
 }
 
@@ -118,6 +121,11 @@ void EntityManager::destroyEntities()
 	{
 		entity.destroy();
 	}
+}
+
+void EntityManager::saveEntities(const std::string& pathFile)
+{
+	this->componentSerializer.serialize(pathFile);
 }
 
 void EntityManager::draw(sf::RenderTarget& target, sf::RenderStates states) const

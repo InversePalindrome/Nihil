@@ -9,10 +9,18 @@ InversePalindrome.com
 #include "AIComponent.hpp"
 
 
-AIComponent::AIComponent(float visionRange, float attackTime, float initialX, float finalX) :
+AIComponent::AIComponent(float visionRange, float initialX, float finalX) :
+	Component(ComponentID::AI),
 	visionRange(visionRange),
 	path(initialX, finalX)
 {
+}
+
+std::ostream& AIComponent::operator<<(std::ostream& os)
+{
+	os << this->visionRange << ' ' << this->path.first << ' ' << this->path.second;
+
+	return os;
 }
 
 float AIComponent::getVisionRange() const

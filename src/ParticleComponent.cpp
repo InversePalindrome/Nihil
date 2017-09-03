@@ -13,6 +13,8 @@ InversePalindrome.com
 
 
 ParticleComponent::ParticleComponent(const std::string& pathFile, ResourceManager& resourceManager) :
+	Component(ComponentID::Particle),
+	pathFile(pathFile),
 	rangeOfEmission(0u)
 {
 	std::ifstream inFile(pathFile);
@@ -64,6 +66,13 @@ ParticleComponent::ParticleComponent(const std::string& pathFile, ResourceManage
 	emitter.setParticleTextureIndex(thor::Distributions::uniform(0u, numberOfParticles - 1u));
 
 	particleSystem.addEmitter(thor::refEmitter(emitter));
+}
+
+std::ostream& ParticleComponent::operator<<(std::ostream& os)
+{
+	os << this->pathFile;
+
+	return os;
 }
 
 void ParticleComponent::update(float deltaTime)

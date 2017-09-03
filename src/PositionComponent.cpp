@@ -14,8 +14,16 @@ PositionComponent::PositionComponent() :
 }
 
 PositionComponent::PositionComponent(float xPosition, float yPosition) :
+	Component(ComponentID::Position),
 	position(xPosition, yPosition)
 {
+}
+
+std::ostream& PositionComponent::operator<<(std::ostream& os)
+{
+	os << this->position.x << ' ' << this->position.y;
+
+	return os;
 }
 
 sf::Vector2f PositionComponent::getPosition() const
