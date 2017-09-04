@@ -14,10 +14,10 @@ InversePalindrome.com
 
 class HealthComponent : public Component
 {
+	friend std::ostream& operator<<(std::ostream& os, const HealthComponent& component);
+
 public:
 	HealthComponent(std::size_t hitpoints);
-
-	virtual std::ostream& operator<<(std::ostream& os) override;
 
 	std::size_t getHitpoints() const;
 
@@ -26,3 +26,5 @@ public:
 private:
 	std::size_t hitpoints;
 };
+
+std::ostream& operator<<(std::ostream& os, const HealthComponent& component);

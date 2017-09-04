@@ -13,6 +13,7 @@ InversePalindrome.com
 #include <brigand/sequences/list.hpp>
 
 #include <string>
+#include <vector>
 
 
 class ComponentSerializer
@@ -22,10 +23,8 @@ public:
 
 	void serialize(const std::string& pathFile);
 
+	void createBlueprint(const std::string& pathFile, const std::vector<std::pair<std::string, sf::Vector2f>>& entitiesFiles);
+
 private:
 	Entities& entities;
-
-	using ComponentList = brigand::list<PositionComponent, StateComponent, PhysicsComponent, AIComponent, 
-		HealthComponent, AttackComponent, SpriteComponent, AnimationComponent, SoundComponent,
-		ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent>;
 };

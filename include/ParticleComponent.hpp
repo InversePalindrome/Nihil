@@ -24,10 +24,10 @@ InversePalindrome.com
 
 class ParticleComponent : public Component, public sf::Drawable
 {
+	friend std::ostream& operator<<(std::ostream& os, const ParticleComponent& component);
+
 public:
 	ParticleComponent(const std::string& filePath, ResourceManager& resourceManager);
-
-	virtual std::ostream& operator<<(std::ostream& os) override;
 
 	void update(float deltaTime);
     
@@ -55,3 +55,5 @@ private:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
+
+std::ostream& operator<<(std::ostream& os, const ParticleComponent& component);

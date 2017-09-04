@@ -24,13 +24,11 @@ public:
 	std::string getCurrentLevel() const;
 
 	std::size_t getCoins() const;
-	sf::Vector2f getPosition() const;
 
 	void setCharacterName(const std::string& characterName);
 	void setCurrentLevel(const std::string& currentLevel);
 
 	void setCoins(std::size_t coins);
-	void setPosition(const sf::Vector2f& position);
 
 private:
 	std::string pathFile;
@@ -38,5 +36,4 @@ private:
 	std::string currentLevel;
 
 	std::size_t coins;
-	sf::Vector2f position;
 };

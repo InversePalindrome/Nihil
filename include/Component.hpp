@@ -7,20 +7,21 @@ InversePalindrome.com
 
 #pragma once
 
+#include <string>
 #include <fstream>
 
-
-enum class ComponentID { Position, State, Physics, AI, Health, Attack, Sprite, Animation, Sound, Particle, Parent, Child, Automated };
 
 class Component
 {
 public:
-	Component(ComponentID componentID);
+	Component(const std::string& componentID);
 
-	ComponentID getID() const;
+    std::string getName() const;
+	std::size_t getEntity() const;
 
-	virtual std::ostream& operator<<(std::ostream& os) = 0;
+	void setEntity(std::size_t entity);
 
 private:
-	ComponentID componentID;
+	std::string name;
+	std::size_t entity;
 };

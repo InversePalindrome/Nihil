@@ -14,10 +14,10 @@ InversePalindrome.com
 
 class AttackComponent : public Component
 {
+	friend std::ostream& operator<<(std::ostream& os, const AttackComponent& component);
+
 public:
 	AttackComponent(std::size_t damagePoints);
-
-	virtual std::ostream& operator<<(std::ostream& os) override;
 
 	std::size_t getDamagePoints() const;
 
@@ -26,3 +26,5 @@ public:
 private:
 	std::size_t damagePoints;
 };
+
+std::ostream& operator<<(std::ostream& os, const AttackComponent& component);

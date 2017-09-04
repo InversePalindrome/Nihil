@@ -22,6 +22,8 @@ InversePalindrome.com
 #include "AutomatedComponent.hpp"
 #include "Direction.hpp"
 
+#include <brigand/sequences/list.hpp>
+
 #include <entityplus/entity.h>
 #include <entityplus/event.h>
 
@@ -43,6 +45,10 @@ struct GameOver;
 using Components = entityplus::component_list<PositionComponent, StateComponent, 
 	PhysicsComponent, AIComponent, HealthComponent, AttackComponent, SpriteComponent, AnimationComponent, SoundComponent,
     ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent>;
+
+using ComponentList = brigand::list<PositionComponent, StateComponent, PhysicsComponent, AIComponent,
+	HealthComponent, AttackComponent, SpriteComponent, AnimationComponent, SoundComponent,
+	ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent>;
 
 using Tags = entityplus::tag_list<Controllable, Pickup>;
 

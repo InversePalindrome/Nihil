@@ -22,12 +22,11 @@ InversePalindrome.com
 
 class AnimationComponent : public Component
 {
+	friend std::ostream& operator<<(std::ostream& os, const AnimationComponent& component);
 	using Animation = std::pair<EntityState, Direction>;
 
 public:
 	AnimationComponent(const std::string& animationsFile);
-
-	virtual std::ostream& operator<<(std::ostream& os) override;
 
 	std::optional<std::pair<EntityState, Direction>> getCurrentAnimation() const;
 
@@ -43,3 +42,5 @@ private:
 	std::map<Animation, std::pair<thor::FrameAnimation, float>> animations;
 	thor::Animator<sf::Sprite, std::pair<EntityState, Direction>> animator;
 };
+
+std::ostream& operator<<(std::ostream& os, const AnimationComponent& component);

@@ -37,13 +37,15 @@ public:
 
 	Entities& getEntities();
 	Events& getEvents();
+	ComponentSerializer& getComponentSerializer();
 
 	void update(float deltaTime);
 
-	Entity createEntity(const std::string& filePath);
-	Entity createEntity(const std::string& filePath, const sf::Vector2f& position);
+	Entity createEntity(const std::string& pathFile);
+	Entity createEntity(const std::string& pathFile, const sf::Vector2f& position);
 
-	void createEntities(const std::string& filePath);
+	void createEntities(const std::string& pathFile);
+	void createBlueprint(const std::string& pathFile);
 
 	void destroyEntity(Entity entity);
 	void destroyEntities();

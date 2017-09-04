@@ -17,10 +17,10 @@ InversePalindrome.com
 
 class ChildComponent : public Component
 {
+	friend std::ostream& operator<<(std::ostream& os, const ChildComponent& component);
+
 public:
 	ChildComponent(std::size_t parentID);
-
-	virtual std::ostream& operator<<(std::ostream& os) override;
 
 	std::size_t getParentID() const;
 	const sf::Transform& getTransform() const;
@@ -32,3 +32,5 @@ private:
 	std::size_t parentID;
 	const sf::Transform* transform;
 };
+
+std::ostream& operator<<(std::ostream& os, const ChildComponent& component);

@@ -14,11 +14,11 @@ InversePalindrome.com
 
 class PositionComponent : public Component
 {
+	friend std::ostream& operator<<(std::ostream& os, const PositionComponent& component);
+
 public:
 	PositionComponent();
 	PositionComponent(float xPosition, float yPosition);
-
-	virtual std::ostream& operator<<(std::ostream& os) override;
 
 	sf::Vector2f getPosition() const;
 
@@ -29,3 +29,5 @@ public:
 private:
 	sf::Vector2f position;
 };
+
+std::ostream& operator<<(std::ostream& os, const PositionComponent& component);

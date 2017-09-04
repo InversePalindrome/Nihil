@@ -13,10 +13,10 @@ InversePalindrome.com
 
 class SoundComponent : public Component
 {
+	friend std::ostream& operator<<(std::ostream& os, const SoundComponent& component);
+
 public:
 	SoundComponent();
-
-	virtual std::ostream& operator<<(std::ostream& os) override;
 
 	SoundID getSoundID() const;
 
@@ -25,3 +25,5 @@ public:
 private:
 	SoundID soundID;
 };
+
+std::ostream& operator<<(std::ostream& os, const SoundComponent& component);

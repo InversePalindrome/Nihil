@@ -18,12 +18,12 @@ InversePalindrome.com
 
 class PhysicsComponent : public Component
 {
-public:
-	PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType physicalType, ObjectType objectType, std::int8_t collisionGroup);
-	PhysicsComponent(b2World& world, const b2Vec2& bodySize, float maxVelocity, float accelerationRate,
-		b2BodyType physicalType, ObjectType objectType, std::int8_t collisionGroup);
+	friend std::ostream& operator<<(std::ostream& os, const PhysicsComponent& component);
 
-	virtual std::ostream& operator<<(std::ostream& os) override;
+public:
+	PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType physicalType, ObjectType objectType, std::int32_t collisionGroup);
+	PhysicsComponent(b2World& world, const b2Vec2& bodySize, float maxVelocity, float accelerationRate,
+		b2BodyType physicalType, ObjectType objectType, std::int32_t collisionGroup);
 
 	b2Body* getBody();
 
@@ -54,5 +54,7 @@ private:
 	float accelerationRate;
 
 	ObjectType objectType;
-	std::int8_t collisionGroup;
+	std::int32_t collisionGroup;
 };
+
+std::ostream& operator<<(std::ostream& os, const PhysicsComponent& component);

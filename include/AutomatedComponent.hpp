@@ -17,12 +17,11 @@ InversePalindrome.com
 
 class AutomatedComponent : public Component
 {
+	friend std::ostream& operator<<(std::ostream& os, const AutomatedComponent& component);
 	using Task = std::pair<std::string, float>;
 
 public:
 	AutomatedComponent(const std::string& filePath);
-
-	virtual std::ostream& operator<<(std::ostream& os) override;
 
 	Task getCurrentTask() const;
 
@@ -37,3 +36,5 @@ private:
 	thor::Timer timer;
 	std::size_t currentTask;
 };
+
+std::ostream& operator<<(std::ostream& os, const AutomatedComponent& component);

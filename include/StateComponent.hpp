@@ -14,10 +14,10 @@ enum class EntityState { Idle, Walking, Jumping, Attacking, Dead };
 
 class StateComponent : public Component
 {
+	friend std::ostream& operator<<(std::ostream& os, const StateComponent& component);
+
 public:
 	StateComponent();
-
-	virtual std::ostream& operator<<(std::ostream& os) override;
 
 	EntityState getState() const;
 
@@ -26,3 +26,5 @@ public:
 private:
 	EntityState state;
 };
+
+std::ostream& operator<<(std::ostream& os, const StateComponent& component);

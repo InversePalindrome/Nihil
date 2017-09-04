@@ -16,12 +16,11 @@ InversePalindrome.com
 
 class AIComponent : public Component
 {
+	friend std::ostream& operator<<(std::ostream& os, const AIComponent& component);
 	using Path = std::pair<float, float>;
 
 public:
 	AIComponent(float visionRange, float initialX, float finalX);
-
-	virtual std::ostream& operator<<(std::ostream& os) override;
 
 	float getVisionRange() const;
 	Path getPath() const;
@@ -35,3 +34,6 @@ private:
 	float visionRange;
     Path path;
 };
+
+std::ostream& operator<<(std::ostream& os, const AIComponent& component);
+
