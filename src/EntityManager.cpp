@@ -50,6 +50,11 @@ Events& EntityManager::getEvents()
 	return this->eventManager;
 }
 
+ComponentSerializer& EntityManager::getComponentSerializer()
+{
+	return this->componentSerializer;
+}
+
 void EntityManager::update(float deltaTime)
 {
 	for (auto& system : this->systems)
@@ -58,14 +63,14 @@ void EntityManager::update(float deltaTime)
 	}
 }
 
-Entity EntityManager::createEntity(const std::string& filePath)
+Entity EntityManager::createEntity(const std::string& pathFile)
 {
-	return this->componentParser.parseComponents(filePath);
+	return this->componentParser.parseComponents(pathFile);
 }
 
-Entity EntityManager::createEntity(const std::string& filePath, const sf::Vector2f& position)
+Entity EntityManager::createEntity(const std::string& pathFile, const sf::Vector2f& position)
 {
-	auto& entity = this->createEntity(filePath);
+	auto& entity = this->createEntity(pathFile);
 	
 	if (entity.has_component<PositionComponent>())
 	{
@@ -80,15 +85,14 @@ Entity EntityManager::createEntity(const std::string& filePath, const sf::Vector
 	return entity;
 }
 
-void EntityManager::createEntities(const std::string& filePath)
+void EntityManager::createEntities(const std::string& pathFile)
 {
-	std::ifstream inFile(filePath);
-	std::string line;
+	this->componentParser.parseEntities(pathFile);
+}
 
-	while (std::getline(inFile, line))
-	{
-		this->createEntity(line);
-	}
+void EntityManager::createBlueprint(const std::string& pathFile)
+{
+	this->componentParser.parseBlueprint(pathFile);
 }
 
 void EntityManager::destroyEntity(Entity entity)

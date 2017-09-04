@@ -9,14 +9,14 @@ InversePalindrome.com
 
 
 HealthComponent::HealthComponent(std::size_t hitpoints) :
-	Component(ComponentID::Health),
+	Component("Health"),
 	hitpoints(hitpoints)
 {
 }
 
-std::ostream& HealthComponent::operator<<(std::ostream& os)
+std::ostream& operator<<(std::ostream& os, const HealthComponent& component)
 {
-	os << this->hitpoints;
+	os << component.getEntity() << ' ' << component.getName() << ' ' << component.hitpoints;
 
 	return os;
 }

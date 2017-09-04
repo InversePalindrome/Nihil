@@ -12,7 +12,7 @@ InversePalindrome.com
 
 
 AnimationComponent::AnimationComponent(const std::string& animationsFile)  :
-	Component(ComponentID::Animation),
+	Component("Animation"),
 	animationsFile(animationsFile)
 {
 	std::ifstream inFile(animationsFile);
@@ -57,9 +57,9 @@ AnimationComponent::AnimationComponent(const std::string& animationsFile)  :
 	}
 }
 
-std::ostream& AnimationComponent::operator<<(std::ostream& os)
+std::ostream& operator<<(std::ostream& os, const AnimationComponent& component)
 {
-	os << this->animationsFile;
+	os << component.getEntity() << ' ' << component.getName() << ' ' << component.animationsFile;
 
 	return os;
 }

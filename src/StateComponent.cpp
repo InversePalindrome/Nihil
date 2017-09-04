@@ -9,14 +9,14 @@ InversePalindrome.com
 
 
 StateComponent::StateComponent() :
-	Component(ComponentID::State),
+	Component("State"),
 	state(EntityState::Idle)
 {
 }
 
-std::ostream& StateComponent::operator<<(std::ostream& os)
+std::ostream& operator<<(std::ostream& os, const StateComponent& component)
 {
-	os << static_cast<std::size_t>(this->state);
+	os << component.getEntity() << ' ' << component.getName() << ' ' << static_cast<std::size_t>(component.state);
 
 	return os;
 }

@@ -13,7 +13,7 @@ InversePalindrome.com
 
 
 AutomatedComponent::AutomatedComponent(const std::string& pathFile) :
-	Component(ComponentID::Automated),
+	Component("Automated"),
 	filePath(filePath),
 	currentTask(0u)
 {
@@ -33,9 +33,9 @@ AutomatedComponent::AutomatedComponent(const std::string& pathFile) :
 	}
 }
 
-std::ostream& AutomatedComponent::operator<<(std::ostream& os)
+std::ostream& operator<<(std::ostream& os, const AutomatedComponent& component)
 {
-	os << this->filePath;
+	os << component.getEntity() << ' ' << component.getName() << ' ' << component.filePath;
 
 	return os;
 }

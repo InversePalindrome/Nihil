@@ -8,12 +8,23 @@ InversePalindrome.com
 #include "Component.hpp"
 
 
-Component::Component(ComponentID componentID) :
-	componentID(componentID)
+Component::Component(const std::string& componentID) :
+	name(componentID),
+	entity(0u)
 {
 }
 
-ComponentID Component::getID() const
+std::string Component::getName() const
 {
-	return this->componentID;
+	return this->name;
+}
+
+std::size_t Component::getEntity() const
+{
+	return this->entity;
+}
+
+void Component::setEntity(std::size_t entity)
+{
+	this->entity = entity;
 }

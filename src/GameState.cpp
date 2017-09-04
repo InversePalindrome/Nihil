@@ -13,7 +13,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
 	world(b2Vec2(0.f, -9.8f)),
 	entityManager(world, stateData.resourceManager, stateData.soundManager, stateData.inputHandler, collisionsData),
-	map(sf::Vector2f(8192.f, 1536.f), world, entityManager, stateData.resourceManager, collisionsData),
+	map(sf::Vector2f(8192.f, 1536.f), stateData.player, world, entityManager.getComponentSerializer(), stateData.resourceManager, collisionsData),
 	camera(stateData.window.getDefaultView()),
 	collisionHandler(entityManager.getEvents()),
 	healthBar(stateData.resourceManager),
@@ -44,7 +44,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	{
 		callbacks.push_back([this, &stateData] 
 		{
-			changeLevel(stateData.player.getCurrentLevel(), stateData.player.getPosition());
+			changeLevel(stateData.player.getCurrentLevel(), sf::Vector2f());
 		});
 	});
 	entityManager.getEvents().subscribe<PickedUpCoin>([this, &stateData](const auto& event)
@@ -59,13 +59,14 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 
 	stateData.window.setView(camera);
 
-	changeLevel(stateData.player.getCurrentLevel(), stateData.player.getPosition());
+	changeLevel(stateData.player.getCurrentLevel(), sf::Vector2f());
 }
 
 void GameState::handleEvent(const sf::Event& event)
 {
 	if (this->stateData.inputHandler.isActive("Escape"))
 	{
+		this->entityManager.saveEntities("Resources/Files/Entities-" + this->stateData.player.getCurrentLevel() + ".txt");
 		this->stateMachine.pushState(StateID::Pause);
 	}
 	else if (this->stateData.inputHandler.isActive("Retry"))
@@ -122,16 +123,12 @@ void GameState::changeLevel(const std::string& level, const sf::Vector2f& positi
 	this->entityManager.destroyEntities();
 
 	this->map.load("Resources/Files/" + level + ".tmx");
-	this->entityManager.createEntities("Resources/Files/Entities-" + level + ".txt");
+	//this->entityManager.createEntities("Resources/Files/Entities-" + level + ".txt");
+	this->entityManager.createBlueprint("Resources/Files/Blueprint-" + level + ".txt");
 	this->stateData.player.setCurrentLevel(level);
 
 	this->healthBar.setHitpointsDisplay(this->entityManager.getEntities().get_entities<Controllable, HealthComponent>()
 		.back().get_component<HealthComponent>().getHitpoints());
-
-	this->entityManager.getEntities().get_entities<Controllable, PositionComponent>().back()
-		.get_component<PositionComponent>().setPosition(position);
-
-	this->stateData.player.setPosition(position);
 
 	this->camera = this->stateData.window.getDefaultView();
 	this->stateData.soundManager.stopAllSounds();

@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "ComponentParser.hpp"
 
+#include <brigand/algorithms/for_each.hpp>
+
 #include <boost/range/algorithm_ext/erase.hpp>
 #include <boost/algorithm/string/classification.hpp>
 
@@ -15,7 +17,8 @@ InversePalindrome.com
 
 ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceManager, b2World& world) :
 	entities(entities),
-	world(world)
+	world(world),
+	currentEntityID(0u)
 {
 	componentParsers["Controllable"] = [this](auto& entity, auto& line)
 	{
@@ -27,35 +30,36 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 		entity.set_tag<Pickup>(true);
 	};
 	
-	componentParsers["Position1"] = [this](auto& entity, auto& line)
+	componentParsers["PositionA"] = [this](auto& entity, auto& line) 
+	{
+		entity.add_component<PositionComponent>(std::make_from_tuple<PositionComponent>(this->parse<float, float>(line)));
+	};
+
+	componentParsers["PositionB"] = [this](auto& entity, auto& line)
 	{
 		entity.add_component<PositionComponent>();
 	};
 
-	componentParsers["Position2"] = [this](auto& entity, auto& line) 
-	{
-		entity.add_component<PositionComponent>(std::make_from_tuple<PositionComponent>(this->parse<float, float>(line)));
-	};
 
 	componentParsers["State"] = [this](auto& entity, const auto& line)
 	{
 		entity.add_component<StateComponent>();
 	};
 
-	componentParsers["Physics1"] = [this, &world](auto& entity, auto& line)
+	componentParsers["PhysicsA"] = [this, &world](auto& entity, auto& line)
 	{
-		auto& params = this->parse<float, float, std::size_t, std::size_t, std::size_t>(line);
+		auto& params = this->parse<float, float, float, float, std::size_t, std::size_t, std::int32_t>(line);
 
-		entity.add_component<PhysicsComponent>(world, b2Vec2(std::get<0>(params), std::get<1>(params)), 0.f, 0.f,
-			static_cast<b2BodyType>(std::get<2>(params)), static_cast<ObjectType>(std::get<3>(params)), std::get<4>(params));
+		entity.add_component<PhysicsComponent>(world, b2Vec2(std::get<0>(params), std::get<1>(params)),
+			std::get<2>(params), std::get<3>(params), static_cast<b2BodyType>(std::get<4>(params)), static_cast<ObjectType>(std::get<5>(params)), std::get<6>(params));
 	};
 
-	componentParsers["Physics2"] = [this, &world](auto& entity, auto& line)
+	componentParsers["PhysicsB"] = [this, &world](auto& entity, auto& line)
 	{
-		auto& params = this->parse<float, float, float, float, std::size_t, std::size_t, std::size_t>(line);
+		auto& params = this->parse<float, float, std::size_t, std::size_t, std::int32_t>(line);
 
-		entity.add_component<PhysicsComponent>(world, b2Vec2(std::get<0>(params), std::get<1>(params)), 
-			std::get<2>(params), std::get<3>(params), static_cast<b2BodyType>(std::get<4>(params)), static_cast<ObjectType>(std::get<5>(params)), std::get<6>(params));
+		entity.add_component<PhysicsComponent>(world, b2Vec2(std::get<0>(params), std::get<1>(params)),
+			static_cast<b2BodyType>(std::get<2>(params)), static_cast<ObjectType>(std::get<3>(params)), std::get<4>(params));
 	};
 
 	componentParsers["AI"] = [this](auto& entity, auto& line)
@@ -63,29 +67,29 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 		entity.add_component<AIComponent>(std::make_from_tuple<AIComponent>(this->parse<float, float, float>(line)));
 	};
 
-	componentParsers["Sprite1"] = [this, &resourceManager](auto& entity, auto& line)
+	componentParsers["SpriteA"] = [this, &resourceManager](auto& entity, auto& line)
 	{
-		auto& params = this->parse<std::size_t>(line);
+		auto& params = this->parse<std::size_t, std::size_t, std::size_t, std::size_t, std::size_t, float, float>(line);
 
-		entity.add_component<SpriteComponent>(resourceManager.getTexture(static_cast<TexturesID>(std::get<0>(params))));
+		entity.add_component<SpriteComponent>(resourceManager, static_cast<TexturesID>(std::get<0>(params)),
+			sf::IntRect(std::get<1>(params), std::get<2>(params), std::get<3>(params), std::get<4>(params)), sf::Vector2f(std::get<5>(params), std::get<6>(params)));
 	};
 
-	componentParsers["Sprite2"] = [this, &resourceManager](auto& entity, auto& line)
+	componentParsers["SpriteB"] = [this, &resourceManager](auto& entity, auto& line)
 	{
 		auto& params = this->parse<std::size_t, std::size_t, std::size_t, std::size_t, std::size_t>(line);
 
-		entity.add_component<SpriteComponent>(resourceManager.getTexture(static_cast<TexturesID>(std::get<0>(params))),
+		entity.add_component<SpriteComponent>(resourceManager, static_cast<TexturesID>(std::get<0>(params)),
 			sf::IntRect(std::get<1>(params), std::get<2>(params), std::get<3>(params), std::get<4>(params)));
 	};
-		
-	componentParsers["Sprite3"] = [this, &resourceManager](auto& entity, auto& line)
+
+	componentParsers["SpriteC"] = [this, &resourceManager](auto& entity, auto& line)
 	{
-		auto& params = this->parse<std::size_t, std::size_t, std::size_t, std::size_t, std::size_t, float, float>(line);
-		
-		entity.add_component<SpriteComponent>(resourceManager.getTexture(static_cast<TexturesID>(std::get<0>(params))),
-			sf::IntRect(std::get<1>(params), std::get<2>(params), std::get<3>(params), std::get<4>(params)), sf::Vector2f(std::get<5>(params), std::get<6>(params)));
+		auto& params = this->parse<std::size_t>(line);
+
+		entity.add_component<SpriteComponent>(resourceManager, static_cast<TexturesID>(std::get<0>(params)));
 	};
-	
+
 	componentParsers["Health"] = [this](auto& entity, auto& line)
 	{
 		entity.add_component<HealthComponent>(std::make_from_tuple<HealthComponent>(this->parse<std::size_t>(line)));
@@ -131,26 +135,101 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 	};
 }
 
-Entity ComponentParser::parseComponents(const std::string& filePath)
+Entity ComponentParser::parseComponents(const std::string& pathFile)
 {
-	auto& entity = entities.create_entity();
-	
-	std::ifstream inFile(filePath);
+	auto entity = this->createEntity();
+
+	std::ifstream inFile(pathFile);
 	std::string line;
 
 	while (std::getline(inFile, line))
 	{
 		std::istringstream iStream(line);
 
-		std::string component;
-	   
-		iStream >> component;
+		std::string componentName;
 
-		line.erase(std::begin(line), std::begin(line) + component.size());
+		iStream >> componentName;
+
+		line.erase(std::begin(line), std::begin(line) + componentName.size());
 		boost::remove_erase_if(line, boost::is_any_of(",()"));
 		
-		this->componentParsers[component](entity, line);
+		this->componentParsers[componentName](entity, line);
 	}
 
+	brigand::for_each<ComponentList>([&entity, this](auto componentType)
+	{
+		using Component = decltype(componentType)::type;
+
+		if (entity.has_component<Component>())
+		{
+			entity.get_component<Component>().setEntity(currentEntityID);
+		}
+	});
+
 	return entity;
+}
+
+void ComponentParser::parseBlueprint(const std::string& pathFile)
+{
+	std::ifstream inFile(pathFile);
+	std::string line;
+
+	while (std::getline(inFile, line))
+	{
+		std::istringstream iStream(line);
+
+		std::string entityFile;
+		float xPosition = 0.f, yPosition = 0.f;
+
+		iStream >> entityFile >> xPosition >> yPosition;
+		
+		auto entity = this->parseComponents(entityFile);
+
+		if (entity.has_component<PositionComponent>())
+		{
+			entity.get_component<PositionComponent>().setPosition(sf::Vector2f(xPosition, yPosition));
+		}
+	}
+}
+
+void ComponentParser::parseEntities(const std::string& pathFile)
+{
+	std::ifstream inFile(pathFile);
+	std::string line;
+
+	std::unordered_map<std::size_t, Entity> entitiesIDs;
+
+	while (std::getline(inFile, line))
+	{
+		std::istringstream iStream(line);
+
+		std::size_t entityID = 0u;
+		std::string componentName;
+
+		iStream >> entityID >> componentName;
+
+		Entity entity;
+
+		if (entitiesIDs.count(entityID))
+		{
+			entity = entitiesIDs[entityID];
+			entity.sync();
+		}
+		else
+		{
+			entity = this->createEntity();
+			entitiesIDs.emplace(entityID, entity);
+		}
+
+		line.erase(std::begin(line), std::begin(line) + std::to_string(entityID).size() + componentName.size() + 1u);
+	
+		this->componentParsers[componentName](entity, line);
+	}
+}
+
+Entity ComponentParser::createEntity()
+{
+	++this->currentEntityID;
+
+	return this->entities.create_entity();
 }

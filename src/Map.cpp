@@ -13,10 +13,11 @@ InversePalindrome.com
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
 
-Map::Map(const sf::Vector2f& chunkSize, b2World& world, EntityManager& entityManager, ResourceManager& resourceManager, CollisionsData& collisionsData) :
+Map::Map(const sf::Vector2f& chunkSize, Player& player, b2World& world, ComponentSerializer& componentSerializer, ResourceManager& resourceManager, CollisionsData& collisionsData) :
 	chunkSize(chunkSize),
+	player(player),
 	world(world),
-	entityManager(entityManager),
+	componentSerializer(componentSerializer),
 	resourceManager(resourceManager),
 	collisionsData(collisionsData)
 {
@@ -81,17 +82,19 @@ void Map::addImage(tmx::ImageLayer* imageLayer)
 void Map::addObjects(tmx::ObjectGroup* objectLayer)
 {
 	const auto& objects = objectLayer->getObjects();
+	std::vector<std::pair<std::string, sf::Vector2f>> entitiesFiles;
 
 	for (const auto& object : objects)
 	{
 		const auto& AABB = object.getAABB();
+
 		if (object.getType() == "Entity")
 		{
 			for (const auto& property : object.getProperties())
 			{
 				if (property.getName() == "File")
 				{
-					this->entityManager.createEntity(property.getStringValue(), sf::Vector2f(AABB.left + AABB.width / 2.f, AABB.top + AABB.height / 2.f));
+					entitiesFiles.push_back(std::make_pair(property.getStringValue(), sf::Vector2f(AABB.left + AABB.width / 2.f, AABB.top + AABB.height / 2.f)));
 				}
 			}
 		}
@@ -116,11 +119,13 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 			{
 	            properties.emplace(property.getName(), property);
 			}
-
+            
             this->collisionsData.push_back(CollisionData(tile, static_cast<ObjectType>(properties["ID"].getIntValue()), properties));
             this->collisionsData.back().body->SetUserData(&this->collisionsData.back());
 		}
 	}
+	
+	this->componentSerializer.createBlueprint("Resources/Files/Blueprint-" + player.getCurrentLevel() + ".txt", entitiesFiles);
 }
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const

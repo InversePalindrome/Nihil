@@ -8,32 +8,40 @@ InversePalindrome.com
 #include "SpriteComponent.hpp"
 
 
-SpriteComponent::SpriteComponent(sf::Texture& texture) :
-	Component(ComponentID::Sprite),
-	sprite(texture)
+SpriteComponent::SpriteComponent(ResourceManager& resourceManager, TexturesID textureID) :
+	Component("SpriteA"),
+	textureID(textureID),
+	sprite(resourceManager.getTexture(textureID))
 {
 	sprite.setOrigin(sprite.getLocalBounds().width / 2.f, sprite.getLocalBounds().height / 2.f);
 }
 
-SpriteComponent::SpriteComponent(sf::Texture& texture, const sf::IntRect& textureRect) :
-	SpriteComponent(texture, textureRect, sf::Vector2f(1.f, 1.f))
+SpriteComponent::SpriteComponent(ResourceManager& resourceManager, TexturesID textureID, const sf::IntRect& textureRect) :
+	SpriteComponent(resourceManager, textureID, textureRect, sf::Vector2f(1.f, 1.f))
 {
 }
 
-SpriteComponent::SpriteComponent(sf::Texture& texture, const sf::IntRect& textureRect, const sf::Vector2f& scale) :
-	Component(ComponentID::Sprite),
-	sprite(texture, textureRect)
+SpriteComponent::SpriteComponent(ResourceManager& resourceManager, TexturesID textureID, const sf::IntRect& textureRect, const sf::Vector2f& scale) :
+	Component("SpriteA"),
+	textureID(textureID),
+	sprite(resourceManager.getTexture(textureID), textureRect)
 {
 	sprite.setOrigin(sprite.getLocalBounds().width / 2.f, sprite.getLocalBounds().height / 2.f);
 	sprite.setScale(scale);
 }
 
-std::ostream& SpriteComponent::operator<<(std::ostream& os)
+std::ostream& operator<<(std::ostream& os, const SpriteComponent& component)
 {
-	os << this->sprite.getTextureRect().left << ' ' << this->sprite.getTextureRect().top <<  ' ' << this->sprite.getTextureRect().width <<  ' ' <<
-		this->sprite.getTextureRect().height << ' ' << this->sprite.getScale().x << ' ' << this->sprite.getScale().y;
+	os << component.getEntity() << ' ' << component.getName() << ' ' << static_cast<std::size_t>(component.getTextureID()) << ' ' << component.sprite.getTextureRect().left << 
+		' ' << component.sprite.getTextureRect().top <<  ' ' << component.sprite.getTextureRect().width <<  ' ' << component.sprite.getTextureRect().height <<
+		' ' << component.sprite.getScale().x << ' ' << component.sprite.getScale().y;
 
 	return os;
+}
+
+TexturesID SpriteComponent::getTextureID() const
+{
+	return this->textureID;
 }
 
 sf::Sprite& SpriteComponent::getSprite()

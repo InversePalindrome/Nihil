@@ -9,14 +9,14 @@ InversePalindrome.com
 
 
 AttackComponent::AttackComponent(std::size_t damagePoints) :
-	Component(ComponentID::Attack),
+	Component("Attack"),
 	damagePoints(damagePoints)
 {
 }
 
-std::ostream& AttackComponent::operator<<(std::ostream& os)
+std::ostream& operator<<(std::ostream& os, const AttackComponent& component)
 {
-	os << this->damagePoints;
+	os << component.getEntity() << ' ' << component.getName() << ' ' << component.damagePoints;
 
 	return os;
 }

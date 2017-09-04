@@ -13,7 +13,7 @@ InversePalindrome.com
 
 
 ParticleComponent::ParticleComponent(const std::string& pathFile, ResourceManager& resourceManager) :
-	Component(ComponentID::Particle),
+	Component("Particle"),
 	pathFile(pathFile),
 	rangeOfEmission(0u)
 {
@@ -68,9 +68,9 @@ ParticleComponent::ParticleComponent(const std::string& pathFile, ResourceManage
 	particleSystem.addEmitter(thor::refEmitter(emitter));
 }
 
-std::ostream& ParticleComponent::operator<<(std::ostream& os)
+std::ostream& operator<<(std::ostream& os, const ParticleComponent& component)
 {
-	os << this->pathFile;
+	os << component.getEntity() << ' ' << component.getName() << ' ' << component.pathFile;
 
 	return os;
 }

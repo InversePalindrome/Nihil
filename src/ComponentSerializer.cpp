@@ -22,11 +22,21 @@ void ComponentSerializer::serialize(const std::string& pathFile)
 {
 	std::ofstream outFile(pathFile);
 	
-	brigand::for_each<ComponentList>([this](auto x) 
+	brigand::for_each<ComponentList>([this, &outFile](auto componentType) 
 	{
-		this->entities.for_each<decltype(x)::type>([](auto entity, auto& component) 
+		this->entities.for_each<decltype(componentType)::type>([&outFile](auto entity, auto& component) 
 		{
-			
+			outFile << component << '\n';
 		});
 	});
+}
+
+void ComponentSerializer::createBlueprint(const std::string& pathFile, const std::vector<std::pair<std::string, sf::Vector2f>>& entitiesFile)
+{
+	std::ofstream outFile(pathFile);
+
+	for (const auto& entityFile : entitiesFile)
+	{
+		outFile << entityFile.first << ' ' << entityFile.second.x << ' ' << entityFile.second.y << '\n';
+	}
 }

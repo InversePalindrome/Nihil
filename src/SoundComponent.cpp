@@ -9,14 +9,14 @@ InversePalindrome.com
 
 
 SoundComponent::SoundComponent() :
-	Component(ComponentID::Sound),
+	Component("Sound"),
 	soundID(-1)
 {
 }
 
-std::ostream& SoundComponent::operator<<(std::ostream& os)
+std::ostream& operator<<(std::ostream& os, const SoundComponent& component)
 {
-	os << this->soundID;
+	os << component.getEntity() << ' ' << component.getName() << ' ' << component.soundID;
 
 	return os;
 }

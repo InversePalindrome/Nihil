@@ -9,14 +9,14 @@ InversePalindrome.com
 
 
 ChildComponent::ChildComponent(std::size_t parentID) :
-	Component(ComponentID::Child),
+	Component("Child"),
 	parentID(parentID)
 {
 }
 
-std::ostream& ChildComponent::operator<<(std::ostream& os)
+std::ostream& operator<<(std::ostream& os, const ChildComponent& component)
 {
-	os << this->parentID;
+	os << component.getEntity() << ' ' << component.getName() << ' ' << component.parentID;
 
 	return os;
 }

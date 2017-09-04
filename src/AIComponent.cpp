@@ -10,15 +10,16 @@ InversePalindrome.com
 
 
 AIComponent::AIComponent(float visionRange, float initialX, float finalX) :
-	Component(ComponentID::AI),
+	Component("AI"),
 	visionRange(visionRange),
 	path(initialX, finalX)
 {
 }
 
-std::ostream& AIComponent::operator<<(std::ostream& os)
+std::ostream& operator<<(std::ostream& os, const AIComponent& component)
 {
-	os << this->visionRange << ' ' << this->path.first << ' ' << this->path.second;
+	os  << component.getEntity() << ' ' << component.getName() << ' ' << component.visionRange << ' ' << 
+		component.path.first << ' ' << component.path.second;
 
 	return os;
 }

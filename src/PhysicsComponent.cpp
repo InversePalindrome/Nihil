@@ -11,14 +11,14 @@ InversePalindrome.com
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
 
-PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType physicalType, ObjectType objectType, std::int8_t collisionGroup) :
+PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType physicalType, ObjectType objectType, std::int32_t collisionGroup) :
 	PhysicsComponent(world, bodySize, 0.f, 0.f, physicalType, objectType, collisionGroup)
 {
 }
 
 PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, float maxVelocity,
-	float accelerationRate, b2BodyType physicalType, ObjectType objectType, std::int8_t collisionGroup)  :
-	Component(ComponentID::Physics),
+	float accelerationRate, b2BodyType physicalType, ObjectType objectType, std::int32_t collisionGroup)  :
+	Component("PhysicsA"),
 	body(nullptr),
 	bodySize(bodySize),
 	maxVelocity(maxVelocity),
@@ -44,10 +44,10 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, float
 	body->CreateFixture(&fixture);
 }
 
-std::ostream& PhysicsComponent::operator<<(std::ostream& os)
+std::ostream& operator<<(std::ostream& os, const PhysicsComponent& component)
 {
-	os << this->bodySize.x << ' ' << this->bodySize.y << ' ' << ' ' << this->maxVelocity << ' ' << this->accelerationRate 
-		<< ' ' << static_cast<std::size_t>(this->getType()) << ' ' << static_cast<std::size_t>(this->objectType) << ' ' << this->collisionGroup;
+	os << component.getEntity() << ' ' << component.getName() << ' ' << component.bodySize.x << ' ' << component.bodySize.y << ' ' << component.maxVelocity << ' ' 
+		<< component.accelerationRate << ' ' << static_cast<std::size_t>(component.getType()) << ' ' << static_cast<std::size_t>(component.objectType) << ' ' << component.collisionGroup;
 
 	return os;
 }
