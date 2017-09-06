@@ -21,9 +21,9 @@ class PhysicsComponent : public Component
 	friend std::ostream& operator<<(std::ostream& os, const PhysicsComponent& component);
 
 public:
-	PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType physicalType, ObjectType objectType, std::int32_t collisionGroup);
-	PhysicsComponent(b2World& world, const b2Vec2& bodySize, float maxVelocity, float accelerationRate,
-		b2BodyType physicalType, ObjectType objectType, std::int32_t collisionGroup);
+	PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType bodyType, ObjectType objectType, std::int32_t collisionGroup);
+	PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType physicalType, ObjectType objectType, std::int32_t collisionGroup,
+		float maxVelocity, float accelerationRate);
 
 	b2Body* getBody();
 
@@ -50,11 +50,11 @@ public:
 private:
 	b2Body* body;
 	b2Vec2 bodySize;
-	float maxVelocity;
-	float accelerationRate;
-
 	ObjectType objectType;
 	std::int32_t collisionGroup;
+
+	float maxVelocity;
+	float accelerationRate;
 };
 
 std::ostream& operator<<(std::ostream& os, const PhysicsComponent& component);

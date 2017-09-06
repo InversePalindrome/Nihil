@@ -16,7 +16,7 @@ InversePalindrome.com
 #include <unordered_map>
 
 
-enum class StateID { Splash, Start, Menu, Game, Settings, Characters, Pause, GameOver };
+enum class StateID { Splash, Start, Menu, Hub, Game, Settings, Characters, Pause };
 
 class StateMachine
 {
