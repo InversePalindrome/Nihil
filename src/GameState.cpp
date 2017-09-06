@@ -123,7 +123,6 @@ void GameState::changeLevel(const std::string& level, const sf::Vector2f& positi
 	this->entityManager.destroyEntities();
 
 	this->map.load("Resources/Files/" + level + ".tmx");
-	//this->entityManager.createEntities("Resources/Files/Entities-" + level + ".txt");
 	this->entityManager.createBlueprint("Resources/Files/Blueprint-" + level + ".txt");
 	this->stateData.player.setCurrentLevel(level);
 

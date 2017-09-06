@@ -9,6 +9,7 @@ InversePalindrome.com
 #include "SplashState.hpp"
 #include "StartState.hpp"
 #include "MenuState.hpp"
+#include "HubState.hpp"
 #include "GameState.hpp"
 #include "SettingsState.hpp"
 #include "CharactersState.hpp"
@@ -34,6 +35,7 @@ Application::Application() :
 	stateMachine.registerState<StartState>(StateID::Start);
 	stateMachine.registerState<MenuState>(StateID::Menu);
 	stateMachine.registerState<GameState>(StateID::Game);
+	stateMachine.registerState<HubState>(StateID::Hub);
 	stateMachine.registerState<SettingsState>(StateID::Settings);
 	stateMachine.registerState<CharactersState>(StateID::Characters);
 	stateMachine.registerState<PauseState>(StateID::Pause);

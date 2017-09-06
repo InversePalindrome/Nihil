@@ -11,24 +11,23 @@ InversePalindrome.com
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
 
-PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType physicalType, ObjectType objectType, std::int32_t collisionGroup) :
-	PhysicsComponent(world, bodySize, 0.f, 0.f, physicalType, objectType, collisionGroup)
+PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType bodyType, ObjectType objectType, std::int32_t collisionGroup) :
+	PhysicsComponent(world, bodySize, bodyType, objectType, collisionGroup, 0.f, 0.f)
 {
 }
 
-PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, float maxVelocity,
-	float accelerationRate, b2BodyType physicalType, ObjectType objectType, std::int32_t collisionGroup)  :
+PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType bodyType, ObjectType objectType, std::int32_t collisionGroup,
+	float maxVelocity, float accelerationRate)  :
 	Component("PhysicsA"),
 	body(nullptr),
 	bodySize(bodySize),
-	maxVelocity(maxVelocity),
-	accelerationRate(accelerationRate),
 	objectType(objectType),
-	collisionGroup(collisionGroup)
+	collisionGroup(collisionGroup),
+	maxVelocity(maxVelocity),
+	accelerationRate(accelerationRate)
 {
 	b2BodyDef bodyDefinition;
-	bodyDefinition.type = physicalType;
-
+	bodyDefinition.type = bodyType;
 	bodyDefinition.fixedRotation = true;
 	
 	b2PolygonShape fixtureShape;
@@ -46,8 +45,8 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, float
 
 std::ostream& operator<<(std::ostream& os, const PhysicsComponent& component)
 {
-	os << component.getEntity() << ' ' << component.getName() << ' ' << component.bodySize.x << ' ' << component.bodySize.y << ' ' << component.maxVelocity << ' ' 
-		<< component.accelerationRate << ' ' << static_cast<std::size_t>(component.getType()) << ' ' << static_cast<std::size_t>(component.objectType) << ' ' << component.collisionGroup;
+	os << component.getEntity() << ' ' << component.getName() << ' ' << component.bodySize.x << ' ' << component.bodySize.y <<  ' ' << ' ' << static_cast<std::size_t>(component.getType()) 
+		<< ' ' << static_cast<std::size_t>(component.objectType) << ' ' << component.collisionGroup << ' ' << component.maxVelocity << ' ' << component.accelerationRate;
 
 	return os;
 }

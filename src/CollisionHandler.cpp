@@ -6,7 +6,6 @@ InversePalindrome.com
 
 
 #include "CollisionHandler.hpp"
-#include <iostream>
 
 
 CollisionHandler::CollisionHandler(Events& events) :
@@ -39,7 +38,7 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Pickup))
 	{
 		orderedCollision.value().second.get().entity.sync();
-
+		
 		this->events.broadcast(DestroyEntity{ orderedCollision.value().second.get().entity });
 		this->events.broadcast(EmitSound{ SoundBuffersID::Pickup, false });
 		this->events.broadcast(PickedUpCoin{});

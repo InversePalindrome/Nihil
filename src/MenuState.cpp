@@ -105,7 +105,7 @@ void MenuState::draw()
 
 void MenuState::transitionToPlay()
 {
-	this->stateMachine.changeState(StateID::Game);
+	this->stateMachine.pushState(StateID::Hub);
 }
 
 void MenuState::transitionToSettings()

@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #include "ComponentParser.hpp"
+#include "UnitConverter.hpp"
 
 #include <brigand/algorithms/for_each.hpp>
 
@@ -48,10 +49,10 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["PhysicsA"] = [this, &world](auto& entity, auto& line)
 	{
-		auto& params = this->parse<float, float, float, float, std::size_t, std::size_t, std::int32_t>(line);
+		auto& params = this->parse<float, float, std::size_t, std::size_t, std::int32_t, float, float>(line);
 
 		entity.add_component<PhysicsComponent>(world, b2Vec2(std::get<0>(params), std::get<1>(params)),
-			std::get<2>(params), std::get<3>(params), static_cast<b2BodyType>(std::get<4>(params)), static_cast<ObjectType>(std::get<5>(params)), std::get<6>(params));
+			static_cast<b2BodyType>(std::get<2>(params)), static_cast<ObjectType>(std::get<3>(params)), std::get<4>(params), std::get<5>(params), std::get<6>(params));
 	};
 
 	componentParsers["PhysicsB"] = [this, &world](auto& entity, auto& line)
@@ -188,6 +189,11 @@ void ComponentParser::parseBlueprint(const std::string& pathFile)
 		if (entity.has_component<PositionComponent>())
 		{
 			entity.get_component<PositionComponent>().setPosition(sf::Vector2f(xPosition, yPosition));
+		}
+		if (entity.has_component<PhysicsComponent>())
+		{
+			entity.get_component<PhysicsComponent>().setPosition(
+				b2Vec2(UnitConverter::pixelsToMeters(xPosition), UnitConverter::pixelsToMeters(-yPosition)));
 		}
 	}
 }
