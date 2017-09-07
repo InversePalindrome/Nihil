@@ -62,8 +62,8 @@ void NeuralSystem::directAI(Entity entity, AIComponent& AI, const PositionCompon
 
 void NeuralSystem::updateTargetPosition()
 {
-	this->entities.for_each<Controllable, PositionComponent>(
-		[this](auto entity, auto& position)
+	this->entities.for_each<ControllableComponent, PositionComponent>(
+		[this](auto entity, auto& controllable, auto& position)
 	{
 		this->targetPosition = position.getPosition();
 	});

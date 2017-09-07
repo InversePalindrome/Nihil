@@ -21,10 +21,12 @@ ComponentSerializer::ComponentSerializer(Entities& entities) :
 void ComponentSerializer::serialize(const std::string& pathFile)
 {
 	std::ofstream outFile(pathFile);
-	
+
 	brigand::for_each<ComponentList>([this, &outFile](auto componentType) 
 	{
-		this->entities.for_each<decltype(componentType)::type>([&outFile](auto entity, auto& component) 
+		using Type = decltype(componentType)::type;
+
+		this->entities.for_each<Type>([&outFile](auto entity, auto& component)
 		{
 			outFile << component << '\n';
 		});

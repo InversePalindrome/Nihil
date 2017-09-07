@@ -23,12 +23,7 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 {
 	componentParsers["Controllable"] = [this](auto& entity, auto& line)
 	{
-		entity.set_tag<Controllable>(true);
-	};
-
-	componentParsers["Pickup"] = [this](auto& entity, auto& line)
-	{
-		entity.set_tag<Pickup>(true);
+		entity.add_component<ControllableComponent>();
 	};
 	
 	componentParsers["PositionA"] = [this](auto& entity, auto& line) 
@@ -139,7 +134,7 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 Entity ComponentParser::parseComponents(const std::string& pathFile)
 {
 	auto entity = this->createEntity();
-
+	
 	std::ifstream inFile(pathFile);
 	std::string line;
 
@@ -159,11 +154,11 @@ Entity ComponentParser::parseComponents(const std::string& pathFile)
 
 	brigand::for_each<ComponentList>([&entity, this](auto componentType)
 	{
-		using Component = decltype(componentType)::type;
+		using Type = decltype(componentType)::type;
 
-		if (entity.has_component<Component>())
+		if (entity.has_component<Type>())
 		{
-			entity.get_component<Component>().setEntity(currentEntityID);
+			entity.get_component<Type>().setEntity(this->currentEntityID);
 		}
 	});
 

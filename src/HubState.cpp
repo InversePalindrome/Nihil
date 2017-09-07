@@ -8,34 +8,33 @@ InversePalindrome.com
 #include "HubState.hpp"
 #include "StateMachine.hpp"
 
-#include <SFGUI/Box.hpp>
 #include <SFGUI/Label.hpp>
 #include <SFGUI/RadioButton.hpp>
 
 #include <fstream>
-#include <sstream>
 
 
 HubState::HubState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
-	addGamePopup(sfg::Window::Create(sf::Style::Titlebar | sf::Style::Close)),
+	addGamePopup(sfg::Window::Create(sfg::Window::Style::TITLEBAR | sfg::Window::Style::TOPLEVEL)),
 	nameEntry(sfg::Entry::Create()),
 	backButton(sfg::Button::Create("BACK")),
 	playButton(sfg::Button::Create("\t Play \t")),
 	addButton(sfg::Button::Create("\t\tAdd\t\t")),
 	deleteButton(sfg::Button::Create(" Delete ")),
+	selectionBox(sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 50.f)),
 	selectionButtons(sfg::RadioButtonGroup::Create())
 {
 	addGamePopup->SetTitle("Add Game");
-	addGamePopup->SetPosition(sf::Vector2f(750.f, 400.f));
+	addGamePopup->SetPosition(sf::Vector2f(675.f, 400.f));
 	addGamePopup->Show(false);
-
-	auto gamePopupBox = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 10.f);
+	
+	auto gamePopupBox = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 70.f);
 
 	auto nameLabel = sfg::Label::Create("Name");
 	auto doneButton = sfg::Button::Create("Done");
 
-	nameEntry->SetRequisition(sf::Vector2f(600.f, 0.f));
+	nameEntry->SetRequisition(sf::Vector2f(700.f, 0.f));
 
 	doneButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { addGame(); });
 
@@ -48,26 +47,33 @@ HubState::HubState(StateMachine& stateMachine, StateData& stateData) :
 	backButton->SetPosition(sf::Vector2f(12.f, 65.f));
 	backButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { transitionToMenu(); });
 
-	addButton->SetPosition(sf::Vector2f(475.f, 1300.f));
+	addButton->SetPosition(sf::Vector2f(450.f, 1300.f));
 	addButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { showAddGamePopup(); });
 
-	playButton->SetPosition(sf::Vector2f(875.f, 1300.f));;
+	playButton->SetPosition(sf::Vector2f(850.f, 1300.f));;
 	playButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { transitionToPlay(); });
 
-	deleteButton->SetPosition(sf::Vector2f(1275.f, 1300.f));
+	deleteButton->SetPosition(sf::Vector2f(1250.f, 1300.f));
 	deleteButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { deleteGame(); });
 
-	this->loadGames("Resources/Files/SavedGames.txt");
+	this->addGames();
 
-	stateData.guiManager.setProperty("Entry", "FontSize", 60.f);
-	stateData.guiManager.setProperty("RadioButton", "FontSize", 80.f);
-	stateData.guiManager.setProperty("Window", "BackgroundColor", sf::Color(75u, 0u, 130u));
+	stateData.guiManager.setProperty("Entry", "FontSize", 50.f);
+	stateData.guiManager.setProperty("RadioButton", "FontSize", 60.f);
+	stateData.guiManager.setProperty("RadioButton", "BoxSize", 30.f);
+	stateData.guiManager.setProperty("RadioButton", "BackgroundColor", sf::Color(102u, 0u, 204u));
+	stateData.guiManager.setProperty("RadioButton:PRELIGHT", "BackgroundColor", sf::Color(15u, 192u, 252u));
+	stateData.guiManager.setProperty("RadioButton:ACTIVE", "BackgroundColor", sf::Color(15u, 192u, 252u));
+	stateData.guiManager.setProperty("RadioButton:SELECTED", "BackgroundColor", sf::Color(15u, 192u, 252u));
+	stateData.guiManager.setProperty("Window", "BackgroundColor", sf::Color(25u, 25u, 112u));
+	stateData.guiManager.setProperty("Window", "Color", sf::Color(70u, 173u, 212u));
+	stateData.guiManager.setProperty("Entry", "BackgroundColor", sf::Color(75u, 0u, 130u));
 
-	this->stateData.guiManager.addWidget(addGamePopup);
-	this->stateData.guiManager.addWidget(backButton);
-	this->stateData.guiManager.addWidget(playButton);
-	this->stateData.guiManager.addWidget(addButton);
-	this->stateData.guiManager.addWidget(deleteButton);
+	stateData.guiManager.addWidget(addGamePopup);
+	stateData.guiManager.addWidget(backButton);
+	stateData.guiManager.addWidget(playButton);
+	stateData.guiManager.addWidget(addButton);
+	stateData.guiManager.addWidget(deleteButton);
 }
 
 void HubState::handleEvent(const sf::Event& event)
@@ -85,43 +91,62 @@ void HubState::draw()
 	this->stateData.window.draw(this->background);
 }
 
-void HubState::loadGames(const std::string& pathFile)
+void HubState::addGames()
 {
-	std::ifstream inFile(pathFile);
-	std::string line;
+	this->selectionBox->SetPosition(sf::Vector2f(750.f, 350.f));
 
-	auto selectionBox = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 30.f);
-	selectionBox->SetPosition(sf::Vector2f(750.f, 400.f));
-
-	while (std::getline(inFile, line))
+	for (const auto& game : this->stateData.games)
 	{
-		std::istringstream iStream(line);
-
-		std::string gameName;
-
-		iStream >> gameName;
-		
-		auto gameButton = sfg::RadioButton::Create(gameName, this->selectionButtons);
+		auto gameButton = sfg::RadioButton::Create(game.getName(), this->selectionButtons);
 
 		selectionBox->Pack(gameButton);
 	}
-
+	
 	this->stateData.guiManager.addWidget(selectionBox);
 }
 
 void HubState::showAddGamePopup()
 {
+	this->nameEntry->SetText("");
+	this->selectionBox->Show(false);
 	this->addGamePopup->Show(true);
 }
 
 void HubState::addGame()
 {
+	this->stateData.games.push_back(Game(nameEntry->GetText()));
+
+	auto gameButton = sfg::RadioButton::Create(this->nameEntry->GetText(), this->selectionButtons);
+
+	this->selectionBox->Pack(gameButton);
+
 	this->addGamePopup->Show(false);
+	this->selectionBox->Show(true);
+
+	this->saveGames("Resources/Files/SavedGames.txt");
 }
 
 void HubState::deleteGame()
 {
+	for (auto& gameButton : this->selectionButtons->GetMembers())
+	{
+		if (gameButton._Get()->IsActive())
+		{
+			gameButton._Get()->Show(false);
 
+			this->stateData.games.erase(std::remove_if(std::begin(this->stateData.games), std::end(this->stateData.games), [gameButton](const auto& game) { return game.getName() == gameButton._Get()->GetLabel(); }));
+		}
+	}
+}
+
+void HubState::saveGames(const std::string& pathFile)
+{
+	std::ofstream outFile(pathFile);
+
+	for (const auto& game : this->stateData.games)
+	{
+		outFile << game << '\n';
+	}
 }
 
 void HubState::transitionToMenu()
@@ -131,6 +156,21 @@ void HubState::transitionToMenu()
 
 void HubState::transitionToPlay()
 {
-	this->stateMachine.clearStates();
-	this->stateMachine.pushState(StateID::Game);
+	for (auto& gameButton : this->selectionButtons->GetMembers())
+	{
+		if (gameButton._Get()->IsActive())
+		{
+			auto gameIter = std::find_if(std::begin(this->stateData.games), std::end(this->stateData.games), [gameButton](const auto& game) { return game.getName() == gameButton._Get()->GetLabel(); });
+
+			if (this->stateData.games.size() > 1u)
+			{
+				std::iter_swap(gameIter, std::begin(this->stateData.games));
+			}
+
+			this->stateMachine.clearStates();
+			this->stateMachine.pushState(StateID::Game);
+
+			break;
+		}
+	}
 }

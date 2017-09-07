@@ -17,8 +17,8 @@ ControlSystem::ControlSystem(Entities& entities, Events& events, InputHandler& i
 
 void ControlSystem::update(float deltaTime)
 {
-	this->entities.for_each<Controllable>(
-		[this, deltaTime](auto entity)
+	this->entities.for_each<ControllableComponent>(
+		[this, deltaTime](auto entity, auto& component)
 	{
 		this->reactToInput(entity, deltaTime);
 	});

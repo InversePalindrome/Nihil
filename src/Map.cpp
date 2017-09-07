@@ -13,9 +13,9 @@ InversePalindrome.com
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
 
-Map::Map(const sf::Vector2f& chunkSize, Player& player, b2World& world, ComponentSerializer& componentSerializer, ResourceManager& resourceManager, CollisionsData& collisionsData) :
+Map::Map(const sf::Vector2f& chunkSize, Game& game, b2World& world, ComponentSerializer& componentSerializer, ResourceManager& resourceManager, CollisionsData& collisionsData) :
 	chunkSize(chunkSize),
-	player(player),
+	game(game),
 	world(world),
 	componentSerializer(componentSerializer),
 	resourceManager(resourceManager),
@@ -125,7 +125,7 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 		}
 	}
 	
-	this->componentSerializer.createBlueprint("Resources/Files/Blueprint-" + player.getCurrentLevel() + ".txt", entitiesFiles);
+	this->componentSerializer.createBlueprint("Resources/Files/Blueprint-" + game.getCurrentLevel() + ".txt", entitiesFiles);
 }
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const

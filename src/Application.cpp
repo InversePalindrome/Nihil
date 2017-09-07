@@ -20,15 +20,16 @@ InversePalindrome.com
 #include <SFML/Window/Event.hpp>
 
 #include <chrono>
+#include <fstream>
+#include <sstream>
 
 
 Application::Application() :
-	player("Resources/Files/PlayerData.txt"),
 	window(sf::VideoMode(2048u, 1536u), "Nihil", sf::Style::Close | sf::Style::Titlebar),
 	resourceManager("Resources/Files/ResourcePaths.txt"),
 	soundManager(resourceManager),
 	guiManager(window),
-	stateData(player, resourceManager, soundManager, guiManager, inputHandler, window),
+	stateData(games, resourceManager, soundManager, guiManager, inputHandler, window),
 	stateMachine(stateData)
 {
 	stateMachine.registerState<SplashState>(StateID::Splash);
@@ -41,6 +42,8 @@ Application::Application() :
 	stateMachine.registerState<PauseState>(StateID::Pause);
 
 	stateMachine.pushState(StateID::Splash);
+
+	loadGames("Resources/Files/SavedGames.txt");
 }
 
 void Application::run()
@@ -99,4 +102,23 @@ void Application::render()
 	this->guiManager.display();
 
 	this->window.display();
+}
+
+void Application::loadGames(const std::string& pathFile)
+{
+	std::ifstream inFile(pathFile);
+	std::string line;
+
+	while (std::getline(inFile, line))
+	{
+		std::istringstream iStream(line);
+
+		std::string gameName, characterName, levelName;
+		std::size_t coins;
+		std::bitset<3u> levels;
+
+		iStream >> gameName >> characterName >> levelName >> coins >> levels;
+
+		this->games.push_back(Game(gameName, characterName, levelName, levels, coins));
+	}
 }

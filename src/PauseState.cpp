@@ -12,28 +12,19 @@ InversePalindrome.com
 PauseState::PauseState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
 	resumeButton(sfg::Button::Create(" Resume ")),
-	restartButton(sfg::Button::Create("Restart ")),
 	settingsButton(sfg::Button::Create("Settings")),
 	quitButton(sfg::Button::Create("\t\tQuit\t\t"))
 {
 	resumeButton->SetPosition(sf::Vector2f(840.f, 500.f));
 	resumeButton->GetSignal(sfg::Widget::OnLeftClick).Connect([&stateMachine]() { stateMachine.popState(); });
 
-	restartButton->SetPosition(sf::Vector2f(840.f, 650.f));
-	restartButton->GetSignal(sfg::Widget::OnLeftClick).Connect([&stateMachine, &stateData]() 
-	{ 
-		stateMachine.clearStates(); 
-		stateMachine.pushState(StateID::Game);
-	});
-
-	settingsButton->SetPosition(sf::Vector2f(840.f, 800.f));
+	settingsButton->SetPosition(sf::Vector2f(840.f, 650.f));
 	settingsButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { transitionToSettings(); });
 
-	quitButton->SetPosition(sf::Vector2f(840.f, 950.f));
+	quitButton->SetPosition(sf::Vector2f(840.f, 800.f));
 	quitButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { transitionToMenu(); });
 
 	stateData.guiManager.addWidget(resumeButton);
-	stateData.guiManager.addWidget(restartButton);
 	stateData.guiManager.addWidget(settingsButton);
 	stateData.guiManager.addWidget(quitButton);
 }
@@ -54,7 +45,6 @@ void PauseState::update(float deltaTime)
 void PauseState::draw()
 {
 	this->resumeButton->Show(true);
-	this->restartButton->Show(true);
 	this->settingsButton->Show(true);
 	this->quitButton->Show(true);
 }
@@ -64,10 +54,18 @@ bool PauseState::isTransparent() const
 	return true;
 }
 
+void PauseState::saveGame(const std::string& pathFile)
+{
+	std::ofstream outFile(pathFile);
+
+	for (const auto& game : this->stateData.games)
+	{
+		outFile << game;
+	}
+}
+
 void PauseState::transitionToMenu()
 { 
-	this->stateData.player.saveData();
-
 	this->stateMachine.clearStates();
 	this->stateMachine.pushState(StateID::Menu);
 }

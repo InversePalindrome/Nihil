@@ -65,7 +65,7 @@ void SoundSystem::stopSound(Entity entity)
 
 void SoundSystem::updateListenerPosition(Entity entity)
 {
-	if (entity.has_tag <Controllable>())
+	if (entity.has_component<ControllableComponent>())
 	{
 		const auto& position = entity.get_component<PositionComponent>().getPosition();
 

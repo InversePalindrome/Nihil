@@ -13,7 +13,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
 	world(b2Vec2(0.f, -9.8f)),
 	entityManager(world, stateData.resourceManager, stateData.soundManager, stateData.inputHandler, collisionsData),
-	map(sf::Vector2f(8192.f, 1536.f), stateData.player, world, entityManager.getComponentSerializer(), stateData.resourceManager, collisionsData),
+	map(sf::Vector2f(8192.f, 1536.f), stateData.games.front(), world, entityManager.getComponentSerializer(), stateData.resourceManager, collisionsData),
 	camera(stateData.window.getDefaultView()),
 	collisionHandler(entityManager.getEvents()),
 	healthBar(stateData.resourceManager),
@@ -24,7 +24,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	healthBar.setPosition(150.f, 120.f);
 
 	coinDisplay.setPosition(1600.f, 120.f);
-	coinDisplay.setNumberOfCoins(stateData.player.getCoins());
+	coinDisplay.setNumberOfCoins(stateData.games.front().getCoins());
 	
 	entityManager.getEvents().subscribe<DestroyEntity>([this](const auto& event) 
 	{ 
@@ -35,22 +35,22 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	});
 	entityManager.getEvents().subscribe<Teleported>([this, &stateData](const auto& event)
 	{
-		callbacks.push_back([this, &stateData, event]
+		callbacks.push_back([this, event]
 		{ 
-			changeLevel(event.level, event.position);
+			changeLevel(event.level);
 		});
 	});
 	entityManager.getEvents().subscribe<GameOver>([this, &stateData](const auto& event)
 	{
 		callbacks.push_back([this, &stateData] 
 		{
-			changeLevel(stateData.player.getCurrentLevel(), sf::Vector2f());
+			changeLevel(stateData.games.front().getCurrentLevel());
 		});
 	});
 	entityManager.getEvents().subscribe<PickedUpCoin>([this, &stateData](const auto& event)
 	{
-		stateData.player.setCoins(stateData.player.getCoins() + 1u);
-		coinDisplay.setNumberOfCoins(stateData.player.getCoins());
+		stateData.games.front().setCoins(stateData.games.front().getCoins() + 1u);
+		coinDisplay.setNumberOfCoins(stateData.games.front().getCoins());
 	});
 	entityManager.getEvents().subscribe<CombatOcurred>([this](const auto& event)
 	{
@@ -59,19 +59,15 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 
 	stateData.window.setView(camera);
 
-	changeLevel(stateData.player.getCurrentLevel(), sf::Vector2f());
+	changeLevel(stateData.games.front().getCurrentLevel());
 }
 
 void GameState::handleEvent(const sf::Event& event)
 {
 	if (this->stateData.inputHandler.isActive("Escape"))
 	{
-		this->entityManager.saveEntities("Resources/Files/Entities-" + this->stateData.player.getCurrentLevel() + ".txt");
+		this->saveData("Resources/Files/SavedGames.txt");
 		this->stateMachine.pushState(StateID::Pause);
-	}
-	else if (this->stateData.inputHandler.isActive("Retry"))
-	{
-		this->entityManager.getEvents().broadcast(GameOver{});
 	}
 }
 
@@ -109,7 +105,7 @@ void GameState::draw()
 void GameState::updateCamera()
 {
 	const auto& playerPosition = this->entityManager.getEntities().
-		get_entities<Controllable, PositionComponent>().back().get_component<PositionComponent>().getPosition();
+		get_entities<ControllableComponent, PositionComponent>().back().get_component<PositionComponent>().getPosition();
 	
 	if (playerPosition.x > this->camera.getSize().x / 2.f && playerPosition.x < this->map.getBounds().width - this->camera.getSize().x / 2.f)
 	{
@@ -118,15 +114,25 @@ void GameState::updateCamera()
 	}
 }
 
-void GameState::changeLevel(const std::string& level, const sf::Vector2f& position)
+void GameState::changeLevel(const std::string& level)
 {
 	this->entityManager.destroyEntities();
 
 	this->map.load("Resources/Files/" + level + ".tmx");
-	this->entityManager.createBlueprint("Resources/Files/Blueprint-" + level + ".txt");
-	this->stateData.player.setCurrentLevel(level);
 
-	this->healthBar.setHitpointsDisplay(this->entityManager.getEntities().get_entities<Controllable, HealthComponent>()
+	if (!this->stateData.games.front().getLoadedLevels()[level])
+	{
+		this->entityManager.createBlueprint("Resources/Files/Blueprint-" + level + ".txt");
+		this->stateData.games.front().getLoadedLevels()[level] = true;
+	}
+	else
+	{
+		this->entityManager.createEntities("Resources/Files/Entities-" + this->stateData.games.front().getName() + '-' + level + ".txt");
+	}
+
+	this->stateData.games.front().setCurrentLevel(level);
+
+	this->healthBar.setHitpointsDisplay(this->entityManager.getEntities().get_entities<ControllableComponent, HealthComponent>()
 		.back().get_component<HealthComponent>().getHitpoints());
 
 	this->camera = this->stateData.window.getDefaultView();
@@ -135,8 +141,20 @@ void GameState::changeLevel(const std::string& level, const sf::Vector2f& positi
 
 void GameState::setDisplayHitpoints(Entity entity)
 {
-	if (entity.has_tag<Controllable>())
+	if (entity.has_component<ControllableComponent>())
 	{
 		this->healthBar.setHitpointsDisplay(entity.get_component<HealthComponent>().getHitpoints());
+	}
+}
+
+void GameState::saveData(const std::string& pathFile)
+{
+	this->entityManager.saveEntities("Resources/Files/Entities-" + this->stateData.games.front().getName() + '-' + this->stateData.games.front().getCurrentLevel() + ".txt");
+	
+	std::ofstream outFile(pathFile);
+
+	for (const auto& game : this->stateData.games)
+	{
+		outFile << game << '\n';
 	}
 }

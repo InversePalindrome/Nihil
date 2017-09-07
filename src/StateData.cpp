@@ -8,8 +8,8 @@ InversePalindrome.com
 #include "StateData.hpp"
 
 
-StateData::StateData(Player& player, ResourceManager& resourceManager, SoundManager& soundManager, GUIManager& guiManager, InputHandler& inputHandler, sf::RenderWindow& window) :
-	player(player),
+StateData::StateData(std::vector<Game>& games, ResourceManager& resourceManager, SoundManager& soundManager, GUIManager& guiManager, InputHandler& inputHandler, sf::RenderWindow& window) :
+	games(games),
 	resourceManager(resourceManager),
 	soundManager(soundManager),
 	guiManager(guiManager),

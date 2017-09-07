@@ -30,7 +30,7 @@ CharactersState::CharactersState(StateMachine& stateMachine, StateData& stateDat
 	background.setScale(stateData.window.getSize().x / background.getGlobalBounds().width, stateData.window.getSize().y / background.getGlobalBounds().height);
 
 	coinDisplay.setPosition(1600.f, 120.f);
-	coinDisplay.setNumberOfCoins(stateData.player.getCoins());
+	coinDisplay.setNumberOfCoins(stateData.games.front().getCoins());
 
 	backButton->SetPosition(sf::Vector2f(12.f, 65.f));
 	backButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { transitionToMenu(); });
@@ -51,7 +51,7 @@ CharactersState::CharactersState(StateMachine& stateMachine, StateData& stateDat
 		characterButton._Get()->SetState(sfg::Widget::State::SELECTED);
 		characterButton._Get()->SetState(sfg::Widget::State::NORMAL);
 
-		if (stateData.player.getCharacterName() == characterButton._Get()->GetId())
+		if (stateData.games.front().getCharacterName() == characterButton._Get()->GetId())
 		{
 			characterButton._Get()->SetActive(true);
 		}
@@ -154,17 +154,17 @@ void CharactersState::loadCharacters(const std::string& filePath)
 
 void CharactersState::selectedCharacter(const std::string& character)
 {
-	this->stateData.player.setCharacterName(character);
+	this->stateData.games.front().setCharacterName(character);
 }
 
 void CharactersState::purchasedCharacter(sfg::RadioButton::Ptr characterButton, sfg::Button::Ptr purchaseButton)
 {
 	const auto& price = std::stoull(purchaseButton->GetLabel().toAnsiString());
 
-	if (this->stateData.player.getCoins() >= price)
+	if (this->stateData.games.front().getCoins() >= price)
 	{
-		this->stateData.player.setCoins(this->stateData.player.getCoins() - price);
-		this->coinDisplay.setNumberOfCoins(this->stateData.player.getCoins());
+		this->stateData.games.front().setCoins(this->stateData.games.front().getCoins() - price);
+		this->coinDisplay.setNumberOfCoins(this->stateData.games.front().getCoins());
 
 		purchaseButton->Show(false);
 
