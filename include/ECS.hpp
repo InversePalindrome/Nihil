@@ -20,6 +20,7 @@ InversePalindrome.com
 #include "ParentComponent.hpp"
 #include "ChildComponent.hpp"
 #include "AutomatedComponent.hpp"
+#include "ControllableComponent.hpp"
 #include "Direction.hpp"
 
 #include <brigand/sequences/list.hpp>
@@ -28,8 +29,6 @@ InversePalindrome.com
 #include <entityplus/event.h>
 
 
-struct Controllable;
-struct Pickup;
 struct DirectionChanged;
 struct Jumped;
 struct CombatOcurred;
@@ -44,13 +43,13 @@ struct GameOver;
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, 
 	PhysicsComponent, AIComponent, HealthComponent, AttackComponent, SpriteComponent, AnimationComponent, SoundComponent,
-    ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent>;
+    ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent>;
+
+using Tags = entityplus::tag_list<>;
 
 using ComponentList = brigand::list<PositionComponent, StateComponent, PhysicsComponent, AIComponent,
 	HealthComponent, AttackComponent, SpriteComponent, AnimationComponent, SoundComponent,
-	ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent>;
-
-using Tags = entityplus::tag_list<Controllable, Pickup>;
+	ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent>;
 
 using Entities = entityplus::entity_manager<Components, Tags>;
 
@@ -92,7 +91,6 @@ struct StateChanged
 struct Teleported
 {
 	std::string level;
-	sf::Vector2f position;
 };
 
 struct DestroyEntity

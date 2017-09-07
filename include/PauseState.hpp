@@ -25,10 +25,11 @@ public:
 
 private:
 	sfg::Button::Ptr resumeButton;
-	sfg::Button::Ptr restartButton;
 	sfg::Button::Ptr settingsButton;
 	sfg::Button::Ptr quitButton;
 	
+	void saveGame(const std::string& pathFile);
+
 	void transitionToMenu();
 	void transitionToSettings();
 };

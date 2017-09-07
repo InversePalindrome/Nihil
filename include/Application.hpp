@@ -7,7 +7,7 @@ InversePalindrome.com
 
 #pragma once
 
-#include "Player.hpp"
+#include "Game.hpp"
 #include "StateData.hpp"
 #include "StateMachine.hpp"
 #include "InputHandler.hpp"
@@ -16,6 +16,9 @@ InversePalindrome.com
 #include "GUIManager.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
+
+#include <vector>
+#include <string>
 
 
 class Application
@@ -28,7 +31,7 @@ public:
 	void run();
 
 private:
-	Player player;
+	std::vector<Game> games;
 
 	InputHandler inputHandler;
 
@@ -44,4 +47,6 @@ private:
 	void handleEvents();
 	void update(float deltaTime);
 	void render();
+
+	void loadGames(const std::string& pathFile);
 };

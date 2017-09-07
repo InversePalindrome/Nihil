@@ -8,7 +8,7 @@ InversePalindrome.com
 #pragma once
 
 #include "Layer.hpp"
-#include "Player.hpp"
+#include "Game.hpp"
 #include "CollisionData.hpp"
 #include "ResourceManager.hpp"
 #include "ComponentSerializer.hpp"
@@ -29,7 +29,7 @@ InversePalindrome.com
 class Map : public sf::Drawable
 {
 public:
-	Map(const sf::Vector2f& chunkSize, Player& player, b2World& world, ComponentSerializer& componentSerializer, ResourceManager& resourceManager, CollisionsData& collisionsData);
+	Map(const sf::Vector2f& chunkSize, Game& game, b2World& world, ComponentSerializer& componentSerializer, ResourceManager& resourceManager, CollisionsData& collisionsData);
 
 	void load(const std::string& filePath);
 	
@@ -44,7 +44,7 @@ private:
 	std::string filePath;
 	std::vector<std::unique_ptr<Layer>> layers;
 
-	Player& player;
+	Game& game;
 	b2World& world;
 	ComponentSerializer& componentSerializer;
 	ResourceManager& resourceManager;

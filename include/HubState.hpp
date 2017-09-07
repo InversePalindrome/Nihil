@@ -9,6 +9,7 @@ InversePalindrome.com
 
 #include "State.hpp"
 
+#include <SFGUI/Box.hpp>
 #include <SFGUI/Entry.hpp>
 #include <SFGUI/Button.hpp>
 #include <SFGUI/Window.hpp>
@@ -36,13 +37,16 @@ private:
 	sfg::Button::Ptr playButton;
 	sfg::Button::Ptr addButton;
 	sfg::Button::Ptr deleteButton;
+	sfg::Box::Ptr selectionBox;
 	sfg::RadioButtonGroup::Ptr selectionButtons;
 
-	void loadGames(const std::string& pathFile);
+	void addGames();
 
 	void showAddGamePopup();
 	void addGame();
 	void deleteGame();
+
+	void saveGames(const std::string& pathFile);
 
 	void transitionToMenu();
 	void transitionToPlay();
