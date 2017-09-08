@@ -23,7 +23,7 @@ public:
 
 	void serialize(const std::string& pathFile);
 
-	void createBlueprint(const std::string& pathFile, const std::vector<std::pair<std::string, sf::Vector2f>>& entitiesFiles);
+	void saveBlueprint(const std::string& pathFile, const std::vector<std::pair<std::string, sf::Vector2f>>& entitiesFiles);
 
 private:
 	Entities& entities;

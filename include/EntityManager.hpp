@@ -44,8 +44,8 @@ public:
 	Entity createEntity(const std::string& pathFile);
 	Entity createEntity(const std::string& pathFile, const sf::Vector2f& position);
 
-	void createEntities(const std::string& pathFile);
-	void createBlueprint(const std::string& pathFile);
+	void parseEntities(const std::string& pathFile);
+	void parseBlueprint(const std::string& pathFile);
 
 	void destroyEntity(Entity entity);
 	void destroyEntities();

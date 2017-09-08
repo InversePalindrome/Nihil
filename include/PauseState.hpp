@@ -27,8 +27,6 @@ private:
 	sfg::Button::Ptr resumeButton;
 	sfg::Button::Ptr settingsButton;
 	sfg::Button::Ptr quitButton;
-	
-	void saveGame(const std::string& pathFile);
 
 	void transitionToMenu();
 	void transitionToSettings();

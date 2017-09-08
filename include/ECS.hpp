@@ -40,6 +40,8 @@ struct EmitSound;
 struct PickedUpCoin;
 struct TouchedTrampoline;
 struct GameOver;
+struct MoveCamera;
+struct DisplayHealthBar;
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, 
 	PhysicsComponent, AIComponent, HealthComponent, AttackComponent, SpriteComponent, AnimationComponent, SoundComponent,
@@ -54,7 +56,7 @@ using ComponentList = brigand::list<PositionComponent, StateComponent, PhysicsCo
 using Entities = entityplus::entity_manager<Components, Tags>;
 
 using Events = entityplus::event_manager<Components, Tags, DirectionChanged, Jumped, CombatOcurred, ChangeState,
-	StateChanged, Teleported, DestroyEntity, EmitSound, PickedUpCoin, TouchedTrampoline, GameOver>;
+	StateChanged, Teleported, DestroyEntity, EmitSound, PickedUpCoin, TouchedTrampoline, GameOver, MoveCamera, DisplayHealthBar>;
 
 using Entity = Entities::entity_t;
 
@@ -115,4 +117,14 @@ struct TouchedTrampoline
 
 struct GameOver
 {
+};
+
+struct MoveCamera
+{
+	Entity entity;
+};
+
+struct DisplayHealthBar
+{
+	Entity entity;
 };

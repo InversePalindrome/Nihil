@@ -46,10 +46,9 @@ private:
 	HealthBar healthBar;
 	CoinDisplay coinDisplay;
 
-	void updateCamera();
+	void updateCamera(Entity entity);
+	void updateHealthBar(Entity entity);
 	void changeLevel(const std::string& level);
-
-	void setDisplayHitpoints(Entity entity);
 
 	void saveData(const std::string& pathFile);
 };
