@@ -13,6 +13,13 @@ ControlSystem::ControlSystem(Entities& entities, Events& events, InputHandler& i
 	inputHandler(inputHandler),
 	timeSinceJump(0.f)
 {
+	events.subscribe<entityplus::component_added<Entity, ControllableComponent>>([&events](const auto& event)
+	{
+		if (event.entity.has_component<HealthComponent>())
+		{
+			events.broadcast(DisplayHealthBar{ event.entity });
+		}
+	});
 }
 
 void ControlSystem::update(float deltaTime)
@@ -21,6 +28,7 @@ void ControlSystem::update(float deltaTime)
 		[this, deltaTime](auto entity, auto& component)
 	{
 		this->reactToInput(entity, deltaTime);
+		this->events.broadcast(MoveCamera{ entity });
 	});
 }
 

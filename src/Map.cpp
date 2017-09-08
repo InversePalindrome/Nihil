@@ -125,7 +125,7 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 		}
 	}
 	
-	this->componentSerializer.createBlueprint("Resources/Files/Blueprint-" + game.getCurrentLevel() + ".txt", entitiesFiles);
+	this->componentSerializer.saveBlueprint("Resources/Files/Blueprint-" + game.getCurrentLevel() + ".txt", entitiesFiles);
 }
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const

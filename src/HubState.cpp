@@ -134,9 +134,14 @@ void HubState::deleteGame()
 		{
 			gameButton._Get()->Show(false);
 
-			this->stateData.games.erase(std::remove_if(std::begin(this->stateData.games), std::end(this->stateData.games), [gameButton](const auto& game) { return game.getName() == gameButton._Get()->GetLabel(); }));
+			if (!this->stateData.games.empty())
+			{
+				this->stateData.games.erase(std::remove_if(std::begin(this->stateData.games), std::end(this->stateData.games), [gameButton](const auto& game) { return game.getName() == gameButton._Get()->GetLabel(); }));
+			}
 		}
 	}
+
+	this->saveGames("Resources/Files/SavedGames.txt");
 }
 
 void HubState::saveGames(const std::string& pathFile)
@@ -162,15 +167,15 @@ void HubState::transitionToPlay()
 		{
 			auto gameIter = std::find_if(std::begin(this->stateData.games), std::end(this->stateData.games), [gameButton](const auto& game) { return game.getName() == gameButton._Get()->GetLabel(); });
 
-			if (this->stateData.games.size() > 1u)
+			if (!this->stateData.games.empty() && gameIter != std::end(this->stateData.games))
 			{
 				std::iter_swap(gameIter, std::begin(this->stateData.games));
+
+				this->stateMachine.clearStates();
+				this->stateMachine.pushState(StateID::Game);
+
+				break;
 			}
-
-			this->stateMachine.clearStates();
-			this->stateMachine.pushState(StateID::Game);
-
-			break;
 		}
 	}
 }

@@ -15,13 +15,13 @@ PauseState::PauseState(StateMachine& stateMachine, StateData& stateData) :
 	settingsButton(sfg::Button::Create("Settings")),
 	quitButton(sfg::Button::Create("\t\tQuit\t\t"))
 {
-	resumeButton->SetPosition(sf::Vector2f(840.f, 500.f));
+	resumeButton->SetPosition(sf::Vector2f(850.f, 625.f));
 	resumeButton->GetSignal(sfg::Widget::OnLeftClick).Connect([&stateMachine]() { stateMachine.popState(); });
 
-	settingsButton->SetPosition(sf::Vector2f(840.f, 650.f));
+	settingsButton->SetPosition(sf::Vector2f(850.f, 775.f));
 	settingsButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { transitionToSettings(); });
 
-	quitButton->SetPosition(sf::Vector2f(840.f, 800.f));
+	quitButton->SetPosition(sf::Vector2f(850.f, 925.f));
 	quitButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { transitionToMenu(); });
 
 	stateData.guiManager.addWidget(resumeButton);
@@ -52,16 +52,6 @@ void PauseState::draw()
 bool PauseState::isTransparent() const
 {
 	return true;
-}
-
-void PauseState::saveGame(const std::string& pathFile)
-{
-	std::ofstream outFile(pathFile);
-
-	for (const auto& game : this->stateData.games)
-	{
-		outFile << game;
-	}
 }
 
 void PauseState::transitionToMenu()

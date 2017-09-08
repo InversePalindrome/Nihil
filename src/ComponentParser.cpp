@@ -198,7 +198,7 @@ void ComponentParser::parseEntities(const std::string& pathFile)
 	std::ifstream inFile(pathFile);
 	std::string line;
 
-	std::unordered_map<std::size_t, Entity> entitiesIDs;
+	std::unordered_map<std::size_t, std::pair<std::size_t, Entity>> entitiesIDs;
 
 	while (std::getline(inFile, line))
 	{
@@ -210,21 +210,37 @@ void ComponentParser::parseEntities(const std::string& pathFile)
 		iStream >> entityID >> componentName;
 
 		Entity entity;
-
+		
 		if (entitiesIDs.count(entityID))
 		{
-			entity = entitiesIDs[entityID];
-			entity.sync();
+			entity = entitiesIDs[entityID].second;
 		}
 		else
 		{
 			entity = this->createEntity();
-			entitiesIDs.emplace(entityID, entity);
+			entitiesIDs.emplace(entityID, std::make_pair(this->currentEntityID, entity));
 		}
+
+		entity.sync();
 
 		line.erase(std::begin(line), std::begin(line) + std::to_string(entityID).size() + componentName.size() + 1u);
 	
 		this->componentParsers[componentName](entity, line);
+	}
+
+	for (auto& entity : entitiesIDs)
+	{
+		brigand::for_each<ComponentList>([&entity, this](auto componentType)
+		{
+			entity.second.second.sync();
+			
+			using Type = decltype(componentType)::type;
+			
+			if (entity.second.second.has_component<Type>())
+			{
+				entity.second.second.get_component<Type>().setEntity(entity.second.first);
+			}
+		});
 	}
 }
 

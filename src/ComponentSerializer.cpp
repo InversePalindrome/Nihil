@@ -15,7 +15,6 @@ InversePalindrome.com
 ComponentSerializer::ComponentSerializer(Entities& entities) :
 	entities(entities)
 {
-
 }
 
 void ComponentSerializer::serialize(const std::string& pathFile)
@@ -33,7 +32,7 @@ void ComponentSerializer::serialize(const std::string& pathFile)
 	});
 }
 
-void ComponentSerializer::createBlueprint(const std::string& pathFile, const std::vector<std::pair<std::string, sf::Vector2f>>& entitiesFile)
+void ComponentSerializer::saveBlueprint(const std::string& pathFile, const std::vector<std::pair<std::string, sf::Vector2f>>& entitiesFile)
 {
 	std::ofstream outFile(pathFile);
 

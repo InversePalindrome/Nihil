@@ -28,5 +28,8 @@ void HealthBar::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	states.transform = this->getTransform();
 
-	target.draw(this->heart, states);
+	if(this->heart.getTextureRect().width > 0.f)
+	{
+		target.draw(this->heart, states);
+	}
 }

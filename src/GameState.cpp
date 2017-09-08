@@ -7,7 +7,7 @@ InversePalindrome.com
 
 #include "GameState.hpp"
 #include "StateMachine.hpp"
-
+#include <iostream>
 
 GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
@@ -47,14 +47,14 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 			changeLevel(stateData.games.front().getCurrentLevel());
 		});
 	});
+
+	entityManager.getEvents().subscribe<MoveCamera>([this](const auto& event) { updateCamera(event.entity); });
+	entityManager.getEvents().subscribe<DisplayHealthBar>([this](const auto& event) { updateHealthBar(event.entity); });
+
 	entityManager.getEvents().subscribe<PickedUpCoin>([this, &stateData](const auto& event)
 	{
 		stateData.games.front().setCoins(stateData.games.front().getCoins() + 1u);
 		coinDisplay.setNumberOfCoins(stateData.games.front().getCoins());
-	});
-	entityManager.getEvents().subscribe<CombatOcurred>([this](const auto& event)
-	{
-		setDisplayHitpoints(event.victim);
 	});
 
 	stateData.window.setView(camera);
@@ -87,7 +87,6 @@ void GameState::update(float deltaTime)
 	this->callbacks.clear();
 	
 	this->entityManager.update(deltaTime);
-	this->updateCamera();
 	this->coinDisplay.update(deltaTime);
 }
 
@@ -102,16 +101,20 @@ void GameState::draw()
 	this->stateData.window.draw(this->coinDisplay);
 }
 
-void GameState::updateCamera()
+void GameState::updateCamera(Entity entity)
 {
-	const auto& playerPosition = this->entityManager.getEntities().
-		get_entities<ControllableComponent, PositionComponent>().back().get_component<PositionComponent>().getPosition();
+	const auto& playerPosition = entity.get_component<PositionComponent>().getPosition();
 	
 	if (playerPosition.x > this->camera.getSize().x / 2.f && playerPosition.x < this->map.getBounds().width - this->camera.getSize().x / 2.f)
 	{
 		this->camera.setCenter(playerPosition.x, this->camera.getCenter().y);
 		this->stateData.window.setView(this->camera);
 	}
+}
+
+void GameState::updateHealthBar(Entity entity)
+{
+	this->healthBar.setHitpointsDisplay(entity.get_component<HealthComponent>().getHitpoints());
 }
 
 void GameState::changeLevel(const std::string& level)
@@ -122,29 +125,18 @@ void GameState::changeLevel(const std::string& level)
 
 	if (!this->stateData.games.front().getLoadedLevels()[level])
 	{
-		this->entityManager.createBlueprint("Resources/Files/Blueprint-" + level + ".txt");
+		this->entityManager.parseBlueprint("Resources/Files/Blueprint-" + level + ".txt");
 		this->stateData.games.front().getLoadedLevels()[level] = true;
 	}
 	else
 	{
-		this->entityManager.createEntities("Resources/Files/Entities-" + this->stateData.games.front().getName() + '-' + level + ".txt");
+		this->entityManager.parseEntities("Resources/Files/Entities-" + this->stateData.games.front().getName() + '-' + level + ".txt");
 	}
 
 	this->stateData.games.front().setCurrentLevel(level);
 
-	this->healthBar.setHitpointsDisplay(this->entityManager.getEntities().get_entities<ControllableComponent, HealthComponent>()
-		.back().get_component<HealthComponent>().getHitpoints());
-
 	this->camera = this->stateData.window.getDefaultView();
 	this->stateData.soundManager.stopAllSounds();
-}
-
-void GameState::setDisplayHitpoints(Entity entity)
-{
-	if (entity.has_component<ControllableComponent>())
-	{
-		this->healthBar.setHitpointsDisplay(entity.get_component<HealthComponent>().getHitpoints());
-	}
 }
 
 void GameState::saveData(const std::string& pathFile)

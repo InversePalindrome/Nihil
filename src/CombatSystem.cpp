@@ -11,6 +11,14 @@ InversePalindrome.com
 CombatSystem::CombatSystem(Entities& entities, Events& events) :
 	System(entities, events)
 {
+	events.subscribe<entityplus::component_added<Entity, HealthComponent>>([&events](const auto& event)
+	{
+		if (event.entity.has_component<ControllableComponent>())
+		{
+			events.broadcast(DisplayHealthBar{ event.entity });
+		}
+	});
+
 	events.subscribe<CombatOcurred>([this](const auto& event) { handleCombat(event.attacker, event.victim); });
 }
 
@@ -32,11 +40,15 @@ void CombatSystem::handleCombat(Entity attacker, Entity victim)
 	{
 		health.setHitpoints(health.getHitpoints() - damagePoints);
 	}
+	if (victim.has_component<ControllableComponent>())
+	{
+		this->events.broadcast(DisplayHealthBar{ victim });
+	}
 }
 
 void CombatSystem::checkIfDead(Entity entity, HealthComponent& health)
 {
-	if (health.getHitpoints() <= 0u)
+	if (health.getHitpoints() == 0u)
 	{
 		this->events.broadcast(ChangeState{ entity, EntityState::Dead });
 	}

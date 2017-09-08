@@ -85,12 +85,12 @@ Entity EntityManager::createEntity(const std::string& pathFile, const sf::Vector
 	return entity;
 }
 
-void EntityManager::createEntities(const std::string& pathFile)
+void EntityManager::parseEntities(const std::string& pathFile)
 {
 	this->componentParser.parseEntities(pathFile);
 }
 
-void EntityManager::createBlueprint(const std::string& pathFile)
+void EntityManager::parseBlueprint(const std::string& pathFile)
 {
 	this->componentParser.parseBlueprint(pathFile);
 }
