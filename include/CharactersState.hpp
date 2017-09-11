@@ -13,6 +13,7 @@ InversePalindrome.com
 #include <SFGUI/Table.hpp>
 #include <SFGUI/Scale.hpp>
 #include <SFGUI/Button.hpp>
+#include <SFGUI/ComboBox.hpp>
 #include <SFGUI/Adjustment.hpp>
 #include <SFGUI/RadioButton.hpp>
 #include <SFGUI/ScrolledWindow.hpp>
@@ -39,6 +40,7 @@ private:
 	CoinDisplay coinDisplay;
 
 	sfg::Button::Ptr backButton;
+	sfg::ComboBox::Ptr gameChoices;
 	sfg::Table::Ptr itemsTable;
 	sfg::Scale::Ptr scrollbarScale;
 	sfg::Adjustment::Ptr scrollbarAdjustment;
@@ -49,7 +51,8 @@ private:
 	std::unordered_map<std::string, CharacterData> charactersData;
 
 	void loadCharacters(const std::string& filePath);
-	void saveCharactersData();
+
+	void selectGame();
 
 	void selectedCharacter(const std::string& character);
 	void purchasedCharacter(sfg::RadioButton::Ptr characterButton, sfg::Button::Ptr purchaseButton);
@@ -60,10 +63,9 @@ private:
 struct CharacterData
 {
 	CharacterData();
-	CharacterData(const std::string& characterName, std::size_t imageID, std::size_t price, bool lockStatus);
+	CharacterData(const std::string& characterName, std::size_t imageID, std::size_t price);
 
 	std::string characterName;
 	std::size_t imageID;
 	std::size_t price;
-	bool lockStatus;
 };

@@ -9,11 +9,12 @@ InversePalindrome.com
 
 #include <SFML/System/Vector2.hpp>
 
+#include <boost/dynamic_bitset/dynamic_bitset.hpp>
+
 #include <cstddef>
 #include <string>
 #include <ostream>
-#include <map>
-#include <bitset>
+#include <unordered_map>
 
 
 class Game
@@ -21,28 +22,32 @@ class Game
 	friend std::ostream& operator<<(std::ostream& os, const Game& game);
 
 public:
-	Game(const std::string& gameName);
-	Game(const std::string& gameName, const std::string& characterName, const std::string& currentLevel, const std::bitset<3u>& levels, std::size_t coins);
+	Game();
+	Game(const std::string& data);
 
-	std::string getName() const;
+	std::string getGameName() const;
 	std::string getCharacterName() const;
 	std::string getCurrentLevel() const;
-	std::map<std::string, bool>& getLoadedLevels();
-
 	std::size_t getCoins() const;
 
+	std::unordered_map<std::string, bool>& getLevels();
+	std::unordered_map<std::string, bool>& getCharacters();
+
+	void setGameName(const std::string& name);
 	void setCharacterName(const std::string& characterName);
 	void setCurrentLevel(const std::string& currentLevel);
-
 	void setCoins(std::size_t coins);
 
 private:
 	std::string gameName;
 	std::string characterName;
 	std::string currentLevel;
-	std::map<std::string, bool> loadedLevels;
-
 	std::size_t coins;
+	std::unordered_map<std::string, bool> levels;
+	std::unordered_map<std::string, bool> characters;
+
+	void loadNames();
+	void loadDataBitsets(std::unordered_map<std::string, bool>& dataset, const boost::dynamic_bitset<std::size_t>& bitset);
 };
 
 std::ostream& operator<<(std::ostream& os, const Game& game);
