@@ -111,14 +111,6 @@ void Application::loadGames(const std::string& pathFile)
 
 	while (std::getline(inFile, line))
 	{
-		std::istringstream iStream(line);
-
-		std::string gameName, characterName, levelName;
-		std::size_t coins;
-		std::bitset<3u> levels;
-
-		iStream >> gameName >> characterName >> levelName >> coins >> levels;
-
-		this->games.push_back(Game(gameName, characterName, levelName, levels, coins));
+		this->games.push_back(Game(line));
 	}
 }

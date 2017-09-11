@@ -73,7 +73,10 @@ MenuState::MenuState(StateMachine& stateMachine, StateData& stateData) :
 	stateData.guiManager.setProperty("*", "FontSize", 40.f);
 	stateData.guiManager.setProperty("Button", "Padding", 25.f);
 	stateData.guiManager.setProperty("Button", "BackgroundColor", sf::Color(75u, 0u, 130u));
-	stateData.guiManager.setProperty("Button:PRELIGHT", "BackgroundColor", sf::Color(75u, 0u, 130u));
+	stateData.guiManager.setProperty("Button:PRELIGHT", "BackgroundColor", sf::Color(156u, 28u, 107u));
+	stateData.guiManager.setProperty("Button:ACTIVE", "BackgroundColor", sf::Color(75u, 0u, 130u));
+	stateData.guiManager.setProperty("Button:PRELIGHT", "Color", sf::Color(255u, 255u, 0u));
+	stateData.guiManager.setProperty("Button:ACTIVE", "Color", sf::Color(255u, 255u, 0u));
 
 	stateData.guiManager.addWidget(playButton);
 	stateData.guiManager.addWidget(settingsButton);

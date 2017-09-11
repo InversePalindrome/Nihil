@@ -123,14 +123,14 @@ void GameState::changeLevel(const std::string& level)
 
 	this->map.load("Resources/Files/" + level + ".tmx");
 
-	if (!this->stateData.games.front().getLoadedLevels()[level])
+	if (!this->stateData.games.front().getLevels()[level])
 	{
 		this->entityManager.parseBlueprint("Resources/Files/Blueprint-" + level + ".txt");
-		this->stateData.games.front().getLoadedLevels()[level] = true;
+		this->stateData.games.front().getLevels()[level] = true;
 	}
 	else
 	{
-		this->entityManager.parseEntities("Resources/Files/Entities-" + this->stateData.games.front().getName() + '-' + level + ".txt");
+		this->entityManager.parseEntities("Resources/Files/Entities-" + this->stateData.games.front().getGameName() + '-' + level + ".txt");
 	}
 
 	this->stateData.games.front().setCurrentLevel(level);
@@ -141,7 +141,7 @@ void GameState::changeLevel(const std::string& level)
 
 void GameState::saveData(const std::string& pathFile)
 {
-	this->entityManager.saveEntities("Resources/Files/Entities-" + this->stateData.games.front().getName() + '-' + this->stateData.games.front().getCurrentLevel() + ".txt");
+	this->entityManager.saveEntities("Resources/Files/Entities-" + this->stateData.games.front().getGameName() + '-' + this->stateData.games.front().getCurrentLevel() + ".txt");
 	
 	std::ofstream outFile(pathFile);
 

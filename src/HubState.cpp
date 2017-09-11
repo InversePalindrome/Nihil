@@ -11,6 +11,7 @@ InversePalindrome.com
 #include <SFGUI/Label.hpp>
 #include <SFGUI/RadioButton.hpp>
 
+#include <cstdio>
 #include <fstream>
 
 
@@ -59,6 +60,8 @@ HubState::HubState(StateMachine& stateMachine, StateData& stateData) :
 	this->addGames();
 
 	stateData.guiManager.setProperty("Entry", "FontSize", 50.f);
+	stateData.guiManager.setProperty("Entry", "BackgroundColor", sf::Color(75u, 0u, 130u));
+	stateData.guiManager.setProperty("Entry", "Color", sf::Color(255u, 255u, 0u));
 	stateData.guiManager.setProperty("RadioButton", "FontSize", 60.f);
 	stateData.guiManager.setProperty("RadioButton", "BoxSize", 30.f);
 	stateData.guiManager.setProperty("RadioButton", "BackgroundColor", sf::Color(102u, 0u, 204u));
@@ -67,7 +70,6 @@ HubState::HubState(StateMachine& stateMachine, StateData& stateData) :
 	stateData.guiManager.setProperty("RadioButton:SELECTED", "BackgroundColor", sf::Color(15u, 192u, 252u));
 	stateData.guiManager.setProperty("Window", "BackgroundColor", sf::Color(25u, 25u, 112u));
 	stateData.guiManager.setProperty("Window", "Color", sf::Color(70u, 173u, 212u));
-	stateData.guiManager.setProperty("Entry", "BackgroundColor", sf::Color(75u, 0u, 130u));
 
 	stateData.guiManager.addWidget(addGamePopup);
 	stateData.guiManager.addWidget(backButton);
@@ -97,7 +99,7 @@ void HubState::addGames()
 
 	for (const auto& game : this->stateData.games)
 	{
-		auto gameButton = sfg::RadioButton::Create(game.getName(), this->selectionButtons);
+		auto gameButton = sfg::RadioButton::Create(game.getGameName(), this->selectionButtons);
 
 		selectionBox->Pack(gameButton);
 	}
@@ -114,16 +116,20 @@ void HubState::showAddGamePopup()
 
 void HubState::addGame()
 {
-	this->stateData.games.push_back(Game(nameEntry->GetText()));
+	if (!this->nameEntry->GetText().isEmpty())
+	{
+		this->stateData.games.push_back(Game());
+		this->stateData.games.back().setGameName(this->nameEntry->GetText());
 
-	auto gameButton = sfg::RadioButton::Create(this->nameEntry->GetText(), this->selectionButtons);
+		auto gameButton = sfg::RadioButton::Create(this->nameEntry->GetText(), this->selectionButtons);
 
-	this->selectionBox->Pack(gameButton);
+		this->selectionBox->Pack(gameButton);
+
+		this->saveGames("Resources/Files/SavedGames.txt");
+	}
 
 	this->addGamePopup->Show(false);
 	this->selectionBox->Show(true);
-
-	this->saveGames("Resources/Files/SavedGames.txt");
 }
 
 void HubState::deleteGame()
@@ -136,7 +142,18 @@ void HubState::deleteGame()
 
 			if (!this->stateData.games.empty())
 			{
-				this->stateData.games.erase(std::remove_if(std::begin(this->stateData.games), std::end(this->stateData.games), [gameButton](const auto& game) { return game.getName() == gameButton._Get()->GetLabel(); }));
+				auto gameIter = std::find_if(std::begin(this->stateData.games), std::end(this->stateData.games), [gameButton](const auto& game) { return game.getGameName() == gameButton._Get()->GetLabel(); });
+
+				if (gameIter != std::end(this->stateData.games))
+				{
+					for (auto& level : gameIter->getLevels())
+					{
+						std::remove(std::string("Resources/Files/Entities-" + gameButton._Get()->GetLabel() + '-' + level.first + ".txt").c_str());
+					}
+
+					this->stateData.games.erase(gameIter);
+
+				}
 			}
 		}
 	}
@@ -165,7 +182,7 @@ void HubState::transitionToPlay()
 	{
 		if (gameButton._Get()->IsActive())
 		{
-			auto gameIter = std::find_if(std::begin(this->stateData.games), std::end(this->stateData.games), [gameButton](const auto& game) { return game.getName() == gameButton._Get()->GetLabel(); });
+			auto gameIter = std::find_if(std::begin(this->stateData.games), std::end(this->stateData.games), [gameButton](const auto& game) { return game.getGameName() == gameButton._Get()->GetLabel(); });
 
 			if (!this->stateData.games.empty() && gameIter != std::end(this->stateData.games))
 			{

@@ -19,21 +19,35 @@ CharactersState::CharactersState(StateMachine& stateMachine, StateData& stateDat
 	background(stateData.resourceManager.getTexture(TexturesID::MenuBackground)),
 	coinDisplay(stateData.resourceManager),
 	backButton(sfg::Button::Create("BACK")),
+	gameChoices(sfg::ComboBox::Create()),
 	itemsTable(sfg::Table::Create()),
 	scrollbarScale(sfg::Scale::Create(sfg::Scale::Orientation::VERTICAL)),
 	scrollbarAdjustment(sfg::Adjustment::Create(0.f, 0.f, 100.f, 1.f, 10.f, 10.f)),
 	scrolledWindow(sfg::ScrolledWindow::Create()),
 	characterButtons(sfg::RadioButtonGroup::Create())
 {
-	loadCharacters("Resources/Files/Characters.txt");
-
 	background.setScale(stateData.window.getSize().x / background.getGlobalBounds().width, stateData.window.getSize().y / background.getGlobalBounds().height);
 
 	coinDisplay.setPosition(1600.f, 120.f);
-	coinDisplay.setNumberOfCoins(stateData.games.front().getCoins());
 
 	backButton->SetPosition(sf::Vector2f(12.f, 65.f));
 	backButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { transitionToMenu(); });
+
+	gameChoices->SetPosition(sf::Vector2f(775.f, 275.f));
+	gameChoices->SetRequisition(sf::Vector2f(400.f, 0.f));
+
+	for (const auto& game : this->stateData.games)
+	{
+		gameChoices->AppendItem(game.getGameName());
+	}
+
+	gameChoices->GetSignal(sfg::ComboBox::OnSelect).Connect([this]() { selectGame(); });
+
+	if (!stateData.games.empty())
+	{
+		coinDisplay.setNumberOfCoins(stateData.games.front().getCoins());
+		gameChoices->SelectItem(0u);
+	}
 
 	scrolledWindow->SetPosition(sf::Vector2f(125.f, 400.f));
 	scrolledWindow->SetRequisition(sf::Vector2f(1800.f, 650.f));
@@ -51,12 +65,18 @@ CharactersState::CharactersState(StateMachine& stateMachine, StateData& stateDat
 		characterButton._Get()->SetState(sfg::Widget::State::SELECTED);
 		characterButton._Get()->SetState(sfg::Widget::State::NORMAL);
 
-		if (stateData.games.front().getCharacterName() == characterButton._Get()->GetId())
+		if (!stateData.games.empty() && stateData.games.front().getCharacterName() == characterButton._Get()->GetId())
 		{
 			characterButton._Get()->SetActive(true);
 		}
 	}
 
+	stateData.guiManager.setProperty("ComboBox:PRELIGHT", "BackgroundColor", sf::Color(75u, 0u, 130u));
+	stateData.guiManager.setProperty("ComboBox:NORMAL", "BackgroundColor", sf::Color(75u, 0u, 130u));
+	stateData.guiManager.setProperty("ComboBox:ACTIVE", "BackgroundColor", sf::Color(75u, 0u, 130u));
+	stateData.guiManager.setProperty("ComboBox:SELECTED", "BackgroundColor", sf::Color(75u, 0u, 130u));
+	stateData.guiManager.setProperty("ComboBox", "Color", sf::Color(255.f, 255.f, 0.f));
+	stateData.guiManager.setProperty("ComboBox", "ArrowColor", sf::Color(15u, 192u, 252u));
 	stateData.guiManager.setProperty("ScrolledWindow", "BorderWidth", 0.f);
 	stateData.guiManager.setProperty("ScrolledWindow", "ScrollbarSpacing", 20.f);
 	stateData.guiManager.setProperty("Scrollbar", "TroughColor", sf::Color(75u, 0u, 130u));
@@ -71,7 +91,10 @@ CharactersState::CharactersState(StateMachine& stateMachine, StateData& stateDat
 	stateData.guiManager.setProperty("RadioButton:SELECTED", "BackgroundColor", sf::Color(15u, 192u, 252u));
 
 	stateData.guiManager.addWidget(backButton);
+	stateData.guiManager.addWidget(gameChoices);
 	stateData.guiManager.addWidget(scrolledWindow);
+
+	loadCharacters("Resources/Files/Characters.txt");
 }
 
 void CharactersState::handleEvent(const sf::Event& event)
@@ -105,11 +128,10 @@ void CharactersState::loadCharacters(const std::string& filePath)
 
 		std::string characterID;
 		std::size_t imageID = 0, price = 0u;
-		bool lockStatus;
 		
-		iStream >> characterID >> imageID >> price >> lockStatus;
+		iStream >> characterID >> imageID >> price;
 
-		this->charactersData.emplace(characterID, CharacterData(characterID, imageID, price, lockStatus));
+		this->charactersData.emplace(characterID, CharacterData(characterID, imageID, price));
 		
 		auto characterButton = sfg::RadioButton::Create("", this->characterButtons);
 		
@@ -126,7 +148,7 @@ void CharactersState::loadCharacters(const std::string& filePath)
 		this->itemsTable->Attach(purchaseButton, sf::Rect<sf::Uint32>(columnIndex, rowIndex, columnSpan, rowSpan),
 			0u, 0u, sf::Vector2f(100.f, 0.f));
 
-		if (lockStatus)
+		if (!this->stateData.games.empty() && !this->stateData.games.front().getCharacters()[characterID])
 		{
 			purchaseButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this, characterButton, purchaseButton]() { this->purchasedCharacter(characterButton, purchaseButton); });
 		}
@@ -161,26 +183,39 @@ void CharactersState::purchasedCharacter(sfg::RadioButton::Ptr characterButton, 
 {
 	const auto& price = std::stoull(purchaseButton->GetLabel().toAnsiString());
 
-	if (this->stateData.games.front().getCoins() >= price)
+	if (!this->stateData.games.empty() && this->stateData.games.front().getCoins() >= price)
 	{
 		this->stateData.games.front().setCoins(this->stateData.games.front().getCoins() - price);
 		this->coinDisplay.setNumberOfCoins(this->stateData.games.front().getCoins());
 
 		purchaseButton->Show(false);
 
-		this->charactersData[characterButton->GetId()].lockStatus = false;
+		this->stateData.games.front().getCharacters()[characterButton->GetId()] = true;
 
-		this->saveCharactersData();
+		std::ofstream outFile("Resources/Files/SavedGames.txt");
+
+		for (const auto& game : this->stateData.games)
+		{
+			outFile << game << '\n';
+		}
 	}
 }
 
-void CharactersState::saveCharactersData()
+void CharactersState::selectGame()
 {
-	std::ofstream outFile(this->charactersFile);
-
-	for (const auto& characterData : this->charactersData)
+	if (this->stateData.games.size() > 1u)
 	{
-		outFile << characterData.second.characterName << ' ' << characterData.second.imageID << ' '  << characterData.second.price << ' ' << characterData.second.lockStatus << '\n';
+		auto selectedGame = std::find_if(std::begin(this->stateData.games), std::end(this->stateData.games), [this](const auto& game) { return game.getGameName() == this->gameChoices->GetSelectedText(); });
+
+		std::iter_swap(std::begin(this->stateData.games), selectedGame);
+		this->coinDisplay.setNumberOfCoins(this->stateData.games.front().getCoins());
+
+		for (const auto& widget : this->itemsTable->GetChildren())
+		{
+			widget->Show(false);
+		}
+
+		this->loadCharacters("Resources/Files/Characters.txt");
 	}
 }
 
@@ -190,14 +225,13 @@ void CharactersState::transitionToMenu()
 }
 
 CharacterData::CharacterData() :
-	CharacterData("", 0u, 0u, false)
+	CharacterData("", 0u, 0u)
 {
 }
 
-CharacterData::CharacterData(const std::string& characterName, std::size_t imageID, std::size_t price, bool lockStatus) :
+CharacterData::CharacterData(const std::string& characterName, std::size_t imageID, std::size_t price) :
 	characterName(characterName),
 	imageID(imageID),
-	price(price),
-	lockStatus(lockStatus)
+	price(price)
 {
 }
