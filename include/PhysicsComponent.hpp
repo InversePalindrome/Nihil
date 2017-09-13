@@ -38,6 +38,7 @@ public:
 	std::int8_t getCollisionGroup() const;
 
 	void setPosition(const b2Vec2& position);
+	void setVelocity(const b2Vec2& velocity);
 	void setMaxVelocity(float maxVelocity);
 	void setAccelerationRate(float accelerationRate);
 	void setGravityScale(float gravityScale);

@@ -11,7 +11,7 @@ InversePalindrome.com
 #include "PhysicsComponent.hpp"
 #include "StateComponent.hpp"
 #include "PositionComponent.hpp"
-#include "AIComponent.hpp"
+#include "PatrolComponent.hpp"
 #include "HealthComponent.hpp"
 #include "AttackComponent.hpp"
 #include "AnimationComponent.hpp"
@@ -31,6 +31,7 @@ InversePalindrome.com
 
 struct DirectionChanged;
 struct Jumped;
+struct StopMovement;
 struct CombatOcurred;
 struct ChangeState;
 struct StateChanged;
@@ -39,24 +40,25 @@ struct DestroyEntity;
 struct EmitSound;
 struct PickedUpCoin;
 struct TouchedTrampoline;
-struct GameOver;
 struct MoveCamera;
 struct DisplayHealthBar;
+struct PlayerDied;
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, 
-	PhysicsComponent, AIComponent, HealthComponent, AttackComponent, SpriteComponent, AnimationComponent, SoundComponent,
+	PhysicsComponent, PatrolComponent, HealthComponent, AttackComponent, SpriteComponent, AnimationComponent, SoundComponent,
     ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent>;
 
 using Tags = entityplus::tag_list<>;
 
-using ComponentList = brigand::list<PositionComponent, StateComponent, PhysicsComponent, AIComponent,
+using ComponentList = brigand::list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent,
 	HealthComponent, AttackComponent, SpriteComponent, AnimationComponent, SoundComponent,
 	ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent>;
 
 using Entities = entityplus::entity_manager<Components, Tags>;
 
-using Events = entityplus::event_manager<Components, Tags, DirectionChanged, Jumped, CombatOcurred, ChangeState,
-	StateChanged, Teleported, DestroyEntity, EmitSound, PickedUpCoin, TouchedTrampoline, GameOver, MoveCamera, DisplayHealthBar>;
+using Events = entityplus::event_manager<Components, Tags, DirectionChanged, Jumped, StopMovement, CombatOcurred, ChangeState,
+	StateChanged, Teleported, DestroyEntity, EmitSound, PickedUpCoin, TouchedTrampoline, MoveCamera, DisplayHealthBar,
+    PlayerDied>;
 
 using Entity = Entities::entity_t;
 
@@ -68,6 +70,11 @@ struct DirectionChanged
 };
 
 struct Jumped
+{
+	Entity entity;
+};
+
+struct StopMovement
 {
 	Entity entity;
 };
@@ -127,4 +134,8 @@ struct MoveCamera
 struct DisplayHealthBar
 {
 	Entity entity;
+};
+
+struct PlayerDied
+{
 };

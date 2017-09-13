@@ -26,6 +26,7 @@ private:
 	CollisionsData& collisionsData;
 
 	void moveEntity(Entity entity, Direction direction);
+	void stopEntity(Entity entity);
 	void makeJump(Entity entity);
 
 	void applyImpulse(Entity entity, const b2Vec2& impulse);
