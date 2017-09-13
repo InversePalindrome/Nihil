@@ -15,6 +15,7 @@ AutomatorSystem::AutomatorSystem(Entities& entities, Events& events) :
 	registeredTasks["Right"] = [&events](auto entity) { events.broadcast(DirectionChanged{ entity, Direction::Right }); };
 	registeredTasks["Up"] = [&events](auto entity) { events.broadcast(DirectionChanged{ entity, Direction::Up }); };
 	registeredTasks["Down"] = [&events](auto entity) { events.broadcast(DirectionChanged{ entity, Direction::Down }); };
+	registeredTasks["Wait"] = [&events](auto entity) { events.broadcast(StopMovement{ entity }); };
 }
 
 void AutomatorSystem::update(float deltaTime)

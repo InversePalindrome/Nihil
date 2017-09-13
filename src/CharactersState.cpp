@@ -148,7 +148,7 @@ void CharactersState::loadCharacters(const std::string& filePath)
 		this->itemsTable->Attach(purchaseButton, sf::Rect<sf::Uint32>(columnIndex, rowIndex, columnSpan, rowSpan),
 			0u, 0u, sf::Vector2f(100.f, 0.f));
 
-		if (!this->stateData.games.empty() && !this->stateData.games.front().getCharacters()[characterID])
+		if (!this->stateData.games.empty() && !this->stateData.games.front().getCharacters().get<1>().find(characterID)->isLoaded)
 		{
 			purchaseButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this, characterButton, purchaseButton]() { this->purchasedCharacter(characterButton, purchaseButton); });
 		}
@@ -190,7 +190,7 @@ void CharactersState::purchasedCharacter(sfg::RadioButton::Ptr characterButton, 
 
 		purchaseButton->Show(false);
 
-		this->stateData.games.front().getCharacters()[characterButton->GetId()] = true;
+		this->stateData.games.front().getCharacters().get<1>().modify(this->stateData.games.front().getCharacters().get<1>().find(characterButton->GetId()), [](auto& character) { character.isLoaded = false; });
 
 		std::ofstream outFile("Resources/Files/SavedGames.txt");
 

@@ -15,6 +15,21 @@ Game::Game() :
 	coins(0u)
 {
 	loadNames();
+
+	std::ifstream inFile("Resources/Files/Levels.txt");
+
+	inFile >> currentLevel;
+
+	inFile.close();
+	inFile.clear();
+
+	inFile.open("Resources/Files/Characters.txt");
+
+	inFile >> characterName;
+
+	characters.modify(std::begin(characters), [](auto& character) { character.isLoaded = true; });
+
+	loadSpawnPoints();
 }
 
 Game::Game(const std::string& data) :
@@ -31,8 +46,10 @@ Game::Game(const std::string& data) :
     const auto& levelsBitset = boost::dynamic_bitset<std::size_t>(levelBits);
 	const auto& charactersBitset = boost::dynamic_bitset<std::size_t>(characterBits);
 
-	loadDataBitsets(levels, levelsBitset);
-	loadDataBitsets(characters, charactersBitset);
+	loadDataBitsets<LoadedLevels>(levels, levelsBitset);
+	loadDataBitsets<LoadedCharacters>(characters, charactersBitset);
+
+	loadSpawnPoints();
 }
 
 std::string Game::getGameName() const
@@ -55,12 +72,17 @@ std::size_t Game::getCoins() const
 	return this->coins;
 }
 
-std::unordered_map<std::string, bool>& Game::getLevels()
+sf::Vector2f Game::getSpawnPoint() const
+{
+	return this->levels.get<1>().find(this->currentLevel)->spawnPosition;
+}
+
+Game::LoadedLevels& Game::getLevels()
 {
 	return this->levels;
 }
 
-std::unordered_map<std::string, bool>& Game::getCharacters()
+Game::LoadedCharacters& Game::getCharacters()
 {
 	return this->characters;
 }
@@ -88,17 +110,17 @@ void Game::setCoins(std::size_t coins)
 std::ostream& operator<<(std::ostream& os, const Game& game)
 {
 	os << game.gameName << ' ' << game.characterName << ' ' << game.currentLevel << ' ' << game.coins << ' ';
-
+	
 	for (const auto& level : game.levels)
 	{
-		os << level.second;
+		os << level.isLoaded;
 	}
 
 	os << ' ';
 
 	for (const auto& character : game.characters)
 	{
-		os << character.second;
+		os << character.isLoaded;
 	}
 
 	return os;
@@ -109,24 +131,13 @@ void Game::loadNames()
 	std::ifstream inFile("Resources/Files/Levels.txt");
 	std::string line;
 
-	bool isFirstElement = true;
-
 	while (std::getline(inFile, line))
 	{
-		if (isFirstElement)
-		{
-			this->currentLevel = line;
-
-			isFirstElement = false;
-		}
-
-		this->levels.emplace(line, false);
+		this->levels.get<1>().insert({ line, sf::Vector2f(), false });
 	}
 
 	inFile.close();
 	inFile.clear();
-
-	isFirstElement = true;
 
 	inFile.open("Resources/Files/Characters.txt");
 
@@ -138,26 +149,33 @@ void Game::loadNames()
 
 		iStream >> name;
 
-		this->characters.emplace(name, false);
-
-		if (isFirstElement)
-		{
-			this->characterName = name;
-			this->characters[name] = true;
-
-			isFirstElement = false;
-		}
+		this->characters.get<1>().insert({ name, false });
 	}
 }
 
-void Game::loadDataBitsets(std::unordered_map<std::string, bool>& dataset, const boost::dynamic_bitset<std::size_t>& bitset)
+void Game::loadSpawnPoints()
 {
-	std::size_t i = bitset.size() - 1u;
-
-	for (auto& data : dataset)
+	for (const auto& level : this->levels)
 	{
-		data.second = bitset[i];
+		std::ifstream inFile("Resources/Files/BlueprintObjects-" + level.name + ".txt");
+		std::string line;
 
-		--i;
+		while (std::getline(inFile, line))
+		{
+			std::istringstream iStream(line);
+
+			std::string pathFile;
+
+			iStream >> pathFile;
+
+			if (pathFile == "Resources/Files/Player.txt")
+			{
+				float xPosition = 0.f, yPosition = 0.f;
+
+				iStream >> xPosition >> yPosition;
+
+				this->levels.get<1>().modify(this->levels.get<1>().find(level.name), [xPosition, yPosition](auto& iLevel) { iLevel.spawnPosition = sf::Vector2f(xPosition, yPosition); });
+			}
+		}
 	}
 }

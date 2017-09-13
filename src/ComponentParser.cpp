@@ -58,9 +58,9 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 			static_cast<b2BodyType>(std::get<2>(params)), static_cast<ObjectType>(std::get<3>(params)), std::get<4>(params));
 	};
 
-	componentParsers["AI"] = [this](auto& entity, auto& line)
+	componentParsers["Patrol"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component<AIComponent>(std::make_from_tuple<AIComponent>(this->parse<float, float, float>(line)));
+		entity.add_component<PatrolComponent>(std::make_from_tuple<PatrolComponent>(this->parse<float, float>(line)));
 	};
 
 	componentParsers["SpriteA"] = [this, &resourceManager](auto& entity, auto& line)

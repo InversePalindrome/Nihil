@@ -82,7 +82,8 @@ void Map::addImage(tmx::ImageLayer* imageLayer)
 void Map::addObjects(tmx::ObjectGroup* objectLayer)
 {
 	const auto& objects = objectLayer->getObjects();
-	std::vector<std::pair<std::string, sf::Vector2f>> entitiesFiles;
+	std::vector<std::pair<std::string, sf::Vector2f>> objectFiles;
+	std::vector<std::pair<std::string, sf::Vector2f>> enemyFiles;
 
 	for (const auto& object : objects)
 	{
@@ -92,9 +93,13 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 		{
 			for (const auto& property : object.getProperties())
 			{
-				if (property.getName() == "File")
+				if (property.getName() == "ObjectFile")
 				{
-					entitiesFiles.push_back(std::make_pair(property.getStringValue(), sf::Vector2f(AABB.left + AABB.width / 2.f, AABB.top + AABB.height / 2.f)));
+					objectFiles.push_back(std::make_pair(property.getStringValue(), sf::Vector2f(AABB.left + AABB.width / 2.f, AABB.top + AABB.height / 2.f)));
+				}
+				else if (property.getName() == "EnemyFile")
+				{
+					enemyFiles.push_back(std::make_pair(property.getStringValue(), sf::Vector2f(AABB.left + AABB.width / 2.f, AABB.top + AABB.height / 2.f)));
 				}
 			}
 		}
@@ -125,7 +130,8 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 		}
 	}
 	
-	this->componentSerializer.saveBlueprint("Resources/Files/Blueprint-" + game.getCurrentLevel() + ".txt", entitiesFiles);
+	this->componentSerializer.saveBlueprint("Resources/Files/BlueprintObjects-" + game.getCurrentLevel() + ".txt", objectFiles);
+	this->componentSerializer.saveBlueprint("Resources/Files/BlueprintEnemies-" + game.getCurrentLevel() + ".txt", enemyFiles);
 }
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const

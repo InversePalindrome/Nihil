@@ -31,6 +31,8 @@ AutomatedComponent::AutomatedComponent(const std::string& pathFile) :
 
 		tasks.push_back(std::make_pair(function, time));
 	}
+
+	timer.restart(sf::seconds(tasks[0u].second));
 }
 
 std::ostream& operator<<(std::ostream& os, const AutomatedComponent& component)
@@ -42,7 +44,7 @@ std::ostream& operator<<(std::ostream& os, const AutomatedComponent& component)
 
 AutomatedComponent::Task AutomatedComponent::getCurrentTask() const
 {
-	return this->tasks.at(0u);
+	return this->tasks[0u];
 }
 
 void AutomatedComponent::pushNextTask()

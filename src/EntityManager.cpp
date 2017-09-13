@@ -10,7 +10,7 @@ InversePalindrome.com
 #include "StateSystem.hpp"
 #include "ControlSystem.hpp"
 #include "PhysicsSystem.hpp"
-#include "NeuralSystem.hpp"
+#include "AISystem.hpp"
 #include "CombatSystem.hpp"
 #include "AnimatorSystem.hpp"
 #include "SoundSystem.hpp"
@@ -32,7 +32,7 @@ EntityManager::EntityManager(b2World& world, ResourceManager& resourceManager, S
 	systems["Control"] = std::make_unique<ControlSystem>(entityManager, eventManager, inputHandler);
 	systems["State"] = std::make_unique<StateSystem>(entityManager, eventManager);
 	systems["Physics"] = std::make_unique<PhysicsSystem>(entityManager, eventManager, world, collisionsData);
-	systems["AI"] = std::make_unique<NeuralSystem>(entityManager, eventManager);
+	systems["AI"] = std::make_unique<AISystem>(entityManager, eventManager);
 	systems["Combat"] = std::make_unique<CombatSystem>(entityManager, eventManager);
 	systems["Animator"] = std::make_unique<AnimatorSystem>(entityManager, eventManager);
 	systems["Sound"] = std::make_unique<SoundSystem>(entityManager, eventManager, soundManager);

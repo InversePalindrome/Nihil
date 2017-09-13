@@ -50,7 +50,10 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 	}
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Border))
 	{
-		this->events.broadcast(GameOver{});
+		orderedCollision.value().first.get().entity.sync();
+
+		this->events.broadcast(DestroyEntity{ orderedCollision.value().first.get().entity });
+		this->events.broadcast(PlayerDied{});
 	}
 }
 

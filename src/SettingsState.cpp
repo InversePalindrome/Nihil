@@ -65,6 +65,7 @@ SettingsState::SettingsState(StateMachine& stateMachine, StateData& stateData) :
 	stateData.guiManager.setProperty("Scrollbar", "StepperArrowColor", sf::Color(15u, 192u, 252u));
 	stateData.guiManager.setProperty("RadioButton", "BackgroundColor", sf::Color(102u, 0u, 204u));
 	stateData.guiManager.setProperty("RadioButton", "BoxSize", 30.f);
+	stateData.guiManager.setProperty("RadioButton", "FontSize", 40.f);
 	stateData.guiManager.setProperty("RadioButton:PRELIGHT", "BackgroundColor", sf::Color(15u, 192u, 252u));
 	stateData.guiManager.setProperty("RadioButton:ACTIVE", "BackgroundColor", sf::Color(15u, 192u, 252u));
 	stateData.guiManager.setProperty("RadioButton:SELECTED", "BackgroundColor", sf::Color(15u, 192u, 252u));

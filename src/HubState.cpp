@@ -95,7 +95,7 @@ void HubState::draw()
 
 void HubState::addGames()
 {
-	this->selectionBox->SetPosition(sf::Vector2f(750.f, 350.f));
+	this->selectionBox->SetPosition(sf::Vector2f(750.f, 300.f));
 
 	for (const auto& game : this->stateData.games)
 	{
@@ -109,9 +109,14 @@ void HubState::addGames()
 
 void HubState::showAddGamePopup()
 {
-	this->nameEntry->SetText("");
-	this->selectionBox->Show(false);
-	this->addGamePopup->Show(true);
+	const std::size_t maxNumberOfGames = 8u;
+
+	if (this->selectionButtons->GetMembers().size() < maxNumberOfGames)
+	{
+		this->nameEntry->SetText("");
+		this->selectionBox->Show(false);
+		this->addGamePopup->Show(true);
+	}
 }
 
 void HubState::addGame()
@@ -134,25 +139,24 @@ void HubState::addGame()
 
 void HubState::deleteGame()
 {
-	for (auto& gameButton : this->selectionButtons->GetMembers())
+	for (const auto& gameButton : this->selectionButtons->GetMembers())
 	{
 		if (gameButton._Get()->IsActive())
 		{
-			gameButton._Get()->Show(false);
-
 			if (!this->stateData.games.empty())
 			{
 				auto gameIter = std::find_if(std::begin(this->stateData.games), std::end(this->stateData.games), [gameButton](const auto& game) { return game.getGameName() == gameButton._Get()->GetLabel(); });
 
 				if (gameIter != std::end(this->stateData.games))
 				{
-					for (auto& level : gameIter->getLevels())
+					for (const auto& level : gameIter->getLevels())
 					{
-						std::remove(std::string("Resources/Files/Entities-" + gameButton._Get()->GetLabel() + '-' + level.first + ".txt").c_str());
+						std::remove(std::string("Resources/Files/Entities-" + gameButton._Get()->GetLabel() + '-' + level.name + ".txt").c_str());
 					}
 
 					this->stateData.games.erase(gameIter);
 
+					gameButton._Get()->Show(false);
 				}
 			}
 		}

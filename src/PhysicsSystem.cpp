@@ -18,6 +18,7 @@ PhysicsSystem::PhysicsSystem(Entities& entities, Events& events, b2World& world,
 	events.subscribe<entityplus::component_added<Entity, PhysicsComponent>>([this](const auto& event) { addInitialData(event.entity, event.component); });
 	events.subscribe<DirectionChanged>([this](const auto& event) { moveEntity(event.entity, event.direction); });
 	events.subscribe<Jumped>([this](const auto& event) { makeJump(event.entity); });
+	events.subscribe<StopMovement>([this](const auto& event) { stopEntity(event.entity); });
 	events.subscribe<CombatOcurred>([this](const auto& event) { applyImpulse(event.victim, b2Vec2(event.attacker.get_component<PhysicsComponent>().getVelocity().x * 50.f, 0.f)); });
 	events.subscribe<TouchedTrampoline>([this](const auto& event) { applyImpulse(event.entity, b2Vec2(0.f, 250.f)); });
 }
@@ -66,6 +67,11 @@ void PhysicsSystem::moveEntity(Entity entity, Direction direction)
 	const auto& impulse = b2Vec2(deltaVelocity.x * physics.getMass(), deltaVelocity.y * physics.getMass());
 
 	physics.applyImpulse(impulse);
+}
+
+void PhysicsSystem::stopEntity(Entity entity)
+{
+	entity.get_component<PhysicsComponent>().setVelocity(b2Vec2(0.f, 0.f));
 }
 
 void PhysicsSystem::makeJump(Entity entity)

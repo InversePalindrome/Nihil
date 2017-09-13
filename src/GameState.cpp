@@ -7,7 +7,7 @@ InversePalindrome.com
 
 #include "GameState.hpp"
 #include "StateMachine.hpp"
-#include <iostream>
+
 
 GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
@@ -33,18 +33,23 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 		    entityManager.destroyEntity(event.entity);
 		}); 
 	});
+
+	entityManager.getEvents().subscribe<PlayerDied>([this, &stateData](const auto& event)
+	{
+		callbacks.push_back([this, &stateData]
+		{
+			auto& entity = entityManager.createEntity("Resources/Files/Player.txt", stateData.games.front().getSpawnPoint());
+			
+			camera = stateData.window.getDefaultView();
+			stateData.window.setView(camera);
+		});
+	});
+
 	entityManager.getEvents().subscribe<Teleported>([this, &stateData](const auto& event)
 	{
 		callbacks.push_back([this, event]
 		{ 
 			changeLevel(event.level);
-		});
-	});
-	entityManager.getEvents().subscribe<GameOver>([this, &stateData](const auto& event)
-	{
-		callbacks.push_back([this, &stateData] 
-		{
-			changeLevel(stateData.games.front().getCurrentLevel());
 		});
 	});
 
@@ -122,16 +127,18 @@ void GameState::changeLevel(const std::string& level)
 	this->entityManager.destroyEntities();
 
 	this->map.load("Resources/Files/" + level + ".tmx");
-
-	if (!this->stateData.games.front().getLevels()[level])
+	
+	if (!this->stateData.games.front().getLevels().get<1>().find(level)->isLoaded)
 	{
-		this->entityManager.parseBlueprint("Resources/Files/Blueprint-" + level + ".txt");
-		this->stateData.games.front().getLevels()[level] = true;
+		this->entityManager.parseBlueprint("Resources/Files/BlueprintObjects-" + level + ".txt");
+		this->stateData.games.front().getLevels().get<1>().modify(this->stateData.games.front().getLevels().get<1>().find(level), [](auto& iLevel) { iLevel.isLoaded = true; });
 	}
 	else
 	{
 		this->entityManager.parseEntities("Resources/Files/Entities-" + this->stateData.games.front().getGameName() + '-' + level + ".txt");
 	}
+
+	this->entityManager.parseBlueprint("Resources/Files/BlueprintEnemies-" + level + ".txt");
 
 	this->stateData.games.front().setCurrentLevel(level);
 

@@ -41,6 +41,13 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2Bod
 
 	body = world.CreateBody(&bodyDefinition);
 	body->CreateFixture(&fixture);
+
+	switch (objectType)
+	{
+	case ObjectType::Platform:
+		body->SetGravityScale(0.f);
+		break;
+	}
 }
 
 std::ostream& operator<<(std::ostream& os, const PhysicsComponent& component)
@@ -99,6 +106,11 @@ std::int8_t PhysicsComponent::getCollisionGroup() const
 void PhysicsComponent::setPosition(const b2Vec2& position)
 {
 	this->body->SetTransform(position, this->body->GetAngle());
+}
+
+void PhysicsComponent::setVelocity(const b2Vec2& velocity)
+{
+	this->body->SetLinearVelocity(velocity);
 }
 
 void PhysicsComponent::setMaxVelocity(float maxVelocity)
