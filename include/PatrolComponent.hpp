@@ -8,27 +8,24 @@ InversePalindrome.com
 #pragma once
 
 #include "Component.hpp"
-
-#include <SFML/System/Vector2.hpp>
-
-#include <utility>
+#include "Pathway.hpp"
 
 
 class PatrolComponent : public Component
 {
 	friend std::ostream& operator<<(std::ostream& os, const PatrolComponent& component);
-	using Path = std::pair<float, float>;
 
 public:
-	PatrolComponent(float initialX, float finalX);
+	PatrolComponent();
 
-	Path getPath() const;
+	void setPathway(const Pathway& pathway);
 
-	void setPath(const Path& path);
-	void swapPathPoints();
+	Waypoint getCurrentWaypoint() const;
+
+	void moveToNextWaypoint();
 	
 private:
-    Path path;
+	Pathway pathway;
 };
 
 std::ostream& operator<<(std::ostream& os, const PatrolComponent& component);

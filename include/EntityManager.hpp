@@ -9,6 +9,7 @@ InversePalindrome.com
 
 #include "ECS.hpp"
 #include "System.hpp"
+#include "Pathway.hpp"
 #include "InputHandler.hpp"
 #include "CollisionData.hpp"
 #include "ResourceManager.hpp"
@@ -31,7 +32,7 @@ InversePalindrome.com
 class EntityManager : public sf::Drawable
 {
 public:
-	EntityManager(b2World& world, ResourceManager& resourceManager, SoundManager& soundManager, InputHandler& inputHandler, CollisionsData& collisionData);
+	EntityManager(b2World& world, ResourceManager& resourceManager, SoundManager& soundManager, InputHandler& inputHandler, CollisionsData& collisionData, Pathways& pathways);
 	EntityManager(const EntityManager& entityManager) = delete;
     EntityManager& operator=(const EntityManager& entityManager) = delete;
 

@@ -43,6 +43,8 @@ struct TouchedTrampoline;
 struct MoveCamera;
 struct DisplayHealthBar;
 struct PlayerDied;
+struct CrossedWaypoint;
+
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, 
 	PhysicsComponent, PatrolComponent, HealthComponent, AttackComponent, SpriteComponent, AnimationComponent, SoundComponent,
@@ -58,7 +60,7 @@ using Entities = entityplus::entity_manager<Components, Tags>;
 
 using Events = entityplus::event_manager<Components, Tags, DirectionChanged, Jumped, StopMovement, CombatOcurred, ChangeState,
 	StateChanged, Teleported, DestroyEntity, EmitSound, PickedUpCoin, TouchedTrampoline, MoveCamera, DisplayHealthBar,
-    PlayerDied>;
+    PlayerDied, CrossedWaypoint>;
 
 using Entity = Entities::entity_t;
 
@@ -138,4 +140,9 @@ struct DisplayHealthBar
 
 struct PlayerDied
 {
+};
+
+struct CrossedWaypoint
+{
+	Entity entity;
 };

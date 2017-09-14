@@ -21,7 +21,7 @@ class AutomatedComponent : public Component
 	using Task = std::pair<std::string, float>;
 
 public:
-	AutomatedComponent(const std::string& filePath);
+	AutomatedComponent(const std::string& pathFile);
 
 	Task getCurrentTask() const;
 
@@ -31,7 +31,7 @@ public:
 	bool hasCurrentTaskExpired() const;
 
 private:
-	std::string filePath;
+	std::string pathFile;
 	std::vector<Task> tasks;
 	thor::Timer timer;
 	std::size_t currentTask;

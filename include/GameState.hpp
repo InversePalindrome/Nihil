@@ -14,6 +14,7 @@ InversePalindrome.com
 #include "EntityManager.hpp"
 #include "HealthBar.hpp"
 #include "CoinDisplay.hpp"
+#include "Pathway.hpp"
 
 #include <Box2D/Dynamics/b2World.h>
 
@@ -37,9 +38,11 @@ private:
     b2World world;
 	EntityManager entityManager;
 	CollisionsData collisionsData;
+
 	Map map;
 	sf::View camera;
 	std::vector<std::function<void()>> callbacks;
+    Pathways pathways;
 
 	CollisionHandler collisionHandler;
 
