@@ -21,7 +21,7 @@ InversePalindrome.com
 #include <fstream>
 
 
-EntityManager::EntityManager(b2World& world, ResourceManager& resourceManager, SoundManager& soundManager, InputHandler& inputHandler, CollisionsData& collisionsData) :
+EntityManager::EntityManager(b2World& world, ResourceManager& resourceManager, SoundManager& soundManager, InputHandler& inputHandler, CollisionsData& collisionsData, Pathways& pathways) :
 	world(world),
 	componentParser(entityManager, resourceManager, world),
 	componentSerializer(entityManager)
@@ -32,7 +32,7 @@ EntityManager::EntityManager(b2World& world, ResourceManager& resourceManager, S
 	systems["Control"] = std::make_unique<ControlSystem>(entityManager, eventManager, inputHandler);
 	systems["State"] = std::make_unique<StateSystem>(entityManager, eventManager);
 	systems["Physics"] = std::make_unique<PhysicsSystem>(entityManager, eventManager, world, collisionsData);
-	systems["AI"] = std::make_unique<AISystem>(entityManager, eventManager);
+	systems["AI"] = std::make_unique<AISystem>(entityManager, eventManager, pathways);
 	systems["Combat"] = std::make_unique<CombatSystem>(entityManager, eventManager);
 	systems["Animator"] = std::make_unique<AnimatorSystem>(entityManager, eventManager);
 	systems["Sound"] = std::make_unique<SoundSystem>(entityManager, eventManager, soundManager);

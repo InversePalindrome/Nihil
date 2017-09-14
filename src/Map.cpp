@@ -12,14 +12,17 @@ InversePalindrome.com
 #include <Box2D/Dynamics/b2Fixture.h>
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
+#include <unordered_map>
 
-Map::Map(const sf::Vector2f& chunkSize, Game& game, b2World& world, ComponentSerializer& componentSerializer, ResourceManager& resourceManager, CollisionsData& collisionsData) :
+
+Map::Map(const sf::Vector2f& chunkSize, Game& game, b2World& world, ComponentSerializer& componentSerializer, ResourceManager& resourceManager, CollisionsData& collisionsData, Pathways& pathways) :
 	chunkSize(chunkSize),
 	game(game),
 	world(world),
 	componentSerializer(componentSerializer),
 	resourceManager(resourceManager),
-	collisionsData(collisionsData)
+	collisionsData(collisionsData),
+	pathways(pathways)
 {
 }
 
@@ -42,9 +45,7 @@ void Map::load(const std::string& filePath)
 
 void Map::parseMap()
 {
-	const auto& layers = this->map.getLayers();
-
-	for (const auto& layer : layers)
+	for (const auto& layer : this->map.getLayers())
 	{
 		switch (layer->getType())
 		{
@@ -81,11 +82,10 @@ void Map::addImage(tmx::ImageLayer* imageLayer)
 
 void Map::addObjects(tmx::ObjectGroup* objectLayer)
 {
-	const auto& objects = objectLayer->getObjects();
 	std::vector<std::pair<std::string, sf::Vector2f>> objectFiles;
 	std::vector<std::pair<std::string, sf::Vector2f>> enemyFiles;
 
-	for (const auto& object : objects)
+	for (const auto& object : objectLayer->getObjects())
 	{
 		const auto& AABB = object.getAABB();
 
@@ -95,11 +95,11 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 			{
 				if (property.getName() == "ObjectFile")
 				{
-					objectFiles.push_back(std::make_pair(property.getStringValue(), sf::Vector2f(AABB.left + AABB.width / 2.f, AABB.top + AABB.height / 2.f)));
+					objectFiles.push_back(std::make_pair(property.getStringValue(), sf::Vector2f(object.getPosition().x + AABB.width / 2.f, object.getPosition().y + AABB.height / 2.f)));
 				}
 				else if (property.getName() == "EnemyFile")
 				{
-					enemyFiles.push_back(std::make_pair(property.getStringValue(), sf::Vector2f(AABB.left + AABB.width / 2.f, AABB.top + AABB.height / 2.f)));
+					enemyFiles.push_back(std::make_pair(property.getStringValue(), sf::Vector2f(object.getPosition().x + AABB.width / 2.f, object.getPosition().y + AABB.height / 2.f)));
 				}
 			}
 		}
@@ -107,7 +107,7 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 		{
 			b2BodyDef bodyDefinition;
 			bodyDefinition.type = b2_staticBody;
-			bodyDefinition.position.Set(UnitConverter::pixelsToMeters(AABB.left + AABB.width / 2.f), UnitConverter::pixelsToMeters(-(AABB.top + AABB.height / 2.f)));
+			bodyDefinition.position.Set(UnitConverter::pixelsToMeters(object.getPosition().x + AABB.width / 2.f), UnitConverter::pixelsToMeters(-(object.getPosition().y + AABB.height / 2.f)));
 
 			b2PolygonShape shape;
 			shape.SetAsBox(UnitConverter::pixelsToMeters(AABB.width / 2.f), UnitConverter::pixelsToMeters(AABB.height / 2.f));
@@ -115,14 +115,29 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 			b2FixtureDef fixture;
 			fixture.shape = &shape;
 
+			if (object.getType() == "Waypoint")
+			{
+				fixture.isSensor = true;
+			}
+
 			auto* tile = this->world.CreateBody(&bodyDefinition);
 			tile->CreateFixture(&fixture);
 
 			std::unordered_map<std::string, tmx::Property> properties;
-
+			
 ;			for (const auto& property : object.getProperties())
 			{
 	            properties.emplace(property.getName(), property);
+				
+				if(property.getName() == "PathwayID")
+				{
+					if (!this->pathways.count(property.getIntValue()))
+					{
+						this->pathways.emplace(property.getIntValue(), Pathway());
+					}
+
+					this->pathways[property.getIntValue()].addWaypoint(Waypoint(object.getPosition().x + AABB.width / 2.f, object.getPosition().y + AABB.height / 2.f));
+				}
 			}
             
             this->collisionsData.push_back(CollisionData(tile, static_cast<ObjectType>(properties["ID"].getIntValue()), properties));

@@ -12,8 +12,8 @@ InversePalindrome.com
 GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
 	world(b2Vec2(0.f, -9.8f)),
-	entityManager(world, stateData.resourceManager, stateData.soundManager, stateData.inputHandler, collisionsData),
-	map(sf::Vector2f(8192.f, 1536.f), stateData.games.front(), world, entityManager.getComponentSerializer(), stateData.resourceManager, collisionsData),
+	entityManager(world, stateData.resourceManager, stateData.soundManager, stateData.inputHandler, collisionsData, pathways),
+	map(sf::Vector2f(8192.f, 1536.f), stateData.games.front(), world, entityManager.getComponentSerializer(), stateData.resourceManager, collisionsData, pathways),
 	camera(stateData.window.getDefaultView()),
 	collisionHandler(entityManager.getEvents()),
 	healthBar(stateData.resourceManager),

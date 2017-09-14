@@ -37,7 +37,7 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Pickup))
 	{
 		orderedCollision.value().second.get().entity.sync();
-		
+
 		this->events.broadcast(DestroyEntity{ orderedCollision.value().second.get().entity });
 		this->events.broadcast(EmitSound{ SoundBuffersID::Pickup, false });
 		this->events.broadcast(PickedUpCoin{});
@@ -54,6 +54,15 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 
 		this->events.broadcast(DestroyEntity{ orderedCollision.value().first.get().entity });
 		this->events.broadcast(PlayerDied{});
+	}
+	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Enemy, ObjectType::Waypoint))
+	{
+		orderedCollision.value().first.get().entity.sync();
+
+		if (orderedCollision.value().first.get().entity.has_component<PatrolComponent>())
+		{
+			orderedCollision.value().first.get().entity.get_component<PatrolComponent>().moveToNextWaypoint();
+		}
 	}
 }
 

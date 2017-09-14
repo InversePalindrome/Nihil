@@ -9,31 +9,29 @@ InversePalindrome.com
 #include "PatrolComponent.hpp"
 
 
-PatrolComponent::PatrolComponent(float initialX, float finalX) :
-	Component("Patrol"),
-	path(initialX, finalX)
+PatrolComponent::PatrolComponent() :
+	Component("Patrol")
 {
 }
 
 std::ostream& operator<<(std::ostream& os, const PatrolComponent& component)
 {
-	os  << component.getEntity() << ' ' << component.getName() << ' ' << 
-		component.path.first << ' ' << component.path.second;
+	os << component.getEntity() << ' ' << component.getName();
 
 	return os;
 }
 
-PatrolComponent::Path PatrolComponent::getPath() const
+void PatrolComponent::setPathway(const Pathway& pathway)
 {
-	return this->path;
+	this->pathway = pathway;
 }
 
-void PatrolComponent::setPath(const Path& path)
+Waypoint PatrolComponent::getCurrentWaypoint() const
 {
-	this->path = path;
+	return this->pathway.getCurrentWaypoint();
 }
 
-void PatrolComponent::swapPathPoints()
+void PatrolComponent::moveToNextWaypoint()
 {
-	std::swap(this->path.first, this->path.second);
+	this->pathway.moveToNextWaypoint();
 }

@@ -14,7 +14,7 @@ InversePalindrome.com
 
 AutomatedComponent::AutomatedComponent(const std::string& pathFile) :
 	Component("Automated"),
-	filePath(filePath),
+	pathFile(pathFile),
 	currentTask(0u)
 {
 	std::ifstream inFile(pathFile);
@@ -32,19 +32,19 @@ AutomatedComponent::AutomatedComponent(const std::string& pathFile) :
 		tasks.push_back(std::make_pair(function, time));
 	}
 
-	timer.restart(sf::seconds(tasks[0u].second));
+	timer.restart(sf::seconds(tasks.front().second));
 }
 
 std::ostream& operator<<(std::ostream& os, const AutomatedComponent& component)
 {
-	os << component.getEntity() << ' ' << component.getName() << ' ' << component.filePath;
+	os << component.getEntity() << ' ' << component.getName() << ' ' << component.pathFile;
 
 	return os;
 }
 
 AutomatedComponent::Task AutomatedComponent::getCurrentTask() const
 {
-	return this->tasks[0u];
+	return this->tasks.front();
 }
 
 void AutomatedComponent::pushNextTask()
@@ -53,7 +53,7 @@ void AutomatedComponent::pushNextTask()
 	{
 		std::rotate(std::rbegin(this->tasks), std::rbegin(this->tasks) + 1u, std::rend(this->tasks));
 
-		this->timer.restart(sf::seconds(this->tasks[0u].second));
+		this->timer.restart(sf::seconds(this->tasks.front().second));
 	}
 }
 
