@@ -12,8 +12,10 @@ InversePalindrome.com
 
 #include <brigand/sequences/list.hpp>
 
+#include <tuple>
 #include <string>
 #include <vector>
+#include <cstddef>
 
 
 class ComponentSerializer
@@ -23,7 +25,7 @@ public:
 
 	void serialize(const std::string& pathFile);
 
-	void saveBlueprint(const std::string& pathFile, const std::vector<std::pair<std::string, sf::Vector2f>>& entitiesFiles);
+	void saveBlueprint(const std::string& pathFile, const std::vector<std::tuple<std::int32_t, std::string, sf::Vector2f>>& entitiesFiles);
 
 private:
 	Entities& entities;

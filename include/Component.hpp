@@ -9,6 +9,7 @@ InversePalindrome.com
 
 #include <string>
 #include <fstream>
+#include <cstddef>
 
 
 class Component
@@ -17,11 +18,11 @@ public:
 	Component(const std::string& componentID);
 
     std::string getName() const;
-	std::size_t getEntity() const;
+	std::int32_t getEntityID() const;
 
-	void setEntity(std::size_t entity);
+	void setEntityID(std::int32_t entity);
 
 private:
 	std::string name;
-	std::size_t entity;
+	std::int32_t entity;
 };

@@ -14,7 +14,15 @@ InversePalindrome.com
 #include <unordered_map>
 
 
-using Waypoint = sf::Vector2f;
+struct Waypoint
+{
+	Waypoint(const sf::Vector2f& point, std::size_t step);
+
+	bool operator<(const Waypoint& rhs) const;
+
+	sf::Vector2f point;
+	std::size_t step;
+};
 
 class Pathway
 {
@@ -25,6 +33,10 @@ public:
 
 	void moveToNextWaypoint();
 	void addWaypoint(const Waypoint& waypoint);
+
+	void sortWaypoints();
+
+	bool hasWaypoints() const;
 
 private:
 	std::vector<Waypoint> waypoints;

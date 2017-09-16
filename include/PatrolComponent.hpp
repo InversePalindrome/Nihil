@@ -23,6 +23,8 @@ public:
 	Waypoint getCurrentWaypoint() const;
 
 	void moveToNextWaypoint();
+
+	bool hasWaypoints() const;
 	
 private:
 	Pathway pathway;

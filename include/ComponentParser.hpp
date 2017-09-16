@@ -24,6 +24,7 @@ public:
 	ComponentParser(Entities& entities, ResourceManager& resourceManager, b2World& world);
 	
 	Entity parseComponents(const std::string& pathFile);
+	Entity parseComponents(std::int32_t entityID, const std::string& pathFile);
 
 	void parseBlueprint(const std::string& pathFile);
 	void parseEntities(const std::string& pathFile);
@@ -32,7 +33,7 @@ private:
 	Entities& entities;
 	b2World& world;
 
-	std::size_t currentEntityID;
+	std::int32_t currentEntityID;
 	std::unordered_map<std::string, std::function<void(Entity&, const std::string&)>> componentParsers;
 
 	Entity createEntity();

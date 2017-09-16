@@ -23,8 +23,10 @@ public:
 private:
 	Pathways& pathways;
 
-	void updatePatrolling(Entity entity, PatrolComponent& patrol, PositionComponent& position);
+	void updatePatrolling(Entity entity, PatrolComponent& patrol, TimerComponent& timer, PositionComponent& position);
 	void addPathway(Entity entity, PatrolComponent& patrol);
+
+	void changeWaypoint(Entity entity);
 
 	std::optional<Pathway> getClosestPathway(const sf::Vector2f& position);
 };
