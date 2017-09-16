@@ -16,7 +16,7 @@ ChildComponent::ChildComponent(std::size_t parentID) :
 
 std::ostream& operator<<(std::ostream& os, const ChildComponent& component)
 {
-	os << component.getEntity() << ' ' << component.getName() << ' ' << component.parentID;
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.parentID;
 
 	return os;
 }

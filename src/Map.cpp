@@ -12,6 +12,8 @@ InversePalindrome.com
 #include <Box2D/Dynamics/b2Fixture.h>
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
+#include <tuple>
+#include <sstream>
 #include <unordered_map>
 
 
@@ -82,8 +84,10 @@ void Map::addImage(tmx::ImageLayer* imageLayer)
 
 void Map::addObjects(tmx::ObjectGroup* objectLayer)
 {
-	std::vector<std::pair<std::string, sf::Vector2f>> objectFiles;
-	std::vector<std::pair<std::string, sf::Vector2f>> enemyFiles;
+	std::vector<std::tuple<std::int32_t, std::string, sf::Vector2f>> staticObjectFiles;
+	std::vector<std::tuple<std::int32_t, std::string, sf::Vector2f>> entityFiles;
+
+	std::int32_t entityID = 0;
 
 	for (const auto& object : objectLayer->getObjects())
 	{
@@ -91,15 +95,17 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 
 		if (object.getType() == "Entity")
 		{
+			++entityID;
+
 			for (const auto& property : object.getProperties())
 			{
 				if (property.getName() == "ObjectFile")
 				{
-					objectFiles.push_back(std::make_pair(property.getStringValue(), sf::Vector2f(object.getPosition().x + AABB.width / 2.f, object.getPosition().y + AABB.height / 2.f)));
+					staticObjectFiles.push_back(std::make_tuple(entityID, property.getStringValue(), sf::Vector2f(object.getPosition().x + AABB.width / 2.f, object.getPosition().y + AABB.height / 2.f)));
 				}
-				else if (property.getName() == "EnemyFile")
+				else if (property.getName() == "EntityFile")
 				{
-					enemyFiles.push_back(std::make_pair(property.getStringValue(), sf::Vector2f(object.getPosition().x + AABB.width / 2.f, object.getPosition().y + AABB.height / 2.f)));
+					entityFiles.push_back(std::make_tuple(-entityID, property.getStringValue(), sf::Vector2f(object.getPosition().x + AABB.width / 2.f, object.getPosition().y + AABB.height / 2.f)));
 				}
 			}
 		}
@@ -120,8 +126,8 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 				fixture.isSensor = true;
 			}
 
-			auto* tile = this->world.CreateBody(&bodyDefinition);
-			tile->CreateFixture(&fixture);
+			auto* staticObject = this->world.CreateBody(&bodyDefinition);
+			staticObject->CreateFixture(&fixture);
 
 			std::unordered_map<std::string, tmx::Property> properties;
 			
@@ -129,24 +135,33 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 			{
 	            properties.emplace(property.getName(), property);
 				
-				if(property.getName() == "PathwayID")
+				if(property.getName() == "PathwayData")
 				{
-					if (!this->pathways.count(property.getIntValue()))
+					std::string pathwayData = property.getStringValue();
+					std::istringstream iStream(pathwayData);
+
+					std::size_t pathwayIndex = 0u;
+					std::size_t waypointStep = 0u;
+
+					iStream >> pathwayIndex >> waypointStep;
+
+					if (!this->pathways.count(pathwayIndex))
 					{
-						this->pathways.emplace(property.getIntValue(), Pathway());
+						this->pathways.emplace(pathwayIndex, Pathway());
 					}
 
-					this->pathways[property.getIntValue()].addWaypoint(Waypoint(object.getPosition().x + AABB.width / 2.f, object.getPosition().y + AABB.height / 2.f));
+					this->pathways[pathwayIndex].addWaypoint(Waypoint(sf::Vector2f
+					(object.getPosition().x + AABB.width / 2.f, object.getPosition().y + AABB.height / 2.f), waypointStep));
 				}
 			}
             
-            this->collisionsData.push_back(CollisionData(tile, static_cast<ObjectType>(properties["ID"].getIntValue()), properties));
+            this->collisionsData.push_back(CollisionData(staticObject, static_cast<ObjectType>(properties["ID"].getIntValue()), properties));
             this->collisionsData.back().body->SetUserData(&this->collisionsData.back());
 		}
 	}
 	
-	this->componentSerializer.saveBlueprint("Resources/Files/BlueprintObjects-" + game.getCurrentLevel() + ".txt", objectFiles);
-	this->componentSerializer.saveBlueprint("Resources/Files/BlueprintEnemies-" + game.getCurrentLevel() + ".txt", enemyFiles);
+	this->componentSerializer.saveBlueprint("Resources/Files/BlueprintObjects-" + game.getCurrentLevel() + ".txt", staticObjectFiles);
+	this->componentSerializer.saveBlueprint("Resources/Files/BlueprintEntities-" + game.getCurrentLevel() + ".txt", entityFiles);
 }
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const

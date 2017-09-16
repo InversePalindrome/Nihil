@@ -16,7 +16,7 @@ AttackComponent::AttackComponent(std::size_t damagePoints) :
 
 std::ostream& operator<<(std::ostream& os, const AttackComponent& component)
 {
-	os << component.getEntity() << ' ' << component.getName() << ' ' << component.damagePoints;
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.damagePoints;
 
 	return os;
 }

@@ -9,7 +9,11 @@ InversePalindrome.com
 
 #include <brigand/algorithms/for_each.hpp>
 
+#include <boost/algorithm/string/trim.hpp>
+
+#include <map>
 #include <fstream>
+#include <sstream>
 
 
 ComponentSerializer::ComponentSerializer(Entities& entities) :
@@ -19,25 +23,59 @@ ComponentSerializer::ComponentSerializer(Entities& entities) :
 
 void ComponentSerializer::serialize(const std::string& pathFile)
 {
-	std::ofstream outFile(pathFile);
+	std::multimap<std::int32_t, std::string> entities;
 
-	brigand::for_each<ComponentList>([this, &outFile](auto componentType) 
+	brigand::for_each<ComponentList>([this, &entities](auto componentType) 
 	{
 		using Type = decltype(componentType)::type;
-
-		this->entities.for_each<Type>([&outFile](auto entity, auto& component)
+		
+		this->entities.for_each<Type>([&entities](auto entity, auto& component)
 		{
-			outFile << component << '\n';
+			std::stringstream stream;
+
+			std::int32_t entityID;
+			std::string componentData;
+
+			stream << component;
+
+			stream >> entityID;
+
+			if (entityID > 0)
+			{
+				std::getline(stream, componentData);
+
+				boost::trim_left(componentData);
+
+				entities.emplace(entityID, componentData);
+			}
 		});
 	});
+
+	std::ofstream outFile(pathFile);
+
+	for (auto entityItr = std::begin(entities); entityItr != std::end(entities);)
+	{
+		auto entityID = entityItr->first;
+
+		outFile << "Entity " << entityID << '\n';
+
+		do
+		{
+			outFile << entityItr->second << '\n';
+
+			++entityItr;
+		} while (entityItr != std::end(entities) && entityID == entityItr->first);
+
+		outFile << '\n';
+	}
 }
 
-void ComponentSerializer::saveBlueprint(const std::string& pathFile, const std::vector<std::pair<std::string, sf::Vector2f>>& entitiesFile)
+void ComponentSerializer::saveBlueprint(const std::string& pathFile, const std::vector<std::tuple<std::int32_t, std::string, sf::Vector2f>>& entitiesFile)
 {
 	std::ofstream outFile(pathFile);
 
 	for (const auto& entityFile : entitiesFile)
 	{
-		outFile << entityFile.first << ' ' << entityFile.second.x << ' ' << entityFile.second.y << '\n';
+		outFile << std::get<0>(entityFile) << ' ' << std::get<1>(entityFile) << ' ' << std::get<2>(entityFile).x << ' ' << std::get<2>(entityFile).y  << '\n';
 	}
 }

@@ -15,7 +15,7 @@ ControllableComponent::ControllableComponent() :
 
 std::ostream& operator<<(std::ostream& os, const ControllableComponent& component)
 {
-	os << component.getEntity() << ' ' << component.getName();
+	os << component.getEntityID() << ' ' << component.getName();
 
 	return os;
 }

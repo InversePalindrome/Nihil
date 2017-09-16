@@ -138,7 +138,7 @@ void GameState::changeLevel(const std::string& level)
 		this->entityManager.parseEntities("Resources/Files/Entities-" + this->stateData.games.front().getGameName() + '-' + level + ".txt");
 	}
 
-	this->entityManager.parseBlueprint("Resources/Files/BlueprintEnemies-" + level + ".txt");
+	this->entityManager.parseBlueprint("Resources/Files/BlueprintEntities-" + level + ".txt");
 
 	this->stateData.games.front().setCurrentLevel(level);
 

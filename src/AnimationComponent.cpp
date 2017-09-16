@@ -59,7 +59,7 @@ AnimationComponent::AnimationComponent(const std::string& animationsFile)  :
 
 std::ostream& operator<<(std::ostream& os, const AnimationComponent& component)
 {
-	os << component.getEntity() << ' ' << component.getName() << ' ' << component.animationsFile;
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.animationsFile;
 
 	return os;
 }

@@ -70,7 +70,7 @@ ParticleComponent::ParticleComponent(const std::string& pathFile, ResourceManage
 
 std::ostream& operator<<(std::ostream& os, const ParticleComponent& component)
 {
-	os << component.getEntity() << ' ' << component.getName() << ' ' << component.pathFile;
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.pathFile;
 
 	return os;
 }

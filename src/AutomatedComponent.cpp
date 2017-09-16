@@ -37,7 +37,7 @@ AutomatedComponent::AutomatedComponent(const std::string& pathFile) :
 
 std::ostream& operator<<(std::ostream& os, const AutomatedComponent& component)
 {
-	os << component.getEntity() << ' ' << component.getName() << ' ' << component.pathFile;
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.pathFile;
 
 	return os;
 }

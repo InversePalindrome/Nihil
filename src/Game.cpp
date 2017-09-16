@@ -164,16 +164,17 @@ void Game::loadSpawnPoints()
 		{
 			std::istringstream iStream(line);
 
+			std::int32_t entityID;
 			std::string pathFile;
 
-			iStream >> pathFile;
+			iStream >> entityID >> pathFile;
 
 			if (pathFile == "Resources/Files/Player.txt")
 			{
 				float xPosition = 0.f, yPosition = 0.f;
-
+				
 				iStream >> xPosition >> yPosition;
-
+				
 				this->levels.get<1>().modify(this->levels.get<1>().find(level.name), [xPosition, yPosition](auto& iLevel) { iLevel.spawnPosition = sf::Vector2f(xPosition, yPosition); });
 			}
 		}

@@ -16,7 +16,7 @@ PatrolComponent::PatrolComponent() :
 
 std::ostream& operator<<(std::ostream& os, const PatrolComponent& component)
 {
-	os << component.getEntity() << ' ' << component.getName();
+	os << component.getEntityID() << ' ' << component.getName();
 
 	return os;
 }
@@ -34,4 +34,9 @@ Waypoint PatrolComponent::getCurrentWaypoint() const
 void PatrolComponent::moveToNextWaypoint()
 {
 	this->pathway.moveToNextWaypoint();
+}
+
+bool PatrolComponent::hasWaypoints() const
+{
+	return this->pathway.hasWaypoints();
 }

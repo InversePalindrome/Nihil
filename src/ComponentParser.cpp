@@ -13,19 +13,25 @@ InversePalindrome.com
 #include <boost/range/algorithm_ext/erase.hpp>
 #include <boost/algorithm/string/classification.hpp>
 
+#include <map>
 #include <fstream>
 
 
 ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceManager, b2World& world) :
 	entities(entities),
 	world(world),
-	currentEntityID(0u)
+	currentEntityID(0)
 {
 	componentParsers["Controllable"] = [this](auto& entity, auto& line)
 	{
 		entity.add_component<ControllableComponent>();
 	};
-	
+
+	componentParsers["Timer"] = [this](auto& entity, auto& line)
+	{
+		entity.add_component<TimerComponent>(std::make_from_tuple<TimerComponent>(this->parse<std::string>(line)));
+	};
+
 	componentParsers["PositionA"] = [this](auto& entity, auto& line) 
 	{
 		entity.add_component<PositionComponent>(std::make_from_tuple<PositionComponent>(this->parse<float, float>(line)));
@@ -133,6 +139,11 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 Entity ComponentParser::parseComponents(const std::string& pathFile)
 {
+	return this->parseComponents(++this->currentEntityID, pathFile);
+}
+
+Entity ComponentParser::parseComponents(std::int32_t entityID, const std::string& pathFile)
+{
 	auto entity = this->createEntity();
 	
 	std::ifstream inFile(pathFile);
@@ -152,15 +163,20 @@ Entity ComponentParser::parseComponents(const std::string& pathFile)
 		this->componentParsers[componentName](entity, line);
 	}
 
-	brigand::for_each<ComponentList>([&entity, this](auto componentType)
+	brigand::for_each<ComponentList>([&entity, entityID, this](auto componentType)
 	{
 		using Type = decltype(componentType)::type;
 
 		if (entity.has_component<Type>())
 		{
-			entity.get_component<Type>().setEntity(this->currentEntityID);
+			entity.get_component<Type>().setEntityID(entityID);
 		}
 	});
+
+	if (this->currentEntityID < std::abs(entityID))
+	{
+		this->currentEntityID = std::abs(entityID);
+	}
 
 	return entity;
 }
@@ -174,12 +190,13 @@ void ComponentParser::parseBlueprint(const std::string& pathFile)
 	{
 		std::istringstream iStream(line);
 
+		std::int32_t entityID = 0;
 		std::string entityFile;
 		float xPosition = 0.f, yPosition = 0.f;
 
-		iStream >> entityFile >> xPosition >> yPosition;
+		iStream >> entityID >> entityFile >> xPosition >> yPosition;
 		
-		auto entity = this->parseComponents(entityFile);
+		auto entity = this->parseComponents(entityID, entityFile);
 
 		if (entity.has_component<PositionComponent>())
 		{
@@ -198,47 +215,52 @@ void ComponentParser::parseEntities(const std::string& pathFile)
 	std::ifstream inFile(pathFile);
 	std::string line;
 
-	std::unordered_map<std::size_t, std::pair<std::size_t, Entity>> entitiesIDs;
+	std::map<std::int32_t, Entity> entitiesIDs;
+	std::int32_t entityID = 0;
 
 	while (std::getline(inFile, line))
 	{
+		if (line.empty())
+		{
+			continue;
+		}
+
 		std::istringstream iStream(line);
 
-		std::size_t entityID = 0u;
-		std::string componentName;
+		std::string category;
 
-		iStream >> entityID >> componentName;
+		iStream >> category;
 
-		Entity entity;
-		
-		if (entitiesIDs.count(entityID))
+		if (category == "Entity")
 		{
-			entity = entitiesIDs[entityID].second;
+			iStream >> entityID;
+
+			entitiesIDs.emplace(entityID, this->createEntity());
 		}
 		else
 		{
-			entity = this->createEntity();
-			entitiesIDs.emplace(entityID, std::make_pair(this->currentEntityID, entity));
+   			line.erase(std::begin(line), std::begin(line) + category.size());
+			
+			this->componentParsers[category](entitiesIDs[entityID], line);
 		}
-
-		entity.sync();
-
-		line.erase(std::begin(line), std::begin(line) + std::to_string(entityID).size() + componentName.size() + 1u);
-	
-		this->componentParsers[componentName](entity, line);
 	}
 
 	for (auto& entity : entitiesIDs)
 	{
 		brigand::for_each<ComponentList>([&entity, this](auto componentType)
 		{
-			entity.second.second.sync();
+			entity.second.sync();
 			
 			using Type = decltype(componentType)::type;
 			
-			if (entity.second.second.has_component<Type>())
+			if (entity.second.has_component<Type>())
 			{
-				entity.second.second.get_component<Type>().setEntity(entity.second.first);
+				entity.second.get_component<Type>().setEntityID(entity.first);
+
+				if (this->currentEntityID < std::abs(entity.first))
+				{
+					this->currentEntityID = std::abs(entity.first);
+				}
 			}
 		});
 	}
@@ -246,7 +268,5 @@ void ComponentParser::parseEntities(const std::string& pathFile)
 
 Entity ComponentParser::createEntity()
 {
-	++this->currentEntityID;
-
 	return this->entities.create_entity();
 }

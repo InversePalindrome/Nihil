@@ -16,7 +16,7 @@ HealthComponent::HealthComponent(std::size_t hitpoints) :
 
 std::ostream& operator<<(std::ostream& os, const HealthComponent& component)
 {
-	os << component.getEntity() << ' ' << component.getName() << ' ' << component.hitpoints;
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.hitpoints;
 
 	return os;
 }

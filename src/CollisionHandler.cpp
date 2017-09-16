@@ -59,15 +59,13 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 	{
 		orderedCollision.value().first.get().entity.sync();
 
-		if (orderedCollision.value().first.get().entity.has_component<PatrolComponent>())
-		{
-			orderedCollision.value().first.get().entity.get_component<PatrolComponent>().moveToNextWaypoint();
-		}
+		this->events.broadcast(CrossedWaypoint{ orderedCollision.value().first.get().entity });
 	}
 }
 
 void CollisionHandler::EndContact(b2Contact* contact)
 {
+
 }
 
 void CollisionHandler::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)

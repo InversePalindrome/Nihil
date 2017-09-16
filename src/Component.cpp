@@ -10,7 +10,7 @@ InversePalindrome.com
 
 Component::Component(const std::string& componentID) :
 	name(componentID),
-	entity(0u)
+	entity(0)
 {
 }
 
@@ -19,12 +19,12 @@ std::string Component::getName() const
 	return this->name;
 }
 
-std::size_t Component::getEntity() const
+std::int32_t Component::getEntityID() const
 {
 	return this->entity;
 }
 
-void Component::setEntity(std::size_t entity)
+void Component::setEntityID(std::int32_t entity)
 {
 	this->entity = entity;
 }

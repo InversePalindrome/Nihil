@@ -21,7 +21,7 @@ PositionComponent::PositionComponent(float xPosition, float yPosition) :
 
 std::ostream& operator<<(std::ostream& os, const PositionComponent& component)
 {
-	os << component.getEntity() << ' ' << component.getName() << ' ' << component.position.x << ' ' << component.position.y;
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.position.x << ' ' << component.position.y;
 
 	return os;
 }

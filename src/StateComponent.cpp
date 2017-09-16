@@ -16,7 +16,7 @@ StateComponent::StateComponent() :
 
 std::ostream& operator<<(std::ostream& os, const StateComponent& component)
 {
-	os << component.getEntity() << ' ' << component.getName() << ' ' << static_cast<std::size_t>(component.state);
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << static_cast<std::size_t>(component.state);
 
 	return os;
 }

@@ -32,7 +32,7 @@ SpriteComponent::SpriteComponent(ResourceManager& resourceManager, TexturesID te
 
 std::ostream& operator<<(std::ostream& os, const SpriteComponent& component)
 {
-	os << component.getEntity() << ' ' << component.getName() << ' ' << static_cast<std::size_t>(component.getTextureID()) << ' ' << component.sprite.getTextureRect().left << 
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << static_cast<std::size_t>(component.getTextureID()) << ' ' << component.sprite.getTextureRect().left << 
 		' ' << component.sprite.getTextureRect().top <<  ' ' << component.sprite.getTextureRect().width <<  ' ' << component.sprite.getTextureRect().height <<
 		' ' << component.sprite.getScale().x << ' ' << component.sprite.getScale().y;
 

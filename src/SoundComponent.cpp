@@ -16,7 +16,7 @@ SoundComponent::SoundComponent() :
 
 std::ostream& operator<<(std::ostream& os, const SoundComponent& component)
 {
-	os << component.getEntity() << ' ' << component.getName() << ' ' << component.soundID;
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.soundID;
 
 	return os;
 }
