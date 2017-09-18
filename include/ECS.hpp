@@ -13,7 +13,8 @@ InversePalindrome.com
 #include "PositionComponent.hpp"
 #include "PatrolComponent.hpp"
 #include "HealthComponent.hpp"
-#include "AttackComponent.hpp"
+#include "MeleeAttackComponent.hpp"
+#include "RangeAttackComponent.hpp"
 #include "AnimationComponent.hpp"
 #include "SoundComponent.hpp"
 #include "ParticleComponent.hpp"
@@ -46,23 +47,24 @@ struct MoveCamera;
 struct DisplayHealthBar;
 struct PlayerDied;
 struct CrossedWaypoint;
+struct ShootProjectile;
 
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, 
-	PhysicsComponent, PatrolComponent, HealthComponent, AttackComponent, SpriteComponent, AnimationComponent, SoundComponent,
+	PhysicsComponent, PatrolComponent, HealthComponent, MeleeAttackComponent, RangeAttackComponent, SpriteComponent, AnimationComponent, SoundComponent,
     ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, ChaseComponent, TimerComponent>;
 
 using Tags = entityplus::tag_list<>;
 
 using ComponentList = brigand::list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent,
-	HealthComponent, AttackComponent, SpriteComponent, AnimationComponent, SoundComponent,
+	HealthComponent, MeleeAttackComponent, RangeAttackComponent, SpriteComponent, AnimationComponent, SoundComponent,
 	ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, ChaseComponent, TimerComponent>;
 
 using Entities = entityplus::entity_manager<Components, Tags>;
 
 using Events = entityplus::event_manager<Components, Tags, DirectionChanged, Jumped, StopMovement, CombatOcurred, ChangeState,
 	StateChanged, Teleported, DestroyEntity, EmitSound, PickedUpCoin, TouchedTrampoline, MoveCamera, DisplayHealthBar,
-    PlayerDied, CrossedWaypoint>;
+    PlayerDied, CrossedWaypoint, ShootProjectile>;
 
 using Entity = Entities::entity_t;
 
@@ -147,4 +149,9 @@ struct PlayerDied
 struct CrossedWaypoint
 {
 	Entity entity;
+};
+
+struct ShootProjectile
+{
+	std::size_t damagePoints;
 };

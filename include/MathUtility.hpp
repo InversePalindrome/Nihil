@@ -14,8 +14,9 @@ InversePalindrome.com
 
 namespace MathUtils
 {
-	float distance(const sf::Vector2f& pointA, const sf::Vector2f& pointB)
+	template<typename T>
+	auto distance(const T& pointA, const T& pointB)
 	{
-		return std::sqrt(std::pow(pointA.x - pointB.x, 2) + std::pow(pointA.y - pointB.y, 2));
+		return  std::sqrt(std::pow(pointA.x - pointB.x, 2) + std::pow(pointA.y - pointB.y, 2));
 	}
 }

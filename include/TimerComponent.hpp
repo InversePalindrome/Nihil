@@ -19,7 +19,11 @@ class TimerComponent : public Component
 	friend std::ostream& operator<<(std::ostream& os, const TimerComponent& component);
 
 public:
+	TimerComponent();
 	TimerComponent(const std::string& pathFile);
+
+	void addTimer(const std::string& timer, float time);
+	void removeTimer(const std::string& timer);
 
 	void restartTimer(const std::string& timer);
 	void startTimer(const std::string& timer);

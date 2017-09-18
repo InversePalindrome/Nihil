@@ -20,4 +20,6 @@ public:
 private:
 	void handleCombat(Entity attacker, Entity victim);
 	void checkIfDead(Entity entity, HealthComponent& health);
+
+	void shootProjectile();
 };
