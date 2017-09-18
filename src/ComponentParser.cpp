@@ -27,14 +27,19 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 		entity.add_component<ControllableComponent>();
 	};
 
-	componentParsers["Timer"] = [this](auto& entity, auto& line)
+	componentParsers["TimerA"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component<TimerComponent>(std::make_from_tuple<TimerComponent>(this->parse<std::string>(line)));
+		entity.add_component<TimerComponent>();
+	};
+
+	componentParsers["TimerB"] = [this](auto& entity, auto& line)
+	{
+		entity.add_component<TimerComponent>(std::make_from_tuple<TimerComponent>(parse<std::string>(line)));
 	};
 
 	componentParsers["PositionA"] = [this](auto& entity, auto& line) 
 	{
-		entity.add_component<PositionComponent>(std::make_from_tuple<PositionComponent>(this->parse<float, float>(line)));
+		entity.add_component<PositionComponent>(std::make_from_tuple<PositionComponent>(parse<float, float>(line)));
 	};
 
 	componentParsers["PositionB"] = [this](auto& entity, auto& line)
@@ -50,7 +55,7 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["PhysicsA"] = [this, &world](auto& entity, auto& line)
 	{
-		auto& params = this->parse<float, float, std::size_t, std::size_t, std::int32_t, float, float>(line);
+		auto& params = parse<float, float, std::size_t, std::size_t, std::int32_t, float, float>(line);
 
 		entity.add_component<PhysicsComponent>(world, b2Vec2(std::get<0>(params), std::get<1>(params)),
 			static_cast<b2BodyType>(std::get<2>(params)), static_cast<ObjectType>(std::get<3>(params)), std::get<4>(params), std::get<5>(params), std::get<6>(params));
@@ -58,7 +63,7 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["PhysicsB"] = [this, &world](auto& entity, auto& line)
 	{
-		auto& params = this->parse<float, float, std::size_t, std::size_t, std::int32_t>(line);
+		auto& params = parse<float, float, std::size_t, std::size_t, std::int32_t>(line);
 
 		entity.add_component<PhysicsComponent>(world, b2Vec2(std::get<0>(params), std::get<1>(params)),
 			static_cast<b2BodyType>(std::get<2>(params)), static_cast<ObjectType>(std::get<3>(params)), std::get<4>(params));
@@ -71,12 +76,12 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["Chase"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component<ChaseComponent>(std::make_from_tuple<ChaseComponent>(this->parse<float>(line)));
+		entity.add_component<ChaseComponent>(std::make_from_tuple<ChaseComponent>(parse<float>(line)));
 	};
 
 	componentParsers["SpriteA"] = [this, &resourceManager](auto& entity, auto& line)
 	{
-		auto& params = this->parse<std::size_t, std::size_t, std::size_t, std::size_t, std::size_t, float, float>(line);
+		auto& params = parse<std::size_t, std::size_t, std::size_t, std::size_t, std::size_t, float, float>(line);
 
 		entity.add_component<SpriteComponent>(resourceManager, static_cast<TexturesID>(std::get<0>(params)),
 			sf::IntRect(std::get<1>(params), std::get<2>(params), std::get<3>(params), std::get<4>(params)), sf::Vector2f(std::get<5>(params), std::get<6>(params)));
@@ -84,7 +89,7 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["SpriteB"] = [this, &resourceManager](auto& entity, auto& line)
 	{
-		auto& params = this->parse<std::size_t, std::size_t, std::size_t, std::size_t, std::size_t>(line);
+		auto& params = parse<std::size_t, std::size_t, std::size_t, std::size_t, std::size_t>(line);
 
 		entity.add_component<SpriteComponent>(resourceManager, static_cast<TexturesID>(std::get<0>(params)),
 			sf::IntRect(std::get<1>(params), std::get<2>(params), std::get<3>(params), std::get<4>(params)));
@@ -92,24 +97,29 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["SpriteC"] = [this, &resourceManager](auto& entity, auto& line)
 	{
-		auto& params = this->parse<std::size_t>(line);
+		auto& params = parse<std::size_t>(line);
 
 		entity.add_component<SpriteComponent>(resourceManager, static_cast<TexturesID>(std::get<0>(params)));
 	};
 
 	componentParsers["Health"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component<HealthComponent>(std::make_from_tuple<HealthComponent>(this->parse<std::size_t>(line)));
+		entity.add_component<HealthComponent>(std::make_from_tuple<HealthComponent>(parse<std::size_t>(line)));
 	};
 
-	componentParsers["Attack"] = [this](auto& entity, auto& line)
+	componentParsers["Melee"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component<AttackComponent>(std::make_from_tuple<AttackComponent>(this->parse<std::size_t>(line)));
+		entity.add_component<MeleeAttackComponent>(std::make_from_tuple<MeleeAttackComponent>(parse<std::size_t>(line)));
+	};
+
+	componentParsers["Range"] = [this](auto& entity, auto& line)
+	{
+		entity.add_component<RangeAttackComponent>(std::make_from_tuple<RangeAttackComponent>(parse<std::size_t, float, float>(line)));
 	};
 
 	componentParsers["Animation"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component<AnimationComponent>(std::make_from_tuple<AnimationComponent>(this->parse<std::string>(line)));
+		entity.add_component<AnimationComponent>(std::make_from_tuple<AnimationComponent>(parse<std::string>(line)));
 	};
 
 	componentParsers["Sound"] = [this](auto& entity, auto& line)
@@ -126,19 +136,17 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 	
 	componentParsers["Parent"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component<ParentComponent>(std::make_from_tuple<ParentComponent>(this->parse<std::size_t>(line)));
+		entity.add_component<ParentComponent>(std::make_from_tuple<ParentComponent>(parse<std::size_t>(line)));
 	};
 
 	componentParsers["Child"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component<ChildComponent>(std::make_from_tuple<ChildComponent>(this->parse<std::size_t>(line)));
+		entity.add_component<ChildComponent>(std::make_from_tuple<ChildComponent>(parse<std::size_t>(line)));
 	};
 
 	componentParsers["Automated"] = [this](auto& entity, auto& line)
 	{
-		auto& params = this->parse<std::string>(line);
-
-		entity.add_component<AutomatedComponent>(std::get<0>(params));
+		entity.add_component<AutomatedComponent>(std::make_from_tuple<AutomatedComponent>(parse<std::string>(line)));
 	};
 }
 

@@ -11,8 +11,13 @@ InversePalindrome.com
 #include <sstream>
 
 
+TimerComponent::TimerComponent() :
+	Component("TimerA")
+{
+}
+
 TimerComponent::TimerComponent(const std::string& pathFile) :
-	Component("Timer"),
+	Component("TimerB"),
 	pathFile(pathFile)
 {
 	std::ifstream inFile(pathFile);
@@ -36,6 +41,16 @@ std::ostream& operator<<(std::ostream& os, const TimerComponent& component)
 	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.pathFile;
 
 	return os;
+}
+
+void TimerComponent::addTimer(const std::string& timer, float time)
+{
+	this->timers.emplace(timer, std::make_pair(thor::Timer(), time));
+}
+
+void TimerComponent::removeTimer(const std::string& timer)
+{
+	this->timers.erase(timer);
 }
 
 void TimerComponent::restartTimer(const std::string& timer)

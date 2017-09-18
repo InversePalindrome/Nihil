@@ -20,6 +20,17 @@ CombatSystem::CombatSystem(Entities& entities, Events& events) :
 	});
 
 	events.subscribe<CombatOcurred>([this](const auto& event) { handleCombat(event.attacker, event.victim); });
+	events.subscribe<ShootProjectile>([this](const auto& event) { shootProjectile(); });
+
+	events.subscribe<entityplus::component_added<Entity, RangeAttackComponent>>([](auto& event)
+	{
+		if (!event.entity.has_component<TimerComponent>())
+		{
+			//event.entity.add_component<TimerComponent>();
+		}
+		
+		//event.entity.get_component<TimerComponent>().addTimer("Reload", event.component.getReloadTime());
+	});
 }
 
 void CombatSystem::update(float deltaTime)
@@ -33,7 +44,7 @@ void CombatSystem::update(float deltaTime)
 
 void CombatSystem::handleCombat(Entity attacker, Entity victim)
 {
-	const auto& damagePoints = attacker.get_component<AttackComponent>().getDamagePoints();
+	const auto& damagePoints = attacker.get_component<MeleeAttackComponent>().getDamagePoints();
 	auto& health = victim.get_component<HealthComponent>();
 
 	if (health.getHitpoints() > 0u)
@@ -52,4 +63,9 @@ void CombatSystem::checkIfDead(Entity entity, HealthComponent& health)
 	{
 		this->events.broadcast(ChangeState{ entity, EntityState::Dead });
 	}
+}
+
+void CombatSystem::shootProjectile()
+{
+
 }
