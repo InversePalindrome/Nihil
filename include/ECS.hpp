@@ -21,6 +21,7 @@ InversePalindrome.com
 #include "ChildComponent.hpp"
 #include "AutomatedComponent.hpp"
 #include "ControllableComponent.hpp"
+#include "ChaseComponent.hpp"
 #include "TimerComponent.hpp"
 #include "Direction.hpp"
 
@@ -49,13 +50,13 @@ struct CrossedWaypoint;
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, 
 	PhysicsComponent, PatrolComponent, HealthComponent, AttackComponent, SpriteComponent, AnimationComponent, SoundComponent,
-    ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, TimerComponent>;
+    ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, ChaseComponent, TimerComponent>;
 
 using Tags = entityplus::tag_list<>;
 
 using ComponentList = brigand::list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent,
 	HealthComponent, AttackComponent, SpriteComponent, AnimationComponent, SoundComponent,
-	ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, TimerComponent>;
+	ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, ChaseComponent, TimerComponent>;
 
 using Entities = entityplus::entity_manager<Components, Tags>;
 

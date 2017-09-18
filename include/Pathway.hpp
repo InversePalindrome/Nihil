@@ -29,7 +29,11 @@ class Pathway
 public:
 	Pathway();
 
+	std::vector<Waypoint> getWaypoints() const;
 	Waypoint getCurrentWaypoint() const;
+	std::size_t getCurrentWaypointIndex() const;
+
+	void setCurrentWaypointIndex(std::size_t currentWaypointIndex);
 
 	void moveToNextWaypoint();
 	void addWaypoint(const Waypoint& waypoint);

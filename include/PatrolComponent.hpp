@@ -18,9 +18,14 @@ class PatrolComponent : public Component
 public:
 	PatrolComponent();
 
-	void setPathway(const Pathway& pathway);
+	Waypoint operator[](std::size_t index);
 
+	Pathway getPathway() const;
 	Waypoint getCurrentWaypoint() const;
+	std::size_t getCurrentWaypointIndex() const;
+
+	void setPathway(const Pathway& pathway);
+	void setCurrentWaypointIndex(std::size_t currentWaypointIndex);
 
 	void moveToNextWaypoint();
 
