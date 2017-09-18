@@ -69,6 +69,11 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 		entity.add_component<PatrolComponent>();
 	};
 
+	componentParsers["Chase"] = [this](auto& entity, auto& line)
+	{
+		entity.add_component<ChaseComponent>(std::make_from_tuple<ChaseComponent>(this->parse<float>(line)));
+	};
+
 	componentParsers["SpriteA"] = [this, &resourceManager](auto& entity, auto& line)
 	{
 		auto& params = this->parse<std::size_t, std::size_t, std::size_t, std::size_t, std::size_t, float, float>(line);

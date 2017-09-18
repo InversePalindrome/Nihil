@@ -21,14 +21,34 @@ std::ostream& operator<<(std::ostream& os, const PatrolComponent& component)
 	return os;
 }
 
-void PatrolComponent::setPathway(const Pathway& pathway)
+Waypoint PatrolComponent::operator[](std::size_t index)
 {
-	this->pathway = pathway;
+	return this->pathway.getWaypoints()[index];
+}
+
+Pathway PatrolComponent::getPathway() const
+{
+	return this->pathway;
 }
 
 Waypoint PatrolComponent::getCurrentWaypoint() const
 {
 	return this->pathway.getCurrentWaypoint();
+}
+
+std::size_t PatrolComponent::getCurrentWaypointIndex() const
+{
+	return this->pathway.getCurrentWaypointIndex();
+}
+
+void PatrolComponent::setPathway(const Pathway& pathway)
+{
+	this->pathway = pathway;
+}
+
+void PatrolComponent::setCurrentWaypointIndex(std::size_t currentWaypointIndex)
+{
+	this->pathway.setCurrentWaypointIndex(currentWaypointIndex);
 }
 
 void PatrolComponent::moveToNextWaypoint()

@@ -26,9 +26,24 @@ Pathway::Pathway() :
 {
 }
 
+std::vector<Waypoint> Pathway::getWaypoints() const
+{
+	return this->waypoints;
+}
+
 Waypoint Pathway::getCurrentWaypoint() const
 {
 	return this->waypoints[this->currentWaypointIndex];
+}
+
+std::size_t Pathway::getCurrentWaypointIndex() const
+{
+	return this->currentWaypointIndex;
+}
+
+void Pathway::setCurrentWaypointIndex(std::size_t currentWaypointIndex)
+{
+	this->currentWaypointIndex = currentWaypointIndex;
 }
 
 void Pathway::moveToNextWaypoint()
