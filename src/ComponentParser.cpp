@@ -172,7 +172,7 @@ Entity ComponentParser::parseComponents(std::int32_t entityID, const std::string
 
 		line.erase(std::begin(line), std::begin(line) + componentName.size());
 		boost::remove_erase_if(line, boost::is_any_of(",()"));
-		
+	
 		this->componentParsers[componentName](entity, line);
 	}
 

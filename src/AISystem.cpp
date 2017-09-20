@@ -15,11 +15,11 @@ AISystem::AISystem(Entities& entities, Events& events, Pathways& pathways) :
 	System(entities, events),
 	pathways(pathways)
 {
-	events.subscribe<entityplus::component_added<Entity, PatrolComponent>>([this](const auto& event) { addPathway(event.entity, event.component); });
+	events.subscribe<entityplus::component_added<Entity, PatrolComponent>>([this](auto& event) { addPathway(event.entity, event.component); });
 	events.subscribe<CrossedWaypoint>([this](const auto& event)
 	{
 		if (!event.entity.has_component<ChaseComponent>() ||
-			!isWithinChasingRange(event.entity.get_component<PositionComponent>().getPosition(), getTargetPosition(), event.entity.get_component<ChaseComponent>().getVisionRange()))
+			!isWithinRange(event.entity.get_component<PositionComponent>().getPosition(), getTargetPosition(), event.entity.get_component<ChaseComponent>().getVisionRange()))
 		{
 			changeWaypoint(event.entity);
 		}
@@ -32,12 +32,22 @@ void AISystem::update(float deltaTime)
 	{
 		if (patrol.hasWaypoints())
 		{
-			if (entity.has_component<ChaseComponent>() && this->isWithinChasingRange(position.getPosition(), this->getTargetPosition(), entity.get_component<ChaseComponent>().getVisionRange()))
+			if (entity.has_component<ChaseComponent>() && this->isWithinRange(position.getPosition(), this->getTargetPosition(), entity.get_component<ChaseComponent>().getVisionRange()))
 			{
 				this->chaseTarget(patrol, position.getPosition(), this->getTargetPosition());
 			}
 
 			this->updateMovement(entity, patrol, position.getPosition());
+		}
+	});
+
+	this->entities.for_each<RangeAttackComponent, PositionComponent, TimerComponent>([this](auto entity, auto& rangeAttack, auto& position, auto& timer)
+	{
+		if (timer.hasTimer("Reload") && timer.hasTimerExpired("Reload") && this->isWithinRange(position.getPosition(), this->getTargetPosition(), rangeAttack.getAttackRange()))
+		{
+			this->events.broadcast(ShootProjectile{});
+
+			timer.restartTimer("Reload");
 		}
 	});
 }
@@ -136,7 +146,7 @@ sf::Vector2f AISystem::getTargetPosition() const
 	return targetPosition;
 }
 
-bool AISystem::isWithinChasingRange(const sf::Vector2f& AIPosition, const sf::Vector2f& targetPosition, float visionRange) const
+bool AISystem::isWithinRange(const sf::Vector2f& AIPosition, const sf::Vector2f& targetPosition, float range) const
 {
-	return MathUtils::distance(AIPosition, targetPosition) <= visionRange;
+	return MathUtils::distance(AIPosition, targetPosition) <= range;
 }

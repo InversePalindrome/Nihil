@@ -19,27 +19,15 @@ CombatSystem::CombatSystem(Entities& entities, Events& events) :
 		}
 	});
 
+
+	events.subscribe<entityplus::component_added<Entity, RangeAttackComponent>>([this](const auto& event) { addReloadTimer(event.entity, event.component); });
 	events.subscribe<CombatOcurred>([this](const auto& event) { handleCombat(event.attacker, event.victim); });
 	events.subscribe<ShootProjectile>([this](const auto& event) { shootProjectile(); });
-
-	events.subscribe<entityplus::component_added<Entity, RangeAttackComponent>>([](auto& event)
-	{
-		if (!event.entity.has_component<TimerComponent>())
-		{
-			//event.entity.add_component<TimerComponent>();
-		}
-		
-		//event.entity.get_component<TimerComponent>().addTimer("Reload", event.component.getReloadTime());
-	});
 }
 
 void CombatSystem::update(float deltaTime)
 {
-	this->entities.for_each<HealthComponent>(
-		[this](auto entity, auto& health)
-	{
-		this->checkIfDead(entity, health);
-	});
+	
 }
 
 void CombatSystem::handleCombat(Entity attacker, Entity victim)
@@ -55,17 +43,24 @@ void CombatSystem::handleCombat(Entity attacker, Entity victim)
 	{
 		this->events.broadcast(DisplayHealthBar{ victim });
 	}
-}
-
-void CombatSystem::checkIfDead(Entity entity, HealthComponent& health)
-{
 	if (health.getHitpoints() == 0u)
 	{
-		this->events.broadcast(ChangeState{ entity, EntityState::Dead });
+		this->events.broadcast(ChangeState{ victim, EntityState::Dead });
 	}
 }
 
 void CombatSystem::shootProjectile()
 {
+	
+}
 
+void CombatSystem::addReloadTimer(Entity entity, RangeAttackComponent& rangeAttack)
+{
+	if (entity.has_component<TimerComponent>())
+	{
+		auto& timer = entity.get_component<TimerComponent>();
+
+		timer.addTimer("Reload", rangeAttack.getReloadTime());
+		timer.restartTimer("Reload");
+	}
 }

@@ -68,6 +68,11 @@ void TimerComponent::stopTimer(const std::string& timer)
 	this->timers[timer].first.stop();
 }
 
+bool TimerComponent::hasTimer(const std::string& timer) const
+{
+	return this->timers.count(timer);
+}
+
 bool TimerComponent::hasTimerExpired(const std::string& timer) const 
 {
 	return this->timers.at(timer).first.isExpired();
