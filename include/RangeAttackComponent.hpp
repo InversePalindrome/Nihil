@@ -15,20 +15,20 @@ class RangeAttackComponent : public Component
 	friend std::ostream& operator<<(std::ostream& os, const RangeAttackComponent& component);
 
 public:
-	RangeAttackComponent(std::size_t damagePoints, float attackRange, float reloadTime);
+	RangeAttackComponent(std::size_t damagePoints, float reloadTime, float attackRange);
 
 	std::size_t getDamagePoints() const;
-	float getAttackRange() const;
 	float getReloadTime() const;
+	float getAttackRange() const;
 
 	void setDamagePoints(std::size_t damagePoints);
-	void setAttackRange(float attackRange);
 	void setReloadTime(float reloadTime);
+	void setAttackRange(float attackRange);
 
 private:
 	std::size_t damagePoints;
-	float attackRange;
 	float reloadTime;
+	float attackRange;
 };
 
 std::ostream& operator<<(std::ostream& os, const RangeAttackComponent& component);

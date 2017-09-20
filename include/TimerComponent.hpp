@@ -29,6 +29,7 @@ public:
 	void startTimer(const std::string& timer);
 	void stopTimer(const std::string& timer);
 
+	bool hasTimer(const std::string& timer) const;
 	bool hasTimerExpired(const std::string& timer) const;
 
 private:
