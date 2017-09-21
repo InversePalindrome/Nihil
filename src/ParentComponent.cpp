@@ -8,25 +8,31 @@ InversePalindrome.com
 #include "ParentComponent.hpp"
 
 
-ParentComponent::ParentComponent(std::size_t ID) :
-	Component("Parent"),
-	ID(ID)
+ParentComponent::ParentComponent() :
+	Component("ParentA"),
+	childID(-1)
+{
+}
+
+ParentComponent::ParentComponent(std::int32_t childID) :
+	Component("ParentB"),
+	childID(childID)
 {
 }
 
 std::ostream& operator<<(std::ostream& os, const ParentComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.ID;
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.childID;
 
 	return os;
 }
 
-std::size_t ParentComponent::getID() const
+std::int32_t ParentComponent::getChildID() const
 {
-	return this->ID;
+	return this->childID;
 }
 
-void ParentComponent::setID(std::size_t ID)
+void ParentComponent::setChildID(std::int32_t childID)
 {
-	this->ID = ID;
+	this->childID = childID;
 }

@@ -41,11 +41,11 @@ void AISystem::update(float deltaTime)
 		}
 	});
 
-	this->entities.for_each<RangeAttackComponent, PositionComponent, TimerComponent>([this](auto entity, auto& rangeAttack, auto& position, auto& timer)
+	this->entities.for_each<PatrolComponent, RangeAttackComponent, ParentComponent, PositionComponent, TimerComponent>([this](auto entity, auto& patrol, auto& rangeAttack, auto& parent, auto& position, auto& timer)
 	{
 		if (timer.hasTimer("Reload") && timer.hasTimerExpired("Reload") && this->isWithinRange(position.getPosition(), this->getTargetPosition(), rangeAttack.getAttackRange()))
 		{
-			this->events.broadcast(ShootProjectile{});
+			this->events.broadcast(ShootProjectile{ entity, rangeAttack.getProjectileID() });
 
 			timer.restartTimer("Reload");
 		}
@@ -142,7 +142,7 @@ sf::Vector2f AISystem::getTargetPosition() const
 	sf::Vector2f targetPosition;
 
 	this->entities.for_each<ControllableComponent, PositionComponent>([&targetPosition](auto entity, auto& controllable, auto& position) { targetPosition = position.getPosition(); });
-	
+
 	return targetPosition;
 }
 

@@ -139,26 +139,31 @@ void HubState::addGame()
 
 void HubState::deleteGame()
 {
-	for (const auto& gameButton : this->selectionButtons->GetMembers())
+	for (auto& gameButton = std::begin(this->selectionButtons->GetMembers()); gameButton != std::end(this->selectionButtons->GetMembers());)
 	{
-		if (gameButton._Get()->IsActive())
+		if (gameButton->_Get()->IsActive())
 		{
 			if (!this->stateData.games.empty())
 			{
-				auto gameIter = std::find_if(std::begin(this->stateData.games), std::end(this->stateData.games), [gameButton](const auto& game) { return game.getGameName() == gameButton._Get()->GetLabel(); });
+				auto gameIter = std::find_if(std::begin(this->stateData.games), std::end(this->stateData.games), [gameButton](const auto& game) { return game.getGameName() == gameButton->_Get()->GetLabel(); });
 
 				if (gameIter != std::end(this->stateData.games))
 				{
 					for (const auto& level : gameIter->getLevels())
 					{
-						std::remove(std::string("Resources/Files/Entities-" + gameButton._Get()->GetLabel() + '-' + level.name + ".txt").c_str());
+						std::remove(std::string("Resources/Files/Entities-" + gameButton->_Get()->GetLabel() + '-' + level.name + ".txt").c_str());
 					}
 
 					this->stateData.games.erase(gameIter);
 
-					gameButton._Get()->Show(false);
+					gameButton->_Get()->Show(false);
+					gameButton = this->selectionButtons->GetMembers().erase(gameButton);
 				}
 			}
+		}
+		else
+		{
+			++gameButton;
 		}
 	}
 

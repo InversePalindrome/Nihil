@@ -114,7 +114,7 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["Range"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component<RangeAttackComponent>(std::make_from_tuple<RangeAttackComponent>(parse<std::size_t, float, float>(line)));
+		entity.add_component<RangeAttackComponent>(std::make_from_tuple<RangeAttackComponent>(parse<std::string, float, float>(line)));
 	};
 
 	componentParsers["Animation"] = [this](auto& entity, auto& line)
@@ -134,14 +134,24 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 		entity.add_component<ParticleComponent>(std::get<0>(params), resourceManager);
 	};
 	
-	componentParsers["Parent"] = [this](auto& entity, auto& line)
+	componentParsers["ParentA"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component<ParentComponent>(std::make_from_tuple<ParentComponent>(parse<std::size_t>(line)));
+		entity.add_component<ParentComponent>();
 	};
 
-	componentParsers["Child"] = [this](auto& entity, auto& line)
+	componentParsers["ParentB"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component<ChildComponent>(std::make_from_tuple<ChildComponent>(parse<std::size_t>(line)));
+		entity.add_component<ParentComponent>(std::make_from_tuple<ParentComponent>(parse<std::int32_t>(line)));
+	};
+
+	componentParsers["ChildA"] = [this](auto& entity, auto& line)
+	{
+		entity.add_component<ChildComponent>();
+	};
+
+	componentParsers["ChildB"] = [this](auto& entity, auto& line)
+	{
+		entity.add_component<ChildComponent>(std::make_from_tuple<ChildComponent>(parse<std::int32_t>(line)));
 	};
 
 	componentParsers["Automated"] = [this](auto& entity, auto& line)

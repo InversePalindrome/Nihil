@@ -8,8 +8,14 @@ InversePalindrome.com
 #include "ChildComponent.hpp"
 
 
-ChildComponent::ChildComponent(std::size_t parentID) :
-	Component("Child"),
+ChildComponent::ChildComponent() :
+	Component("ChildA"),
+	parentID(-1)
+{
+}
+
+ChildComponent::ChildComponent(std::int32_t parentID) :
+	Component("ChildB"),
 	parentID(parentID)
 {
 }
@@ -21,7 +27,7 @@ std::ostream& operator<<(std::ostream& os, const ChildComponent& component)
 	return os;
 }
 
-std::size_t ChildComponent::getParentID() const
+std::int32_t ChildComponent::getParentID() const
 {
 	return this->parentID;
 }
@@ -32,7 +38,7 @@ const sf::Transform& ChildComponent::getTransform() const
 	return *this->transform;
 }
 
-void ChildComponent::setParentID(std::size_t parentID)
+void ChildComponent::setParentID(std::int32_t parentID)
 {
 	this->parentID = parentID;
 }

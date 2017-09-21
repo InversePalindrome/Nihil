@@ -16,6 +16,11 @@ RenderSystem::RenderSystem(Entities& entities, Events& events) :
 	System(entities, events)
 {
 	events.subscribe<entityplus::component_added<Entity, ChildComponent>>([this](const auto& event) { setParentTransforms(event.entity, event.component); });
+	events.subscribe<CreateTransform>([this](const auto& event) 
+	{
+		addNewTransform(event.child, event.parent);
+		setParentTransforms(event.childEntity, event.child); 
+	});
 }
 
 void RenderSystem::update(float deltaTime)
@@ -45,7 +50,7 @@ void RenderSystem::draw(sf::RenderTarget& target, sf::RenderStates states) const
 			}
 		}
 	});
-	entities.for_each<ParticleComponent>([&target, states](auto entity, auto& particle)
+	this->entities.for_each<ParticleComponent>([&target, states](auto entity, auto& particle)
 	{
 		target.draw(particle, states); 
 	});
@@ -55,13 +60,33 @@ void RenderSystem::setParentTransforms(Entity entity, ChildComponent& child)
 {
 	auto& entityList = entities.get_entities<ParentComponent>();
 	
-	auto foundEntity = std::find_if(std::begin(entityList), std::end(entityList), [&child](auto& parentEntity) { return child.getParentID() == parentEntity.get_component<ParentComponent>().getID(); });
+	auto foundEntity = std::find_if(std::begin(entityList), std::end(entityList), [&child](auto& parentEntity) { return child.getParentID() != -1 && child.getParentID() == parentEntity.get_component<ParentComponent>().getChildID(); });
 
 	if (foundEntity != std::end(entityList))
 	{
 		child.setTransform(foundEntity->get_component<SpriteComponent>().getTransform());
+		this->transformationIDs.emplace(child.getParentID());
 	}
 }
+
+void RenderSystem::addNewTransform(ChildComponent& child, ParentComponent& parent)
+{
+	child.setParentID(this->getNewTransformationID());
+	parent.setChildID(this->getNewTransformationID());
+}
+
+std::int32_t RenderSystem::getNewTransformationID() const
+{
+	if (!this->transformationIDs.empty())
+	{
+		return *(std::rbegin(this->transformationIDs));
+	}
+	else
+	{
+		return 0;
+	}
+}
+
 
 bool RenderSystem::isInsideView(const sf::View& view, const SpriteComponent& sprite) const
 {

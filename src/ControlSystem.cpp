@@ -10,8 +10,7 @@ InversePalindrome.com
 
 ControlSystem::ControlSystem(Entities& entities, Events& events, InputHandler& inputHandler) :
 	System(entities, events),
-	inputHandler(inputHandler),
-	timeSinceJump(0.f)
+	inputHandler(inputHandler)
 {
 	events.subscribe<entityplus::component_added<Entity, ControllableComponent>>([&events](const auto& event)
 	{
@@ -24,15 +23,15 @@ ControlSystem::ControlSystem(Entities& entities, Events& events, InputHandler& i
 
 void ControlSystem::update(float deltaTime)
 {
-	this->entities.for_each<ControllableComponent>(
-		[this, deltaTime](auto entity, auto& component)
+	this->entities.for_each<ControllableComponent, TimerComponent>(
+		[this, deltaTime](auto entity, auto& controllable, auto& timer)
 	{
-		this->reactToInput(entity, deltaTime);
+		this->reactToInput(entity, timer);
 		this->events.broadcast(MoveCamera{ entity });
 	});
 }
 
-void ControlSystem::reactToInput(Entity entity, float deltaTime)
+void ControlSystem::reactToInput(Entity entity, TimerComponent& timer)
 {
 	if (this->inputHandler.isActive("Move Left"))
 	{
@@ -42,11 +41,15 @@ void ControlSystem::reactToInput(Entity entity, float deltaTime)
 	{
 		this->events.broadcast(DirectionChanged{ entity, Direction::Right });
 	}
-	else if (this->inputHandler.isActive("Jump") && this->timeSinceJump > this->jumpInterval)
+	else if (this->inputHandler.isActive("Shoot") && entity.has_component<RangeAttackComponent>() && timer.hasTimer("Reload") && timer.hasTimerExpired("Reload"))
+	{
+		this->events.broadcast(ShootProjectile{ entity, entity.get_component<RangeAttackComponent>().getProjectileID() });
+		
+		timer.restartTimer("Reload");
+	}
+	else if (this->inputHandler.isActive("Jump") && timer.hasTimer("JumpInterval") && timer.hasTimerExpired("JumpInterval"))
 	{
 		this->events.broadcast(Jumped{ entity });
-		this->timeSinceJump = 0.f;
+		timer.restartTimer("JumpInterval");
 	}
-
-	this->timeSinceJump += deltaTime;
 }

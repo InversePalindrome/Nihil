@@ -8,9 +8,9 @@ InversePalindrome.com
 #include "RangeAttackComponent.hpp"
 
 
-RangeAttackComponent::RangeAttackComponent(std::size_t damagePoints, float reloadTime, float attackRange) :
+RangeAttackComponent::RangeAttackComponent(const std::string& projectileID, float reloadTime, float attackRange) :
 	Component("Range"),
-	damagePoints(damagePoints),
+	projectileID(projectileID),
 	reloadTime(reloadTime),
 	attackRange(attackRange)
 {
@@ -18,14 +18,14 @@ RangeAttackComponent::RangeAttackComponent(std::size_t damagePoints, float reloa
 
 std::ostream& operator<<(std::ostream& os, const RangeAttackComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.damagePoints << ' ' << component.reloadTime << ' ' << component.attackRange;
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.projectileID << ' ' << component.reloadTime << ' ' << component.attackRange;
 
 	return os;
 }
 
-std::size_t RangeAttackComponent::getDamagePoints() const
+std::string RangeAttackComponent::getProjectileID() const
 {
-	return this->damagePoints;
+	return this->projectileID;
 }
 
 float RangeAttackComponent::getReloadTime() const
@@ -38,9 +38,9 @@ float RangeAttackComponent::getAttackRange() const
 	return this->attackRange;
 }
 
-void RangeAttackComponent::setDamagePoints(std::size_t damagePoints)
+void RangeAttackComponent::setProjectileID(const std::string& projectileID)
 {
-	this->damagePoints = damagePoints;
+	this->projectileID = projectileID;
 }
 
 void RangeAttackComponent::setReloadTime(float reloadTime)

@@ -33,7 +33,7 @@ EntityManager::EntityManager(b2World& world, ResourceManager& resourceManager, S
 	systems["State"] = std::make_unique<StateSystem>(entityManager, eventManager);
 	systems["Physics"] = std::make_unique<PhysicsSystem>(entityManager, eventManager, world, collisionsData);
 	systems["AI"] = std::make_unique<AISystem>(entityManager, eventManager, pathways);
-	systems["Combat"] = std::make_unique<CombatSystem>(entityManager, eventManager);
+	systems["Combat"] = std::make_unique<CombatSystem>(entityManager, eventManager, componentParser);
 	systems["Animator"] = std::make_unique<AnimatorSystem>(entityManager, eventManager);
 	systems["Sound"] = std::make_unique<SoundSystem>(entityManager, eventManager, soundManager);
 	systems["Effects"] = std::make_unique<EffectsSystem>(entityManager, eventManager);
