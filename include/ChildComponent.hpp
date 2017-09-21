@@ -20,16 +20,17 @@ class ChildComponent : public Component
 	friend std::ostream& operator<<(std::ostream& os, const ChildComponent& component);
 
 public:
-	ChildComponent(std::size_t parentID);
+	ChildComponent();
+	ChildComponent(std::int32_t parentID);
 
-	std::size_t getParentID() const;
+	std::int32_t getParentID() const;
 	const sf::Transform& getTransform() const;
 
-	void setParentID(std::size_t parentID);
+	void setParentID(std::int32_t parentID);
 	void setTransform(const sf::Transform& transform);
 
 private:
-	std::size_t parentID;
+	std::int32_t parentID;
 	const sf::Transform* transform;
 };
 

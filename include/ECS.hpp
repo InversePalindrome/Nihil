@@ -48,6 +48,7 @@ struct DisplayHealthBar;
 struct PlayerDied;
 struct CrossedWaypoint;
 struct ShootProjectile;
+struct CreateTransform;
 
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, 
@@ -64,7 +65,7 @@ using Entities = entityplus::entity_manager<Components, Tags>;
 
 using Events = entityplus::event_manager<Components, Tags, DirectionChanged, Jumped, StopMovement, CombatOcurred, ChangeState,
 	StateChanged, Teleported, DestroyEntity, EmitSound, PickedUpCoin, TouchedTrampoline, MoveCamera, DisplayHealthBar,
-    PlayerDied, CrossedWaypoint, ShootProjectile>;
+    PlayerDied, CrossedWaypoint, ShootProjectile, CreateTransform>;
 
 using Entity = Entities::entity_t;
 
@@ -153,5 +154,13 @@ struct CrossedWaypoint
 
 struct ShootProjectile
 {
-	std::size_t damagePoints;
+	Entity shooter;
+	std::string projectileID; 
+};
+
+struct CreateTransform
+{
+	Entity childEntity;
+	ChildComponent& child;
+	ParentComponent& parent;
 };

@@ -20,14 +20,15 @@ class ParentComponent : public Component
 	friend std::ostream& operator<<(std::ostream& os, const ParentComponent& component);
 
 public:
-	ParentComponent(std::size_t ID);
+	ParentComponent();
+	ParentComponent(std::int32_t childID);
 
-	std::size_t getID() const;
+	std::int32_t getChildID() const;
 
-	void setID(std::size_t ID);
+	void setChildID(std::int32_t childID);
 
 private:
-	std::size_t ID;
+	std::int32_t childID;
 };
 
 std::ostream& operator<<(std::ostream& os, const ParentComponent& component);
