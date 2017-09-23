@@ -29,6 +29,8 @@ public:
 	void parseBlueprint(const std::string& pathFile);
 	void parseEntities(const std::string& pathFile);
 
+	void setComponentsID(Entity entity, std::int32_t entityID);
+
 private:
 	Entities& entities;
 	b2World& world;

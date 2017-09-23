@@ -15,6 +15,7 @@ InversePalindrome.com
 #include "HealthComponent.hpp"
 #include "MeleeAttackComponent.hpp"
 #include "RangeAttackComponent.hpp"
+#include "ProjectileComponent.hpp"
 #include "AnimationComponent.hpp"
 #include "SoundComponent.hpp"
 #include "ParticleComponent.hpp"
@@ -51,15 +52,15 @@ struct ShootProjectile;
 struct CreateTransform;
 
 
-using Components = entityplus::component_list<PositionComponent, StateComponent, 
-	PhysicsComponent, PatrolComponent, HealthComponent, MeleeAttackComponent, RangeAttackComponent, SpriteComponent, AnimationComponent, SoundComponent,
-    ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, ChaseComponent, TimerComponent>;
+using Components = entityplus::component_list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
+	HealthComponent, MeleeAttackComponent, RangeAttackComponent, ProjectileComponent, SpriteComponent, AnimationComponent, 
+	SoundComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, ChaseComponent>;
 
 using Tags = entityplus::tag_list<>;
 
-using ComponentList = brigand::list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent,
-	HealthComponent, MeleeAttackComponent, RangeAttackComponent, SpriteComponent, AnimationComponent, SoundComponent,
-	ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, ChaseComponent, TimerComponent>;
+using ComponentList = brigand::list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
+	HealthComponent, MeleeAttackComponent, RangeAttackComponent, ProjectileComponent, SpriteComponent, AnimationComponent,
+	SoundComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, ChaseComponent>;
 
 using Entities = entityplus::entity_manager<Components, Tags>;
 

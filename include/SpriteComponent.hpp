@@ -23,7 +23,6 @@ class SpriteComponent : public Component, public sf::Drawable
 
 public:
 	SpriteComponent(ResourceManager& resourceManager, TexturesID textureID);
-	SpriteComponent(ResourceManager& resourceManager, TexturesID textureID, const sf::IntRect& textureRect);
 	SpriteComponent(ResourceManager& resourceManager, TexturesID textureID, const sf::IntRect& textureRect, const sf::Vector2f& scale);
 
 	TexturesID getTextureID() const;
@@ -32,6 +31,7 @@ public:
 	const sf::Transform& getTransform() const;
 
 	void setPosition(const sf::Vector2f& position);
+	void setRotation(float rotation);
 
 private:
 	TexturesID textureID;

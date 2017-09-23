@@ -7,8 +7,9 @@ InversePalindrome.com
 
 #pragma once
 
-#include "ObjectType.hpp"
 #include "Component.hpp"
+#include "Direction.hpp"
+#include "ObjectType.hpp"
 
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2World.h>
@@ -35,6 +36,7 @@ public:
 	float getMass() const;
 	float getMaxVelocity() const;
 	float getAccelerationRate() const;
+	Direction getDirection() const;
 	std::int8_t getCollisionGroup() const;
 
 	void setPosition(const b2Vec2& position);
@@ -42,6 +44,7 @@ public:
 	void setMaxVelocity(float maxVelocity);
 	void setAccelerationRate(float accelerationRate);
 	void setGravityScale(float gravityScale);
+	void setDirection(Direction direction);
 
 	void applyForce(const b2Vec2& force);
 	void applyImpulse(const b2Vec2& impulse);
@@ -56,6 +59,7 @@ private:
 
 	float maxVelocity;
 	float accelerationRate;
+	Direction direction;
 };
 
 std::ostream& operator<<(std::ostream& os, const PhysicsComponent& component);
