@@ -16,13 +16,8 @@ SpriteComponent::SpriteComponent(ResourceManager& resourceManager, TexturesID te
 	sprite.setOrigin(sprite.getLocalBounds().width / 2.f, sprite.getLocalBounds().height / 2.f);
 }
 
-SpriteComponent::SpriteComponent(ResourceManager& resourceManager, TexturesID textureID, const sf::IntRect& textureRect) :
-	SpriteComponent(resourceManager, textureID, textureRect, sf::Vector2f(1.f, 1.f))
-{
-}
-
 SpriteComponent::SpriteComponent(ResourceManager& resourceManager, TexturesID textureID, const sf::IntRect& textureRect, const sf::Vector2f& scale) :
-	Component("SpriteA"),
+	Component("SpriteB"),
 	textureID(textureID),
 	sprite(resourceManager.getTexture(textureID), textureRect)
 {
@@ -62,6 +57,11 @@ const sf::Transform& SpriteComponent::getTransform() const
 void SpriteComponent::setPosition(const sf::Vector2f& position)
 {
 	this->sprite.setPosition(position);
+}
+
+void SpriteComponent::setRotation(float rotation)
+{
+	this->sprite.setRotation(rotation);
 }
 
 void SpriteComponent::draw(sf::RenderTarget& target, sf::RenderStates states) const 

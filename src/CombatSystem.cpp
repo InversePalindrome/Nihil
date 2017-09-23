@@ -6,7 +6,7 @@ InversePalindrome.com
 
 
 #include "CombatSystem.hpp"
-
+#include <iostream>
 
 CombatSystem::CombatSystem(Entities& entities, Events& events, ComponentParser& componentParser) :
 	System(entities, events),
@@ -51,11 +51,39 @@ void CombatSystem::handleCombat(Entity attacker, Entity victim)
 
 void CombatSystem::shootProjectile(Entity shooter, const std::string& projectileID)
 {
-	auto& projectile = this->componentParser.parseComponents("Resources/Files/" + projectileID + ".txt");
+	auto& projectileEntity = this->componentParser.parseComponents("Resources/Files/" + projectileID + ".txt");
 	
-	if (shooter.has_component<ParentComponent>() && projectile.has_component<ChildComponent>())
+	this->componentParser.setComponentsID(projectileEntity, -1);
+	
+	if (shooter.has_component<ParentComponent>() && projectileEntity.has_component<ChildComponent>())
 	{
-		this->events.broadcast(CreateTransform{ projectile, projectile.get_component<ChildComponent>(), shooter.get_component<ParentComponent>() });
+		this->events.broadcast(CreateTransform{ projectileEntity, projectileEntity.get_component<ChildComponent>(), shooter.get_component<ParentComponent>() });
+	}
+	if (shooter.has_component<PhysicsComponent>() && projectileEntity.has_component<ProjectileComponent>() && projectileEntity.has_component<PhysicsComponent>()
+		&& projectileEntity.has_component<SpriteComponent>())
+	{
+		const auto& shooterPhysics = shooter.get_component<PhysicsComponent>();
+		
+		auto& projectileComponent = projectileEntity.get_component<ProjectileComponent>();
+		auto& projectilePhysics = projectileEntity.get_component<PhysicsComponent>();
+		auto& projectileSprite = projectileEntity.get_component<SpriteComponent>();
+
+		const auto& position = projectileEntity.get_component<PositionComponent>().getPosition();
+		std::cout << position.x << '\n';
+
+		switch (shooterPhysics.getDirection())
+		{
+		case Direction::Left:
+			projectilePhysics.setPosition(b2Vec2(projectilePhysics.getPosition().x - shooterPhysics.getBodySize().x, projectilePhysics.getPosition().y));
+			projectilePhysics.applyForce(b2Vec2(-projectileComponent.getSpeed(), 0.f));
+			projectileSprite.setRotation(180.f);
+			break;
+		case Direction::Right:
+			projectilePhysics.setPosition(b2Vec2(projectilePhysics.getPosition().x + shooterPhysics.getBodySize().x, projectilePhysics.getPosition().y));
+			projectilePhysics.applyForce(b2Vec2(projectileComponent.getSpeed(), 0.f));
+			projectileSprite.setRotation(0.f);
+			break;
+		}
 	}
 }
 

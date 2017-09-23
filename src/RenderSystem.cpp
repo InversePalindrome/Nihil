@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #include "RenderSystem.hpp"
+#include "UnitConverter.hpp"
 #include "SpriteComponent.hpp"
 #include "PositionComponent.hpp"
 
@@ -38,16 +39,13 @@ void RenderSystem::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{ 
 		if (this->isInsideView(target.getView(), sprite))
 		{
-			if (entity.has_component<ChildComponent>())
-			{
-				states.transform *= entity.get_component<ChildComponent>().getTransform();
+			target.draw(sprite);
+		}
+		else if (entity.has_component<ChildComponent>())
+		{
+			states.transform *= entity.get_component<ChildComponent>().getTransform();
 
-				target.draw(sprite, states);
-			}
-			else
-			{
-				target.draw(sprite);
-			}
+			target.draw(sprite, states);
 		}
 	});
 	this->entities.for_each<ParticleComponent>([&target, states](auto entity, auto& particle)
@@ -56,30 +54,52 @@ void RenderSystem::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	});
 }
 
-void RenderSystem::setParentTransforms(Entity entity, ChildComponent& child)
+void RenderSystem::setParentTransforms(Entity childEntity, ChildComponent& child)
 {
-	auto& entityList = entities.get_entities<ParentComponent>();
+	auto& parents = entities.get_entities<ParentComponent>();
 	
-	auto foundEntity = std::find_if(std::begin(entityList), std::end(entityList), [&child](auto& parentEntity) { return child.getParentID() != -1 && child.getParentID() == parentEntity.get_component<ParentComponent>().getChildID(); });
+	auto foundEntity = std::find_if(std::begin(parents), std::end(parents), [&child](auto& parentEntity) { return child.getParentID() != -1 && child.getParentID() == parentEntity.get_component<ParentComponent>().getChildID(); });
 
-	if (foundEntity != std::end(entityList))
+	if (foundEntity != std::end(parents))
 	{
 		child.setTransform(foundEntity->get_component<SpriteComponent>().getTransform());
 		this->transformationIDs.emplace(child.getParentID());
+
+		if (foundEntity->has_component<PositionComponent>())
+		{
+			const auto& parentPosition = foundEntity->get_component<PositionComponent>().getPosition();
+
+			if (childEntity.has_component<PositionComponent>())
+			{
+				childEntity.get_component<PositionComponent>().setPosition(foundEntity->get_component<PositionComponent>().getPosition());
+			}
+			if (childEntity.has_component<PhysicsComponent>())
+			{
+				childEntity.get_component<PhysicsComponent>().setPosition(
+					b2Vec2(UnitConverter::pixelsToMeters(parentPosition.x), UnitConverter::pixelsToMeters(-parentPosition.y)));
+			}
+		}
 	}
 }
 
 void RenderSystem::addNewTransform(ChildComponent& child, ParentComponent& parent)
 {
-	child.setParentID(this->getNewTransformationID());
-	parent.setChildID(this->getNewTransformationID());
+	if (parent.getChildID() < 0)
+	{
+		parent.setChildID(this->getNewTransformationID());
+		child.setParentID(this->getNewTransformationID());
+	}
+	else
+	{
+		child.setParentID(parent.getChildID());
+	}
 }
 
 std::int32_t RenderSystem::getNewTransformationID() const
 {
 	if (!this->transformationIDs.empty())
 	{
-		return *(std::rbegin(this->transformationIDs));
+		return *(std::rbegin(this->transformationIDs)) + 1;
 	}
 	else
 	{
@@ -87,14 +107,13 @@ std::int32_t RenderSystem::getNewTransformationID() const
 	}
 }
 
-
 bool RenderSystem::isInsideView(const sf::View& view, const SpriteComponent& sprite) const
 {
 	const auto& left = view.getCenter().x - view.getSize().x / 2.f;
 	const auto& right = view.getCenter().x + view.getSize().x / 2.f;
 	const auto& top = view.getCenter().y - view.getSize().y / 2.f;
 	const auto& bottom = view.getCenter().y + view.getSize().y / 2.f;
-
+	 
 	return sprite.getPosition().x > left && sprite.getPosition().x < right
 		   && sprite.getPosition().y > top && sprite.getPosition().y < bottom;
 }

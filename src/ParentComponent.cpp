@@ -9,8 +9,7 @@ InversePalindrome.com
 
 
 ParentComponent::ParentComponent() :
-	Component("ParentA"),
-	childID(-1)
+	ParentComponent(-1)
 {
 }
 

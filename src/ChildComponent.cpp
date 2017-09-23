@@ -9,8 +9,7 @@ InversePalindrome.com
 
 
 ChildComponent::ChildComponent() :
-	Component("ChildA"),
-	parentID(-1)
+	ChildComponent(-1)
 {
 }
 
@@ -18,7 +17,7 @@ ChildComponent::ChildComponent(std::int32_t parentID) :
 	Component("ChildB"),
 	parentID(parentID)
 {
-}
+} 
 
 std::ostream& operator<<(std::ostream& os, const ChildComponent& component)
 {
@@ -34,7 +33,6 @@ std::int32_t ChildComponent::getParentID() const
 
 const sf::Transform& ChildComponent::getTransform() const
 {
-	
 	return *this->transform;
 }
 

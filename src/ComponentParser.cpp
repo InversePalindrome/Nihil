@@ -34,12 +34,12 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["TimerB"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component<TimerComponent>(std::make_from_tuple<TimerComponent>(parse<std::string>(line)));
+		entity.add_component(std::make_from_tuple<TimerComponent>(parse<std::string>(line)));
 	};
 
 	componentParsers["PositionA"] = [this](auto& entity, auto& line) 
 	{
-		entity.add_component<PositionComponent>(std::make_from_tuple<PositionComponent>(parse<float, float>(line)));
+		entity.add_component(std::make_from_tuple<PositionComponent>(parse<float, float>(line)));
 	};
 
 	componentParsers["PositionB"] = [this](auto& entity, auto& line)
@@ -76,10 +76,17 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["Chase"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component<ChaseComponent>(std::make_from_tuple<ChaseComponent>(parse<float>(line)));
+		entity.add_component(std::make_from_tuple<ChaseComponent>(parse<float>(line)));
 	};
 
 	componentParsers["SpriteA"] = [this, &resourceManager](auto& entity, auto& line)
+	{
+		auto& params = parse<std::size_t>(line);
+
+		entity.add_component<SpriteComponent>(resourceManager, static_cast<TexturesID>(std::get<0>(params)));
+	};
+
+	componentParsers["SpriteB"] = [this, &resourceManager](auto& entity, auto& line)
 	{
 		auto& params = parse<std::size_t, std::size_t, std::size_t, std::size_t, std::size_t, float, float>(line);
 
@@ -87,39 +94,29 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 			sf::IntRect(std::get<1>(params), std::get<2>(params), std::get<3>(params), std::get<4>(params)), sf::Vector2f(std::get<5>(params), std::get<6>(params)));
 	};
 
-	componentParsers["SpriteB"] = [this, &resourceManager](auto& entity, auto& line)
-	{
-		auto& params = parse<std::size_t, std::size_t, std::size_t, std::size_t, std::size_t>(line);
-
-		entity.add_component<SpriteComponent>(resourceManager, static_cast<TexturesID>(std::get<0>(params)),
-			sf::IntRect(std::get<1>(params), std::get<2>(params), std::get<3>(params), std::get<4>(params)));
-	};
-
-	componentParsers["SpriteC"] = [this, &resourceManager](auto& entity, auto& line)
-	{
-		auto& params = parse<std::size_t>(line);
-
-		entity.add_component<SpriteComponent>(resourceManager, static_cast<TexturesID>(std::get<0>(params)));
-	};
-
 	componentParsers["Health"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component<HealthComponent>(std::make_from_tuple<HealthComponent>(parse<std::size_t>(line)));
+		entity.add_component(std::make_from_tuple<HealthComponent>(parse<std::size_t>(line)));
 	};
 
 	componentParsers["Melee"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component<MeleeAttackComponent>(std::make_from_tuple<MeleeAttackComponent>(parse<std::size_t>(line)));
+		entity.add_component(std::make_from_tuple<MeleeAttackComponent>(parse<std::size_t>(line)));
 	};
 
 	componentParsers["Range"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component<RangeAttackComponent>(std::make_from_tuple<RangeAttackComponent>(parse<std::string, float, float>(line)));
+		entity.add_component(std::make_from_tuple<RangeAttackComponent>(parse<std::string, float, float>(line)));
+	};
+
+	componentParsers["Projectile"] = [this](auto& entity, auto& line)
+	{
+		entity.add_component(std::make_from_tuple<ProjectileComponent>(parse<float, float>(line)));
 	};
 
 	componentParsers["Animation"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component<AnimationComponent>(std::make_from_tuple<AnimationComponent>(parse<std::string>(line)));
+		entity.add_component(std::make_from_tuple<AnimationComponent>(parse<std::string>(line)));
 	};
 
 	componentParsers["Sound"] = [this](auto& entity, auto& line)
@@ -141,7 +138,7 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["ParentB"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component<ParentComponent>(std::make_from_tuple<ParentComponent>(parse<std::int32_t>(line)));
+		entity.add_component(std::make_from_tuple<ParentComponent>(parse<std::int32_t>(line)));
 	};
 
 	componentParsers["ChildA"] = [this](auto& entity, auto& line)
@@ -151,12 +148,12 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["ChildB"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component<ChildComponent>(std::make_from_tuple<ChildComponent>(parse<std::int32_t>(line)));
+		entity.add_component(std::make_from_tuple<ChildComponent>(parse<std::int32_t>(line)));
 	};
 
 	componentParsers["Automated"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component<AutomatedComponent>(std::make_from_tuple<AutomatedComponent>(parse<std::string>(line)));
+		entity.add_component(std::make_from_tuple<AutomatedComponent>(parse<std::string>(line)));
 	};
 }
 
@@ -186,15 +183,7 @@ Entity ComponentParser::parseComponents(std::int32_t entityID, const std::string
 		this->componentParsers[componentName](entity, line);
 	}
 
-	brigand::for_each<ComponentList>([&entity, entityID, this](auto componentType)
-	{
-		using Type = decltype(componentType)::type;
-
-		if (entity.has_component<Type>())
-		{
-			entity.get_component<Type>().setEntityID(entityID);
-		}
-	});
+	this->setComponentsID(entity, entityID);
 
 	if (this->currentEntityID < std::abs(entityID))
 	{
@@ -262,34 +251,37 @@ void ComponentParser::parseEntities(const std::string& pathFile)
 		}
 		else
 		{
-   			line.erase(std::begin(line), std::begin(line) + category.size());
-			
+			line.erase(std::begin(line), std::begin(line) + category.size());
+
 			this->componentParsers[category](entitiesIDs[entityID], line);
 		}
 	}
 
 	for (auto& entity : entitiesIDs)
 	{
-		brigand::for_each<ComponentList>([&entity, this](auto componentType)
-		{
-			entity.second.sync();
-			
-			using Type = decltype(componentType)::type;
-			
-			if (entity.second.has_component<Type>())
-			{
-				entity.second.get_component<Type>().setEntityID(entity.first);
+		this->setComponentsID(entity.second, entity.first);
+	}
 
-				if (this->currentEntityID < std::abs(entity.first))
-				{
-					this->currentEntityID = std::abs(entity.first);
-				}
-			}
-		});
+	if (!entitiesIDs.empty())
+	{
+		this->currentEntityID = std::rbegin(entitiesIDs)->first;
 	}
 }
 
 Entity ComponentParser::createEntity()
 {
 	return this->entities.create_entity();
+}
+
+void ComponentParser::setComponentsID(Entity entity, std::int32_t entityID)
+{
+	brigand::for_each<ComponentList>([&entity, entityID](auto componentType)
+	{
+		using Type = decltype(componentType)::type;
+
+		if (entity.has_component<Type>())
+		{
+			entity.get_component<Type>().setEntityID(entityID);
+		}
+	});
 }

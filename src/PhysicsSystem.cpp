@@ -37,6 +37,8 @@ void PhysicsSystem::moveEntity(Entity entity, Direction direction)
 {
 	auto& physics = entity.get_component<PhysicsComponent>();
 
+	physics.setDirection(direction);
+
 	const auto& currentVelocity = physics.getVelocity();
 	
 	b2Vec2 newVelocity(0.f, 0.f);
@@ -47,13 +49,16 @@ void PhysicsSystem::moveEntity(Entity entity, Direction direction)
 	case Direction::Right:
 		newVelocity.x = b2Min(currentVelocity.x + physics.getAccelerationRate(), physics.getMaxVelocity());
 		deltaVelocity.x = newVelocity.x - currentVelocity.x;
-		this->events.broadcast(ChangeState{ entity, EntityState::Walking });
 		break;
 	case Direction::Left:
 		newVelocity.x = b2Max(currentVelocity.x - physics.getAccelerationRate(), -physics.getMaxVelocity());
 		deltaVelocity.x = newVelocity.x - currentVelocity.x;
-		this->events.broadcast(ChangeState{ entity, EntityState::Walking });
 		break;
+	}
+
+	if (entity.has_component<StateComponent>())
+	{
+		this->events.broadcast(ChangeState{ entity, EntityState::Walking });
 	}
 
 	const auto& impulse = b2Vec2(deltaVelocity.x * physics.getMass(), deltaVelocity.y * physics.getMass());
@@ -104,7 +109,7 @@ void PhysicsSystem::convertPositionCoordinates(const PhysicsComponent& physics, 
 
 void PhysicsSystem::checkIfStatic(Entity entity, const PhysicsComponent& physics)
 {
-	if (physics.getVelocity() == b2Vec2(0.f, 0.f))
+	if (entity.has_component<StateComponent>() && physics.getVelocity() == b2Vec2(0.f, 0.f))
 	{
 		this->events.broadcast(ChangeState{ entity, EntityState::Idle });
 	}

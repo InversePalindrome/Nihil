@@ -47,6 +47,10 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2Bod
 	case ObjectType::Platform:
 		body->SetGravityScale(0.f);
 		break;
+	case ObjectType::Projectile:
+		body->SetGravityScale(0.f);
+		body->SetBullet(true);
+		break;
 	}
 }
 
@@ -98,6 +102,11 @@ float PhysicsComponent::getAccelerationRate() const
 	return this->accelerationRate;
 }
 
+Direction PhysicsComponent::getDirection() const
+{
+	return this->direction;
+}
+
 std::int8_t PhysicsComponent::getCollisionGroup() const
 {
 	return this->collisionGroup;
@@ -126,6 +135,11 @@ void PhysicsComponent::setAccelerationRate(float accelerationRate)
 void PhysicsComponent::setGravityScale(float gravityScale)
 {
 	this->body->SetGravityScale(gravityScale);
+}
+
+void PhysicsComponent::setDirection(Direction direction)
+{
+	this->direction = direction;
 }
 
 void PhysicsComponent::applyForce(const b2Vec2& force)
