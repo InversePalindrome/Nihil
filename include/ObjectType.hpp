@@ -7,5 +7,24 @@ InversePalindrome.com
 
 #pragma once
 
+#include <type_traits>
 
-enum class ObjectType { Tile, Player, Trap, Enemy, Portal, Pickup, Trampoline, Border, Platform, Waypoint, Projectile };
+
+enum class ObjectType : std::size_t
+{
+	Tile = (1 << 0), Player = (1 << 1), Trap = (1 << 2), Enemy = (1 << 3), Portal = (1 << 4), Pickup = (1 << 5), Trampoline = (1 << 6),
+	Border = (1 << 7), Platform = (1 << 8), Waypoint = (1 << 9), Projectile = (1 << 10),
+	Alive = Player | Enemy
+};
+
+using T = std::underlying_type_t<ObjectType>;
+
+constexpr ObjectType operator|(const ObjectType objectA, const ObjectType objectB)
+{
+	return static_cast<ObjectType>(static_cast<T>(objectA) | static_cast<T>(objectB));
+}
+
+constexpr T operator&(const ObjectType objectA, const ObjectType objectB)
+{
+	return static_cast<T>(objectA) & static_cast<T>(objectB);
+}

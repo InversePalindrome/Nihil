@@ -26,7 +26,7 @@ enum class TexturesID
 };
 enum class ImagesID { RedMonster };
 enum class FontsID { BITWONDER };
-enum class SoundBuffersID { Jump, Footsteps, Pickup };
+enum class SoundBuffersID { Undefined, Jump, Footsteps, Pickup, Laser };
 
 class ResourceManager
 {
@@ -35,7 +35,6 @@ public:
 	ResourceManager(const std::string& resourcesFilePath);
 	ResourceManager(const ResourceManager& resourceManager) = delete;
 	ResourceManager& operator=(const ResourceManager& resourceManager) = delete;
-
 
 	void loadResources(const std::string& resourcesFilePath);
 

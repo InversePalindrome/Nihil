@@ -10,7 +10,7 @@ InversePalindrome.com
 #include "Component.hpp"
 
 
-enum class EntityState { Idle, Walking, Jumping, Attacking, Dead };
+enum class EntityState { Idle, Walking, Jumping, Attacking };
 
 class StateComponent : public Component
 {

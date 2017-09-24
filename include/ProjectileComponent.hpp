@@ -8,6 +8,7 @@ InversePalindrome.com
 #pragma once
 
 #include "Component.hpp"
+#include "ResourceManager.hpp"
 
 
 class ProjectileComponent : public Component
@@ -15,17 +16,20 @@ class ProjectileComponent : public Component
 	friend std::ostream& operator<<(std::ostream& os, const ProjectileComponent& component);
 
 public:
-	ProjectileComponent(float damagePoints, float speed);
+	ProjectileComponent(std::size_t damagePoints, float speed, SoundBuffersID soundID);
 
-	float getDamagePoints() const;
+	std::size_t getDamagePoints() const;
 	float getSpeed() const;
+	SoundBuffersID getSoundID() const;
 
-	void setDamagePoints(float damagePoints);
+	void setDamagePoints(std::size_t damagePoints);
 	void setSpeed(float speed);
+	void setSoundID(SoundBuffersID soundID);
 
 private:
-	float damagePoints;
-	float speed;
+	std::size_t damagePoints;
+  	float speed;
+	SoundBuffersID soundID;
 };
 
 std::ostream& operator<<(std::ostream& os, const ProjectileComponent& component);
