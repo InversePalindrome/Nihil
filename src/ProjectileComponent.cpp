@@ -8,10 +8,11 @@ InversePalindrome.com
 #include "ProjectileComponent.hpp"
 
 
-ProjectileComponent::ProjectileComponent(float damagePoints, float speed):
+ProjectileComponent::ProjectileComponent(std::size_t damagePoints, float speed, SoundBuffersID soundID):
     Component("Projectile"),
 	damagePoints(damagePoints),
-	speed(speed)
+	speed(speed),
+	soundID(soundID)
 {
 }
 
@@ -22,7 +23,7 @@ std::ostream& operator<<(std::ostream& os, const ProjectileComponent& component)
 	return os;
 }
 
-float ProjectileComponent::getDamagePoints() const
+std::size_t ProjectileComponent::getDamagePoints() const
 {
 	return this->damagePoints;
 }
@@ -32,7 +33,12 @@ float ProjectileComponent::getSpeed() const
 	return this->speed;
 }
 
-void ProjectileComponent::setDamagePoints(float damagePoints)
+SoundBuffersID ProjectileComponent::getSoundID() const
+{
+	return this->soundID;
+}
+
+void ProjectileComponent::setDamagePoints(std::size_t damagePoints)
 {
 	this->damagePoints = damagePoints;
 }
@@ -40,4 +46,9 @@ void ProjectileComponent::setDamagePoints(float damagePoints)
 void ProjectileComponent::setSpeed(float speed)
 {
 	this->speed = speed;
+}
+
+void ProjectileComponent::setSoundID(SoundBuffersID soundID)
+{
+	this->soundID = soundID;
 }

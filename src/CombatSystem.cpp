@@ -6,7 +6,7 @@ InversePalindrome.com
 
 
 #include "CombatSystem.hpp"
-#include <iostream>
+
 
 CombatSystem::CombatSystem(Entities& entities, Events& events, ComponentParser& componentParser) :
 	System(entities, events),
@@ -32,20 +32,33 @@ void CombatSystem::update(float deltaTime)
 
 void CombatSystem::handleCombat(Entity attacker, Entity victim)
 {
-	const auto& damagePoints = attacker.get_component<MeleeAttackComponent>().getDamagePoints();
-	auto& health = victim.get_component<HealthComponent>();
+	std::size_t damagePoints = 0u;
 
-	if (health.getHitpoints() > 0u)
+	if (attacker.has_component<MeleeAttackComponent>())
 	{
-		health.setHitpoints(health.getHitpoints() - damagePoints);
+		damagePoints = attacker.get_component<MeleeAttackComponent>().getDamagePoints();
 	}
-	if (victim.has_component<ControllableComponent>())
+	else if (attacker.has_component<ProjectileComponent>())
 	{
-		this->events.broadcast(DisplayHealthBar{ victim });
+		damagePoints = attacker.get_component<ProjectileComponent>().getDamagePoints();
 	}
-	if (health.getHitpoints() == 0u)
+
+	if (victim.has_component<HealthComponent>())
 	{
-		this->events.broadcast(ChangeState{ victim, EntityState::Dead });
+		auto& health = victim.get_component<HealthComponent>();
+
+		if (health.getHitpoints() > 0u)
+		{
+			health.setHitpoints(health.getHitpoints() - damagePoints);
+		}
+		if (victim.has_component<ControllableComponent>())
+		{
+			this->events.broadcast(DisplayHealthBar{ victim });
+		}
+		if (health.getHitpoints() == 0u)
+		{
+			this->events.broadcast(DestroyEntity{ victim });
+		}
 	}
 }
 
@@ -68,22 +81,21 @@ void CombatSystem::shootProjectile(Entity shooter, const std::string& projectile
 		auto& projectilePhysics = projectileEntity.get_component<PhysicsComponent>();
 		auto& projectileSprite = projectileEntity.get_component<SpriteComponent>();
 
-		const auto& position = projectileEntity.get_component<PositionComponent>().getPosition();
-		std::cout << position.x << '\n';
-
 		switch (shooterPhysics.getDirection())
 		{
 		case Direction::Left:
-			projectilePhysics.setPosition(b2Vec2(projectilePhysics.getPosition().x - shooterPhysics.getBodySize().x, projectilePhysics.getPosition().y));
+			projectilePhysics.setPosition(b2Vec2(projectilePhysics.getPosition().x - projectilePhysics.getBodySize().x - 0.1f - shooterPhysics.getBodySize().x, projectilePhysics.getPosition().y));
 			projectilePhysics.applyForce(b2Vec2(-projectileComponent.getSpeed(), 0.f));
 			projectileSprite.setRotation(180.f);
 			break;
 		case Direction::Right:
-			projectilePhysics.setPosition(b2Vec2(projectilePhysics.getPosition().x + shooterPhysics.getBodySize().x, projectilePhysics.getPosition().y));
+			projectilePhysics.setPosition(b2Vec2(projectilePhysics.getPosition().x + projectilePhysics.getBodySize().x + 0.1f + shooterPhysics.getBodySize().x, projectilePhysics.getPosition().y));
 			projectilePhysics.applyForce(b2Vec2(projectileComponent.getSpeed(), 0.f));
 			projectileSprite.setRotation(0.f);
 			break;
 		}
+
+		this->events.broadcast(EmitSound{ projectileComponent.getSoundID(), false });
 	}
 }
 

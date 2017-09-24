@@ -97,12 +97,15 @@ void EntityManager::parseBlueprint(const std::string& pathFile)
 
 void EntityManager::destroyEntity(Entity entity)
 {
-	if (entity.has_component<PhysicsComponent>() && entity.get_component<PhysicsComponent>().getBody())
+	if (entity.get_status() != entityplus::entity_status::DELETED)
 	{
-		this->world.DestroyBody(entity.get_component<PhysicsComponent>().getBody());
-	}
+		if (entity.has_component<PhysicsComponent>() && entity.get_component<PhysicsComponent>().getBody())
+		{
+			this->world.DestroyBody(entity.get_component<PhysicsComponent>().getBody());
+		}
 
-	entity.destroy();
+		entity.destroy();
+	}
 }
 
 void EntityManager::destroyEntities()

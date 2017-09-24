@@ -111,7 +111,9 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["Projectile"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component(std::make_from_tuple<ProjectileComponent>(parse<float, float>(line)));
+		auto& params = this->parse<std::size_t, float, std::size_t>(line);
+
+		entity.add_component<ProjectileComponent>(std::get<0>(params), std::get<1>(params), static_cast<SoundBuffersID>(std::get<2>(params)));
 	};
 
 	componentParsers["Animation"] = [this](auto& entity, auto& line)

@@ -176,7 +176,10 @@ void CharactersState::loadCharacters(const std::string& filePath)
 
 void CharactersState::selectedCharacter(const std::string& character)
 {
-	this->stateData.games.front().setCharacterName(character);
+	if (!this->stateData.games.empty())
+	{
+		this->stateData.games.front().setCharacterName(character);
+	}
 }
 
 void CharactersState::purchasedCharacter(sfg::RadioButton::Ptr characterButton, sfg::Button::Ptr purchaseButton)

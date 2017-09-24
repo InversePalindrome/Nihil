@@ -32,6 +32,11 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 		{ 
 		    entityManager.destroyEntity(event.entity);
 		}); 
+
+		if (event.entity.has_component<ControllableComponent>())
+		{
+			entityManager.getEvents().broadcast(PlayerDied{});
+		}
 	});
 
 	entityManager.getEvents().subscribe<PlayerDied>([this, &stateData](const auto& event)
@@ -83,6 +88,9 @@ void GameState::update(float deltaTime)
 	const std::size_t positionIterations = 2u;
 
 	this->world.Step(timeStep, velocityIterations, positionIterations);
+	
+	this->entityManager.update(deltaTime);
+	this->coinDisplay.update(deltaTime);
 
 	for (auto& callback : this->callbacks)
 	{
@@ -90,9 +98,6 @@ void GameState::update(float deltaTime)
 	}
 
 	this->callbacks.clear();
-	
-	this->entityManager.update(deltaTime);
-	this->coinDisplay.update(deltaTime);
 }
 
 void GameState::draw()

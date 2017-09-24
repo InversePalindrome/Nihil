@@ -20,7 +20,7 @@ RenderSystem::RenderSystem(Entities& entities, Events& events) :
 	events.subscribe<CreateTransform>([this](const auto& event) 
 	{
 		addNewTransform(event.child, event.parent);
-		setParentTransforms(event.childEntity, event.child); 
+		setParentTransforms(event.childEntity, event.child);
 	});
 }
 
@@ -59,7 +59,7 @@ void RenderSystem::setParentTransforms(Entity childEntity, ChildComponent& child
 	auto& parents = entities.get_entities<ParentComponent>();
 	
 	auto foundEntity = std::find_if(std::begin(parents), std::end(parents), [&child](auto& parentEntity) { return child.getParentID() != -1 && child.getParentID() == parentEntity.get_component<ParentComponent>().getChildID(); });
-
+	
 	if (foundEntity != std::end(parents))
 	{
 		child.setTransform(foundEntity->get_component<SpriteComponent>().getTransform());

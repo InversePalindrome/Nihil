@@ -14,6 +14,7 @@ SoundSystem::SoundSystem(Entities& entities, Events& events, SoundManager& sound
 {
 	events.subscribe<StateChanged>([this](const auto& event) { changeSound(event.entity, event.state); });
 	events.subscribe<EmitSound>([&soundManager](const auto& event) { soundManager.playSound(event.soundBuffer, event.loop); });
+	events.subscribe<DestroyEntity>([this](const auto& event) { stopSound(event.entity); });
 }
 
 void SoundSystem::update(float deltaTime)
@@ -60,7 +61,10 @@ void SoundSystem::emitSound(Entity entity, SoundBuffersID soundBufferID, bool lo
 
 void SoundSystem::stopSound(Entity entity)
 {
-	this->soundManager.stopSound(entity.get_component<SoundComponent>().getSoundID());
+	if (entity.has_component<SoundComponent>())
+	{
+		this->soundManager.stopSound(entity.get_component<SoundComponent>().getSoundID());
+	}
 }
 
 void SoundSystem::updateListenerPosition(Entity entity)
