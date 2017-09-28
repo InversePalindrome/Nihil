@@ -76,7 +76,7 @@ void RenderSystem::setParentTransforms(Entity childEntity, ChildComponent& child
 			if (childEntity.has_component<PhysicsComponent>())
 			{
 				childEntity.get_component<PhysicsComponent>().setPosition(
-					b2Vec2(UnitConverter::pixelsToMeters(parentPosition.x), UnitConverter::pixelsToMeters(-parentPosition.y)));
+					b2Vec2(UnitConverter::pixelsToMeters(parentPosition.x + 0.1f), UnitConverter::pixelsToMeters(-parentPosition.y)));
 			}
 		}
 	}

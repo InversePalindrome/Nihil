@@ -18,9 +18,11 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 	auto* objectA = static_cast<CollisionData*>(contact->GetFixtureA()->GetBody()->GetUserData());
 	auto* objectB = static_cast<CollisionData*>(contact->GetFixtureB()->GetBody()->GetUserData());
 
-	if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Trap))
+	if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Movable, ObjectType::Border))
 	{
+		orderedCollision.value().first.get().entity.sync();
 
+		this->events.broadcast(DestroyEntity{ orderedCollision.value().first.get().entity });
 	}
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Enemy))
 	{
@@ -48,19 +50,13 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 
 		this->events.broadcast(TouchedTrampoline{ orderedCollision.value().first.get().entity });
 	}
-	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Border))
-	{
-		orderedCollision.value().first.get().entity.sync();
-
-		this->events.broadcast(DestroyEntity{ orderedCollision.value().first.get().entity });
-	}
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Enemy, ObjectType::Waypoint))
 	{
 		orderedCollision.value().first.get().entity.sync();
 
 		this->events.broadcast(CrossedWaypoint{ orderedCollision.value().first.get().entity });
 	}
-	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Projectile, ObjectType::Alive))
+	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Lethal, ObjectType::Alive))
 	{
 		orderedCollision.value().first.get().entity.sync();
 		orderedCollision.value().second.get().entity.sync();
@@ -69,11 +65,17 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 		this->events.broadcast(StopMovement{ orderedCollision.value().second.get().entity });
 	}
 
-	if (auto& collider = this->getCollider(objectA, objectB, ObjectType::Projectile))
+	if (auto& collider = this->getCollider(objectA, objectB, ObjectType::Bullet))
 	{
 		collider.value().get().entity.sync();
 
 		this->events.broadcast(DestroyEntity{ collider.value().get().entity });
+	}
+	else if (auto& collider = this->getCollider(objectA, objectB, ObjectType::Bomb))
+	{
+		collider.value().get().entity.sync();
+
+		this->events.broadcast(ActivateBomb{ collider.value().get().entity });
 	}
 }
 

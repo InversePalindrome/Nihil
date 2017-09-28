@@ -24,7 +24,8 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2Bod
 	objectType(objectType),
 	collisionGroup(collisionGroup),
 	maxVelocity(maxVelocity),
-	accelerationRate(accelerationRate)
+	accelerationRate(accelerationRate),
+	direction(Direction::Right)
 {
 	b2BodyDef bodyDefinition;
 	bodyDefinition.type = bodyType;
@@ -47,7 +48,7 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2Bod
 	case ObjectType::Platform:
 		body->SetGravityScale(0.f);
 		break;
-	case ObjectType::Projectile:
+	case ObjectType::Bullet:
 		body->SetGravityScale(0.f);
 		body->SetBullet(true);
 		break;

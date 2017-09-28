@@ -22,6 +22,11 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 	world(world),
 	currentEntityID(0)
 {
+	componentParsers["AI"] = [this](auto& entity, auto& line)
+	{
+		entity.set_tag<AI>(true);
+	};
+
 	componentParsers["Controllable"] = [this](auto& entity, auto& line)
 	{
 		entity.add_component<ControllableComponent>();
@@ -109,11 +114,18 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 		entity.add_component(std::make_from_tuple<RangeAttackComponent>(parse<std::string, float, float>(line)));
 	};
 
-	componentParsers["Projectile"] = [this](auto& entity, auto& line)
+	componentParsers["Bullet"] = [this](auto& entity, auto& line)
 	{
-		auto& params = this->parse<std::size_t, float, std::size_t>(line);
+		auto& params = this->parse<std::size_t, std::size_t, float>(line);
 
-		entity.add_component<ProjectileComponent>(std::get<0>(params), std::get<1>(params), static_cast<SoundBuffersID>(std::get<2>(params)));
+		entity.add_component<BulletComponent>(std::get<0>(params), static_cast<SoundBuffersID>(std::get<1>(params)), std::get<2>(params));
+	};
+
+	componentParsers["Bomb"] = [this](auto& entity, auto& line)
+	{
+		auto& params = this->parse<std::size_t, std::size_t, float, std::string>(line);
+
+		entity.add_component<BombComponent>(std::get<0>(params), static_cast<SoundBuffersID>(std::get<1>(params)), std::get<2>(params), std::get<3>(params));
 	};
 
 	componentParsers["Animation"] = [this](auto& entity, auto& line)

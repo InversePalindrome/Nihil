@@ -28,7 +28,7 @@ AISystem::AISystem(Entities& entities, Events& events, Pathways& pathways) :
 
 void AISystem::update(float deltaTime)
 {
-	this->entities.for_each<PatrolComponent, PositionComponent>([this](auto entity, auto& patrol, auto& position)
+	this->entities.for_each<AI, PatrolComponent, PositionComponent>([this](auto entity, auto& patrol, auto& position)
 	{
 		if (patrol.hasWaypoints())
 		{
@@ -41,11 +41,11 @@ void AISystem::update(float deltaTime)
 		}
 	});
 
-	this->entities.for_each<PatrolComponent, RangeAttackComponent, ParentComponent, PositionComponent, TimerComponent>([this](auto entity, auto& patrol, auto& rangeAttack, auto& parent, auto& position, auto& timer)
+	this->entities.for_each<AI, RangeAttackComponent, ParentComponent, PositionComponent, TimerComponent>([this](auto entity, auto& rangeAttack, auto& parent, auto& position, auto& timer)
 	{
 		if (timer.hasTimer("Reload") && timer.hasTimerExpired("Reload") && this->isWithinRange(position.getPosition(), this->getTargetPosition(), rangeAttack.getAttackRange()))
 		{
-			this->events.broadcast(ShootProjectile{ entity, rangeAttack.getProjectileID() });
+			this->events.broadcast(ShootProjectile{ entity, rangeAttack.getProjectileID(), this->getTargetPosition() });
 
 			timer.restartTimer("Reload");
 		}
@@ -85,7 +85,10 @@ void AISystem::addPathway(Entity entity, PatrolComponent& patrol)
 
 void AISystem::changeWaypoint(Entity entity)
 {
-	entity.get_component<PatrolComponent>().moveToNextWaypoint();
+	if (entity.has_component<PatrolComponent>())
+	{
+		entity.get_component<PatrolComponent>().moveToNextWaypoint();
+	}
 }
 
 void AISystem::chaseTarget(PatrolComponent& patrol, const sf::Vector2f& AIPosition, const sf::Vector2f& targetPosition)
