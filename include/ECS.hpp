@@ -15,7 +15,8 @@ InversePalindrome.com
 #include "HealthComponent.hpp"
 #include "MeleeAttackComponent.hpp"
 #include "RangeAttackComponent.hpp"
-#include "ProjectileComponent.hpp"
+#include "BulletComponent.hpp"
+#include "BombComponent.hpp"
 #include "AnimationComponent.hpp"
 #include "SoundComponent.hpp"
 #include "ParticleComponent.hpp"
@@ -33,6 +34,8 @@ InversePalindrome.com
 #include <entityplus/event.h>
 
 
+struct AI;
+
 struct DirectionChanged;
 struct Jumped;
 struct StopMovement;
@@ -49,26 +52,28 @@ struct DisplayHealthBar;
 struct PlayerDied;
 struct CrossedWaypoint;
 struct ShootProjectile;
+struct ActivateBomb;
+struct BombExploded;
 struct CreateTransform;
 
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
-	HealthComponent, MeleeAttackComponent, RangeAttackComponent, ProjectileComponent, SpriteComponent, AnimationComponent, 
+	HealthComponent, MeleeAttackComponent, RangeAttackComponent, BulletComponent, BombComponent, SpriteComponent, AnimationComponent, 
 	SoundComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, ChaseComponent>;
 
-using Tags = entityplus::tag_list<>;
-
-using ComponentList = brigand::list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
-	HealthComponent, MeleeAttackComponent, RangeAttackComponent, ProjectileComponent, SpriteComponent, AnimationComponent,
-	SoundComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, ChaseComponent>;
+using Tags = entityplus::tag_list<AI>;
 
 using Entities = entityplus::entity_manager<Components, Tags>;
 
 using Events = entityplus::event_manager<Components, Tags, DirectionChanged, Jumped, StopMovement, CombatOcurred, ChangeState,
 	StateChanged, Teleported, DestroyEntity, EmitSound, PickedUpCoin, TouchedTrampoline, MoveCamera, DisplayHealthBar,
-    PlayerDied, CrossedWaypoint, ShootProjectile, CreateTransform>;
+    PlayerDied, CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform>;
 
 using Entity = Entities::entity_t;
+
+using ComponentList = brigand::list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
+	HealthComponent, MeleeAttackComponent, RangeAttackComponent, BulletComponent, BombComponent, SpriteComponent, AnimationComponent,
+	SoundComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, ChaseComponent>;
 
 
 struct DirectionChanged
@@ -157,6 +162,18 @@ struct ShootProjectile
 {
 	Entity shooter;
 	std::string projectileID; 
+	sf::Vector2f targetPosition;
+};
+
+struct ActivateBomb
+{
+	Entity bomb;
+};
+
+struct BombExploded
+{
+	Entity bomb;
+	Entity explosion;
 };
 
 struct CreateTransform
