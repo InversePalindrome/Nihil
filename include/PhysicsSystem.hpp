@@ -30,6 +30,7 @@ private:
 	void makeJump(Entity entity);
 
 	void applyImpulse(Entity entity, const b2Vec2& impulse);
+	void applyForce(Entity entity, const b2Vec2& force);
 
 	void convertPositionCoordinates(const PhysicsComponent& physics, PositionComponent& position);
 	void checkIfStatic(Entity entity, const PhysicsComponent& physics);

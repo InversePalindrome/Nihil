@@ -46,7 +46,6 @@ struct Teleported;
 struct DestroyEntity;
 struct EmitSound;
 struct PickedUpCoin;
-struct TouchedTrampoline;
 struct MoveCamera;
 struct DisplayHealthBar;
 struct PlayerDied;
@@ -55,6 +54,10 @@ struct ShootProjectile;
 struct ActivateBomb;
 struct BombExploded;
 struct CreateTransform;
+struct ApplyForce;
+struct ApplyImpulse;
+struct ApplyBlastImpact;
+struct ApplyKnockback;
 
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
@@ -66,8 +69,8 @@ using Tags = entityplus::tag_list<AI>;
 using Entities = entityplus::entity_manager<Components, Tags>;
 
 using Events = entityplus::event_manager<Components, Tags, DirectionChanged, Jumped, StopMovement, CombatOcurred, ChangeState,
-	StateChanged, Teleported, DestroyEntity, EmitSound, PickedUpCoin, TouchedTrampoline, MoveCamera, DisplayHealthBar,
-    PlayerDied, CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform>;
+	StateChanged, Teleported, DestroyEntity, EmitSound, PickedUpCoin, MoveCamera, DisplayHealthBar, PlayerDied, CrossedWaypoint,
+	ShootProjectile, ActivateBomb, BombExploded, CreateTransform, ApplyForce, ApplyImpulse, ApplyBlastImpact, ApplyKnockback>;
 
 using Entity = Entities::entity_t;
 
@@ -130,11 +133,6 @@ struct PickedUpCoin
 {
 };
 
-struct TouchedTrampoline
-{
-	Entity entity;
-};
-
 struct GameOver
 {
 };
@@ -181,4 +179,28 @@ struct CreateTransform
 	Entity childEntity;
 	ChildComponent& child;
 	ParentComponent& parent;
+};
+
+struct ApplyForce
+{
+	Entity entity;
+	b2Vec2 force;
+};
+
+struct ApplyImpulse
+{
+	Entity entity;
+	b2Vec2 impulse;
+};
+
+struct ApplyBlastImpact
+{
+	Entity explosion;
+	Entity victim;
+};
+
+struct ApplyKnockback
+{
+	Entity attacker;
+	Entity victim;
 };

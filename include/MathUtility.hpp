@@ -16,6 +16,12 @@ InversePalindrome.com
 
 namespace MathUtils
 {
+	template<typename T> 
+	int sign(T number)
+	{
+		return (T(0) < number) - (number < T(0));
+	}
+
 	template<typename T>
 	auto distance(const T& pointA, const T& pointB)
 	{

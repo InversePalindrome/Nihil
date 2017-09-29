@@ -36,4 +36,7 @@ private:
 
 	void addReloadTimer(Entity entity, RangeAttackComponent& rangeAttack);
 	void addExplosion(Entity bomb);
+
+	void applyKnockback(Entity attacker, Entity victim);
+	void applyBlastImpact(Entity explosion, Entity victim);
 };

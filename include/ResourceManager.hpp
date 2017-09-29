@@ -26,7 +26,7 @@ enum class TexturesID
 };
 enum class ImagesID { RedMonster };
 enum class FontsID { BITWONDER };
-enum class SoundBuffersID { Jump, Footsteps, Pickup, Laser };
+enum class SoundBuffersID { Jump, Footsteps, Pickup, Laser, SmallExplosion };
 
 class ResourceManager
 {
