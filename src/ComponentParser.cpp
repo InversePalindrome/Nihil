@@ -104,9 +104,14 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 		entity.add_component(std::make_from_tuple<HealthComponent>(parse<std::size_t>(line)));
 	};
 
-	componentParsers["Melee"] = [this](auto& entity, auto& line)
+	componentParsers["MeleeA"] = [this](auto& entity, auto& line)
 	{
 		entity.add_component(std::make_from_tuple<MeleeAttackComponent>(parse<std::size_t>(line)));
+	};
+
+	componentParsers["MeleeB"] = [this](auto& entity, auto& line)
+	{
+		entity.add_component(std::make_from_tuple<MeleeAttackComponent>(parse<std::size_t, float>(line)));
 	};
 
 	componentParsers["Range"] = [this](auto& entity, auto& line)
@@ -123,9 +128,9 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["Bomb"] = [this](auto& entity, auto& line)
 	{
-		auto& params = this->parse<std::size_t, std::size_t, float, std::string>(line);
+		auto& params = this->parse<std::size_t, std::size_t, float, float, std::string>(line);
 
-		entity.add_component<BombComponent>(std::get<0>(params), static_cast<SoundBuffersID>(std::get<1>(params)), std::get<2>(params), std::get<3>(params));
+		entity.add_component<BombComponent>(std::get<0>(params), static_cast<SoundBuffersID>(std::get<1>(params)), std::get<2>(params), std::get<3>(params), std::get<4>(params));
 	};
 
 	componentParsers["Animation"] = [this](auto& entity, auto& line)

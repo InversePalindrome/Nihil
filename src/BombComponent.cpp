@@ -8,10 +8,11 @@ InversePalindrome.com
 #include "BombComponent.hpp"
 
 
-BombComponent::BombComponent(std::size_t damagePoints, SoundBuffersID soundID, float explosionTime, const std::string& explosionID) :
+BombComponent::BombComponent(std::size_t damagePoints, SoundBuffersID soundID, float explosionTime, float explosionKnockback, const std::string& explosionID) :
 	Component("Bomb"),
 	Projectile(damagePoints, soundID),
 	explosionTime(explosionTime),
+	explosionKnockback(explosionKnockback),
 	explosionID(explosionID),
 	activationStatus(false)
 {
@@ -30,6 +31,11 @@ float BombComponent::getExplosionTime() const
 	return this->explosionTime;
 }
 
+float BombComponent::getExplosionKnockback() const
+{
+	return this->explosionKnockback;
+}
+
 std::string BombComponent::getExplosionID() const
 {
 	return this->explosionID;
@@ -38,6 +44,11 @@ std::string BombComponent::getExplosionID() const
 void BombComponent::setExplosionTime(float explsionTime)
 {
 	this->explosionTime = explosionTime;
+}
+
+void BombComponent::setExplosionKnockback(float explosionKnockback)
+{
+	this->explosionKnockback = explosionKnockback;
 }
 
 void BombComponent::setExplosionID(const std::string& explosionID)

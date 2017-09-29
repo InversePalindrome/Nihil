@@ -52,11 +52,14 @@ void SoundSystem::changeSound(Entity entity, EntityState state)
 
 void SoundSystem::emitSound(Entity entity, SoundBuffersID soundBufferID, bool loop)
 {
-	auto& sound = entity.get_component<SoundComponent>();
+	if (entity.has_component<SoundComponent>())
+	{
+		auto& sound = entity.get_component<SoundComponent>();
 
-	sound.setSoundID(this->soundManager.getCurrentSoundID());
+		sound.setSoundID(this->soundManager.getCurrentSoundID());
 
-	this->soundManager.playSound(soundBufferID, loop);
+		this->soundManager.playSound(soundBufferID, loop);
+	}
 }
 
 void SoundSystem::stopSound(Entity entity)
