@@ -26,6 +26,8 @@ InversePalindrome.com
 #include "ControllableComponent.hpp"
 #include "ChaseComponent.hpp"
 #include "TimerComponent.hpp"
+#include "PickupComponent.hpp"
+#include "InventoryComponent.hpp"
 #include "Direction.hpp"
 
 #include <brigand/sequences/list.hpp>
@@ -45,7 +47,7 @@ struct StateChanged;
 struct Teleported;
 struct DestroyEntity;
 struct EmitSound;
-struct PickedUpCoin;
+struct PickedUpItem;
 struct MoveCamera;
 struct DisplayHealthBar;
 struct PlayerDied;
@@ -62,21 +64,23 @@ struct ApplyKnockback;
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
 	HealthComponent, MeleeAttackComponent, RangeAttackComponent, BulletComponent, BombComponent, SpriteComponent, AnimationComponent, 
-	SoundComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, ChaseComponent>;
+	SoundComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, ChaseComponent,
+    PickupComponent, InventoryComponent>;
 
 using Tags = entityplus::tag_list<AI>;
 
 using Entities = entityplus::entity_manager<Components, Tags>;
 
 using Events = entityplus::event_manager<Components, Tags, DirectionChanged, Jumped, StopMovement, CombatOcurred, ChangeState,
-	StateChanged, Teleported, DestroyEntity, EmitSound, PickedUpCoin, MoveCamera, DisplayHealthBar, PlayerDied, CrossedWaypoint,
+	StateChanged, Teleported, DestroyEntity, EmitSound, PickedUpItem, MoveCamera, DisplayHealthBar, PlayerDied, CrossedWaypoint,
 	ShootProjectile, ActivateBomb, BombExploded, CreateTransform, ApplyForce, ApplyImpulse, ApplyBlastImpact, ApplyKnockback>;
 
 using Entity = Entities::entity_t;
 
 using ComponentList = brigand::list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
 	HealthComponent, MeleeAttackComponent, RangeAttackComponent, BulletComponent, BombComponent, SpriteComponent, AnimationComponent,
-	SoundComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, ChaseComponent>;
+	SoundComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, ChaseComponent,
+    PickupComponent, InventoryComponent>;
 
 
 struct DirectionChanged
@@ -129,8 +133,10 @@ struct EmitSound
 	bool loop;
 };
 
-struct PickedUpCoin
+struct PickedUpItem
 {
+	Entity collector;
+	Entity item;
 };
 
 struct GameOver
