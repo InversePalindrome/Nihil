@@ -18,7 +18,7 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2Bod
 
 PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType bodyType, ObjectType objectType, std::int32_t collisionGroup,
 	float maxVelocity, float accelerationRate)  :
-	Component("PhysicsA"),
+	Component("Physics"),
 	body(nullptr),
 	bodySize(bodySize),
 	objectType(objectType),

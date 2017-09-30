@@ -58,20 +58,12 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 		entity.add_component<StateComponent>();
 	};
 
-	componentParsers["PhysicsA"] = [this, &world](auto& entity, auto& line)
+	componentParsers["Physics"] = [this, &world](auto& entity, auto& line)
 	{
 		auto& params = parse<float, float, std::size_t, std::size_t, std::int32_t, float, float>(line);
 
 		entity.add_component<PhysicsComponent>(world, b2Vec2(std::get<0>(params), std::get<1>(params)),
 			static_cast<b2BodyType>(std::get<2>(params)), static_cast<ObjectType>(std::get<3>(params)), std::get<4>(params), std::get<5>(params), std::get<6>(params));
-	};
-
-	componentParsers["PhysicsB"] = [this, &world](auto& entity, auto& line)
-	{
-		auto& params = parse<float, float, std::size_t, std::size_t, std::int32_t>(line);
-
-		entity.add_component<PhysicsComponent>(world, b2Vec2(std::get<0>(params), std::get<1>(params)),
-			static_cast<b2BodyType>(std::get<2>(params)), static_cast<ObjectType>(std::get<3>(params)), std::get<4>(params));
 	};
 
 	componentParsers["Patrol"] = [this](auto& entity, auto& line)
@@ -174,6 +166,18 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 	{
 		entity.add_component(std::make_from_tuple<AutomatedComponent>(parse<std::string>(line)));
 	};
+
+	componentParsers["Pickup"] = [this](auto& entity, auto& line)
+	{
+		auto& params = this->parse<std::size_t, std::size_t>(line);
+
+		entity.add_component<PickupComponent>(static_cast<Item>(std::get<0>(params)), static_cast<SoundBuffersID>(std::get<1>(params)));
+	};
+
+	componentParsers["Inventory"] = [this](auto& entity, auto& line)
+	{
+		entity.add_component(std::make_from_tuple<InventoryComponent>(parse<std::string>(line)));
+	};
 }
 
 Entity ComponentParser::parseComponents(const std::string& pathFile)
@@ -198,7 +202,7 @@ Entity ComponentParser::parseComponents(std::int32_t entityID, const std::string
 
 		line.erase(std::begin(line), std::begin(line) + componentName.size());
 		boost::remove_erase_if(line, boost::is_any_of(",()"));
-	
+		
 		this->componentParsers[componentName](entity, line);
 	}
 

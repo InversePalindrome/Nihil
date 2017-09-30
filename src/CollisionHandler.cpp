@@ -39,11 +39,10 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 	}
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Pickup))
 	{
+		orderedCollision.value().first.get().entity.sync();
 		orderedCollision.value().second.get().entity.sync();
 
-		this->events.broadcast(DestroyEntity{ orderedCollision.value().second.get().entity });
-		this->events.broadcast(EmitSound{ SoundBuffersID::Pickup, false });
-		this->events.broadcast(PickedUpCoin{});
+		this->events.broadcast(PickedUpItem{ orderedCollision.value().first.get().entity, orderedCollision.value().second.get().entity });
 	}
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Alive , ObjectType::Trampoline))
 	{
@@ -70,7 +69,6 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 		orderedCollision.value().first.get().entity.sync();
 		orderedCollision.value().second.get().entity.sync();
 
-		//this->events.broadcast(CombatOcurred{ orderedCollision.value().first.get().entity, orderedCollision.value().second.get().entity });
 		this->events.broadcast(ApplyBlastImpact{ orderedCollision.value().first.get().entity, orderedCollision.value().second.get().entity });
 	}
 

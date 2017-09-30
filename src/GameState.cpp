@@ -60,12 +60,13 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 
 	entityManager.getEvents().subscribe<MoveCamera>([this](const auto& event) { updateCamera(event.entity); });
 	entityManager.getEvents().subscribe<DisplayHealthBar>([this](const auto& event) { updateHealthBar(event.entity); });
-
-	entityManager.getEvents().subscribe<PickedUpCoin>([this, &stateData](const auto& event)
+	/*
+	entityManager.getEvents().subscribe<PickedUpItem>([this, &stateData](const auto& event)
 	{
+
 		stateData.games.front().setCoins(stateData.games.front().getCoins() + 1u);
 		coinDisplay.setNumberOfCoins(stateData.games.front().getCoins());
-	});
+	});*/
 
 	stateData.window.setView(camera);
 
