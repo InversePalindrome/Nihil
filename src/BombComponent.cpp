@@ -21,7 +21,7 @@ BombComponent::BombComponent(std::size_t damagePoints, SoundBuffersID soundID, f
 std::ostream& operator<<(std::ostream& os, const BombComponent& component)
 {
 	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.getDamagePoints() << ' ' << static_cast<std::size_t>(component.getSoundID())
-		<< ' ' << component.explosionTime;
+		<< ' ' << component.explosionTime << ' ' << component.explosionID;
 
 	return os;
 }

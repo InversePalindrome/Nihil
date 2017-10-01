@@ -11,10 +11,11 @@ InversePalindrome.com
 #include <sstream>
 
 
-Game::Game() :
-	coins(0u)
+Game::Game() 
 {
-	loadNames();
+	loadCharacterNames();
+	loadLevelNames();
+	loadSpawnPoints();
 
 	std::ifstream inFile("Resources/Files/Levels.txt");
 
@@ -25,31 +26,65 @@ Game::Game() :
 
 	inFile.open("Resources/Files/Characters.txt");
 
-	inFile >> characterName;
+	inFile >> currentCharacter;
 
 	characters.modify(std::begin(characters), [](auto& character) { character.isLoaded = true; });
-
-	loadSpawnPoints();
 }
 
-Game::Game(const std::string& data) :
-	coins(0u)
+Game::Game(const std::string& data) 
 {
 	std::istringstream iStream(data);
+	std::string line;
 
 	std::string levelBits, characterBits;
 
-	iStream >> gameName >> characterName >> currentLevel >> coins >> levelBits >> characterBits;
+	while (std::getline(iStream, line))
+	{
+		std::istringstream inLine(line);
 
-	loadNames();
+		std::string category;
+
+		inLine >> category;
+
+		if (category == "Game")
+		{
+			inLine >> gameName;
+		}
+		else if (category == "CurrentCharacter")
+		{
+			inLine >> currentCharacter;
+		}
+		else if (category == "CurrentLevel")
+		{
+			inLine >> currentLevel;
+		}
+		else if (category == "Characters")
+		{
+			inLine >> characterBits;
+		}
+		else if (category == "Levels")
+		{
+			inLine >> levelBits;
+		}
+		else if (category == "Item")
+		{
+			std::size_t item = 0u, quantity = 0u;
+
+			inLine >> item >> quantity;
+
+			this->items.emplace(static_cast<Item>(item), quantity);
+		}
+	}
+
+	loadCharacterNames();
+	loadLevelNames();
+	loadSpawnPoints();
 
     const auto& levelsBitset = boost::dynamic_bitset<std::size_t>(levelBits);
 	const auto& charactersBitset = boost::dynamic_bitset<std::size_t>(characterBits);
 
 	loadDataBitsets<LoadedLevels>(levels, levelsBitset);
 	loadDataBitsets<LoadedCharacters>(characters, charactersBitset);
-
-	loadSpawnPoints();
 }
 
 std::string Game::getGameName() const
@@ -57,9 +92,9 @@ std::string Game::getGameName() const
 	return this->gameName;
 }
 
-std::string Game::getCharacterName() const
+std::string Game::getCurrentCharacter() const
 {
-	return this->characterName;
+	return this->currentCharacter;
 }
 
 std::string Game::getCurrentLevel() const
@@ -67,9 +102,9 @@ std::string Game::getCurrentLevel() const
 	return this->currentLevel;
 }
 
-std::size_t Game::getCoins() const
+Items& Game::getItems() 
 {
-	return this->coins;
+	return this->items;
 }
 
 sf::Vector2f Game::getSpawnPoint() const
@@ -92,9 +127,9 @@ void Game::setGameName(const std::string& gameName)
 	this->gameName = gameName;
 }
 
-void Game::setCharacterName(const std::string& characterName)
+void Game::setCurrentCharacter(const std::string& currentCharacter)
 {
-	this->characterName = characterName;
+	this->currentCharacter = currentCharacter;
 }
 
 void Game::setCurrentLevel(const std::string& currentLevel)
@@ -102,44 +137,41 @@ void Game::setCurrentLevel(const std::string& currentLevel)
 	this->currentLevel = currentLevel;
 }
 
-void Game::setCoins(std::size_t coins)
-{
-	this->coins = coins;
-}
-
 std::ostream& operator<<(std::ostream& os, const Game& game)
 {
-	os << game.gameName << ' ' << game.characterName << ' ' << game.currentLevel << ' ' << game.coins << ' ';
-	
-	for (const auto& level : game.levels)
-	{
-		os << level.isLoaded;
-	}
-
-	os << ' ';
+	os << "Game " << game.gameName << '\n';
+	os << "CurrentCharacter " << game.currentCharacter << '\n';
+	os << "CurrentLevel " << game.currentLevel << '\n';
+	os << "Characters ";
 
 	for (const auto& character : game.characters)
 	{
 		os << character.isLoaded;
 	}
 
+	os << '\n';
+
+	os << "Levels ";
+
+	for (const auto& level : game.levels)
+	{
+		os << level.isLoaded;
+	}
+	
+	os << '\n';
+
+	for (const auto& item : game.items)
+	{
+		os << "Item " << static_cast<std::size_t>(item.first) << ' ' << item.second << '\n';
+	}
+
 	return os;
 }
 
-void Game::loadNames()
+void Game::loadCharacterNames()
 {
-	std::ifstream inFile("Resources/Files/Levels.txt");
+	std::ifstream inFile("Resources/Files/Characters.txt");
 	std::string line;
-
-	while (std::getline(inFile, line))
-	{
-		this->levels.get<1>().insert({ line, sf::Vector2f(), false });
-	}
-
-	inFile.close();
-	inFile.clear();
-
-	inFile.open("Resources/Files/Characters.txt");
 
 	while (std::getline(inFile, line))
 	{
@@ -150,6 +182,17 @@ void Game::loadNames()
 		iStream >> name;
 
 		this->characters.get<1>().insert({ name, false });
+	}
+}
+
+void Game::loadLevelNames()
+{
+	std::ifstream inFile("Resources/Files/Levels.txt");
+	std::string line;
+
+	while (std::getline(inFile, line))
+	{
+		this->levels.get<1>().insert({ line, sf::Vector2f(), false });
 	}
 }
 

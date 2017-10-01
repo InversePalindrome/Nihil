@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #include "CoinDisplay.hpp"
+#include "AnimationParser.hpp"
 
 #include <Thor/Animations/FrameAnimation.hpp>
 
@@ -22,13 +23,12 @@ CoinDisplay::CoinDisplay(ResourceManager& resourceManager) :
 	text.setPosition(120.f, 0.f);
 
 	thor::FrameAnimation frameAnimation;
+	std::size_t animationID = 0u;
+	float animationTime = 0.f;
 
-	frameAnimation.addFrame(1.f, sf::IntRect(0u, 0u, 60u, 60u));
-	frameAnimation.addFrame(1.f, sf::IntRect(60u, 0u, 60u, 60u));
-	frameAnimation.addFrame(1.f, sf::IntRect(0u, 60u, 60u, 60u));
-	frameAnimation.addFrame(1.f, sf::IntRect(60u, 60u, 60u, 60u));
+	AnimationParser::parseAnimations("Resources/Files/CoinAnimations.txt", frameAnimation, animationID, animationTime);
 
-	animator.addAnimation("Animation", frameAnimation, sf::seconds(0.5f));
+	animator.addAnimation("Animation", frameAnimation, sf::seconds(animationTime));
 
 	animator.playAnimation("Animation", true);
 }

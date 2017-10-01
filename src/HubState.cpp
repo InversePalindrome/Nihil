@@ -196,7 +196,7 @@ void HubState::transitionToPlay()
 			if (!this->stateData.games.empty() && gameIter != std::end(this->stateData.games))
 			{
 				std::iter_swap(gameIter, std::begin(this->stateData.games));
-
+			
 				this->stateMachine.clearStates();
 				this->stateMachine.pushState(StateID::Game);
 

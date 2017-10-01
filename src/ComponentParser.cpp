@@ -127,7 +127,7 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["Animation"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component(std::make_from_tuple<AnimationComponent>(parse<std::string>(line)));
+		entity.add_component(std::make_from_tuple<AnimationComponent>(parse<bool, std::string>(line)));
 	};
 
 	componentParsers["Sound"] = [this](auto& entity, auto& line)
@@ -176,7 +176,7 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["Inventory"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component(std::make_from_tuple<InventoryComponent>(parse<std::string>(line)));
+		entity.add_component<InventoryComponent>();
 	};
 }
 

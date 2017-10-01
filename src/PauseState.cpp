@@ -15,7 +15,7 @@ PauseState::PauseState(StateMachine& stateMachine, StateData& stateData) :
 	settingsButton(sfg::Button::Create("Settings")),
 	quitButton(sfg::Button::Create("\t\tQuit\t\t"))
 {
-	resumeButton->SetPosition(sf::Vector2f(850.f, 625.f));
+	resumeButton->SetPosition(sf::Vector2f(850, 625.f));
 	resumeButton->GetSignal(sfg::Widget::OnLeftClick).Connect([&stateMachine]() { stateMachine.popState(); });
 
 	settingsButton->SetPosition(sf::Vector2f(850.f, 775.f));
@@ -39,7 +39,6 @@ void PauseState::handleEvent(const sf::Event& event)
 
 void PauseState::update(float deltaTime)
 {
-
 }
 
 void PauseState::draw()

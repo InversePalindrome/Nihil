@@ -17,7 +17,8 @@ PickupComponent::PickupComponent(Item item, SoundBuffersID soundID) :
 
 std::ostream& operator<<(std::ostream& os, const PickupComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName() <<  ' ' << static_cast<std::size_t>(component.item);
+	os << component.getEntityID() << ' ' << component.getName() <<  ' ' << static_cast<std::size_t>(component.item) 
+		<< ' ' << static_cast<std::size_t>(component.soundID);
 
 	return os;
 }

@@ -107,10 +107,19 @@ void Application::render()
 void Application::loadGames(const std::string& pathFile)
 {
 	std::ifstream inFile(pathFile);
+	std::string gameData;
 	std::string line;
 
 	while (std::getline(inFile, line))
 	{
-		this->games.push_back(Game(line));
+		if (line.empty())
+		{
+			this->games.push_back(Game(gameData));
+			gameData.clear();
+
+			continue;
+		}
+
+		gameData += line + '\n';
 	}
 }

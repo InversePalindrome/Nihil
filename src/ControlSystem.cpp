@@ -16,7 +16,7 @@ ControlSystem::ControlSystem(Entities& entities, Events& events, InputHandler& i
 	{
 		if (event.entity.has_component<HealthComponent>())
 		{
-			events.broadcast(DisplayHealthBar{ event.entity });
+			events.broadcast(DisplayHealthBar{ event.entity.get_component<HealthComponent>() });
 		}
 	});
 }

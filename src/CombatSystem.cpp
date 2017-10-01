@@ -18,7 +18,7 @@ CombatSystem::CombatSystem(Entities& entities, Events& events, ComponentParser& 
 	{
 		if (event.entity.has_component<ControllableComponent>())
 		{
-			events.broadcast(DisplayHealthBar{ event.entity });
+			events.broadcast(DisplayHealthBar{ event.component });
 		}
 	});
 
@@ -79,7 +79,7 @@ void CombatSystem::handleCombat(Entity attacker, Entity victim)
 		}
 		if (victim.has_component<ControllableComponent>())
 		{
-			this->events.broadcast(DisplayHealthBar{ victim });
+			this->events.broadcast(DisplayHealthBar{ health });
 		}
 		if (health.getHitpoints() == 0u)
 		{

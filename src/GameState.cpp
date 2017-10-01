@@ -17,14 +17,17 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	camera(stateData.window.getDefaultView()),
 	collisionHandler(entityManager.getEvents()),
 	healthBar(stateData.resourceManager),
-	coinDisplay(stateData.resourceManager)
+	coinDisplay(stateData.resourceManager),
+	itemsDisplay(stateData.resourceManager)
 {
 	world.SetContactListener(&collisionHandler);
 
 	healthBar.setPosition(150.f, 120.f);
 
 	coinDisplay.setPosition(1600.f, 120.f);
-	coinDisplay.setNumberOfCoins(stateData.games.front().getCoins());
+	coinDisplay.setNumberOfCoins(stateData.games.front().getItems()[Item::Coin]);
+
+	itemsDisplay.setPosition(200.f, 200.f);
 	
 	entityManager.getEvents().subscribe<DestroyEntity>([this](const auto& event) 
 	{ 
@@ -59,14 +62,13 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	});
 
 	entityManager.getEvents().subscribe<MoveCamera>([this](const auto& event) { updateCamera(event.entity); });
-	entityManager.getEvents().subscribe<DisplayHealthBar>([this](const auto& event) { updateHealthBar(event.entity); });
-	/*
-	entityManager.getEvents().subscribe<PickedUpItem>([this, &stateData](const auto& event)
-	{
+	entityManager.getEvents().subscribe<DisplayHealthBar>([this](const auto& event) { updateHealthBar(event.health); });
+	entityManager.getEvents().subscribe<DisplayCoins>([this](const auto& event) { updateCoinDisplay(event.inventory); });
 
-		stateData.games.front().setCoins(stateData.games.front().getCoins() + 1u);
-		coinDisplay.setNumberOfCoins(stateData.games.front().getCoins());
-	});*/
+    entityManager.getEvents().subscribe<entityplus::component_added<Entity, InventoryComponent>>([&stateData](auto& event)
+	{
+		event.component.setItems(stateData.games.front().getItems());
+	});
 
 	stateData.window.setView(camera);
 
@@ -80,6 +82,10 @@ void GameState::handleEvent(const sf::Event& event)
 		this->saveData("Resources/Files/SavedGames.txt");
 		this->stateMachine.pushState(StateID::Pause);
 	}
+	else if (this->stateData.inputHandler.isActive("Inventory"))
+	{
+		this->itemsDisplay.setVisibility(!this->itemsDisplay.getVisibility());
+	}
 }
 
 void GameState::update(float deltaTime)
@@ -92,6 +98,7 @@ void GameState::update(float deltaTime)
 	
 	this->entityManager.update(deltaTime);
 	this->coinDisplay.update(deltaTime);
+	this->itemsDisplay.update(deltaTime);
 
 	for (auto& callback : this->callbacks)
 	{
@@ -110,6 +117,7 @@ void GameState::draw()
 	this->stateData.window.setView(this->stateData.window.getDefaultView());
 	this->stateData.window.draw(this->healthBar);
 	this->stateData.window.draw(this->coinDisplay);
+	this->stateData.window.draw(this->itemsDisplay);
 }
 
 void GameState::updateCamera(Entity entity)
@@ -123,9 +131,14 @@ void GameState::updateCamera(Entity entity)
 	}
 }
 
-void GameState::updateHealthBar(Entity entity)
+void GameState::updateHealthBar(const HealthComponent& healthComponent)
 {
-	this->healthBar.setHitpointsDisplay(entity.get_component<HealthComponent>().getHitpoints());
+	this->healthBar.setHitpointsDisplay(healthComponent.getHitpoints());
+}
+
+void GameState::updateCoinDisplay(const InventoryComponent& inventory)
+{
+	this->coinDisplay.setNumberOfCoins(inventory[Item::Coin]);
 }
 
 void GameState::changeLevel(const std::string& level)

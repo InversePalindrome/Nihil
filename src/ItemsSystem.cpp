@@ -36,6 +36,11 @@ void ItemsSystem::handleItemPickup(Entity collector, Entity item)
 		}
 
 		this->events.broadcast(EmitSound{ pickup.getSoundID(), false });
+
+		if (collector.has_component<ControllableComponent>() && pickup.getItem() == Item::Coin)
+		{
+			this->events.broadcast(DisplayCoins{ inventory });
+		}
 	}
 
 	this->events.broadcast(DestroyEntity{ item });

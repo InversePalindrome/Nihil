@@ -30,20 +30,20 @@ SettingsState::SettingsState(StateMachine& stateMachine, StateData& stateData) :
 	backButton->SetPosition(sf::Vector2f(12.f, 65.f));
 	backButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { transitionToMenu(); });
 
-	soundLabel->SetPosition(sf::Vector2f(930.f, 475.f));
+	soundLabel->SetPosition(sf::Vector2f(900.f, 475.f));
 
 	soundScrollbar->SetRequisition(sf::Vector2f(1000.f, 50.f));
-	soundScrollbar->SetPosition(sf::Vector2f(550.f, 550.f));
+	soundScrollbar->SetPosition(sf::Vector2f(520.f, 550.f));
 	soundScrollbar->SetAdjustment(soundVolumeAdjustment);
 	
 	soundVolumeAdjustment->GetSignal(sfg::Adjustment::OnChange).Connect([this] { adjustSoundVolume(); });
 
 	soundVolumeScale->SetAdjustment(soundVolumeAdjustment);
 
-	musicLabel->SetPosition(sf::Vector2f(930.f, 725.f));
+	musicLabel->SetPosition(sf::Vector2f(900.f, 725.f));
 
 	musicScrollbar->SetRequisition(sf::Vector2f(1000.f, 50.f));
-	musicScrollbar->SetPosition(sf::Vector2f(550.f, 800.f));
+	musicScrollbar->SetPosition(sf::Vector2f(520.f, 800.f));
 	musicScrollbar->SetAdjustment(musicVolumeAdjustment);
 
 	musicVolumeScale->SetAdjustment(musicVolumeAdjustment);
@@ -53,10 +53,12 @@ SettingsState::SettingsState(StateMachine& stateMachine, StateData& stateData) :
 	auto moveRightButton = sfg::RadioButton::Create("Move Right", keyButtons);
 	auto moveLeftButton = sfg::RadioButton::Create("Move Left", keyButtons);
 	auto jumpButton = sfg::RadioButton::Create("Jump", keyButtons);
+	auto shootButton = sfg::RadioButton::Create("Shoot", keyButtons);
 
-	moveRightButton->SetPosition(sf::Vector2f(600.f, 1000.f));
-	moveLeftButton->SetPosition(sf::Vector2f(1150.f, 1000.f));
-	jumpButton->SetPosition(sf::Vector2f(600.f, 1100.f));
+	moveRightButton->SetPosition(sf::Vector2f(570.f, 1000.f));
+	moveLeftButton->SetPosition(sf::Vector2f(1120.f, 1000.f));
+	jumpButton->SetPosition(sf::Vector2f(570.f, 1100.f));
+	shootButton->SetPosition(sf::Vector2f(1120.f, 1100.f));
 	
 	stateData.guiManager.setProperty("Scrollbar", "TroughColor", sf::Color(102u, 0u, 204u));
 	stateData.guiManager.setProperty("Scrollbar", "SliderColor", sf::Color(15u, 192u, 252u));
@@ -78,6 +80,7 @@ SettingsState::SettingsState(StateMachine& stateMachine, StateData& stateData) :
 	stateData.guiManager.addWidget(moveRightButton);
 	stateData.guiManager.addWidget(moveLeftButton);
 	stateData.guiManager.addWidget(jumpButton);
+	stateData.guiManager.addWidget(shootButton);
 }
 
 void SettingsState::handleEvent(const sf::Event& event)

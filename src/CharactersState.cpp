@@ -45,7 +45,7 @@ CharactersState::CharactersState(StateMachine& stateMachine, StateData& stateDat
 
 	if (!stateData.games.empty())
 	{
-		coinDisplay.setNumberOfCoins(stateData.games.front().getCoins());
+		coinDisplay.setNumberOfCoins(stateData.games.front().getItems()[Item::Coin]);
 		gameChoices->SelectItem(0u);
 	}
 
@@ -65,7 +65,7 @@ CharactersState::CharactersState(StateMachine& stateMachine, StateData& stateDat
 		characterButton._Get()->SetState(sfg::Widget::State::SELECTED);
 		characterButton._Get()->SetState(sfg::Widget::State::NORMAL);
 
-		if (!stateData.games.empty() && stateData.games.front().getCharacterName() == characterButton._Get()->GetId())
+		if (!stateData.games.empty() && stateData.games.front().getCurrentCharacter() == characterButton._Get()->GetId())
 		{
 			characterButton._Get()->SetActive(true);
 		}
@@ -178,7 +178,7 @@ void CharactersState::selectedCharacter(const std::string& character)
 {
 	if (!this->stateData.games.empty())
 	{
-		this->stateData.games.front().setCharacterName(character);
+		this->stateData.games.front().setCurrentCharacter(character);
 	}
 }
 
@@ -186,10 +186,11 @@ void CharactersState::purchasedCharacter(sfg::RadioButton::Ptr characterButton, 
 {
 	const auto& price = std::stoull(purchaseButton->GetLabel().toAnsiString());
 
-	if (!this->stateData.games.empty() && this->stateData.games.front().getCoins() >= price)
+	if (!this->stateData.games.empty() && this->stateData.games.front().getItems()[Item::Coin] >= price)
 	{
-		this->stateData.games.front().setCoins(this->stateData.games.front().getCoins() - price);
-		this->coinDisplay.setNumberOfCoins(this->stateData.games.front().getCoins());
+		this->stateData.games.front().getItems()[Item::Coin] = (this->stateData.games.front().getItems()[Item::Coin] - price);
+
+		this->coinDisplay.setNumberOfCoins(this->stateData.games.front().getItems()[Item::Coin]);
 
 		purchaseButton->Show(false);
 
@@ -211,7 +212,7 @@ void CharactersState::selectGame()
 		auto selectedGame = std::find_if(std::begin(this->stateData.games), std::end(this->stateData.games), [this](const auto& game) { return game.getGameName() == this->gameChoices->GetSelectedText(); });
 
 		std::iter_swap(std::begin(this->stateData.games), selectedGame);
-		this->coinDisplay.setNumberOfCoins(this->stateData.games.front().getCoins());
+		this->coinDisplay.setNumberOfCoins(this->stateData.games.front().getItems()[Item::Coin]);
 
 		for (const auto& widget : this->itemsTable->GetChildren())
 		{
