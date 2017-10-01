@@ -25,7 +25,7 @@ enum class TexturesID
     Level1, Level2, Level3, Level4, Level5, Level6, Coin, Heart, Laser, Gems
 };
 enum class ImagesID { RedMonster };
-enum class FontsID { BITWONDER };
+enum class FontsID { BITWONDER, CODE, Roboto };
 enum class SoundBuffersID { Jump, Footsteps, Coin, Laser, SmallExplosion, Gem };
 
 class ResourceManager

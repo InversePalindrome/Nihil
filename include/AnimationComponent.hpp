@@ -26,7 +26,7 @@ class AnimationComponent : public Component
 	using Animation = std::pair<EntityState, Direction>;
 
 public:
-	AnimationComponent(const std::string& animationsFile);
+	AnimationComponent(bool hasMultipleAnimations, const std::string& animationsFile);
 
 	std::optional<std::pair<EntityState, Direction>> getCurrentAnimation() const;
 
@@ -39,8 +39,10 @@ public:
 
 private:
 	std::string animationsFile;
+	bool hasMultipleAnimations;
 	std::map<Animation, std::pair<thor::FrameAnimation, float>> animations;
-	thor::Animator<sf::Sprite, std::pair<EntityState, Direction>> animator;
+	thor::Animator<sf::Sprite, std::pair<EntityState, Direction>> stateAnimator;
+	thor::Animator<sf::Sprite, std::size_t> singleAnimator;
 };
 
 std::ostream& operator<<(std::ostream& os, const AnimationComponent& component);

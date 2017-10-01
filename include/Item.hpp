@@ -7,8 +7,13 @@ InversePalindrome.com
 
 #pragma once
 
+#include <cstddef>
+#include <unordered_map>
+
 
 enum class Item
 {
-	Coin, Gem
+	Coin, OrangeGem, RedGem, PurpleGem, BlueGem, YellowGem, WhiteGem
 };
+
+using Items = std::unordered_map<Item, std::size_t>;

@@ -50,6 +50,7 @@ struct EmitSound;
 struct PickedUpItem;
 struct MoveCamera;
 struct DisplayHealthBar;
+struct DisplayCoins;
 struct PlayerDied;
 struct CrossedWaypoint;
 struct ShootProjectile;
@@ -72,8 +73,9 @@ using Tags = entityplus::tag_list<AI>;
 using Entities = entityplus::entity_manager<Components, Tags>;
 
 using Events = entityplus::event_manager<Components, Tags, DirectionChanged, Jumped, StopMovement, CombatOcurred, ChangeState,
-	StateChanged, Teleported, DestroyEntity, EmitSound, PickedUpItem, MoveCamera, DisplayHealthBar, PlayerDied, CrossedWaypoint,
-	ShootProjectile, ActivateBomb, BombExploded, CreateTransform, ApplyForce, ApplyImpulse, ApplyBlastImpact, ApplyKnockback>;
+	StateChanged, Teleported, DestroyEntity, EmitSound, PickedUpItem, MoveCamera, DisplayHealthBar, DisplayCoins, PlayerDied,
+	CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform, ApplyForce, ApplyImpulse, ApplyBlastImpact, 
+	ApplyKnockback>;
 
 using Entity = Entities::entity_t;
 
@@ -150,7 +152,12 @@ struct MoveCamera
 
 struct DisplayHealthBar
 {
-	Entity entity;
+	const HealthComponent& health;
+};
+
+struct DisplayCoins
+{
+	const InventoryComponent& inventory;
 };
 
 struct PlayerDied

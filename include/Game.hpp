@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #pragma once
 
+#include "Item.hpp"
+
 #include <SFML/System/Vector2.hpp>
 
 #include <boost/multi_index_container.hpp>
@@ -18,6 +20,7 @@ InversePalindrome.com
 #include <cstddef>
 #include <string>
 #include <ostream>
+#include <unordered_map>
 
 
 struct LoadedLevelData
@@ -50,29 +53,29 @@ public:
 	Game(const std::string& data);
 
 	std::string getGameName() const;
-	std::string getCharacterName() const;
+	std::string getCurrentCharacter() const;
 	std::string getCurrentLevel() const;
-	std::size_t getCoins() const;
+	Items& getItems();
 	sf::Vector2f getSpawnPoint() const;
 
 	LoadedLevels& getLevels();
 	LoadedCharacters& getCharacters();
 
 	void setGameName(const std::string& name);
-	void setCharacterName(const std::string& characterName);
+	void setCurrentCharacter(const std::string& currentCharacter);
 	void setCurrentLevel(const std::string& currentLevel);
-	void setCoins(std::size_t coins);
 
 private:
 	std::string gameName;
-	std::string characterName;
+	std::string currentCharacter;
 	std::string currentLevel;
-	std::size_t coins;
+	Items items; 
 
 	LoadedLevels levels;
 	LoadedCharacters characters;
 
-	void loadNames();
+	void loadCharacterNames();
+	void loadLevelNames();
 	void loadSpawnPoints();
 
 	template<typename T>

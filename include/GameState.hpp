@@ -14,6 +14,7 @@ InversePalindrome.com
 #include "EntityManager.hpp"
 #include "HealthBar.hpp"
 #include "CoinDisplay.hpp"
+#include "ItemsDisplay.hpp"
 #include "Pathway.hpp"
 
 #include <Box2D/Dynamics/b2World.h>
@@ -48,9 +49,11 @@ private:
 
 	HealthBar healthBar;
 	CoinDisplay coinDisplay;
+	ItemsDisplay itemsDisplay;
 
 	void updateCamera(Entity entity);
-	void updateHealthBar(Entity entity);
+	void updateHealthBar(const HealthComponent& health);
+	void updateCoinDisplay(const InventoryComponent& inventory);
 	void changeLevel(const std::string& level);
 
 	void saveData(const std::string& pathFile);

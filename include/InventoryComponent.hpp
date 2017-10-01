@@ -18,9 +18,12 @@ class InventoryComponent : public Component
 	friend std::ostream& operator<<(std::ostream& os, const InventoryComponent& component);
 
 public:
-	InventoryComponent(const std::string& pathFile);
+	InventoryComponent();
+
+	void setItems(Items& items);
 
 	std::size_t& operator[](Item item);
+	const std::size_t& operator[](Item item) const;
 
 	void addItem(Item item, std::size_t quantity);
 	void removeItem(Item item);
@@ -28,8 +31,7 @@ public:
 	bool hasItem(Item item) const;
 
 private:
-	std::string pathFile;
-	std::unordered_map<Item, std::size_t> inventory;
+	Items* items;
 };
 
 std::ostream& operator<<(std::ostream& os, const InventoryComponent& component);
