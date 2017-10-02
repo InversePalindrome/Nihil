@@ -34,6 +34,11 @@ std::ostream& operator<<(std::ostream& os, const SpriteComponent& component)
 	return os;
 }
 
+sf::FloatRect SpriteComponent::getGlobalBounds() const
+{
+	return this->sprite.getGlobalBounds();
+}
+
 TexturesID SpriteComponent::getTextureID() const
 {
 	return this->textureID;
@@ -44,27 +49,9 @@ sf::Sprite& SpriteComponent::getSprite()
 	return this->sprite;
 }
 
-sf::Vector2f SpriteComponent::getPosition() const
-{
-	return this->sprite.getPosition();
-}
-
-const sf::Transform& SpriteComponent::getTransform() const
-{
-	return this->sprite.getTransform();
-}
-
-void SpriteComponent::setPosition(const sf::Vector2f& position)
-{
-	this->sprite.setPosition(position);
-}
-
-void SpriteComponent::setRotation(float rotation)
-{
-	this->sprite.setRotation(rotation);
-}
-
 void SpriteComponent::draw(sf::RenderTarget& target, sf::RenderStates states) const 
 {
+	states.transform = this->getTransform();
+
 	target.draw(this->sprite, states);
 }

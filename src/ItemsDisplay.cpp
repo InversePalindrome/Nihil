@@ -29,6 +29,11 @@ ItemsDisplay::ItemsDisplay(ResourceManager& resourceManager) :
 	}
 }
 
+ItemsGraphics& ItemsDisplay::operator[](Item item)
+{
+	return this->itemsData[item];
+}
+
 void ItemsDisplay::update(float deltaTime)
 {
 	if (this->isVisible)
@@ -52,6 +57,11 @@ bool ItemsDisplay::getVisibility() const
 void ItemsDisplay::setVisibility(bool isVisible)
 {
 	this->isVisible = isVisible;
+}
+
+bool ItemsDisplay::hasItem(Item item) const
+{
+	return this->itemsData.count(item);
 }
 
 void ItemsDisplay::loadItems(ResourceManager& resourceManager, const std::string& pathFile)
@@ -84,11 +94,12 @@ void ItemsDisplay::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	}
 }
 
-ItemsGraphics::ItemsGraphics(ResourceManager& resourceManager, const std::string& itemData)
+ItemsGraphics::ItemsGraphics(ResourceManager& resourceManager, const std::string& itemData) :
+	quantity(0u)
 {
 	std::istringstream iStream(itemData);
 
-	std::size_t item = 0u, textureID = 0u, fontID = 0u, maxQuantity = 0u;
+	std::size_t item = 0u, textureID = 0u, fontID = 0u;
 	float scale = 0.f, xPosition = 0.f, yPosition = 0.f, textOffset = 0.f;
 	std::string iAnimationFile;
 
@@ -107,7 +118,7 @@ ItemsGraphics::ItemsGraphics(ResourceManager& resourceManager, const std::string
 	info.setOutlineThickness(3.f);
 	info.setOutlineColor(sf::Color::Black);
 	info.setPosition(sf::Vector2f(xPosition, yPosition + textOffset));
-	info.setString("0 / " + std::to_string(maxQuantity));
+	info.setString(std::to_string(quantity) + " / " + std::to_string(maxQuantity));
 }
 
 void ItemsGraphics::draw(sf::RenderTarget& target, sf::RenderStates states) const

@@ -32,8 +32,8 @@ ParticleComponent::ParticleComponent(const std::string& pathFile, ResourceManage
 
 		if (category == "Texture")
 		{
-			std::size_t textureID = 0u, radiusOfEmission = 0u;
-			float emissionOffsetX = 0.f, emissionOffsetY = 0.f;
+			std::size_t textureID = 0u;
+			float radiusOfEmission = 0.f, emissionOffsetX = 0.f, emissionOffsetY = 0.f;
 
 			iStream >> textureID >> radiusOfEmission >> emissionOffsetX >> emissionOffsetY;
 
@@ -90,17 +90,22 @@ sf::Vector2f ParticleComponent::getEmissionOffset() const
 	return this->emissionOffset;
 }
 
+sf::FloatRect ParticleComponent::getGlobalBounds() const
+{
+	return sf::FloatRect(this->getPosition(), { this->rangeOfEmission, this->rangeOfEmission });
+}
+
 void ParticleComponent::setEffect(EntityState state)
 {
 	this->emitter.setParticleLifetime(sf::seconds(this->particleEffects.at(state).particleLifetime));
 	this->emitter.setEmissionRate(this->particleEffects.at(state).emissionRate);
 	this->emitter.setParticleColor(this->particleEffects.at(state).particleColor);
 }
-
+/*
 void ParticleComponent::setEmitterPosition(const sf::Vector2f& position)
 {
 	this->emitter.setParticlePosition(thor::Distributions::circle(position, this->rangeOfEmission));
-}
+}*/
 
 void ParticleComponent::clearEffects()
 {
@@ -120,5 +125,7 @@ bool ParticleComponent::hasParticleData(EntityState state) const
 
 void ParticleComponent::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
+	states.transform = this->getTransform();
+
 	target.draw(this->particleSystem, states);
 }

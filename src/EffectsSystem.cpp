@@ -19,7 +19,7 @@ void EffectsSystem::update(float deltaTime)
 	entities.for_each<ParticleComponent, PositionComponent, StateComponent>(
 		[this, deltaTime](auto entity, auto& particle, const auto& position, const auto& state)
 	{
-		particle.setEmitterPosition(position.getPosition() + particle.getEmissionOffset());
+		particle.setPosition(position.getPosition() + particle.getEmissionOffset());
 
 		if (particle.hasParticleData(state.getState()))
 		{

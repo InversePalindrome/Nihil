@@ -19,11 +19,6 @@ std::ostream& operator<<(std::ostream& os, const InventoryComponent& component)
 	return os;
 }
 
-void InventoryComponent::setItems(Items& items)
-{
-	this->items = &items;
-}
-
 std::size_t& InventoryComponent::operator[](Item item)
 {
 	return (*this->items)[item];
@@ -32,6 +27,11 @@ std::size_t& InventoryComponent::operator[](Item item)
 const std::size_t& InventoryComponent::operator[](Item item) const
 {
 	return (*this->items)[item];
+}
+
+void InventoryComponent::setItems(Items& items)
+{
+	this->items = &items;
 }
 
 void InventoryComponent::addItem(Item item, std::size_t quantity)

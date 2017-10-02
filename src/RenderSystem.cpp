@@ -10,6 +10,8 @@ InversePalindrome.com
 #include "SpriteComponent.hpp"
 #include "PositionComponent.hpp"
 
+#include <brigand/algorithms/for_each.hpp>
+
 #include <algorithm>
 
 
@@ -26,31 +28,31 @@ RenderSystem::RenderSystem(Entities& entities, Events& events) :
 
 void RenderSystem::update(float deltaTime)
 {
-	this->entities.for_each<SpriteComponent, PositionComponent>(
-		[](auto entity, auto& sprite, auto& position)
+	brigand::for_each<Renderables>([this](auto renderableComponent)
 	{
-		sprite.setPosition(position.getPosition());
+		using Type = decltype(renderableComponent)::type;
+
+		this->entities.for_each<Type, PositionComponent>(
+			[](auto entity, auto& renderable, auto& position)
+		{
+			renderable.setPosition(position.getPosition());
+		});
 	});
 }
 
 void RenderSystem::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	this->entities.for_each<SpriteComponent>([this, &target, states](auto entity, auto& sprite) mutable
-	{ 
-		if (this->isInsideView(target.getView(), sprite))
-		{
-			target.draw(sprite);
-		}
-		else if (entity.has_component<ChildComponent>())
-		{
-			states.transform *= entity.get_component<ChildComponent>().getTransform();
-
-			target.draw(sprite, states);
-		}
-	});
-	this->entities.for_each<ParticleComponent>([&target, states](auto entity, auto& particle)
+	brigand::for_each<Renderables>([this, &target, states](auto renderableComponent)
 	{
-		target.draw(particle, states); 
+		using Type = decltype(renderableComponent)::type;
+
+		this->entities.for_each<Type>([this, &target, states](auto entity, auto& renderable) mutable
+		{
+			if (this->isInsideView(target.getView(), renderable.getPosition(), renderable.getGlobalBounds()))
+			{
+				target.draw(renderable);
+			}
+		});
 	});
 }
 
@@ -110,13 +112,13 @@ std::int32_t RenderSystem::getNewTransformationID() const
 	}
 }
 
-bool RenderSystem::isInsideView(const sf::View& view, const SpriteComponent& sprite) const
+bool RenderSystem::isInsideView(const sf::View& view, const sf::Vector2f& position, const sf::FloatRect& globalBounds) const
 {
 	const auto& left = view.getCenter().x - view.getSize().x / 2.f;
 	const auto& right = view.getCenter().x + view.getSize().x / 2.f;
 	const auto& top = view.getCenter().y - view.getSize().y / 2.f;
 	const auto& bottom = view.getCenter().y + view.getSize().y / 2.f;
-	 
-	return sprite.getPosition().x > left && sprite.getPosition().x < right
-		   && sprite.getPosition().y > top && sprite.getPosition().y < bottom;
+
+	return position.x + globalBounds.width / 2.f > left && position.x - globalBounds.width / 2.f < right
+		&& position.y - globalBounds.height / 2.f > top && position.y + globalBounds.height / 2.f < bottom;
 }

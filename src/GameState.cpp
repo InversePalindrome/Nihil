@@ -29,6 +29,11 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 
 	itemsDisplay.setPosition(200.f, 200.f);
 	
+	entityManager.getEvents().subscribe<MoveCamera>([this](const auto& event) { updateCamera(event.entity); });
+	entityManager.getEvents().subscribe<DisplayHealthBar>([this](const auto& event) { updateHealthBar(event.health); });
+	entityManager.getEvents().subscribe<DisplayCoins>([this](const auto& event) { updateCoinDisplay(event.inventory); });
+	entityManager.getEvents().subscribe<PickedUpItem>([this](const auto& event) { updateItemsDisplay(event.item); });
+
 	entityManager.getEvents().subscribe<DestroyEntity>([this](const auto& event) 
 	{ 
 		callbacks.push_back([this, event]
@@ -61,13 +66,15 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 		});
 	});
 
-	entityManager.getEvents().subscribe<MoveCamera>([this](const auto& event) { updateCamera(event.entity); });
-	entityManager.getEvents().subscribe<DisplayHealthBar>([this](const auto& event) { updateHealthBar(event.health); });
-	entityManager.getEvents().subscribe<DisplayCoins>([this](const auto& event) { updateCoinDisplay(event.inventory); });
-
-    entityManager.getEvents().subscribe<entityplus::component_added<Entity, InventoryComponent>>([&stateData](auto& event)
+    entityManager.getEvents().subscribe<entityplus::component_added<Entity, InventoryComponent>>([this, &stateData](auto& event)
 	{
 		event.component.setItems(stateData.games.front().getItems());
+
+		for (const auto& item : stateData.games.front().getItems())
+		{
+			itemsDisplay[item.first].quantity = item.second;
+			itemsDisplay[item.first].info.setString(std::to_string(item.second) + " / " + std::to_string(itemsDisplay[item.first].maxQuantity));
+		}
 	});
 
 	stateData.window.setView(camera);
@@ -139,6 +146,17 @@ void GameState::updateHealthBar(const HealthComponent& healthComponent)
 void GameState::updateCoinDisplay(const InventoryComponent& inventory)
 {
 	this->coinDisplay.setNumberOfCoins(inventory[Item::Coin]);
+}
+
+void GameState::updateItemsDisplay(Entity item)
+{
+	if (item.has_component<PickupComponent>() && this->itemsDisplay.hasItem(item.get_component<PickupComponent>().getItem()))
+	{
+		auto& itemGraphic = this->itemsDisplay[item.get_component<PickupComponent>().getItem()];
+
+		++itemGraphic.quantity;
+		itemGraphic.info.setString(std::to_string(itemGraphic.quantity) + " / " + std::to_string(itemGraphic.maxQuantity));
+	}
 }
 
 void GameState::changeLevel(const std::string& level)

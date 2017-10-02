@@ -91,6 +91,13 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 			sf::IntRect(std::get<1>(params), std::get<2>(params), std::get<3>(params), std::get<4>(params)), sf::Vector2f(std::get<5>(params), std::get<6>(params)));
 	};
 
+	componentParsers["Text"] = [this, &resourceManager](auto& entity, auto& line)
+	{
+		auto& params = parse<std::string, std::string>(line);
+
+		entity.add_component<TextComponent>(resourceManager, std::get<0>(params), std::get<1>(params));
+	};
+
 	componentParsers["Health"] = [this](auto& entity, auto& line)
 	{
 		entity.add_component(std::make_from_tuple<HealthComponent>(parse<std::size_t>(line)));
