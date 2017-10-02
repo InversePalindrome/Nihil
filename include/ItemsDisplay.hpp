@@ -31,11 +31,15 @@ class ItemsDisplay : public sf::Drawable, public sf::Transformable
 public:
 	ItemsDisplay(ResourceManager& resourceManager);
 
+	ItemsGraphics& operator[](Item item);
+
 	void update(float deltaTime);
 
 	bool getVisibility() const;
 
 	void setVisibility(bool isVisible);
+
+	bool hasItem(Item item) const;
 
 private:
 	bool isVisible;
@@ -48,11 +52,14 @@ private:
 
 struct ItemsGraphics : public sf::Drawable, public sf::Transformable
 {
+	ItemsGraphics() = default;
 	ItemsGraphics(ResourceManager& resourceManager, const std::string& itemData);
 
 	sf::Sprite sprite;
 	std::string animationFile;
 	sf::Text info;
+	std::size_t quantity;
+	std::size_t maxQuantity;
 	thor::Animator<sf::Sprite, std::size_t> animator;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

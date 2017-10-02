@@ -20,10 +20,10 @@ class InventoryComponent : public Component
 public:
 	InventoryComponent();
 
-	void setItems(Items& items);
-
 	std::size_t& operator[](Item item);
 	const std::size_t& operator[](Item item) const;
+
+	void setItems(Items& items);
 
 	void addItem(Item item, std::size_t quantity);
 	void removeItem(Item item);

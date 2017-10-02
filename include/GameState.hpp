@@ -54,6 +54,8 @@ private:
 	void updateCamera(Entity entity);
 	void updateHealthBar(const HealthComponent& health);
 	void updateCoinDisplay(const InventoryComponent& inventory);
+	void updateItemsDisplay(Entity item);
+
 	void changeLevel(const std::string& level);
 
 	void saveData(const std::string& pathFile);

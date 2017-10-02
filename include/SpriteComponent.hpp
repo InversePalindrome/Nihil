@@ -15,9 +15,10 @@ InversePalindrome.com
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
+#include <SFML/Graphics/Transformable.hpp>
 
 
-class SpriteComponent : public Component, public sf::Drawable
+class SpriteComponent : public Component, public sf::Transformable, public sf::Drawable
 {
 	friend std::ostream& operator<<(std::ostream& os, const SpriteComponent& component);
 
@@ -25,13 +26,10 @@ public:
 	SpriteComponent(ResourceManager& resourceManager, TexturesID textureID);
 	SpriteComponent(ResourceManager& resourceManager, TexturesID textureID, const sf::IntRect& textureRect, const sf::Vector2f& scale);
 
+	sf::FloatRect getGlobalBounds() const;
+
 	TexturesID getTextureID() const;
 	sf::Sprite& getSprite();
-	sf::Vector2f getPosition() const;
-	const sf::Transform& getTransform() const;
-
-	void setPosition(const sf::Vector2f& position);
-	void setRotation(float rotation);
 
 private:
 	TexturesID textureID;

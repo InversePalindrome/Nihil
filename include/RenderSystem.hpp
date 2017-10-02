@@ -9,6 +9,8 @@ InversePalindrome.com
 
 #include "System.hpp"
 
+#include <brigand/sequences/list.hpp>
+
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
@@ -18,6 +20,8 @@ InversePalindrome.com
 
 class RenderSystem : public System, public sf::Drawable
 {
+	using Renderables = brigand::list<SpriteComponent, TextComponent, ParticleComponent>;
+
 public:
 	RenderSystem(Entities& entities, Events& events);
 
@@ -32,7 +36,7 @@ private:
 
 	std::int32_t getNewTransformationID() const;
 
-	bool isInsideView(const sf::View& view, const SpriteComponent& sprite) const;
+	bool isInsideView(const sf::View& view, const sf::Vector2f& position, const sf::FloatRect& globalBounds) const;
 
 	std::set<std::int32_t> transformationIDs;
 };

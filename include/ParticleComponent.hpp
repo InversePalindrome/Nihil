@@ -18,11 +18,12 @@ InversePalindrome.com
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
+#include <SFML/Graphics/Transformable.hpp>
 
 #include <unordered_map>
 
 
-class ParticleComponent : public Component, public sf::Drawable
+class ParticleComponent : public Component, public sf::Transformable, public sf::Drawable
 {
 	friend std::ostream& operator<<(std::ostream& os, const ParticleComponent& component);
 
@@ -33,9 +34,9 @@ public:
     
 	ParticleData getParticleData(EntityState state) const;
 	sf::Vector2f getEmissionOffset() const;
+	sf::FloatRect getGlobalBounds() const;
 
 	void setEffect(EntityState state);
-	void setEmitterPosition(const sf::Vector2f& position);
 
 	void clearEffects();
 
@@ -48,7 +49,7 @@ private:
 
 	thor::ParticleSystem particleSystem;
 	thor::UniversalEmitter emitter;
-	std::size_t rangeOfEmission;
+	float rangeOfEmission;
 	sf::Vector2f emissionOffset;
 
 	std::unordered_map<EntityState, ParticleData> particleEffects;

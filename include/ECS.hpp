@@ -8,6 +8,7 @@ InversePalindrome.com
 #pragma once
 
 #include "SpriteComponent.hpp"
+#include "TextComponent.hpp"
 #include "PhysicsComponent.hpp"
 #include "StateComponent.hpp"
 #include "PositionComponent.hpp"
@@ -64,9 +65,9 @@ struct ApplyKnockback;
 
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
-	HealthComponent, MeleeAttackComponent, RangeAttackComponent, BulletComponent, BombComponent, SpriteComponent, AnimationComponent, 
-	SoundComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, ChaseComponent,
-    PickupComponent, InventoryComponent>;
+	HealthComponent, MeleeAttackComponent, RangeAttackComponent, BulletComponent, BombComponent, SpriteComponent, TextComponent, 
+	AnimationComponent, SoundComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent,
+	ChaseComponent, PickupComponent, InventoryComponent>;
 
 using Tags = entityplus::tag_list<AI>;
 
@@ -80,9 +81,9 @@ using Events = entityplus::event_manager<Components, Tags, DirectionChanged, Jum
 using Entity = Entities::entity_t;
 
 using ComponentList = brigand::list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
-	HealthComponent, MeleeAttackComponent, RangeAttackComponent, BulletComponent, BombComponent, SpriteComponent, AnimationComponent,
-	SoundComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, ChaseComponent,
-    PickupComponent, InventoryComponent>;
+	HealthComponent, MeleeAttackComponent, RangeAttackComponent, BulletComponent, BombComponent, SpriteComponent, TextComponent, 
+	AnimationComponent, SoundComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent,
+	ChaseComponent, PickupComponent, InventoryComponent>;
 
 
 struct DirectionChanged
