@@ -28,31 +28,20 @@ class ParticleComponent : public Component, public sf::Transformable, public sf:
 	friend std::ostream& operator<<(std::ostream& os, const ParticleComponent& component);
 
 public:
-	ParticleComponent(const std::string& filePath, ResourceManager& resourceManager);
+	ParticleComponent(ResourceManager& resourceManager, const sf::Vector2f& effectRange, 
+		const std::string& particleFile, const std::string& emitterFile);
 
 	void update(float deltaTime);
     
-	ParticleData getParticleData(EntityState state) const;
-	sf::Vector2f getEmissionOffset() const;
 	sf::FloatRect getGlobalBounds() const;
 
-	void setEffect(EntityState state);
-
-	void clearEffects();
-
-	void clearParticles();
-
-	bool hasParticleData(EntityState state) const;
-
 private:
-	std::string pathFile;
+	sf::Vector2f effectRange;
+	std::string particleFile;
+	std::string emitterFile;
 
 	thor::ParticleSystem particleSystem;
 	thor::UniversalEmitter emitter;
-	float rangeOfEmission;
-	sf::Vector2f emissionOffset;
-
-	std::unordered_map<EntityState, ParticleData> particleEffects;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

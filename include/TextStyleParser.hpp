@@ -12,7 +12,7 @@ InversePalindrome.com
 #include <SFML/Graphics/Text.hpp>
 
 
-namespace TextStyleParser
+namespace Parsers
 {
 	void parseStyle(ResourceManager& resourceManager, const std::string& pathFile, sf::Text& text);
 }

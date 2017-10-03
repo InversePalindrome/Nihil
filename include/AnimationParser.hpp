@@ -8,6 +8,7 @@ InversePalindrome.com
 #pragma once
 
 #include <Thor/Animations/FrameAnimation.hpp>
+#include <Thor/Animations/ColorAnimation.hpp>
 
 #include <SFML/Graphics/Sprite.hpp>
 
@@ -16,8 +17,10 @@ InversePalindrome.com
 #include <sstream>
 
 
-namespace AnimationParser
+namespace Parsers
 {
-	void parseAnimations(const std::string& pathFile, thor::FrameAnimation& animation,
+	void parseFrameAnimations(const std::string& pathFile, thor::FrameAnimation& animation,
 		std::size_t& animationID, float& animationTime);
+
+	thor::ColorGradient parseColors(const std::string& pathFile);
 }

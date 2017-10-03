@@ -16,7 +16,4 @@ public:
 	EffectsSystem(Entities& entities, Events& events);
 
 	virtual void update(float deltaTime) override;
-
-private:
-	void changeParticleEffect(Entity entity, EntityState state);
 };
