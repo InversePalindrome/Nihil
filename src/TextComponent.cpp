@@ -13,7 +13,7 @@ TextComponent::TextComponent(ResourceManager& resourceManager, const std::string
 	Component("Text"),
 	pathFile(pathFile)
 {
-	TextStyleParser::parseStyle(resourceManager, pathFile, text);
+	Parsers::parseStyle(resourceManager, pathFile, text);
 
 	text.setString(inputText);
     text.setOrigin(text.getLocalBounds().width / 2.f, text.getLocalBounds().height / 2.f);

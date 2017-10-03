@@ -50,7 +50,7 @@ void RenderSystem::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		{
 			if (this->isInsideView(target.getView(), renderable.getPosition(), renderable.getGlobalBounds()))
 			{
-				target.draw(renderable);
+				target.draw(renderable, states);
 			}
 		});
 	});

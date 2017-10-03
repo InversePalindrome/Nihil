@@ -23,7 +23,7 @@ ItemsDisplay::ItemsDisplay(ResourceManager& resourceManager) :
 		std::size_t animationID = 0u;
 		float animationTime = 0.f;
 
-		AnimationParser::parseAnimations(item.second.animationFile, animation, animationID, animationTime);
+		Parsers::parseFrameAnimations(item.second.animationFile, animation, animationID, animationTime);
 		item.second.animator.addAnimation(animationID, animation, sf::seconds(animationTime));
 		item.second.animator.playAnimation(animationID, true);
 	}

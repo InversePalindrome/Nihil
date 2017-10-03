@@ -8,7 +8,7 @@ InversePalindrome.com
 #include "AnimationParser.hpp"
 
 
-void AnimationParser::parseAnimations(const std::string& pathFile, thor::FrameAnimation& animation, 
+void Parsers::parseFrameAnimations(const std::string& pathFile, thor::FrameAnimation& animation, 
 	std::size_t& animationID, float& animationTime)
 {
 	std::ifstream inFile(pathFile);
@@ -36,4 +36,22 @@ void AnimationParser::parseAnimations(const std::string& pathFile, thor::FrameAn
 			animation.addFrame(frameTime, sf::IntRect(left, top, width, length));
 		}
 	}
+}
+
+
+thor::ColorGradient Parsers::parseColors(const std::string& pathFile)
+{
+	thor::ColorGradient colors;
+
+	std::ifstream inFile(pathFile);
+
+	float gradientPosition = 0.f;
+	std::size_t R = 0u, G = 0u, B = 0u;
+
+	while (inFile >> gradientPosition >> R >> G >> B)
+	{
+		colors[gradientPosition] = sf::Color(R, G, B);
+	}
+
+	return colors;
 }

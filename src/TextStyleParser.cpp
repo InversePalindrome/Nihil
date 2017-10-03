@@ -11,7 +11,7 @@ InversePalindrome.com
 #include <sstream>
 
 
-void TextStyleParser::parseStyle(ResourceManager& resourceManager, const std::string& pathFile, sf::Text& text)
+void Parsers::parseStyle(ResourceManager& resourceManager, const std::string& pathFile, sf::Text& text)
 {
 	std::ifstream inFile(pathFile);
 	std::string line;

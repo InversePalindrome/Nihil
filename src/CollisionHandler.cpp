@@ -35,7 +35,7 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 	}
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Portal))
 	{
-		this->events.broadcast(Teleported{ orderedCollision.value().second.get().properties["ID"].getStringValue() });
+		this->events.broadcast(Teleported{ orderedCollision.value().second.get().properties["Destination"].getStringValue() });
 	}
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Pickup))
 	{

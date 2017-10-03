@@ -66,7 +66,7 @@ AnimationComponent::AnimationComponent(bool hasMultipleAnimations, const std::st
 		std::size_t animationID = 0u;
 		float animationTime = 0.f;
 
-		AnimationParser::parseAnimations(animationsFile, animation, animationID, animationTime);
+		Parsers::parseFrameAnimations(animationsFile, animation, animationID, animationTime);
 
 		singleAnimator.addAnimation(animationID, animation, sf::seconds(animationTime));
 		singleAnimator.playAnimation(animationID, true);

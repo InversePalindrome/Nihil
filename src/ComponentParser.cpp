@@ -144,9 +144,9 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["Particle"] = [this, &resourceManager](auto& entity, auto& line)
 	{
-		auto& params = this->parse<std::string>(line);
+		auto& params = parse<float, float, std::string, std::string>(line);
 		
-		entity.add_component<ParticleComponent>(std::get<0>(params), resourceManager);
+		entity.add_component<ParticleComponent>(resourceManager, sf::Vector2f(std::get<0>(params), std::get<1>(params)), std::get<2>(params), std::get<3>(params));
 	};
 	
 	componentParsers["ParentA"] = [this](auto& entity, auto& line)

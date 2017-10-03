@@ -6,71 +6,26 @@ InversePalindrome.com
 
 
 #include "ParticleComponent.hpp"
+#include "EffectParser.hpp"
 #include <Thor/Math/Distributions.hpp>
 
-#include <fstream>
-#include <sstream>
 
-
-ParticleComponent::ParticleComponent(const std::string& pathFile, ResourceManager& resourceManager) :
+ParticleComponent::ParticleComponent(ResourceManager& resourceManager, const sf::Vector2f& effectRange, 
+	const std::string& particleFile, const std::string& emitterFile) :
 	Component("Particle"),
-	pathFile(pathFile),
-	rangeOfEmission(0u)
+	effectRange(effectRange),
+	particleFile(particleFile),
+	emitterFile(emitterFile),
+	emitter(std::move(Parsers::parseEmitter(emitterFile)))
 {
-	std::ifstream inFile(pathFile);
-	std::string line;
-
-	std::size_t numberOfParticles = 0u;
-
-	while (std::getline(inFile, line))
-	{
-		std::istringstream iStream(line);
-
-		std::string category;
-
-		iStream >> category;
-
-		if (category == "Texture")
-		{
-			std::size_t textureID = 0u;
-			float radiusOfEmission = 0.f, emissionOffsetX = 0.f, emissionOffsetY = 0.f;
-
-			iStream >> textureID >> radiusOfEmission >> emissionOffsetX >> emissionOffsetY;
-
-			particleSystem.setTexture(resourceManager.getTexture(static_cast<TexturesID>(textureID)));
-
-			rangeOfEmission = radiusOfEmission;
-			emissionOffset = sf::Vector2f(emissionOffsetX, emissionOffsetY);
-		}
-		else if (category == "Particle")
-		{
-			std::size_t left = 0u, top = 0u, width = 0u, height = 0u;
-
-			iStream >> left >> top >> width >> height;
-
-			particleSystem.addTextureRect(sf::IntRect(left, top, width, height));
-
-			++numberOfParticles;
-		}
-		else if (category == "State")
-		{
-			std::size_t stateID = 0u, R = 0u, G = 0u, B = 0u;
-			float particleLifetime = 0.f, emissionRate = 0.f;
-
-			iStream >> stateID >> emissionRate >> particleLifetime >> R >> G >> B;
-
-			particleEffects[static_cast<EntityState>(stateID)] = ParticleData(emissionRate, particleLifetime, sf::Color(R, G, B));
-		}
-	}
-
-	emitter.setParticleTextureIndex(thor::Distributions::uniform(0u, numberOfParticles - 1u));
-
+	Parsers::parseParticleSystem(resourceManager, particleFile, particleSystem);
+    
 	particleSystem.addEmitter(thor::refEmitter(emitter));
 }
 
 std::ostream& operator<<(std::ostream& os, const ParticleComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.pathFile;
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.particleFile << ' ' << component.emitterFile;
 
 	return os;
 }
@@ -80,47 +35,9 @@ void ParticleComponent::update(float deltaTime)
 	this->particleSystem.update(sf::seconds(deltaTime));
 }
 
-ParticleData ParticleComponent::getParticleData(EntityState state) const
-{
-	return this->particleEffects.at(state);
-}
-
-sf::Vector2f ParticleComponent::getEmissionOffset() const
-{
-	return this->emissionOffset;
-}
-
 sf::FloatRect ParticleComponent::getGlobalBounds() const
 {
-	return sf::FloatRect(this->getPosition(), { this->rangeOfEmission, this->rangeOfEmission });
-}
-
-void ParticleComponent::setEffect(EntityState state)
-{
-	this->emitter.setParticleLifetime(sf::seconds(this->particleEffects.at(state).particleLifetime));
-	this->emitter.setEmissionRate(this->particleEffects.at(state).emissionRate);
-	this->emitter.setParticleColor(this->particleEffects.at(state).particleColor);
-}
-/*
-void ParticleComponent::setEmitterPosition(const sf::Vector2f& position)
-{
-	this->emitter.setParticlePosition(thor::Distributions::circle(position, this->rangeOfEmission));
-}*/
-
-void ParticleComponent::clearEffects()
-{
-	this->emitter.setParticleLifetime(sf::Time::Zero);
-	this->emitter.setEmissionRate(0.f);
-}
-
-void ParticleComponent::clearParticles()
-{
-	this->particleSystem.clearParticles();
-}
-
-bool ParticleComponent::hasParticleData(EntityState state) const
-{
-	return this->particleEffects.count(state);
+	return sf::FloatRect(this->getPosition(), { this->effectRange.x, this->effectRange.y });
 }
 
 void ParticleComponent::draw(sf::RenderTarget& target, sf::RenderStates states) const
