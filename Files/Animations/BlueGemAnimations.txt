@@ -1,1 +1,5 @@
-
+Animation 0 0.8
+Frame 1 0 0 256 256
+Frame 1 286 0 217 256 
+Frame 1 548 0 188 256
+Frame 1 780 0 218 256

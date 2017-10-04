@@ -1,0 +1,5 @@
+Animation 0 0.5
+Frame 1 0 0 60 60
+Frame 1 60 0 60 60
+Frame 1 0 60 60 60
+Frame 1 60 60 60 60
