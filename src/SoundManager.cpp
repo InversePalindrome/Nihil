@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #include "SoundManager.hpp"
+#include "FilePaths.hpp"
 
 #include <SFML/Audio/Listener.hpp>
 
@@ -76,7 +77,7 @@ void SoundManager::playMusic(const std::string& name, bool loop)
 {
 	auto music = std::make_unique<sf::Music>();
 
-	if (!music->openFromFile("Resources/Music/" + name))
+	if (!music->openFromFile(Path::music / name))
 	{
 		std::cerr << "Failed to open Music: " + name << std::endl;
 	}

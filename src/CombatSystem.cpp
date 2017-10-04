@@ -8,6 +8,7 @@ InversePalindrome.com
 #include "CombatSystem.hpp"
 #include "MathUtility.hpp"
 #include "UnitConverter.hpp"
+#include "FilePaths.hpp"
 
 
 CombatSystem::CombatSystem(Entities& entities, Events& events, ComponentParser& componentParser) :
@@ -105,7 +106,7 @@ void CombatSystem::handleExplosion(Entity bomb, Entity explosion)
 
 void CombatSystem::shootProjectile(Entity shooter, const std::string& projectileID, const sf::Vector2f& targetPosition)
 {
-	auto& projectileEntity = this->componentParser.parseComponents("Resources/Files/" + projectileID + ".txt");
+	auto& projectileEntity = this->componentParser.parseComponents(projectileID + ".txt");
 	
 	this->componentParser.setComponentsID(projectileEntity, -1);
 	
@@ -198,7 +199,7 @@ void CombatSystem::addExplosion(Entity bomb)
 			{
 				auto& bombComponent = bomb.get_component<BombComponent>();
 
-				auto& explosion = this->componentParser.parseComponents("Resources/Files/" + bombComponent.getExplosionID() + ".txt");
+				auto& explosion = this->componentParser.parseComponents(bombComponent.getExplosionID() + ".txt");
 
 				this->componentParser.setComponentsID(explosion, -1);
 

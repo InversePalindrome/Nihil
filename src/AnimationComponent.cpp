@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #include "AnimationComponent.hpp"
 #include "AnimationParser.hpp"
+#include "FilePaths.hpp"
 
 #include <fstream>
 #include <sstream>
@@ -19,7 +20,7 @@ AnimationComponent::AnimationComponent(bool hasMultipleAnimations, const std::st
 {
 	if (hasMultipleAnimations)
 	{
-		std::ifstream inFile(animationsFile);
+		std::ifstream inFile(Path::animations / animationsFile);
 		std::string line;
 
 		while (std::getline(inFile, line))
@@ -66,7 +67,7 @@ AnimationComponent::AnimationComponent(bool hasMultipleAnimations, const std::st
 		std::size_t animationID = 0u;
 		float animationTime = 0.f;
 
-		Parsers::parseFrameAnimations(animationsFile, animation, animationID, animationTime);
+		Path::parseFrameAnimations(animationsFile, animation, animationID, animationTime);
 
 		singleAnimator.addAnimation(animationID, animation, sf::seconds(animationTime));
 		singleAnimator.playAnimation(animationID, true);

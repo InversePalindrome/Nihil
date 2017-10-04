@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #include "Layer.hpp"
+#include "FilePaths.hpp"
 
 
 Layer::Layer(const tmx::Map& map, std::size_t layerID, sf::Vector2f chunkSize) :
@@ -69,12 +70,12 @@ void Layer::createChunks(const tmx::Map& map, const tmx::TileLayer& layer)
 	fallback.create(2, 2, sf::Color::Magenta);
 	for (const auto ts : usedTileSets)
 	{
-		const auto& path = ts->getImagePath();
+		const Path::FilePath& filePath(ts->getImagePath());
 		auto newTexture = std::make_unique<sf::Texture>();
 
 		sf::Image image;
-
-		if (!image.loadFromFile(path))
+		
+		if (!image.loadFromFile(Path::textures / filePath.path.leaf().string()))
 		{
 			newTexture->loadFromImage(fallback);
 		}
@@ -88,7 +89,7 @@ void Layer::createChunks(const tmx::Map& map, const tmx::TileLayer& layer)
 			newTexture->loadFromImage(image);
 		}
 
-		this->textures.emplace(path, std::move(newTexture));
+		this->textures.emplace(filePath.path.string(), std::move(newTexture));
 	}
 
 	const auto& bounds = map.getBounds();

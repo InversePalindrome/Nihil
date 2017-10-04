@@ -6,12 +6,13 @@ InversePalindrome.com
 
 
 #include "AnimationParser.hpp"
+#include "FilePaths.hpp"
 
 
-void Parsers::parseFrameAnimations(const std::string& pathFile, thor::FrameAnimation& animation, 
+void Path::parseFrameAnimations(const std::string& filePath, thor::FrameAnimation& animation, 
 	std::size_t& animationID, float& animationTime)
 {
-	std::ifstream inFile(pathFile);
+	std::ifstream inFile(Path::animations / filePath);
 	std::string line;
 
 	while (std::getline(inFile, line))
@@ -39,11 +40,11 @@ void Parsers::parseFrameAnimations(const std::string& pathFile, thor::FrameAnima
 }
 
 
-thor::ColorGradient Parsers::parseColors(const std::string& pathFile)
+thor::ColorGradient Path::parseColors(const std::string& filePath)
 {
 	thor::ColorGradient colors;
 
-	std::ifstream inFile(pathFile);
+	std::ifstream inFile(Path::miscellaneous / filePath);
 
 	float gradientPosition = 0.f;
 	std::size_t R = 0u, G = 0u, B = 0u;

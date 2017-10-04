@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #include "ComponentParser.hpp"
+#include "FilePaths.hpp"
 #include "UnitConverter.hpp"
 
 #include <brigand/algorithms/for_each.hpp>
@@ -187,16 +188,16 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 	};
 }
 
-Entity ComponentParser::parseComponents(const std::string& pathFile)
+Entity ComponentParser::parseComponents(const std::string& filePath)
 {
-	return this->parseComponents(++this->currentEntityID, pathFile);
+	return this->parseComponents(++this->currentEntityID, filePath);
 }
 
-Entity ComponentParser::parseComponents(std::int32_t entityID, const std::string& pathFile)
+Entity ComponentParser::parseComponents(std::int32_t entityID, const std::string& filePath)
 {
 	auto entity = this->createEntity();
-	
-	std::ifstream inFile(pathFile);
+
+	std::ifstream inFile(Path::blueprints / filePath);
 	std::string line;
 
 	while (std::getline(inFile, line))
@@ -223,11 +224,11 @@ Entity ComponentParser::parseComponents(std::int32_t entityID, const std::string
 	return entity;
 }
 
-void ComponentParser::parseBlueprint(const std::string& pathFile)
+void ComponentParser::parseBlueprint(const std::string& filePath)
 {
-	std::ifstream inFile(pathFile);
+	std::ifstream inFile(Path::blueprints / filePath);
 	std::string line;
-
+	
 	while (std::getline(inFile, line))
 	{
 		std::istringstream iStream(line);
@@ -252,9 +253,9 @@ void ComponentParser::parseBlueprint(const std::string& pathFile)
 	}
 }
 
-void ComponentParser::parseEntities(const std::string& pathFile)
+void ComponentParser::parseEntities(const std::string& filePath)
 {
-	std::ifstream inFile(pathFile);
+	std::ifstream inFile(Path::games / filePath);
 	std::string line;
 
 	std::map<std::int32_t, Entity> entitiesIDs;

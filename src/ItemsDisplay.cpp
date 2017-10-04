@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #include "ItemsDisplay.hpp"
+#include "FilePaths.hpp"
 #include "AnimationParser.hpp"
 
 #include <fstream>
@@ -15,7 +16,7 @@ InversePalindrome.com
 ItemsDisplay::ItemsDisplay(ResourceManager& resourceManager) :
 	isVisible(false)
 {
-	loadItems(resourceManager, "Resources/Files/ItemsDisplay.txt");
+	loadItems(resourceManager, Path::miscellaneous / "ItemsDisplay.txt");
 
 	for (auto& item : itemsData)
 	{
@@ -23,7 +24,7 @@ ItemsDisplay::ItemsDisplay(ResourceManager& resourceManager) :
 		std::size_t animationID = 0u;
 		float animationTime = 0.f;
 
-		Parsers::parseFrameAnimations(item.second.animationFile, animation, animationID, animationTime);
+		Path::parseFrameAnimations(item.second.animationFile, animation, animationID, animationTime);
 		item.second.animator.addAnimation(animationID, animation, sf::seconds(animationTime));
 		item.second.animator.playAnimation(animationID, true);
 	}
@@ -64,9 +65,9 @@ bool ItemsDisplay::hasItem(Item item) const
 	return this->itemsData.count(item);
 }
 
-void ItemsDisplay::loadItems(ResourceManager& resourceManager, const std::string& pathFile)
+void ItemsDisplay::loadItems(ResourceManager& resourceManager, const std::string& filePath)
 {
-	std::ifstream inFile(pathFile);
+	std::ifstream inFile(filePath);
 	std::string line;
 
 	while (std::getline(inFile, line))

@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #include "Game.hpp"
+#include "FilePaths.hpp"
 
 #include <fstream>
 #include <sstream>
@@ -17,14 +18,14 @@ Game::Game()
 	loadLevelNames();
 	loadSpawnPoints();
 
-	std::ifstream inFile("Resources/Files/Levels.txt");
+	std::ifstream inFile(Path::levels / "Levels.txt");
 
 	inFile >> currentLevel;
 
 	inFile.close();
 	inFile.clear();
 
-	inFile.open("Resources/Files/Characters.txt");
+	inFile.open(Path::miscellaneous / "Characters.txt");
 
 	inFile >> currentCharacter;
 
@@ -170,7 +171,7 @@ std::ostream& operator<<(std::ostream& os, const Game& game)
 
 void Game::loadCharacterNames()
 {
-	std::ifstream inFile("Resources/Files/Characters.txt");
+	std::ifstream inFile(Path::miscellaneous / "Characters.txt");
 	std::string line;
 
 	while (std::getline(inFile, line))
@@ -187,7 +188,7 @@ void Game::loadCharacterNames()
 
 void Game::loadLevelNames()
 {
-	std::ifstream inFile("Resources/Files/Levels.txt");
+	std::ifstream inFile(Path::levels / "Levels.txt");
 	std::string line;
 
 	while (std::getline(inFile, line))
@@ -200,7 +201,7 @@ void Game::loadSpawnPoints()
 {
 	for (const auto& level : this->levels)
 	{
-		std::ifstream inFile("Resources/Files/BlueprintObjects-" + level.name + ".txt");
+		std::ifstream inFile(Path::blueprints / level.name + ".txt");
 		std::string line;
 
 		while (std::getline(inFile, line))
@@ -208,11 +209,11 @@ void Game::loadSpawnPoints()
 			std::istringstream iStream(line);
 
 			std::int32_t entityID;
-			std::string pathFile;
+			std::string filePath;
 
-			iStream >> entityID >> pathFile;
+			iStream >> entityID >> filePath;
 
-			if (pathFile == "Resources/Files/Player.txt")
+			if (filePath == "Player.txt")
 			{
 				float xPosition = 0.f, yPosition = 0.f;
 				

@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #include "Map.hpp"
+#include "FilePaths.hpp"
 #include "UnitConverter.hpp"
 
 #include <Box2D/Dynamics/b2Body.h>
@@ -32,8 +33,8 @@ void Map::load(const std::string& filePath)
 {
 	this->layers.clear();
 
-	this->map.load(filePath);
-	this->filePath = filePath;
+	this->map.load(Path::levels / filePath);
+	this->filePath = Path::levels / filePath;
 
 	for (std::size_t i = 0; i < this->map.getLayers().size(); ++i)
 	{
@@ -160,8 +161,8 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 		}
 	}
 	
-	this->componentSerializer.saveBlueprint("Resources/Files/BlueprintObjects-" + game.getCurrentLevel() + ".txt", staticObjectFiles);
-	this->componentSerializer.saveBlueprint("Resources/Files/BlueprintEntities-" + game.getCurrentLevel() + ".txt", entityFiles);
+	this->componentSerializer.saveBlueprint("Objects-" + game.getCurrentLevel() + ".txt", staticObjectFiles);
+	this->componentSerializer.saveBlueprint("Entities-" + game.getCurrentLevel() + ".txt", entityFiles);
 }
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const

@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #include "MenuState.hpp"
+#include "FilePaths.hpp"
 #include "StateMachine.hpp"
 
 #include <Thor/Math/Distributions.hpp>
@@ -68,7 +69,7 @@ MenuState::MenuState(StateMachine& stateMachine, StateData& stateData) :
 	charactersButton->SetPosition(sf::Vector2f(790.f, 1180.f));
 	charactersButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { transitionToCharacters(); });
 	
-	stateData.guiManager.setProperty("*", "FontName", "Resources/Fonts/8-BIT-WONDER.ttf");
+	stateData.guiManager.setProperty("*", "FontName", Path::fonts / "8-BIT-WONDER.ttf");
 	stateData.guiManager.setProperty("*", "Color", sf::Color(255u, 255u, 0u));
 	stateData.guiManager.setProperty("*", "FontSize", 40.f);
 	stateData.guiManager.setProperty("Button", "Padding", 25.f);

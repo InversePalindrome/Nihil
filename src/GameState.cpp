@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #include "GameState.hpp"
 #include "StateMachine.hpp"
+#include "FilePaths.hpp"
 
 
 GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
@@ -51,7 +52,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	{
 		callbacks.push_back([this, &stateData]
 		{
-			auto& entity = entityManager.createEntity("Resources/Files/Player.txt", stateData.games.front().getSpawnPoint());
+			auto& entity = entityManager.createEntity("Player.txt", stateData.games.front().getSpawnPoint());
 			
 			camera = stateData.window.getDefaultView();
 			stateData.window.setView(camera);
@@ -86,7 +87,7 @@ void GameState::handleEvent(const sf::Event& event)
 {
 	if (this->stateData.inputHandler.isActive("Escape"))
 	{
-		this->saveData("Resources/Files/SavedGames.txt");
+		this->saveData("SavedGames.txt");
 		this->stateMachine.pushState(StateID::Pause);
 	}
 	else if (this->stateData.inputHandler.isActive("Inventory"))
@@ -163,19 +164,19 @@ void GameState::changeLevel(const std::string& level)
 {
 	this->entityManager.destroyEntities();
 
-	this->map.load("Resources/Files/" + level + ".tmx");
+	this->map.load(level + ".tmx");
 	
 	if (!this->stateData.games.front().getLevels().get<1>().find(level)->isLoaded)
 	{
-		this->entityManager.parseBlueprint("Resources/Files/BlueprintObjects-" + level + ".txt");
 		this->stateData.games.front().getLevels().get<1>().modify(this->stateData.games.front().getLevels().get<1>().find(level), [](auto& iLevel) { iLevel.isLoaded = true; });
+		this->entityManager.parseBlueprint("Objects-" + level + ".txt");
 	}
 	else
 	{
-		this->entityManager.parseEntities("Resources/Files/Entities-" + this->stateData.games.front().getGameName() + '-' + level + ".txt");
+		this->entityManager.parseEntities(this->stateData.games.front().getGameName() + '-' + level + ".txt");
 	}
 
-	this->entityManager.parseBlueprint("Resources/Files/BlueprintEntities-" + level + ".txt");
+	this->entityManager.parseBlueprint("Entities-" + level + ".txt");
 
 	this->stateData.games.front().setCurrentLevel(level);
 
@@ -183,11 +184,11 @@ void GameState::changeLevel(const std::string& level)
 	this->stateData.soundManager.stopAllSounds();
 }
 
-void GameState::saveData(const std::string& pathFile)
+void GameState::saveData(const std::string& filePath)
 {
-	this->entityManager.saveEntities("Resources/Files/Entities-" + this->stateData.games.front().getGameName() + '-' + this->stateData.games.front().getCurrentLevel() + ".txt");
+	this->entityManager.saveEntities(this->stateData.games.front().getGameName() + '-' + this->stateData.games.front().getCurrentLevel() + ".txt");
 	
-	std::ofstream outFile(pathFile);
+	std::ofstream outFile(Path::games / filePath);
 
 	for (const auto& game : this->stateData.games)
 	{

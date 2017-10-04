@@ -6,18 +6,19 @@ InversePalindrome.com
 
 
 #include "AutomatedComponent.hpp"
+#include "FilePaths.hpp"
 
 #include <fstream>
 #include <sstream>
 #include <algorithm>
 
 
-AutomatedComponent::AutomatedComponent(const std::string& pathFile) :
+AutomatedComponent::AutomatedComponent(const std::string& filePath) :
 	Component("Automated"),
-	pathFile(pathFile),
+	filePath(filePath),
 	currentTask(0u)
 {
-	std::ifstream inFile(pathFile);
+	std::ifstream inFile(Path::miscellaneous / filePath);
 	std::string line;
 
 	while (std::getline(inFile, line))
@@ -37,7 +38,7 @@ AutomatedComponent::AutomatedComponent(const std::string& pathFile) :
 
 std::ostream& operator<<(std::ostream& os, const AutomatedComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.pathFile;
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.filePath;
 
 	return os;
 }

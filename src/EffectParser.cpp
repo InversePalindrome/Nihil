@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #include "EffectParser.hpp"
+#include "FilePaths.hpp"
 #include "AnimationParser.hpp"
 
 #include <Thor/Math/Distributions.hpp>
@@ -17,9 +18,9 @@ InversePalindrome.com
 #include <sstream>
 
 
-void Parsers::parseParticleSystem(ResourceManager& resourceManager, const std::string& pathFile, thor::ParticleSystem& particleSystem)
+void Path::parseParticleSystem(ResourceManager& resourceManager, const std::string& filePath, thor::ParticleSystem& particleSystem)
 {
-	std::ifstream inFile(pathFile);
+	std::ifstream inFile(Path::particles / filePath);
 	std::string line;
 
 	while (std::getline(inFile, line))
@@ -84,16 +85,16 @@ void Parsers::parseParticleSystem(ResourceManager& resourceManager, const std::s
 
 			iStream >> colorFile;
 
-			particleSystem.addAffector(thor::AnimationAffector(thor::ColorAnimation(Parsers::parseColors(colorFile))));
+			particleSystem.addAffector(thor::AnimationAffector(thor::ColorAnimation(Path::parseColors(colorFile))));
 		}
 	}
 }
 
-thor::UniversalEmitter Parsers::parseEmitter(const std::string& pathFile)
+thor::UniversalEmitter Path::parseEmitter(const std::string& filePath)
 {
 	thor::UniversalEmitter emitter;
 
-	std::ifstream inFile(pathFile);
+	std::ifstream inFile(Path::particles / filePath);
 	std::string line;
 
 	while (std::getline(inFile, line))

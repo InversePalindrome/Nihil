@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #include "TimerComponent.hpp"
+#include "FilePaths.hpp"
 
 #include <fstream>
 #include <sstream>
@@ -16,11 +17,11 @@ TimerComponent::TimerComponent() :
 {
 }
 
-TimerComponent::TimerComponent(const std::string& pathFile) :
+TimerComponent::TimerComponent(const std::string& filePath) :
 	Component("TimerB"),
-	pathFile(pathFile)
+	filePath(filePath)
 {
-	std::ifstream inFile(pathFile);
+	std::ifstream inFile(Path::miscellaneous / filePath);
 	std::string line;
 
 	while (std::getline(inFile, line))
@@ -38,7 +39,7 @@ TimerComponent::TimerComponent(const std::string& pathFile) :
 
 std::ostream& operator<<(std::ostream& os, const TimerComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.pathFile;
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.filePath;
 
 	return os;
 }

@@ -16,9 +16,9 @@ ParticleComponent::ParticleComponent(ResourceManager& resourceManager, const sf:
 	effectRange(effectRange),
 	particleFile(particleFile),
 	emitterFile(emitterFile),
-	emitter(std::move(Parsers::parseEmitter(emitterFile)))
+	emitter(std::move(Path::parseEmitter(emitterFile)))
 {
-	Parsers::parseParticleSystem(resourceManager, particleFile, particleSystem);
+	Path::parseParticleSystem(resourceManager, particleFile, particleSystem);
     
 	particleSystem.addEmitter(thor::refEmitter(emitter));
 }

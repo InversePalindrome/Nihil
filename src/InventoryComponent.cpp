@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #include "InventoryComponent.hpp"
 
+
 InventoryComponent::InventoryComponent() :
 	Component("Inventory")
 {

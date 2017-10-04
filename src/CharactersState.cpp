@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #include "CharactersState.hpp"
 #include "StateMachine.hpp"
+#include "FilePaths.hpp"
 
 #include <SFGUI/Image.hpp>
 
@@ -94,7 +95,7 @@ CharactersState::CharactersState(StateMachine& stateMachine, StateData& stateDat
 	stateData.guiManager.addWidget(gameChoices);
 	stateData.guiManager.addWidget(scrolledWindow);
 
-	loadCharacters("Resources/Files/Characters.txt");
+	loadCharacters("Characters.txt");
 }
 
 void CharactersState::handleEvent(const sf::Event& event)
@@ -115,9 +116,7 @@ void CharactersState::draw()
 
 void CharactersState::loadCharacters(const std::string& filePath)
 {
-	this->charactersFile = filePath;
-
-	std::ifstream inFile(filePath);
+	std::ifstream inFile(Path::miscellaneous / filePath);
 	std::string line;
 
 	std::size_t columnIndex = 0u, rowIndex = 0u, columnSpan = 1u, rowSpan = 1u;
@@ -196,7 +195,7 @@ void CharactersState::purchasedCharacter(sfg::RadioButton::Ptr characterButton, 
 
 		this->stateData.games.front().getCharacters().get<1>().modify(this->stateData.games.front().getCharacters().get<1>().find(characterButton->GetId()), [](auto& character) { character.isLoaded = false; });
 
-		std::ofstream outFile("Resources/Files/SavedGames.txt");
+		std::ofstream outFile(Path::games / "SavedGames.txt");
 
 		for (const auto& game : this->stateData.games)
 		{
@@ -219,7 +218,7 @@ void CharactersState::selectGame()
 			widget->Show(false);
 		}
 
-		this->loadCharacters("Resources/Files/Characters.txt");
+		this->loadCharacters("Characters.txt");
 	}
 }
 

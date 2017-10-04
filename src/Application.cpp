@@ -14,6 +14,7 @@ InversePalindrome.com
 #include "SettingsState.hpp"
 #include "CharactersState.hpp"
 #include "PauseState.hpp"
+#include "FilePaths.hpp"
 
 #include <Thor/Resources/SfmlLoaders.hpp>
 
@@ -26,7 +27,7 @@ InversePalindrome.com
 
 Application::Application() :
 	window(sf::VideoMode(2048u, 1536u), "Nihil", sf::Style::Close | sf::Style::Titlebar),
-	resourceManager("Resources/Files/ResourcePaths.txt"),
+	resourceManager("ResourcePaths.txt"),
 	soundManager(resourceManager),
 	guiManager(window),
 	stateData(games, resourceManager, soundManager, guiManager, inputHandler, window),
@@ -43,7 +44,7 @@ Application::Application() :
 
 	stateMachine.pushState(StateID::Splash);
 
-	loadGames("Resources/Files/SavedGames.txt");
+	loadGames("SavedGames.txt");
 }
 
 void Application::run()
@@ -104,9 +105,9 @@ void Application::render()
 	this->window.display();
 }
 
-void Application::loadGames(const std::string& pathFile)
+void Application::loadGames(const std::string& filePath)
 {
-	std::ifstream inFile(pathFile);
+	std::ifstream inFile(Path::games / filePath);
 	std::string gameData;
 	std::string line;
 

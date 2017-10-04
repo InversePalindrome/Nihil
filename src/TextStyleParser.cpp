@@ -6,14 +6,15 @@ InversePalindrome.com
 
 
 #include "TextStyleParser.hpp"
+#include "FilePaths.hpp"
 
 #include <fstream>
 #include <sstream>
 
 
-void Parsers::parseStyle(ResourceManager& resourceManager, const std::string& pathFile, sf::Text& text)
+void Path::parseStyle(ResourceManager& resourceManager, const std::string& filePath, sf::Text& text)
 {
-	std::ifstream inFile(pathFile);
+	std::ifstream inFile(Path::miscellaneous / filePath);
 	std::string line;
 
 	while (std::getline(inFile, line))

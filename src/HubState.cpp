@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #include "HubState.hpp"
 #include "StateMachine.hpp"
+#include "FilePaths.hpp"
 
 #include <SFGUI/Label.hpp>
 #include <SFGUI/RadioButton.hpp>
@@ -130,7 +131,7 @@ void HubState::addGame()
 
 		this->selectionBox->Pack(gameButton);
 
-		this->saveGames("Resources/Files/SavedGames.txt");
+		this->saveGames("SavedGames.txt");
 	}
 
 	this->addGamePopup->Show(false);
@@ -151,7 +152,7 @@ void HubState::deleteGame()
 				{
 					for (const auto& level : gameIter->getLevels())
 					{
-						std::remove(std::string("Resources/Files/Entities-" + gameButton->_Get()->GetLabel() + '-' + level.name + ".txt").c_str());
+						std::remove(std::string(Path::games / gameButton->_Get()->GetLabel() + '-' + level.name + ".txt").c_str());
 					}
 
 					this->stateData.games.erase(gameIter);
@@ -167,12 +168,12 @@ void HubState::deleteGame()
 		}
 	}
 
-	this->saveGames("Resources/Files/SavedGames.txt");
+	this->saveGames("SavedGames.txt");
 }
 
-void HubState::saveGames(const std::string& pathFile)
+void HubState::saveGames(const std::string& filePath)
 {
-	std::ofstream outFile(pathFile);
+	std::ofstream outFile(Path::games / filePath);
 
 	for (const auto& game : this->stateData.games)
 	{

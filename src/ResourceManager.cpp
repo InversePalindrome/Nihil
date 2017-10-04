@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #include "ResourceManager.hpp"
+#include "FilePaths.hpp"
 
 #include <Thor/Resources/SfmlLoaders.hpp>
 
@@ -19,19 +20,19 @@ ResourceManager::ResourceManager() :
 
 ResourceManager::ResourceManager(const std::string& resourcesFilePath) 
 {
-	resourceFactory.emplace("Texture", [this]
+	resourceFactory.emplace("Textures", [this]
 	(std::size_t ID, const std::string& resourceFilePath)
 	{ textures.acquire(static_cast<TexturesID>(ID), thor::Resources::fromFile<sf::Texture>(resourceFilePath)); });
 
-	resourceFactory.emplace("Image", [this]
+	resourceFactory.emplace("Images", [this]
 	(std::size_t ID, const std::string& resourceFilePath)
 	{ images.acquire(static_cast<ImagesID>(ID), thor::Resources::fromFile<sf::Image>(resourceFilePath)); });
 
-	resourceFactory.emplace("Font", [this]
+	resourceFactory.emplace("Fonts", [this]
 	(std::size_t ID, const std::string& resourceFilePath)
 	{ fonts.acquire(static_cast<FontsID>(ID), thor::Resources::fromFile<sf::Font>(resourceFilePath)); });
 
-	resourceFactory.emplace("Sound", [this]
+	resourceFactory.emplace("Sounds", [this]
 	(std::size_t ID, const std::string& resourceFilePath)
 	{ sounds.acquire(static_cast<SoundBuffersID>(ID), thor::Resources::fromFile<sf::SoundBuffer>(resourceFilePath)); });
 
@@ -40,7 +41,7 @@ ResourceManager::ResourceManager(const std::string& resourcesFilePath)
 
 void ResourceManager::loadResources(const std::string& resourcesFilePath)
 {
-	std::ifstream inFile(resourcesFilePath);
+	std::ifstream inFile(Path::miscellaneous / resourcesFilePath);
 
 	std::string resourceType;
 	std::size_t resourceID;
@@ -48,7 +49,7 @@ void ResourceManager::loadResources(const std::string& resourcesFilePath)
 
 	while (inFile >> resourceType >> resourceID >> filePath)
 	{
-		this->resourceFactory.at(resourceType)(resourceID, filePath);
+		this->resourceFactory.at(resourceType)(resourceID, Path::resources / resourceType + '/' + filePath);
 	}
 }
 

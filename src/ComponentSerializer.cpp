@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #include "ComponentSerializer.hpp"
+#include "FilePaths.hpp"
 
 #include <brigand/algorithms/for_each.hpp>
 
@@ -21,7 +22,7 @@ ComponentSerializer::ComponentSerializer(Entities& entities) :
 {
 }
 
-void ComponentSerializer::serialize(const std::string& pathFile)
+void ComponentSerializer::serialize(const std::string& filePath)
 {
 	std::multimap<std::int32_t, std::string> entities;
 
@@ -51,7 +52,7 @@ void ComponentSerializer::serialize(const std::string& pathFile)
 		});
 	});
 
-	std::ofstream outFile(pathFile);
+	std::ofstream outFile(Path::games / filePath);
 
 	for (auto entityItr = std::begin(entities); entityItr != std::end(entities);)
 	{
@@ -70,10 +71,10 @@ void ComponentSerializer::serialize(const std::string& pathFile)
 	}
 }
 
-void ComponentSerializer::saveBlueprint(const std::string& pathFile, const std::vector<std::tuple<std::int32_t, std::string, sf::Vector2f>>& entitiesFile)
+void ComponentSerializer::saveBlueprint(const std::string& filePath, const std::vector<std::tuple<std::int32_t, std::string, sf::Vector2f>>& entitiesFile)
 {
-	std::ofstream outFile(pathFile);
-
+	std::ofstream outFile(Path::blueprints / filePath);
+	
 	for (const auto& entityFile : entitiesFile)
 	{
 		outFile << std::get<0>(entityFile) << ' ' << std::get<1>(entityFile) << ' ' << std::get<2>(entityFile).x << ' ' << std::get<2>(entityFile).y  << '\n';
