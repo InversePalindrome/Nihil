@@ -1,9 +1,0 @@
-Texture 0 Resources/Textures/SplashScreen.png
-Texture 1 Resources/Textures/StartBackground.png
-Texture 2 Resources/Textures/Particles.png
-Texture 3 Resources/Textures/Skeleton.png
-Image 0 Resources/Images/PlayButton.png
-Image 1 Resources/Images/SettingsButton.png
-Image 2 Resources/Images/CharactersButton.png
-Image 3 Resources/Images/BackButton.png
-Font 0 Resources/Fonts/8-BIT-WONDER.ttf
