@@ -15,8 +15,8 @@ InversePalindrome.com
 #include <Thor/Particles/ParticleSystem.hpp>
 
 
-namespace Parsers
+namespace Path
 {
-	void parseParticleSystem(ResourceManager& resourceManager, const std::string& pathFile, thor::ParticleSystem& particleSystem);
-	thor::UniversalEmitter parseEmitter(const std::string& pathFile);
+	void parseParticleSystem(ResourceManager& resourceManager, const std::string& filePath, thor::ParticleSystem& particleSystem);
+	thor::UniversalEmitter parseEmitter(const std::string& filePath);
 }

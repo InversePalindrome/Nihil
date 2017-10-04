@@ -58,5 +58,5 @@ private:
 
 	void changeLevel(const std::string& level);
 
-	void saveData(const std::string& pathFile);
+	void saveData(const std::string& filePath);
 };

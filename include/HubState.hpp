@@ -46,7 +46,7 @@ private:
 	void addGame();
 	void deleteGame();
 
-	void saveGames(const std::string& pathFile);
+	void saveGames(const std::string& filePath);
 
 	void transitionToMenu();
 	void transitionToPlay();

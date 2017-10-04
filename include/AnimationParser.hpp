@@ -17,10 +17,10 @@ InversePalindrome.com
 #include <sstream>
 
 
-namespace Parsers
+namespace Path
 {
-	void parseFrameAnimations(const std::string& pathFile, thor::FrameAnimation& animation,
+	void parseFrameAnimations(const std::string& filePath, thor::FrameAnimation& animation,
 		std::size_t& animationID, float& animationTime);
 
-	thor::ColorGradient parseColors(const std::string& pathFile);
+	thor::ColorGradient parseColors(const std::string& filePath);
 }

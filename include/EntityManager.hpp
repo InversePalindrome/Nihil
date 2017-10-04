@@ -42,16 +42,16 @@ public:
 
 	void update(float deltaTime);
 
-	Entity createEntity(const std::string& pathFile);
-	Entity createEntity(const std::string& pathFile, const sf::Vector2f& position);
+	Entity createEntity(const std::string& filePath);
+	Entity createEntity(const std::string& filePath, const sf::Vector2f& position);
 
-	void parseEntities(const std::string& pathFile);
-	void parseBlueprint(const std::string& pathFile);
+	void parseEntities(const std::string& filePath);
+	void parseBlueprint(const std::string& filePath);
 
 	void destroyEntity(Entity entity);
 	void destroyEntities();
 
-	void saveEntities(const std::string& pathFile);
+	void saveEntities(const std::string& filePath);
 
 private:
 	Entities entityManager;

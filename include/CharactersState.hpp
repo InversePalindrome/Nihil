@@ -47,7 +47,6 @@ private:
 	sfg::ScrolledWindow::Ptr scrolledWindow;
 	sfg::RadioButtonGroup::Ptr characterButtons;
 
-	std::string charactersFile;
 	std::unordered_map<std::string, CharacterData> charactersData;
 
 	void loadCharacters(const std::string& filePath);
