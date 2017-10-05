@@ -45,7 +45,7 @@ struct StopMovement;
 struct CombatOcurred;
 struct ChangeState;
 struct StateChanged;
-struct Teleported;
+struct ChangeLevel;
 struct DestroyEntity;
 struct EmitSound;
 struct PickedUpItem;
@@ -62,6 +62,7 @@ struct ApplyForce;
 struct ApplyImpulse;
 struct ApplyBlastImpact;
 struct ApplyKnockback;
+struct ChangePosition;
 
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
@@ -74,9 +75,9 @@ using Tags = entityplus::tag_list<AI>;
 using Entities = entityplus::entity_manager<Components, Tags>;
 
 using Events = entityplus::event_manager<Components, Tags, DirectionChanged, Jumped, StopMovement, CombatOcurred, ChangeState,
-	StateChanged, Teleported, DestroyEntity, EmitSound, PickedUpItem, MoveCamera, DisplayHealthBar, DisplayCoins, PlayerDied,
+	StateChanged, ChangeLevel, DestroyEntity, EmitSound, PickedUpItem, MoveCamera, DisplayHealthBar, DisplayCoins, PlayerDied,
 	CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform, ApplyForce, ApplyImpulse, ApplyBlastImpact, 
-	ApplyKnockback>;
+	ApplyKnockback, ChangePosition>;
 
 using Entity = Entities::entity_t;
 
@@ -120,7 +121,7 @@ struct StateChanged
 	EntityState state;
 };
 
-struct Teleported
+struct ChangeLevel
 {
 	std::string level;
 };
@@ -148,7 +149,7 @@ struct GameOver
 
 struct MoveCamera
 {
-	Entity entity;
+	sf::Vector2f centerPosition;
 };
 
 struct DisplayHealthBar
@@ -217,4 +218,10 @@ struct ApplyKnockback
 {
 	Entity attacker;
 	Entity victim;
+};
+
+struct ChangePosition
+{
+	Entity entity;
+	sf::Vector2f location;
 };

@@ -23,11 +23,11 @@ class ComponentParser
 public:
 	ComponentParser(Entities& entities, ResourceManager& resourceManager, b2World& world);
 	
-	Entity parseComponents(const std::string& filePath);
-	Entity parseComponents(std::int32_t entityID, const std::string& filePath);
+	Entity parseComponents(const std::string& fileName);
+	Entity parseComponents(std::int32_t entityID, const std::string& fileName);
 
-	void parseBlueprint(const std::string& filePath);
-	void parseEntities(const std::string& filePath);
+	void parseBlueprint(const std::string& fileName);
+	void parseEntities(const std::string& fileName);
 
 	void setComponentsID(Entity entity, std::int32_t entityID);
 

@@ -31,7 +31,7 @@ class Map : public sf::Drawable
 public:
 	Map(const sf::Vector2f& chunkSize, Game& game, b2World& world, ComponentSerializer& componentSerializer, ResourceManager& resourceManager, CollisionsData& collisionsData, Pathways& pathways);
 
-	void load(const std::string& filePath);
+	void load(const std::string& fileName);
 	
 	sf::FloatRect getBounds() const;
 	std::string getCurrentFilePath() const;
@@ -41,7 +41,7 @@ private:
 	sf::Sprite background;
 	sf::Vector2f chunkSize;
 	sf::FloatRect bounds;
-	std::string filePath;
+	std::string fileName;
 	std::vector<std::unique_ptr<Layer>> layers;
 
 	Game& game;

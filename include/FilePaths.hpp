@@ -14,7 +14,7 @@ namespace Path
 {
 	struct FilePath
 	{
-		FilePath(const std::string& filePath);
+		FilePath(const std::string& fileName);
 
 		std::string operator/(const std::string& extension);
 

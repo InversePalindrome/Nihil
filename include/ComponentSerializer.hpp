@@ -23,9 +23,9 @@ class ComponentSerializer
 public:
 	ComponentSerializer(Entities& entities);
 
-	void serialize(const std::string& filePath);
+	void serialize(const std::string& fileName);
 
-	void saveBlueprint(const std::string& filePath, const std::vector<std::tuple<std::int32_t, std::string, sf::Vector2f>>& entitiesFiles);
+	void saveBlueprint(const std::string& fileName, const std::vector<std::tuple<std::int32_t, std::string, sf::Vector2f>>& entitiesFiles);
 
 private:
 	Entities& entities;

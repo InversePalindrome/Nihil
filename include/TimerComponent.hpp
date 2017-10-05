@@ -20,7 +20,7 @@ class TimerComponent : public Component
 
 public:
 	TimerComponent();
-	TimerComponent(const std::string& filePath);
+	TimerComponent(const std::string& fileName);
 
 	void addTimer(const std::string& timer, float time);
 	void removeTimer(const std::string& timer);
@@ -33,7 +33,7 @@ public:
 	bool hasTimerExpired(const std::string& timer) const;
 
 private:
-	std::string filePath;
+	std::string fileName;
 	std::unordered_map<std::string, std::pair<thor::Timer, float>> timers;
 };
 

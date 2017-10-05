@@ -14,5 +14,5 @@ InversePalindrome.com
 
 namespace Path
 {
-	void parseStyle(ResourceManager& resourceManager, const std::string& filePath, sf::Text& text);
+	void parseStyle(ResourceManager& resourceManager, const std::string& fileName, sf::Text& text);
 }

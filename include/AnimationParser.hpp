@@ -19,8 +19,8 @@ InversePalindrome.com
 
 namespace Path
 {
-	void parseFrameAnimations(const std::string& filePath, thor::FrameAnimation& animation,
+	void parseFrameAnimations(const std::string& fileName, thor::FrameAnimation& animation,
 		std::size_t& animationID, float& animationTime);
 
-	thor::ColorGradient parseColors(const std::string& filePath);
+	thor::ColorGradient parseColors(const std::string& fileName);
 }

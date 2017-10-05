@@ -51,12 +51,13 @@ private:
 	CoinDisplay coinDisplay;
 	ItemsDisplay itemsDisplay;
 
-	void updateCamera(Entity entity);
+	void updateCamera(const sf::Vector2f& centerPosition);
 	void updateHealthBar(const HealthComponent& health);
 	void updateCoinDisplay(const InventoryComponent& inventory);
 	void updateItemsDisplay(Entity item);
 
 	void changeLevel(const std::string& level);
+	void changeEntityPosition(Entity entity, const sf::Vector2f& position);
 
-	void saveData(const std::string& filePath);
+	void saveData(const std::string& fileName);
 };

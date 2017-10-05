@@ -25,7 +25,7 @@ private:
 	b2World& world;
 	CollisionsData& collisionsData;
 
-	void moveEntity(Entity entity, Direction direction);
+	void changeEntityPosition(Entity entity, Direction direction);
 	void stopEntity(Entity entity);
 	void makeJump(Entity entity);
 

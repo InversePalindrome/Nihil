@@ -45,7 +45,7 @@ private:
 	bool isVisible;
 	std::unordered_map<Item, ItemsGraphics> itemsData;
 
-	void loadItems(ResourceManager& resourceManager, const std::string& filePath);
+	void loadItems(ResourceManager& resourceManager, const std::string& fileName);
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

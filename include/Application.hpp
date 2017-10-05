@@ -48,5 +48,5 @@ private:
 	void update(float deltaTime);
 	void render();
 
-	void loadGames(const std::string& filePath);
+	void loadGames(const std::string& fileName);
 };

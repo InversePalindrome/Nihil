@@ -22,13 +22,13 @@ class TextComponent : public Component, public sf::Transformable, public sf::Dra
 	friend std::ostream& operator<<(std::ostream& os, const TextComponent& component);
 
 public:
-	TextComponent(ResourceManager& resourceManager, const std::string& inputText, const std::string& filePath);
+	TextComponent(ResourceManager& resourceManager, const std::string& inputText, const std::string& fileName);
 
 	sf::FloatRect getGlobalBounds() const;
 
 private:
 	sf::Text text;
-	std::string filePath;
+	std::string fileName;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
