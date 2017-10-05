@@ -11,11 +11,6 @@ InversePalindrome.com
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
 
-PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType bodyType, ObjectType objectType, std::int32_t collisionGroup) :
-	PhysicsComponent(world, bodySize, bodyType, objectType, collisionGroup, 0.f, 0.f)
-{
-}
-
 PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType bodyType, ObjectType objectType, std::int32_t collisionGroup,
 	float maxVelocity, float accelerationRate)  :
 	Component("Physics"),

@@ -188,16 +188,16 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 	};
 }
 
-Entity ComponentParser::parseComponents(const std::string& filePath)
+Entity ComponentParser::parseComponents(const std::string& fileName)
 {
-	return this->parseComponents(++this->currentEntityID, filePath);
+	return this->parseComponents(++this->currentEntityID, fileName);
 }
 
-Entity ComponentParser::parseComponents(std::int32_t entityID, const std::string& filePath)
+Entity ComponentParser::parseComponents(std::int32_t entityID, const std::string& fileName)
 {
 	auto entity = this->createEntity();
 
-	std::ifstream inFile(Path::blueprints / filePath);
+	std::ifstream inFile(Path::blueprints / fileName);
 	std::string line;
 
 	while (std::getline(inFile, line))
@@ -224,9 +224,9 @@ Entity ComponentParser::parseComponents(std::int32_t entityID, const std::string
 	return entity;
 }
 
-void ComponentParser::parseBlueprint(const std::string& filePath)
+void ComponentParser::parseBlueprint(const std::string& fileName)
 {
-	std::ifstream inFile(Path::blueprints / filePath);
+	std::ifstream inFile(Path::blueprints / fileName);
 	std::string line;
 	
 	while (std::getline(inFile, line))
@@ -253,9 +253,9 @@ void ComponentParser::parseBlueprint(const std::string& filePath)
 	}
 }
 
-void ComponentParser::parseEntities(const std::string& filePath)
+void ComponentParser::parseEntities(const std::string& fileName)
 {
-	std::ifstream inFile(Path::games / filePath);
+	std::ifstream inFile(Path::games / fileName);
 	std::string line;
 
 	std::map<std::int32_t, Entity> entitiesIDs;

@@ -9,11 +9,11 @@ InversePalindrome.com
 #include "TextStyleParser.hpp"
 
 
-TextComponent::TextComponent(ResourceManager& resourceManager, const std::string& inputText, const std::string& filePath) :
+TextComponent::TextComponent(ResourceManager& resourceManager, const std::string& inputText, const std::string& fileName) :
 	Component("Text"),
-	filePath(filePath)
+	fileName(fileName)
 {
-	Path::parseStyle(resourceManager, filePath, text);
+	Path::parseStyle(resourceManager, fileName, text);
 
 	text.setString(inputText);
     text.setOrigin(text.getLocalBounds().width / 2.f, text.getLocalBounds().height / 2.f);
@@ -21,7 +21,7 @@ TextComponent::TextComponent(ResourceManager& resourceManager, const std::string
 
 std::ostream& operator<<(std::ostream& os, const TextComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.text.getString().toAnsiString() << ' ' << component.filePath;;
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.text.getString().toAnsiString() << ' ' << component.fileName;;
 
 	return os;
 }

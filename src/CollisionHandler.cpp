@@ -35,7 +35,14 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 	}
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Portal))
 	{
-		this->events.broadcast(Teleported{ orderedCollision.value().second.get().properties["Destination"].getStringValue() });
+		this->events.broadcast(ChangeLevel{ orderedCollision.value().second.get().properties["Destination"].getStringValue() });
+	}
+	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Teleporter))
+	{
+		orderedCollision.value().first.get().entity.sync();
+
+		this->events.broadcast(ChangePosition{ orderedCollision.value().first.get().entity,
+		{orderedCollision.value().second.get().properties["xLocation"].getFloatValue(), orderedCollision.value().second.get().properties["yLocation"].getFloatValue()} });
 	}
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Pickup))
 	{

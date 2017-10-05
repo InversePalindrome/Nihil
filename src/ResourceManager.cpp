@@ -45,11 +45,11 @@ void ResourceManager::loadResources(const std::string& resourcesFilePath)
 
 	std::string resourceType;
 	std::size_t resourceID;
-	std::string filePath;
+	std::string fileName;
 
-	while (inFile >> resourceType >> resourceID >> filePath)
+	while (inFile >> resourceType >> resourceID >> fileName)
 	{
-		this->resourceFactory.at(resourceType)(resourceID, Path::resources / resourceType + '/' + filePath);
+		this->resourceFactory.at(resourceType)(resourceID, Path::resources / resourceType + '/' + fileName);
 	}
 }
 

@@ -16,7 +16,7 @@ PhysicsSystem::PhysicsSystem(Entities& entities, Events& events, b2World& world,
 	collisionsData(collisionsData)
 {
 	events.subscribe<entityplus::component_added<Entity, PhysicsComponent>>([this](const auto& event) { addInitialData(event.entity, event.component); });
-	events.subscribe<DirectionChanged>([this](const auto& event) { moveEntity(event.entity, event.direction); });
+	events.subscribe<DirectionChanged>([this](const auto& event) { changeEntityPosition(event.entity, event.direction); });
 	events.subscribe<Jumped>([this](const auto& event) { makeJump(event.entity); });
 	events.subscribe<StopMovement>([this](const auto& event) { stopEntity(event.entity); });
 	events.subscribe<ApplyForce>([this](const auto& event) { applyForce(event.entity, event.force); });
@@ -33,7 +33,7 @@ void PhysicsSystem::update(float deltaTime)
 	});
 }
 
-void PhysicsSystem::moveEntity(Entity entity, Direction direction)
+void PhysicsSystem::changeEntityPosition(Entity entity, Direction direction)
 {
 	auto& physics = entity.get_component<PhysicsComponent>();
 

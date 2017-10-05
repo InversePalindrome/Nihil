@@ -22,7 +22,7 @@ ComponentSerializer::ComponentSerializer(Entities& entities) :
 {
 }
 
-void ComponentSerializer::serialize(const std::string& filePath)
+void ComponentSerializer::serialize(const std::string& fileName)
 {
 	std::multimap<std::int32_t, std::string> entities;
 
@@ -52,7 +52,7 @@ void ComponentSerializer::serialize(const std::string& filePath)
 		});
 	});
 
-	std::ofstream outFile(Path::games / filePath);
+	std::ofstream outFile(Path::games / fileName);
 
 	for (auto entityItr = std::begin(entities); entityItr != std::end(entities);)
 	{
@@ -71,9 +71,9 @@ void ComponentSerializer::serialize(const std::string& filePath)
 	}
 }
 
-void ComponentSerializer::saveBlueprint(const std::string& filePath, const std::vector<std::tuple<std::int32_t, std::string, sf::Vector2f>>& entitiesFile)
+void ComponentSerializer::saveBlueprint(const std::string& fileName, const std::vector<std::tuple<std::int32_t, std::string, sf::Vector2f>>& entitiesFile)
 {
-	std::ofstream outFile(Path::blueprints / filePath);
+	std::ofstream outFile(Path::blueprints / fileName);
 	
 	for (const auto& entityFile : entitiesFile)
 	{

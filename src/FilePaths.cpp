@@ -8,8 +8,8 @@ InversePalindrome.com
 #include "FilePaths.hpp"
 
 
-Path::FilePath::FilePath(const std::string& filePath) :
-	path(filePath)
+Path::FilePath::FilePath(const std::string& fileName) :
+	path(fileName)
 {
 }
 
@@ -18,7 +18,7 @@ std::string Path::FilePath::operator/(const std::string& extension)
 	return (this->path / extension).generic_string();
 }
 
-extern Path::FilePath Path::files("Files/");
+extern Path::FilePath Path::files("DataFiles/");
 extern Path::FilePath Path::games(files / "Games/");
 extern Path::FilePath Path::levels(files / "Levels/");
 extern Path::FilePath Path::blueprints(files / "Blueprints/");

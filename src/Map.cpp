@@ -29,12 +29,12 @@ Map::Map(const sf::Vector2f& chunkSize, Game& game, b2World& world, ComponentSer
 {
 }
 
-void Map::load(const std::string& filePath)
+void Map::load(const std::string& fileName)
 {
 	this->layers.clear();
 
-	this->map.load(Path::levels / filePath);
-	this->filePath = Path::levels / filePath;
+	this->map.load(Path::levels / fileName);
+	this->fileName = Path::levels / fileName;
 
 	for (std::size_t i = 0; i < this->map.getLayers().size(); ++i)
 	{
@@ -69,7 +69,7 @@ sf::FloatRect Map::getBounds() const
 
 std::string Map::getCurrentFilePath() const
 {
-	return this->filePath;
+	return this->fileName;
 }
 
 void Map::addImage(tmx::ImageLayer* imageLayer)

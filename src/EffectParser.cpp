@@ -18,9 +18,9 @@ InversePalindrome.com
 #include <sstream>
 
 
-void Path::parseParticleSystem(ResourceManager& resourceManager, const std::string& filePath, thor::ParticleSystem& particleSystem)
+void Path::parseParticleSystem(ResourceManager& resourceManager, const std::string& fileName, thor::ParticleSystem& particleSystem)
 {
-	std::ifstream inFile(Path::particles / filePath);
+	std::ifstream inFile(Path::particles / fileName);
 	std::string line;
 
 	while (std::getline(inFile, line))
@@ -90,11 +90,11 @@ void Path::parseParticleSystem(ResourceManager& resourceManager, const std::stri
 	}
 }
 
-thor::UniversalEmitter Path::parseEmitter(const std::string& filePath)
+thor::UniversalEmitter Path::parseEmitter(const std::string& fileName)
 {
 	thor::UniversalEmitter emitter;
 
-	std::ifstream inFile(Path::particles / filePath);
+	std::ifstream inFile(Path::particles / fileName);
 	std::string line;
 
 	while (std::getline(inFile, line))

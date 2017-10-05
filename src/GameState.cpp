@@ -8,7 +8,8 @@ InversePalindrome.com
 #include "GameState.hpp"
 #include "StateMachine.hpp"
 #include "FilePaths.hpp"
-
+#include "UnitConverter.hpp"
+#include <iostream>
 
 GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
@@ -30,7 +31,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 
 	itemsDisplay.setPosition(200.f, 200.f);
 	
-	entityManager.getEvents().subscribe<MoveCamera>([this](const auto& event) { updateCamera(event.entity); });
+	entityManager.getEvents().subscribe<MoveCamera>([this](const auto& event) { updateCamera(event.centerPosition); });
 	entityManager.getEvents().subscribe<DisplayHealthBar>([this](const auto& event) { updateHealthBar(event.health); });
 	entityManager.getEvents().subscribe<DisplayCoins>([this](const auto& event) { updateCoinDisplay(event.inventory); });
 	entityManager.getEvents().subscribe<PickedUpItem>([this](const auto& event) { updateItemsDisplay(event.item); });
@@ -52,14 +53,20 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	{
 		callbacks.push_back([this, &stateData]
 		{
-			auto& entity = entityManager.createEntity("Player.txt", stateData.games.front().getSpawnPoint());
+			entityManager.createEntity("Player.txt", stateData.games.front().getSpawnPoint());
 			
 			camera = stateData.window.getDefaultView();
 			stateData.window.setView(camera);
 		});
 	});
 
-	entityManager.getEvents().subscribe<Teleported>([this, &stateData](const auto& event)
+	entityManager.getEvents().subscribe<ChangePosition>([this](const auto& event)
+	{
+		changeEntityPosition(event.entity, event.location);
+		updateCamera(event.location);
+	});
+
+	entityManager.getEvents().subscribe<ChangeLevel>([this, &stateData](const auto& event)
 	{
 		callbacks.push_back([this, event]
 		{ 
@@ -128,13 +135,11 @@ void GameState::draw()
 	this->stateData.window.draw(this->itemsDisplay);
 }
 
-void GameState::updateCamera(Entity entity)
+void GameState::updateCamera(const sf::Vector2f& centerPosition)
 {
-	const auto& playerPosition = entity.get_component<PositionComponent>().getPosition();
-	
-	if (playerPosition.x > this->camera.getSize().x / 2.f && playerPosition.x < this->map.getBounds().width - this->camera.getSize().x / 2.f)
+	if (centerPosition.x > this->camera.getSize().x / 2.f && centerPosition.x < this->map.getBounds().width - this->camera.getSize().x / 2.f)
 	{
-		this->camera.setCenter(playerPosition.x, this->camera.getCenter().y);
+		this->camera.setCenter(centerPosition.x, this->camera.getCenter().y);
 		this->stateData.window.setView(this->camera);
 	}
 }
@@ -162,8 +167,11 @@ void GameState::updateItemsDisplay(Entity item)
 
 void GameState::changeLevel(const std::string& level)
 {
-	this->entityManager.destroyEntities();
+	this->saveData("SavedGames.txt");
+	this->stateData.games.front().setCurrentLevel(level);
 
+	this->entityManager.destroyEntities();
+	
 	this->map.load(level + ".tmx");
 	
 	if (!this->stateData.games.front().getLevels().get<1>().find(level)->isLoaded)
@@ -178,18 +186,40 @@ void GameState::changeLevel(const std::string& level)
 
 	this->entityManager.parseBlueprint("Entities-" + level + ".txt");
 
-	this->stateData.games.front().setCurrentLevel(level);
-
-	this->camera = this->stateData.window.getDefaultView();
 	this->stateData.soundManager.stopAllSounds();
+
+	this->entityManager.getEntities().for_each<ControllableComponent, PositionComponent, PhysicsComponent>([this](auto entity, auto& controllable, auto& position, auto& physics)
+	{
+		const auto& spawnPoint = this->stateData.games.front().getSpawnPoint();
+		
+		position.setPosition({ spawnPoint.x, spawnPoint.y });
+		physics.setPosition({ UnitConverter::pixelsToMeters(spawnPoint.x), UnitConverter::pixelsToMeters(-spawnPoint.y) });
+		std::cout << "Hi\n";
+		this->updateCamera(spawnPoint);
+	});
 }
 
-void GameState::saveData(const std::string& filePath)
+void GameState::changeEntityPosition(Entity entity, const sf::Vector2f& position)
+{
+	if (entity.has_component<PositionComponent>())
+	{
+		entity.get_component<PositionComponent>().setPosition(position);
+	}
+	if (entity.has_component<PhysicsComponent>())
+	{
+		this->callbacks.push_back([entity, position]() mutable
+		{
+			entity.get_component<PhysicsComponent>().setPosition({ UnitConverter::pixelsToMeters(position.x), UnitConverter::pixelsToMeters(-position.y) });
+		});
+	}
+}
+
+void GameState::saveData(const std::string& fileName)
 {
 	this->entityManager.saveEntities(this->stateData.games.front().getGameName() + '-' + this->stateData.games.front().getCurrentLevel() + ".txt");
 	
-	std::ofstream outFile(Path::games / filePath);
-
+	std::ofstream outFile(Path::games / fileName);
+	
 	for (const auto& game : this->stateData.games)
 	{
 		outFile << game << '\n';

@@ -17,11 +17,11 @@ TimerComponent::TimerComponent() :
 {
 }
 
-TimerComponent::TimerComponent(const std::string& filePath) :
+TimerComponent::TimerComponent(const std::string& fileName) :
 	Component("TimerB"),
-	filePath(filePath)
+	fileName(fileName)
 {
-	std::ifstream inFile(Path::miscellaneous / filePath);
+	std::ifstream inFile(Path::miscellaneous / fileName);
 	std::string line;
 
 	while (std::getline(inFile, line))
@@ -39,7 +39,7 @@ TimerComponent::TimerComponent(const std::string& filePath) :
 
 std::ostream& operator<<(std::ostream& os, const TimerComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.filePath;
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.fileName;
 
 	return os;
 }

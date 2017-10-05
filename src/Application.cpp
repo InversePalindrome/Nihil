@@ -105,9 +105,9 @@ void Application::render()
 	this->window.display();
 }
 
-void Application::loadGames(const std::string& filePath)
+void Application::loadGames(const std::string& fileName)
 {
-	std::ifstream inFile(Path::games / filePath);
+	std::ifstream inFile(Path::games / fileName);
 	std::string gameData;
 	std::string line;
 

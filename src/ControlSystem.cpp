@@ -23,11 +23,11 @@ ControlSystem::ControlSystem(Entities& entities, Events& events, InputHandler& i
 
 void ControlSystem::update(float deltaTime)
 {
-	this->entities.for_each<ControllableComponent, TimerComponent>(
-		[this, deltaTime](auto entity, auto& controllable, auto& timer)
+	this->entities.for_each<ControllableComponent, PositionComponent, TimerComponent>(
+		[this, deltaTime](auto entity, auto& controllable, auto& position, auto& timer)
 	{
 		this->reactToInput(entity, timer);
-		this->events.broadcast(MoveCamera{ entity });
+		this->events.broadcast(MoveCamera{ position.getPosition() });
 	});
 }
 

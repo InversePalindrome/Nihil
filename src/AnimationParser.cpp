@@ -9,10 +9,10 @@ InversePalindrome.com
 #include "FilePaths.hpp"
 
 
-void Path::parseFrameAnimations(const std::string& filePath, thor::FrameAnimation& animation, 
+void Path::parseFrameAnimations(const std::string& fileName, thor::FrameAnimation& animation, 
 	std::size_t& animationID, float& animationTime)
 {
-	std::ifstream inFile(Path::animations / filePath);
+	std::ifstream inFile(Path::animations / fileName);
 	std::string line;
 
 	while (std::getline(inFile, line))
@@ -40,11 +40,11 @@ void Path::parseFrameAnimations(const std::string& filePath, thor::FrameAnimatio
 }
 
 
-thor::ColorGradient Path::parseColors(const std::string& filePath)
+thor::ColorGradient Path::parseColors(const std::string& fileName)
 {
 	thor::ColorGradient colors;
 
-	std::ifstream inFile(Path::miscellaneous / filePath);
+	std::ifstream inFile(Path::miscellaneous / fileName);
 
 	float gradientPosition = 0.f;
 	std::size_t R = 0u, G = 0u, B = 0u;

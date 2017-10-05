@@ -65,9 +65,9 @@ bool ItemsDisplay::hasItem(Item item) const
 	return this->itemsData.count(item);
 }
 
-void ItemsDisplay::loadItems(ResourceManager& resourceManager, const std::string& filePath)
+void ItemsDisplay::loadItems(ResourceManager& resourceManager, const std::string& fileName)
 {
-	std::ifstream inFile(filePath);
+	std::ifstream inFile(fileName);
 	std::string line;
 
 	while (std::getline(inFile, line))

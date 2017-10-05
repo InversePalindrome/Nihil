@@ -65,14 +65,14 @@ void EntityManager::update(float deltaTime)
 	}
 }
 
-Entity EntityManager::createEntity(const std::string& filePath)
+Entity EntityManager::createEntity(const std::string& fileName)
 {
-	return this->componentParser.parseComponents(filePath);
+	return this->componentParser.parseComponents(fileName);
 }
 
-Entity EntityManager::createEntity(const std::string& filePath, const sf::Vector2f& position)
+Entity EntityManager::createEntity(const std::string& fileName, const sf::Vector2f& position)
 {
-	auto& entity = this->createEntity(filePath);
+	auto& entity = this->createEntity(fileName);
 	
 	if (entity.has_component<PositionComponent>())
 	{
@@ -87,14 +87,14 @@ Entity EntityManager::createEntity(const std::string& filePath, const sf::Vector
 	return entity;
 }
 
-void EntityManager::parseEntities(const std::string& filePath)
+void EntityManager::parseEntities(const std::string& fileName)
 {
-	this->componentParser.parseEntities(filePath);
+	this->componentParser.parseEntities(fileName);
 }
 
-void EntityManager::parseBlueprint(const std::string& filePath)
+void EntityManager::parseBlueprint(const std::string& fileName)
 {
-	this->componentParser.parseBlueprint(filePath);
+	this->componentParser.parseBlueprint(fileName);
 }
 
 void EntityManager::destroyEntity(Entity entity)
@@ -132,9 +132,9 @@ void EntityManager::destroyEntities()
 	}
 }
 
-void EntityManager::saveEntities(const std::string& filePath)
+void EntityManager::saveEntities(const std::string& fileName)
 {
-	this->componentSerializer.serialize(filePath);
+	this->componentSerializer.serialize(fileName);
 }
 
 void EntityManager::draw(sf::RenderTarget& target, sf::RenderStates states) const

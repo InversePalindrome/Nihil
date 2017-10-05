@@ -114,9 +114,9 @@ void CharactersState::draw()
 	this->stateData.window.draw(this->coinDisplay);
 }
 
-void CharactersState::loadCharacters(const std::string& filePath)
+void CharactersState::loadCharacters(const std::string& fileName)
 {
-	std::ifstream inFile(Path::miscellaneous / filePath);
+	std::ifstream inFile(Path::miscellaneous / fileName);
 	std::string line;
 
 	std::size_t columnIndex = 0u, rowIndex = 0u, columnSpan = 1u, rowSpan = 1u;

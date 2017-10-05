@@ -193,34 +193,30 @@ void Game::loadLevelNames()
 
 	while (std::getline(inFile, line))
 	{
-		this->levels.get<1>().insert({ line, sf::Vector2f(), false });
+		std::istringstream iStream(line);
+		
+	    std::string levelName;
+
+		iStream >> levelName;
+
+		this->levels.get<1>().insert({ levelName, sf::Vector2f(), false });
 	}
 }
 
 void Game::loadSpawnPoints()
 {
-	for (const auto& level : this->levels)
+	std::ifstream inFile(Path::levels / "levels.txt ");
+	std::string line;
+
+	while (std::getline(inFile, line))
 	{
-		std::ifstream inFile(Path::blueprints / level.name + ".txt");
-		std::string line;
+		std::istringstream iStream(line);
 
-		while (std::getline(inFile, line))
-		{
-			std::istringstream iStream(line);
+		std::string levelName;
+		float xPosition = 0.f, yPosition = 0.f;
 
-			std::int32_t entityID;
-			std::string filePath;
-
-			iStream >> entityID >> filePath;
-
-			if (filePath == "Player.txt")
-			{
-				float xPosition = 0.f, yPosition = 0.f;
+		iStream >> levelName >> xPosition >> yPosition;
 				
-				iStream >> xPosition >> yPosition;
-				
-				this->levels.get<1>().modify(this->levels.get<1>().find(level.name), [xPosition, yPosition](auto& iLevel) { iLevel.spawnPosition = sf::Vector2f(xPosition, yPosition); });
-			}
-		}
+		this->levels.get<1>().modify(this->levels.get<1>().find(levelName), [xPosition, yPosition](auto& iLevel) { iLevel.spawnPosition = { xPosition, yPosition }; });
 	}
 }

@@ -171,9 +171,9 @@ void HubState::deleteGame()
 	this->saveGames("SavedGames.txt");
 }
 
-void HubState::saveGames(const std::string& filePath)
+void HubState::saveGames(const std::string& fileName)
 {
-	std::ofstream outFile(Path::games / filePath);
+	std::ofstream outFile(Path::games / fileName);
 
 	for (const auto& game : this->stateData.games)
 	{

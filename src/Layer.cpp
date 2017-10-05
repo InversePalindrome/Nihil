@@ -70,12 +70,12 @@ void Layer::createChunks(const tmx::Map& map, const tmx::TileLayer& layer)
 	fallback.create(2, 2, sf::Color::Magenta);
 	for (const auto ts : usedTileSets)
 	{
-		const Path::FilePath& filePath(ts->getImagePath());
+		const Path::FilePath& fileName(ts->getImagePath());
 		auto newTexture = std::make_unique<sf::Texture>();
 
 		sf::Image image;
 		
-		if (!image.loadFromFile(Path::textures / filePath.path.leaf().string()))
+		if (!image.loadFromFile(Path::textures / fileName.path.leaf().string()))
 		{
 			newTexture->loadFromImage(fallback);
 		}
@@ -89,7 +89,7 @@ void Layer::createChunks(const tmx::Map& map, const tmx::TileLayer& layer)
 			newTexture->loadFromImage(image);
 		}
 
-		this->textures.emplace(filePath.path.string(), std::move(newTexture));
+		this->textures.emplace(fileName.path.string(), std::move(newTexture));
 	}
 
 	const auto& bounds = map.getBounds();

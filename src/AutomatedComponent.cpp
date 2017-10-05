@@ -13,12 +13,12 @@ InversePalindrome.com
 #include <algorithm>
 
 
-AutomatedComponent::AutomatedComponent(const std::string& filePath) :
+AutomatedComponent::AutomatedComponent(const std::string& fileName) :
 	Component("Automated"),
-	filePath(filePath),
+	fileName(fileName),
 	currentTask(0u)
 {
-	std::ifstream inFile(Path::miscellaneous / filePath);
+	std::ifstream inFile(Path::miscellaneous / fileName);
 	std::string line;
 
 	while (std::getline(inFile, line))
@@ -38,7 +38,7 @@ AutomatedComponent::AutomatedComponent(const std::string& filePath) :
 
 std::ostream& operator<<(std::ostream& os, const AutomatedComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.filePath;
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.fileName;
 
 	return os;
 }
