@@ -9,3 +9,4 @@ InversePalindrome.com
 
 
 enum class Direction { Right, Left, Up, Down };
+enum class DirectionType { Horizontal, Vertical };

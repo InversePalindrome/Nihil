@@ -49,7 +49,6 @@ struct ChangeLevel;
 struct DestroyEntity;
 struct EmitSound;
 struct PickedUpItem;
-struct MoveCamera;
 struct DisplayHealthBar;
 struct DisplayCoins;
 struct PlayerDied;
@@ -75,7 +74,7 @@ using Tags = entityplus::tag_list<AI>;
 using Entities = entityplus::entity_manager<Components, Tags>;
 
 using Events = entityplus::event_manager<Components, Tags, DirectionChanged, Jumped, StopMovement, CombatOcurred, ChangeState,
-	StateChanged, ChangeLevel, DestroyEntity, EmitSound, PickedUpItem, MoveCamera, DisplayHealthBar, DisplayCoins, PlayerDied,
+	StateChanged, ChangeLevel, DestroyEntity, EmitSound, PickedUpItem, DisplayHealthBar, DisplayCoins, PlayerDied,
 	CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform, ApplyForce, ApplyImpulse, ApplyBlastImpact, 
 	ApplyKnockback, ChangePosition>;
 
@@ -145,11 +144,6 @@ struct PickedUpItem
 
 struct GameOver
 {
-};
-
-struct MoveCamera
-{
-	sf::Vector2f centerPosition;
 };
 
 struct DisplayHealthBar

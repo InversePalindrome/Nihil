@@ -23,14 +23,14 @@ InversePalindrome.com
 class Layer : public sf::Drawable
 {
 public:
-	Layer(const tmx::Map& map, std::size_t layerID, sf::Vector2f chunkSize);
+	Layer(const tmx::Map& map, std::size_t layerID, const sf::Vector2f& layerSize);
 
 	const sf::FloatRect& getGlobalBounds() const;
 
 	void draw(sf::RenderTarget& renderTarget, sf::RenderStates states) const override;
 
 private:
-	sf::Vector2f chunkSize;
+	sf::Vector2f size;
 	sf::Vector2u chunkCount;
 	sf::FloatRect globalBounds;
 

@@ -51,7 +51,9 @@ private:
 	CoinDisplay coinDisplay;
 	ItemsDisplay itemsDisplay;
 
-	void updateCamera(const sf::Vector2f& centerPosition);
+	void moveCamera(const sf::Vector2f& position);
+
+	void updateCamera();
 	void updateHealthBar(const HealthComponent& health);
 	void updateCoinDisplay(const InventoryComponent& inventory);
 	void updateItemsDisplay(Entity item);

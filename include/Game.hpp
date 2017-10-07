@@ -8,6 +8,7 @@ InversePalindrome.com
 #pragma once
 
 #include "Item.hpp"
+#include "Direction.hpp"
 
 #include <SFML/System/Vector2.hpp>
 
@@ -26,6 +27,7 @@ InversePalindrome.com
 struct LoadedLevelData
 {
 	std::string name;
+	DirectionType directionType;
 	sf::Vector2f spawnPosition;
 	bool isLoaded;
 };
@@ -56,7 +58,8 @@ public:
 	std::string getCurrentCharacter() const;
 	std::string getCurrentLevel() const;
 	Items& getItems();
-	sf::Vector2f getSpawnPoint() const;
+	DirectionType getCurrenDirectionType() const;
+	sf::Vector2f getCurrentSpawnPoint() const;
 
 	LoadedLevels& getLevels();
 	LoadedCharacters& getCharacters();
@@ -75,8 +78,7 @@ private:
 	LoadedCharacters characters;
 
 	void loadCharacterNames();
-	void loadLevelNames();
-	void loadSpawnPoints();
+	void loadLevels();
 
 	template<typename T>
 	void loadDataBitsets(T& dataset, const boost::dynamic_bitset<std::size_t>& bitset);
