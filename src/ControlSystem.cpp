@@ -27,7 +27,6 @@ void ControlSystem::update(float deltaTime)
 		[this, deltaTime](auto entity, auto& controllable, auto& position, auto& timer)
 	{
 		this->reactToInput(entity, timer);
-		this->events.broadcast(MoveCamera{ position.getPosition() });
 	});
 }
 
@@ -43,13 +42,14 @@ void ControlSystem::reactToInput(Entity entity, TimerComponent& timer)
 	}
 	else if (this->inputHandler.isActive("Shoot") && entity.has_component<RangeAttackComponent>() && timer.hasTimer("Reload") && timer.hasTimerExpired("Reload"))
 	{
-		this->events.broadcast(ShootProjectile{ entity, entity.get_component<RangeAttackComponent>().getProjectileID(), {} });
+		this->events.broadcast(ShootProjectile{ entity, entity.get_component<RangeAttackComponent>().getProjectileID(), {0.f, 0.f} });
 		
 		timer.restartTimer("Reload");
 	}
 	else if (this->inputHandler.isActive("Jump") && timer.hasTimer("JumpInterval") && timer.hasTimerExpired("JumpInterval"))
 	{
 		this->events.broadcast(Jumped{ entity });
+
 		timer.restartTimer("JumpInterval");
 	}
 }

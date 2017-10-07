@@ -18,8 +18,7 @@ InversePalindrome.com
 #include <unordered_map>
 
 
-Map::Map(const sf::Vector2f& chunkSize, Game& game, b2World& world, ComponentSerializer& componentSerializer, ResourceManager& resourceManager, CollisionsData& collisionsData, Pathways& pathways) :
-	chunkSize(chunkSize),
+Map::Map(Game& game, b2World& world, ComponentSerializer& componentSerializer, ResourceManager& resourceManager, CollisionsData& collisionsData, Pathways& pathways) :
 	game(game),
 	world(world),
 	componentSerializer(componentSerializer),
@@ -35,13 +34,12 @@ void Map::load(const std::string& fileName)
 
 	this->map.load(Path::levels / fileName);
 	this->fileName = Path::levels / fileName;
+	this->bounds = sf::FloatRect(this->map.getBounds().left, this->map.getBounds().top, this->map.getBounds().width, this->map.getBounds().height);
 
 	for (std::size_t i = 0; i < this->map.getLayers().size(); ++i)
 	{
-		this->layers.push_back(std::make_unique<Layer>(this->map, i, this->chunkSize));
+		this->layers.push_back(std::make_unique<Layer>(this->map, i, sf::Vector2f(this->bounds.width, this->bounds.height)));
 	}
-
-	this->bounds = sf::FloatRect(this->map.getBounds().left, this->map.getBounds().top, this->map.getBounds().width, this->map.getBounds().height);
 
 	this->parseMap();
 }

@@ -15,8 +15,7 @@ InversePalindrome.com
 Game::Game() 
 {
 	loadCharacterNames();
-	loadLevelNames();
-	loadSpawnPoints();
+	loadLevels();
 
 	std::ifstream inFile(Path::levels / "Levels.txt");
 
@@ -78,8 +77,7 @@ Game::Game(const std::string& data)
 	}
 
 	loadCharacterNames();
-	loadLevelNames();
-	loadSpawnPoints();
+	loadLevels();
 
     const auto& levelsBitset = boost::dynamic_bitset<std::size_t>(levelBits);
 	const auto& charactersBitset = boost::dynamic_bitset<std::size_t>(characterBits);
@@ -108,7 +106,7 @@ Items& Game::getItems()
 	return this->items;
 }
 
-sf::Vector2f Game::getSpawnPoint() const
+sf::Vector2f Game::getCurrentSpawnPoint() const
 {
 	return this->levels.get<1>().find(this->currentLevel)->spawnPosition;
 }
@@ -116,6 +114,11 @@ sf::Vector2f Game::getSpawnPoint() const
 Game::LoadedLevels& Game::getLevels()
 {
 	return this->levels;
+}
+
+DirectionType Game::getCurrenDirectionType() const
+{
+	return this->levels.get<1>().find(this->currentLevel)->directionType;
 }
 
 Game::LoadedCharacters& Game::getCharacters()
@@ -186,7 +189,7 @@ void Game::loadCharacterNames()
 	}
 }
 
-void Game::loadLevelNames()
+void Game::loadLevels()
 {
 	std::ifstream inFile(Path::levels / "Levels.txt");
 	std::string line;
@@ -196,27 +199,11 @@ void Game::loadLevelNames()
 		std::istringstream iStream(line);
 		
 	    std::string levelName;
-
-		iStream >> levelName;
-
-		this->levels.get<1>().insert({ levelName, sf::Vector2f(), false });
-	}
-}
-
-void Game::loadSpawnPoints()
-{
-	std::ifstream inFile(Path::levels / "levels.txt ");
-	std::string line;
-
-	while (std::getline(inFile, line))
-	{
-		std::istringstream iStream(line);
-
-		std::string levelName;
+		std::size_t directionType = 0u;
 		float xPosition = 0.f, yPosition = 0.f;
 
-		iStream >> levelName >> xPosition >> yPosition;
-				
-		this->levels.get<1>().modify(this->levels.get<1>().find(levelName), [xPosition, yPosition](auto& iLevel) { iLevel.spawnPosition = { xPosition, yPosition }; });
+		iStream >> levelName >> directionType >> xPosition >> yPosition;
+
+		this->levels.get<1>().insert({ levelName, static_cast<DirectionType>(directionType), {xPosition, yPosition}, false });
 	}
 }

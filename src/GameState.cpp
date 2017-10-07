@@ -9,13 +9,13 @@ InversePalindrome.com
 #include "StateMachine.hpp"
 #include "FilePaths.hpp"
 #include "UnitConverter.hpp"
-#include <iostream>
+
 
 GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
 	world(b2Vec2(0.f, -9.8f)),
 	entityManager(world, stateData.resourceManager, stateData.soundManager, stateData.inputHandler, collisionsData, pathways),
-	map(sf::Vector2f(8192.f, 1536.f), stateData.games.front(), world, entityManager.getComponentSerializer(), stateData.resourceManager, collisionsData, pathways),
+	map(stateData.games.front(), world, entityManager.getComponentSerializer(), stateData.resourceManager, collisionsData, pathways),
 	camera(stateData.window.getDefaultView()),
 	collisionHandler(entityManager.getEvents()),
 	healthBar(stateData.resourceManager),
@@ -23,7 +23,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	itemsDisplay(stateData.resourceManager)
 {
 	world.SetContactListener(&collisionHandler);
-
+	
 	healthBar.setPosition(150.f, 120.f);
 
 	coinDisplay.setPosition(1600.f, 120.f);
@@ -31,7 +31,6 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 
 	itemsDisplay.setPosition(200.f, 200.f);
 	
-	entityManager.getEvents().subscribe<MoveCamera>([this](const auto& event) { updateCamera(event.centerPosition); });
 	entityManager.getEvents().subscribe<DisplayHealthBar>([this](const auto& event) { updateHealthBar(event.health); });
 	entityManager.getEvents().subscribe<DisplayCoins>([this](const auto& event) { updateCoinDisplay(event.inventory); });
 	entityManager.getEvents().subscribe<PickedUpItem>([this](const auto& event) { updateItemsDisplay(event.item); });
@@ -53,17 +52,16 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	{
 		callbacks.push_back([this, &stateData]
 		{
-			entityManager.createEntity("Player.txt", stateData.games.front().getSpawnPoint());
+			entityManager.createEntity("Player.txt", stateData.games.front().getCurrentSpawnPoint());
 			
-			camera = stateData.window.getDefaultView();
-			stateData.window.setView(camera);
+			moveCamera(stateData.games.front().getCurrentSpawnPoint());
 		});
 	});
 
 	entityManager.getEvents().subscribe<ChangePosition>([this](const auto& event)
 	{
 		changeEntityPosition(event.entity, event.location);
-		updateCamera(event.location);
+		moveCamera(event.location);
 	});
 
 	entityManager.getEvents().subscribe<ChangeLevel>([this, &stateData](const auto& event)
@@ -72,6 +70,8 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 		{ 
 			changeLevel(event.level);
 		});
+
+		this->saveData("SavedGames.txt");
 	});
 
     entityManager.getEvents().subscribe<entityplus::component_added<Entity, InventoryComponent>>([this, &stateData](auto& event)
@@ -84,8 +84,6 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 			itemsDisplay[item.first].info.setString(std::to_string(item.second) + " / " + std::to_string(itemsDisplay[item.first].maxQuantity));
 		}
 	});
-
-	stateData.window.setView(camera);
 
 	changeLevel(stateData.games.front().getCurrentLevel());
 }
@@ -111,6 +109,8 @@ void GameState::update(float deltaTime)
 
 	this->world.Step(timeStep, velocityIterations, positionIterations);
 	
+	this->updateCamera();
+
 	this->entityManager.update(deltaTime);
 	this->coinDisplay.update(deltaTime);
 	this->itemsDisplay.update(deltaTime);
@@ -135,13 +135,45 @@ void GameState::draw()
 	this->stateData.window.draw(this->itemsDisplay);
 }
 
-void GameState::updateCamera(const sf::Vector2f& centerPosition)
+void GameState::moveCamera(const sf::Vector2f& position)
 {
-	if (centerPosition.x > this->camera.getSize().x / 2.f && centerPosition.x < this->map.getBounds().width - this->camera.getSize().x / 2.f)
+	switch (this->stateData.games.front().getCurrenDirectionType())
 	{
-		this->camera.setCenter(centerPosition.x, this->camera.getCenter().y);
-		this->stateData.window.setView(this->camera);
+	case DirectionType::Horizontal:
+		this->camera.setCenter(position.x, this->camera.getCenter().y);
+		break;
+	case DirectionType::Vertical:
+		this->camera.setCenter(this->camera.getCenter().x, position.y);
+		break;
 	}
+}
+
+void GameState::updateCamera()
+{
+	this->entityManager.getEntities().for_each<ControllableComponent, PositionComponent>([this](auto entity, auto& controllable, auto& position)
+	{
+		const auto& centerPosition = position.getPosition();
+
+		switch (this->stateData.games.front().getCurrenDirectionType())
+		{
+		case DirectionType::Horizontal:
+		{
+			if (centerPosition.x > this->camera.getSize().x / 2.f && centerPosition.x < this->map.getBounds().width - this->camera.getSize().x / 2.f)
+			{
+				this->camera.setCenter(centerPosition.x, this->camera.getCenter().y);
+			}
+		}
+		break;
+		case DirectionType::Vertical:
+		{
+			if (centerPosition.y > this->camera.getSize().y / 2.f && centerPosition.y < this->map.getBounds().height + this->camera.getSize().y / 2.f)
+			{
+				this->camera.setCenter(this->camera.getCenter().x, centerPosition.y);
+			}
+		}
+		break;
+		}
+	});
 }
 
 void GameState::updateHealthBar(const HealthComponent& healthComponent)
@@ -167,7 +199,6 @@ void GameState::updateItemsDisplay(Entity item)
 
 void GameState::changeLevel(const std::string& level)
 {
-	this->saveData("SavedGames.txt");
 	this->stateData.games.front().setCurrentLevel(level);
 
 	this->entityManager.destroyEntities();
@@ -190,12 +221,12 @@ void GameState::changeLevel(const std::string& level)
 
 	this->entityManager.getEntities().for_each<ControllableComponent, PositionComponent, PhysicsComponent>([this](auto entity, auto& controllable, auto& position, auto& physics)
 	{
-		const auto& spawnPoint = this->stateData.games.front().getSpawnPoint();
+		const auto& spawnPoint = this->stateData.games.front().getCurrentSpawnPoint();
 		
 		position.setPosition({ spawnPoint.x, spawnPoint.y });
 		physics.setPosition({ UnitConverter::pixelsToMeters(spawnPoint.x), UnitConverter::pixelsToMeters(-spawnPoint.y) });
-		std::cout << "Hi\n";
-		this->updateCamera(spawnPoint);
+		
+		this->moveCamera(spawnPoint);
 	});
 }
 
