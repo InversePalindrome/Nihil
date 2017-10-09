@@ -28,6 +28,9 @@ void ControlSystem::update(float deltaTime)
 	{
 		this->reactToInput(entity, timer);
 	});
+
+	callbacks.update();
+	callbacks.clear();
 }
 
 void ControlSystem::reactToInput(Entity entity, TimerComponent& timer)
@@ -42,7 +45,10 @@ void ControlSystem::reactToInput(Entity entity, TimerComponent& timer)
 	}
 	else if (this->inputHandler.isActive("Shoot") && entity.has_component<RangeAttackComponent>() && timer.hasTimer("Reload") && timer.hasTimerExpired("Reload"))
 	{
-		this->events.broadcast(ShootProjectile{ entity, entity.get_component<RangeAttackComponent>().getProjectileID(), {0.f, 0.f} });
+		this->callbacks.addCallback([this, entity]()
+		{
+			this->events.broadcast(ShootProjectile{ entity, entity.get_component<RangeAttackComponent>().getProjectileID(), {0.f, 0.f} });
+		});
 		
 		timer.restartTimer("Reload");
 	}

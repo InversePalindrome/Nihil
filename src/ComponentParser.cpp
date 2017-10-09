@@ -207,8 +207,9 @@ Entity ComponentParser::parseComponents(std::int32_t entityID, const std::string
 		std::string componentName;
 
 		iStream >> componentName;
-
+		
 		line.erase(std::begin(line), std::begin(line) + componentName.size());
+		
 		boost::remove_erase_if(line, boost::is_any_of(",()"));
 		
 		this->componentParsers[componentName](entity, line);
@@ -306,7 +307,7 @@ Entity ComponentParser::createEntity()
 
 void ComponentParser::setComponentsID(Entity entity, std::int32_t entityID)
 {
-	brigand::for_each<ComponentList>([&entity, entityID](auto componentType)
+	brigand::for_each<ComponentList>([entity, entityID](auto componentType) mutable
 	{
 		using Type = decltype(componentType)::type;
 

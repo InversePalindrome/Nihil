@@ -106,16 +106,15 @@ void CombatSystem::handleExplosion(Entity bomb, Entity explosion)
 
 void CombatSystem::shootProjectile(Entity shooter, const std::string& projectileID, const sf::Vector2f& targetPosition)
 {
-	auto& projectileEntity = this->componentParser.parseComponents(projectileID + ".txt");
-	
-	this->componentParser.setComponentsID(projectileEntity, -1);
-	
+	auto projectileEntity = this->componentParser.parseComponents(-1, projectileID + ".txt");
+
 	if (shooter.has_component<ParentComponent>() && projectileEntity.has_component<ChildComponent>())
 	{
 		this->events.broadcast(CreateTransform{ projectileEntity, projectileEntity.get_component<ChildComponent>(), shooter.get_component<ParentComponent>() });
 	}
 	if (shooter.has_component<PhysicsComponent>() && projectileEntity.has_component<PhysicsComponent>() && projectileEntity.has_component<SpriteComponent>())
 	{
+		
 		const auto& shooterPhysics = shooter.get_component<PhysicsComponent>();
 		auto& projectilePhysics = projectileEntity.get_component<PhysicsComponent>();
 		auto& projectileSprite = projectileEntity.get_component<SpriteComponent>();
@@ -172,7 +171,7 @@ void CombatSystem::shootBomb(const PhysicsComponent& shooterPhysics, BombCompone
 	}
 }
 
-void CombatSystem::addReloadTimer(Entity entity, RangeAttackComponent& rangeAttack)
+void CombatSystem::addReloadTimer(Entity entity, const RangeAttackComponent& rangeAttack)
 {
 	if (entity.has_component<TimerComponent>())
 	{
@@ -199,7 +198,7 @@ void CombatSystem::addExplosion(Entity bomb)
 			{
 				auto& bombComponent = bomb.get_component<BombComponent>();
 
-				auto& explosion = this->componentParser.parseComponents(bombComponent.getExplosionID() + ".txt");
+				auto explosion = this->componentParser.parseComponents(bombComponent.getExplosionID() + ".txt");
 
 				this->componentParser.setComponentsID(explosion, -1);
 

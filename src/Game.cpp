@@ -121,6 +121,11 @@ DirectionType Game::getCurrenDirectionType() const
 	return this->levels.get<1>().find(this->currentLevel)->directionType;
 }
 
+b2Vec2 Game::getCurrentGravity() const
+{
+	return this->levels.get<1>().find(this->currentLevel)->gravity;
+}
+
 Game::LoadedCharacters& Game::getCharacters()
 {
 	return this->characters;
@@ -200,10 +205,10 @@ void Game::loadLevels()
 		
 	    std::string levelName;
 		std::size_t directionType = 0u;
-		float xPosition = 0.f, yPosition = 0.f;
+		float xGravity = 0.f, yGravity = 0.f, xPosition = 0.f, yPosition = 0.f;
 
-		iStream >> levelName >> directionType >> xPosition >> yPosition;
+		iStream >> levelName >> directionType >> xGravity >> yGravity >> xPosition >> yPosition;
 
-		this->levels.get<1>().insert({ levelName, static_cast<DirectionType>(directionType), {xPosition, yPosition}, false });
+		this->levels.get<1>().insert({ levelName, static_cast<DirectionType>(directionType), { xGravity, yGravity }, {xPosition, yPosition}, false });
 	}
 }

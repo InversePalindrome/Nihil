@@ -37,7 +37,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 
 	entityManager.getEvents().subscribe<DestroyEntity>([this](const auto& event) 
 	{ 
-		callbacks.push_back([this, event]
+		callbacks.addCallback([this, event]
 		{ 
 		    entityManager.destroyEntity(event.entity);
 		}); 
@@ -50,7 +50,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 
 	entityManager.getEvents().subscribe<PlayerDied>([this, &stateData](const auto& event)
 	{
-		callbacks.push_back([this, &stateData]
+		callbacks.addCallback([this, &stateData]
 		{
 			entityManager.createEntity("Player.txt", stateData.games.front().getCurrentSpawnPoint());
 			
@@ -66,7 +66,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 
 	entityManager.getEvents().subscribe<ChangeLevel>([this, &stateData](const auto& event)
 	{
-		callbacks.push_back([this, event]
+		callbacks.addCallback([this, event]
 		{ 
 			changeLevel(event.level);
 		});
@@ -115,11 +115,7 @@ void GameState::update(float deltaTime)
 	this->coinDisplay.update(deltaTime);
 	this->itemsDisplay.update(deltaTime);
 
-	for (auto& callback : this->callbacks)
-	{
-		callback();
-	}
-
+	this->callbacks.update();
 	this->callbacks.clear();
 }
 
@@ -216,18 +212,19 @@ void GameState::changeLevel(const std::string& level)
 	}
 
 	this->entityManager.parseBlueprint("Entities-" + level + ".txt");
-
 	this->stateData.soundManager.stopAllSounds();
 
 	this->entityManager.getEntities().for_each<ControllableComponent, PositionComponent, PhysicsComponent>([this](auto entity, auto& controllable, auto& position, auto& physics)
 	{
 		const auto& spawnPoint = this->stateData.games.front().getCurrentSpawnPoint();
-		
+
 		position.setPosition({ spawnPoint.x, spawnPoint.y });
 		physics.setPosition({ UnitConverter::pixelsToMeters(spawnPoint.x), UnitConverter::pixelsToMeters(-spawnPoint.y) });
 		
 		this->moveCamera(spawnPoint);
 	});
+
+	this->world.SetGravity(this->stateData.games.front().getCurrentGravity());
 }
 
 void GameState::changeEntityPosition(Entity entity, const sf::Vector2f& position)
@@ -238,7 +235,7 @@ void GameState::changeEntityPosition(Entity entity, const sf::Vector2f& position
 	}
 	if (entity.has_component<PhysicsComponent>())
 	{
-		this->callbacks.push_back([entity, position]() mutable
+		this->callbacks.addCallback([entity, position]() mutable
 		{
 			entity.get_component<PhysicsComponent>().setPosition({ UnitConverter::pixelsToMeters(position.x), UnitConverter::pixelsToMeters(-position.y) });
 		});

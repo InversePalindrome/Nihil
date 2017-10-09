@@ -130,7 +130,7 @@ void CharactersState::loadCharacters(const std::string& fileName)
 		
 		iStream >> characterID >> imageID >> price;
 
-		this->charactersData.emplace(characterID, CharacterData(characterID, imageID, price));
+		this->charactersData.emplace(characterID, CharacterGraphics(characterID, imageID, price));
 		
 		auto characterButton = sfg::RadioButton::Create("", this->characterButtons);
 		
@@ -227,12 +227,12 @@ void CharactersState::transitionToMenu()
 	this->stateMachine.popState();
 }
 
-CharacterData::CharacterData() :
-	CharacterData("", 0u, 0u)
+CharacterGraphics::CharacterGraphics() :
+	CharacterGraphics("", 0u, 0u)
 {
 }
 
-CharacterData::CharacterData(const std::string& characterName, std::size_t imageID, std::size_t price) :
+CharacterGraphics::CharacterGraphics(const std::string& characterName, std::size_t imageID, std::size_t price) :
 	characterName(characterName),
 	imageID(imageID),
 	price(price)
