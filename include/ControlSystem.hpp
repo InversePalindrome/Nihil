@@ -9,6 +9,7 @@ InversePalindrome.com
 
 #include "System.hpp"
 #include "InputHandler.hpp"
+#include "Callbacks.hpp"
 
 
 class ControlSystem : public System
@@ -19,6 +20,7 @@ public:
 	virtual void update(float deltaTime) override;
 
 private:
+	Callbacks callbacks;
 	InputHandler& inputHandler;
 
 	void reactToInput(Entity entity, TimerComponent& timer);

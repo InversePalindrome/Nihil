@@ -11,6 +11,7 @@ InversePalindrome.com
 #include "Map.hpp"
 #include "CollisionData.hpp"
 #include "CollisionHandler.hpp"
+#include "Callbacks.hpp"
 #include "EntityManager.hpp"
 #include "HealthBar.hpp"
 #include "CoinDisplay.hpp"
@@ -22,8 +23,6 @@ InversePalindrome.com
 #include <SFML/Graphics/View.hpp>
 
 #include <memory>
-#include <vector>
-#include <functional>
 
 
 class GameState : public State
@@ -42,7 +41,7 @@ private:
 
 	Map map;
 	sf::View camera;
-	std::vector<std::function<void()>> callbacks;
+	Callbacks callbacks;
     Pathways pathways;
 
 	CollisionHandler collisionHandler;

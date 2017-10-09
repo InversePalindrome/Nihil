@@ -34,7 +34,7 @@ private:
 	void shootBomb(const PhysicsComponent& shooterPhysics, BombComponent& bombComponent, PhysicsComponent& physicsComponent, SpriteComponent& spriteComponent,
 		const sf::Vector2f& targetPosition);
 
-	void addReloadTimer(Entity entity, RangeAttackComponent& rangeAttack);
+	void addReloadTimer(Entity entity, const RangeAttackComponent& rangeAttack);
 	void addExplosion(Entity bomb);
 
 	void applyKnockback(Entity attacker, Entity victim);

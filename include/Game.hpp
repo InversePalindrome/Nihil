@@ -10,6 +10,7 @@ InversePalindrome.com
 #include "Item.hpp"
 #include "Direction.hpp"
 
+#include <Box2D/Common/b2Math.h>
 #include <SFML/System/Vector2.hpp>
 
 #include <boost/multi_index_container.hpp>
@@ -24,15 +25,16 @@ InversePalindrome.com
 #include <unordered_map>
 
 
-struct LoadedLevelData
+struct LevelData
 {
 	std::string name;
 	DirectionType directionType;
+	b2Vec2 gravity;
 	sf::Vector2f spawnPosition;
 	bool isLoaded;
 };
 
-struct LoadedCharacterData
+struct CharacterData
 {
 	std::string name;
 	bool isLoaded;
@@ -42,13 +44,13 @@ class Game
 {
 	friend std::ostream& operator<<(std::ostream& os, const Game& game);
 
-	using LoadedLevels = boost::multi_index_container<LoadedLevelData,
+	using LoadedLevels = boost::multi_index_container<LevelData,
 		boost::multi_index::indexed_by<boost::multi_index::random_access<>,
-		boost::multi_index::hashed_unique<boost::multi_index::member<LoadedLevelData, std::string, &LoadedLevelData::name>>>>;
+		boost::multi_index::hashed_unique<boost::multi_index::member<LevelData, std::string, &LevelData::name>>>>;
 
-	using LoadedCharacters = boost::multi_index_container<LoadedCharacterData,
+	using LoadedCharacters = boost::multi_index_container<CharacterData,
 		boost::multi_index::indexed_by<boost::multi_index::random_access<>,
-		boost::multi_index::hashed_unique<boost::multi_index::member<LoadedCharacterData, std::string, &LoadedCharacterData::name>>>>;
+		boost::multi_index::hashed_unique<boost::multi_index::member<CharacterData, std::string, &CharacterData::name>>>>;
 
 public:
 	Game();
@@ -59,6 +61,7 @@ public:
 	std::string getCurrentLevel() const;
 	Items& getItems();
 	DirectionType getCurrenDirectionType() const;
+	b2Vec2 getCurrentGravity() const;
 	sf::Vector2f getCurrentSpawnPoint() const;
 
 	LoadedLevels& getLevels();

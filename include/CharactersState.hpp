@@ -24,7 +24,7 @@ InversePalindrome.com
 #include <unordered_map>
 
 
-struct CharacterData;
+struct CharacterGraphics;
 
 class CharactersState : public State
 {
@@ -47,7 +47,7 @@ private:
 	sfg::ScrolledWindow::Ptr scrolledWindow;
 	sfg::RadioButtonGroup::Ptr characterButtons;
 
-	std::unordered_map<std::string, CharacterData> charactersData;
+	std::unordered_map<std::string, CharacterGraphics> charactersData;
 
 	void loadCharacters(const std::string& fileName);
 
@@ -59,10 +59,10 @@ private:
 	void transitionToMenu();
 };
 
-struct CharacterData
+struct CharacterGraphics
 {
-	CharacterData();
-	CharacterData(const std::string& characterName, std::size_t imageID, std::size_t price);
+	CharacterGraphics();
+	CharacterGraphics(const std::string& characterName, std::size_t imageID, std::size_t price);
 
 	std::string characterName;
 	std::size_t imageID;
