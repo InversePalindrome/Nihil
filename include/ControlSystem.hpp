@@ -23,5 +23,7 @@ private:
 	Callbacks callbacks;
 	InputHandler& inputHandler;
 
-	void reactToInput(Entity entity, TimerComponent& timer);
+	void reactToInput(Entity entity, ControllableComponent& controllable, TimerComponent& timer);
+
+	void setMidAirStatus(Entity entity, bool midAirStatus);
 };

@@ -17,7 +17,7 @@ InversePalindrome.com
 #include <sstream>
 
 
-namespace Path
+namespace Parsers
 {
 	void parseFrameAnimations(const std::string& fileName, thor::FrameAnimation& animation,
 		std::size_t& animationID, float& animationTime);

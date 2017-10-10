@@ -16,6 +16,13 @@ class ControllableComponent : public Component
 
 public:
 	ControllableComponent();
+
+	void setMidAirStatus(bool midAirStatus);
+
+	bool isMidAir() const;
+
+private:
+	bool midAirStatus;
 };
 
 std::ostream& operator<<(std::ostream& os, const ControllableComponent& component);

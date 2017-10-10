@@ -22,7 +22,8 @@ InversePalindrome.com
 enum class TexturesID
 {
 	SplashScreen, StartBackground, Particles, Character, Mushroom, RedMonster, MenuBackground,                 
-    Level1, Level2, Level3, Level4, Level5, Level6, Coin, Heart, Laser, Gems
+    City, Desert, MushroomLand, PinkTown, FlowerLand, DarkTown, Coin, Heart, Laser, Gems, MistZone,
+	Bombs
 };
 enum class ImagesID { RedMonster };
 enum class FontsID { BITWONDER, CODE, Roboto };
