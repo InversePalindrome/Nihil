@@ -12,6 +12,8 @@ ControlSystem::ControlSystem(Entities& entities, Events& events, InputHandler& i
 	System(entities, events),
 	inputHandler(inputHandler)
 {
+	events.subscribe<IsMidAir>([this](const auto& event) { setMidAirStatus(event.entity, event.midAirStatus); });
+
 	events.subscribe<entityplus::component_added<Entity, ControllableComponent>>([&events](const auto& event)
 	{
 		if (event.entity.has_component<HealthComponent>())
@@ -26,14 +28,14 @@ void ControlSystem::update(float deltaTime)
 	this->entities.for_each<ControllableComponent, PositionComponent, TimerComponent>(
 		[this, deltaTime](auto entity, auto& controllable, auto& position, auto& timer)
 	{
-		this->reactToInput(entity, timer);
+		this->reactToInput(entity, controllable, timer);
 	});
 
 	callbacks.update();
 	callbacks.clear();
 }
 
-void ControlSystem::reactToInput(Entity entity, TimerComponent& timer)
+void ControlSystem::reactToInput(Entity entity, ControllableComponent& controllable, TimerComponent& timer)
 {
 	if (this->inputHandler.isActive("Move Left"))
 	{
@@ -52,10 +54,17 @@ void ControlSystem::reactToInput(Entity entity, TimerComponent& timer)
 		
 		timer.restartTimer("Reload");
 	}
-	else if (this->inputHandler.isActive("Jump") && timer.hasTimer("JumpInterval") && timer.hasTimerExpired("JumpInterval"))
+	else if (this->inputHandler.isActive("Jump") && !controllable.isMidAir())
 	{
 		this->events.broadcast(Jumped{ entity });
+	}
+}
 
-		timer.restartTimer("JumpInterval");
+
+void ControlSystem::setMidAirStatus(Entity entity, bool midAirStatus)
+{
+	if (entity.has_component<ControllableComponent>())
+	{
+		entity.get_component<ControllableComponent>().setMidAirStatus(midAirStatus);
 	}
 }

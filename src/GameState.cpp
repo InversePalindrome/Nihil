@@ -9,11 +9,11 @@ InversePalindrome.com
 #include "StateMachine.hpp"
 #include "FilePaths.hpp"
 #include "UnitConverter.hpp"
-
+#include <iostream>
 
 GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
-	world(b2Vec2(0.f, -9.8f)),
+	world({ 0.f, -9.8f }),
 	entityManager(world, stateData.resourceManager, stateData.soundManager, stateData.inputHandler, collisionsData, pathways),
 	map(stateData.games.front(), world, entityManager.getComponentSerializer(), stateData.resourceManager, collisionsData, pathways),
 	camera(stateData.window.getDefaultView()),
@@ -133,6 +133,8 @@ void GameState::draw()
 
 void GameState::moveCamera(const sf::Vector2f& position)
 {
+	this->camera.setCenter(this->stateData.window.getDefaultView().getCenter());
+
 	switch (this->stateData.games.front().getCurrenDirectionType())
 	{
 	case DirectionType::Horizontal:
@@ -141,6 +143,7 @@ void GameState::moveCamera(const sf::Vector2f& position)
 	case DirectionType::Vertical:
 		this->camera.setCenter(this->camera.getCenter().x, position.y);
 		break;
+		
 	}
 }
 
@@ -162,7 +165,7 @@ void GameState::updateCamera()
 		break;
 		case DirectionType::Vertical:
 		{
-			if (centerPosition.y > this->camera.getSize().y / 2.f && centerPosition.y < this->map.getBounds().height + this->camera.getSize().y / 2.f)
+			if (centerPosition.y > this->camera.getSize().y / 2.f && centerPosition.y < this->map.getBounds().height - this->camera.getSize().y / 2.f)
 			{
 				this->camera.setCenter(this->camera.getCenter().x, centerPosition.y);
 			}

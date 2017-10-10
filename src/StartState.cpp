@@ -7,19 +7,17 @@ InversePalindrome.com
 
 #include "StartState.hpp"
 #include "StateMachine.hpp"
+#include "EffectParser.hpp"
+#include "TextStyleParser.hpp"
+#include "FilePaths.hpp"
 
 #include <Thor/Math/Distributions.hpp>
-#include <Thor/Particles/Affectors.hpp>
-#include <Thor/Graphics/ColorGradient.hpp>
-#include <Thor/Animations/FadeAnimation.hpp>
-#include <Thor/Animations/ColorAnimation.hpp>
-
 
 StartState::StartState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
 	view(stateData.window.getDefaultView()),
-	titleLabel("Nihil", stateData.resourceManager.getFont(FontsID::BITWONDER), 220u),
-	continueLabel("Press a key to Continue", stateData.resourceManager.getFont(FontsID::BITWONDER), 40u)
+	continueLabel("Press a key to Continue", stateData.resourceManager.getFont(FontsID::BITWONDER), 40u),
+	emitter(Parsers::parseEmitter("StartEmitters.txt"))
 {
 	auto& backgroundTexture = stateData.resourceManager.getTexture(TexturesID::StartBackground);
 
@@ -27,39 +25,16 @@ StartState::StartState(StateMachine& stateMachine, StateData& stateData) :
 	
 	background.setTexture(backgroundTexture);
 
-	particleSystem.setTexture(stateData.resourceManager.getTexture(TexturesID::Particles));
-	particleSystem.addTextureRect(sf::IntRect(400u, 656u, 144u, 143u));
-	particleSystem.addTextureRect(sf::IntRect(0u, 800u, 100u, 95u));
-	particleSystem.addTextureRect(sf::IntRect(400u, 400u, 256u, 256u));
-
-	thor::ColorGradient colors;
-	colors[0.f] = sf::Color(44, 221, 55);
-	colors[0.25f] = sf::Color(47, 47, 204);
-	colors[0.5f] = sf::Color(153, 47, 143);
-	colors[0.75f] = sf::Color(241, 148, 55);
-	colors[1.f] = sf::Color(255, 247, 4);
-
-	emitter.setParticleTextureIndex(thor::Distributions::uniform(0u, 2u));
-	emitter.setEmissionRate(thor::Distributions::uniform(8.f, 13.f)());
-	emitter.setParticlePosition(thor::Distributions::rect(sf::Vector2f(stateData.window.getSize().x / 2.f, stateData.window.getSize().y / 2.f),
-		sf::Vector2f(stateData.window.getSize().x / 2.f, stateData.window.getSize().y / 2.f)));
-	emitter.setParticleLifetime(thor::Distributions::uniform(sf::seconds(5.f), sf::seconds(10.f)));
-	emitter.setParticleRotation(thor::Distributions::uniform(0.f, 360.f));
-
+	Parsers::parseParticleSystem(stateData.resourceManager, "StartParticles.txt", particleSystem);
 	particleSystem.addEmitter(thor::refEmitter(emitter));
-	particleSystem.addAffector(thor::AnimationAffector(thor::ColorAnimation(colors)));
-	particleSystem.addAffector(thor::AnimationAffector(thor::FadeAnimation(0.2f, 0.2f)));
-	particleSystem.addAffector(thor::ForceAffector(sf::Vector2f(0.f, 20.f)));
 
+	Parsers::parseStyle(stateData.resourceManager, "TitleStyle.txt", titleLabel);
+	titleLabel.setString("Nihil");
 	titleLabel.setOrigin(titleLabel.getGlobalBounds().width / 2.f, titleLabel.getGlobalBounds().height / 2.f);
 	titleLabel.setPosition(this->view.getCenter());
-	titleLabel.setFillColor(sf::Color(156u, 28u, 107u));
-	titleLabel.setOutlineThickness(10.f);
-	titleLabel.setOutlineColor(sf::Color(75u, 0u, 130u));
-	
-	continueLabel.setOrigin(continueLabel.getGlobalBounds().width / 2.f, continueLabel.getGlobalBounds().height / 2.f);
-	continueLabel.setPosition(sf::Vector2f(this->view.getCenter().x, 1250.f));
 
+	continueLabel.setOrigin(continueLabel.getGlobalBounds().width / 2.f, continueLabel.getGlobalBounds().height / 2.f);
+	continueLabel.setPosition(sf::Vector2f(this->view.getCenter().x - 10.f, 1250.f));
 	continueLabel.setFillColor(sf::Color::Black);
 
 	stateData.soundManager.playMusic("StartElectro.wav", true);

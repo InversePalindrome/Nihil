@@ -29,7 +29,7 @@ void PhysicsSystem::update(float deltaTime)
 		[this](auto entity, const auto& physics, auto& position) 
 	{
 		this->convertPositionCoordinates(physics, position);
-		this->checkIfStatic(entity, physics);
+		this->checkPhysicalStatus(entity, physics);
 	});
 }
 
@@ -115,11 +115,20 @@ void PhysicsSystem::convertPositionCoordinates(const PhysicsComponent& physics, 
 	}
 }
 
-void PhysicsSystem::checkIfStatic(Entity entity, const PhysicsComponent& physics)
+void PhysicsSystem::checkPhysicalStatus(Entity entity, const PhysicsComponent& physics)
 {
 	if (entity.has_component<StateComponent>() && physics.getVelocity() == b2Vec2(0.f, 0.f))
 	{
 		this->events.broadcast(ChangeState{ entity, EntityState::Idle });
+	}
+
+	if (physics.getVelocity().y != 0.f)
+	{
+		this->events.broadcast(IsMidAir{ entity, true });
+	}
+	else
+	{
+		this->events.broadcast(IsMidAir{ entity, false });
 	}
 }
 

@@ -12,7 +12,7 @@ InversePalindrome.com
 #include <sstream>
 
 
-void Path::parseStyle(ResourceManager& resourceManager, const std::string& fileName, sf::Text& text)
+void Parsers::parseStyle(ResourceManager& resourceManager, const std::string& fileName, sf::Text& text)
 {
 	std::ifstream inFile(Path::miscellaneous / fileName);
 	std::string line;

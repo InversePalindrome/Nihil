@@ -18,7 +18,7 @@ InversePalindrome.com
 #include <sstream>
 
 
-void Path::parseParticleSystem(ResourceManager& resourceManager, const std::string& fileName, thor::ParticleSystem& particleSystem)
+void Parsers::parseParticleSystem(ResourceManager& resourceManager, const std::string& fileName, thor::ParticleSystem& particleSystem)
 {
 	std::ifstream inFile(Path::particles / fileName);
 	std::string line;
@@ -85,12 +85,12 @@ void Path::parseParticleSystem(ResourceManager& resourceManager, const std::stri
 
 			iStream >> colorFile;
 
-			particleSystem.addAffector(thor::AnimationAffector(thor::ColorAnimation(Path::parseColors(colorFile))));
+			particleSystem.addAffector(thor::AnimationAffector(thor::ColorAnimation(Parsers::parseColors(colorFile))));
 		}
 	}
 }
 
-thor::UniversalEmitter Path::parseEmitter(const std::string& fileName)
+thor::UniversalEmitter Parsers::parseEmitter(const std::string& fileName)
 {
 	thor::UniversalEmitter emitter;
 
@@ -107,11 +107,11 @@ thor::UniversalEmitter Path::parseEmitter(const std::string& fileName)
 
 		if (category == "EmissionRate")
 		{
-			float particlesPerSecond = 0.f;
+			float minParticlesPerSecond = 0.f, maxParticlesPerSecond = 0.f;
 
-			iStream >> particlesPerSecond;
+			iStream >> minParticlesPerSecond >> maxParticlesPerSecond;
 
-			emitter.setEmissionRate(particlesPerSecond);
+			emitter.setEmissionRate(thor::Distributions::uniform(minParticlesPerSecond, maxParticlesPerSecond)());
 		}
 		else if (category == "Lifetime")
 		{

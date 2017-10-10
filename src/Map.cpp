@@ -31,7 +31,7 @@ Map::Map(Game& game, b2World& world, ComponentSerializer& componentSerializer, R
 void Map::load(const std::string& fileName)
 {
 	this->layers.clear();
-
+	
 	this->map.load(Path::levels / fileName);
 	this->fileName = Path::levels / fileName;
 	this->bounds = sf::FloatRect(this->map.getBounds().left, this->map.getBounds().top, this->map.getBounds().width, this->map.getBounds().height);

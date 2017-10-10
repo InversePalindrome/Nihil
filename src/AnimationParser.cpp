@@ -9,7 +9,7 @@ InversePalindrome.com
 #include "FilePaths.hpp"
 
 
-void Path::parseFrameAnimations(const std::string& fileName, thor::FrameAnimation& animation, 
+void Parsers::parseFrameAnimations(const std::string& fileName, thor::FrameAnimation& animation, 
 	std::size_t& animationID, float& animationTime)
 {
 	std::ifstream inFile(Path::animations / fileName);
@@ -40,7 +40,7 @@ void Path::parseFrameAnimations(const std::string& fileName, thor::FrameAnimatio
 }
 
 
-thor::ColorGradient Path::parseColors(const std::string& fileName)
+thor::ColorGradient Parsers::parseColors(const std::string& fileName)
 {
 	thor::ColorGradient colors;
 

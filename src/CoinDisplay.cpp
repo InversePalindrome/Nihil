@@ -26,7 +26,7 @@ CoinDisplay::CoinDisplay(ResourceManager& resourceManager) :
 	std::size_t animationID = 0u;
 	float animationTime = 0.f;
 
-	Path::parseFrameAnimations("CoinAnimations.txt", frameAnimation, animationID, animationTime);
+	Parsers::parseFrameAnimations("CoinAnimations.txt", frameAnimation, animationID, animationTime);
 
 	animator.addAnimation("Animation", frameAnimation, sf::seconds(animationTime));
 
