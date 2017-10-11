@@ -46,7 +46,7 @@ std::ostream& operator<<(std::ostream& os, const TimerComponent& component)
 
 void TimerComponent::addTimer(const std::string& timer, float time)
 {
-	this->timers.emplace(timer, std::make_pair(thor::Timer(), time));
+	this->timers[timer] = std::make_pair(thor::Timer(), time);
 }
 
 void TimerComponent::removeTimer(const std::string& timer)

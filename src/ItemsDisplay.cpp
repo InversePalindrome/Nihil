@@ -8,6 +8,7 @@ InversePalindrome.com
 #include "ItemsDisplay.hpp"
 #include "FilePaths.hpp"
 #include "AnimationParser.hpp"
+#include "TextStyleParser.hpp"
 
 #include <fstream>
 #include <sstream>
@@ -90,7 +91,7 @@ void ItemsDisplay::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 		for (const auto& item : this->itemsData)
 		{
-			target.draw(item.second);
+			target.draw(item.second, states);
 		}
 	}
 }
@@ -100,11 +101,11 @@ ItemsGraphics::ItemsGraphics(ResourceManager& resourceManager, const std::string
 {
 	std::istringstream iStream(itemData);
 
-	std::size_t item = 0u, textureID = 0u, fontID = 0u;
+	std::size_t item = 0u, textureID = 0u;
 	float scale = 0.f, xPosition = 0.f, yPosition = 0.f, textOffset = 0.f;
 	std::string iAnimationFile;
 
-	iStream >> item >> textureID >> scale >> xPosition >> yPosition >> textOffset >> fontID >> maxQuantity >> iAnimationFile;
+	iStream >> item >> textureID >> scale >> xPosition >> yPosition >> textOffset >> maxQuantity >> iAnimationFile;
 
 	animationFile = iAnimationFile;
 
@@ -112,12 +113,8 @@ ItemsGraphics::ItemsGraphics(ResourceManager& resourceManager, const std::string
 	sprite.setScale(sf::Vector2f(scale, scale));
 	sprite.setPosition(xPosition, yPosition);
 
-	info.setFont(resourceManager.getFont(static_cast<FontsID>(fontID)));
-	info.setCharacterSize(45u);
-	info.setFillColor(sf::Color(255u, 255u, 0u));
-	info.setStyle(sf::Text::Bold);
-	info.setOutlineThickness(3.f);
-	info.setOutlineColor(sf::Color::Black);
+	Parsers::parseStyle(resourceManager, "ItemStyle.txt", info);
+
 	info.setPosition(sf::Vector2f(xPosition, yPosition + textOffset));
 	info.setString(std::to_string(quantity) + " / " + std::to_string(maxQuantity));
 }

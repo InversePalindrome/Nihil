@@ -75,18 +75,9 @@ void PhysicsSystem::makeJump(Entity entity)
 {
 	auto& physics = entity.get_component<PhysicsComponent>();
 
-	const auto& currentVelocity = physics.getVelocity();
-
-	b2Vec2 newVelocity(0.f, 0.f);
-
-	const float jumpVelocity = 15.f;
-	newVelocity.y = jumpVelocity;
-
 	this->events.broadcast(ChangeState{ entity, EntityState::Jumping });
 
-	const auto& deltaVelocity = newVelocity - currentVelocity;
-
-	const auto& impulse = b2Vec2(0.f, deltaVelocity.y * physics.getMass());
+	const auto& impulse = b2Vec2(0.f, physics.getJumpVelocity() * physics.getMass());
 
 	physics.applyImpulse(impulse);
 }

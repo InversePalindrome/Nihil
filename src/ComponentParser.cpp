@@ -61,10 +61,11 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["Physics"] = [this, &world](auto& entity, auto& line)
 	{
-		auto& params = parse<float, float, std::size_t, std::size_t, std::int32_t, float, float>(line);
+		auto& params = parse<float, float, std::size_t, std::size_t, std::int32_t, float, float, float>(line);
 
 		entity.add_component<PhysicsComponent>(world, b2Vec2(std::get<0>(params), std::get<1>(params)),
-			static_cast<b2BodyType>(std::get<2>(params)), static_cast<ObjectType>(std::get<3>(params)), std::get<4>(params), std::get<5>(params), std::get<6>(params));
+			static_cast<b2BodyType>(std::get<2>(params)), static_cast<ObjectType>(std::get<3>(params)), std::get<4>(params),
+			std::get<5>(params), std::get<6>(params), std::get<7>(params));
 	};
 
 	componentParsers["Patrol"] = [this](auto& entity, auto& line)
@@ -180,6 +181,13 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 		auto& params = this->parse<std::size_t, std::size_t>(line);
 
 		entity.add_component<PickupComponent>(static_cast<Item>(std::get<0>(params)), static_cast<SoundBuffersID>(std::get<1>(params)));
+	};
+
+	componentParsers["PowerUp"] = [this](auto& entity, auto& line)
+	{
+		auto& params = this->parse<std::size_t, std::size_t, float, float>(line);
+
+		entity.add_component<PowerUpComponent>(static_cast<Item>(std::get<0>(params)), static_cast<SoundBuffersID>(std::get<1>(params)), std::get<2>(params), std::get<3>(params));
 	};
 
 	componentParsers["Inventory"] = [this](auto& entity, auto& line)

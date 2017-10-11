@@ -9,7 +9,7 @@ InversePalindrome.com
 #include "StateMachine.hpp"
 #include "FilePaths.hpp"
 #include "UnitConverter.hpp"
-#include <iostream>
+
 
 GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
@@ -20,7 +20,8 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	collisionHandler(entityManager.getEvents()),
 	healthBar(stateData.resourceManager),
 	coinDisplay(stateData.resourceManager),
-	itemsDisplay(stateData.resourceManager)
+	itemsDisplay(stateData.resourceManager),
+	powerUpDisplay(stateData.resourceManager)
 {
 	world.SetContactListener(&collisionHandler);
 	
@@ -30,10 +31,14 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	coinDisplay.setNumberOfCoins(stateData.games.front().getItems()[Item::Coin]);
 
 	itemsDisplay.setPosition(200.f, 200.f);
+
+	powerUpDisplay.setPosition(600.f, 100.f);
 	
 	entityManager.getEvents().subscribe<DisplayHealthBar>([this](const auto& event) { updateHealthBar(event.health); });
 	entityManager.getEvents().subscribe<DisplayCoins>([this](const auto& event) { updateCoinDisplay(event.inventory); });
 	entityManager.getEvents().subscribe<PickedUpItem>([this](const auto& event) { updateItemsDisplay(event.item); });
+	entityManager.getEvents().subscribe<DisplayPowerUp>([this](const auto& event) { powerUpDisplay.addPowerUp(event.item); });
+	entityManager.getEvents().subscribe<HidePowerUp>([this](const auto& event) { powerUpDisplay.removePowerUp(event.item); });
 
 	entityManager.getEvents().subscribe<DestroyEntity>([this](const auto& event) 
 	{ 
@@ -114,6 +119,7 @@ void GameState::update(float deltaTime)
 	this->entityManager.update(deltaTime);
 	this->coinDisplay.update(deltaTime);
 	this->itemsDisplay.update(deltaTime);
+	this->powerUpDisplay.update(deltaTime);
 
 	this->callbacks.update();
 	this->callbacks.clear();
@@ -129,6 +135,7 @@ void GameState::draw()
 	this->stateData.window.draw(this->healthBar);
 	this->stateData.window.draw(this->coinDisplay);
 	this->stateData.window.draw(this->itemsDisplay);
+	this->stateData.window.draw(this->powerUpDisplay);
 }
 
 void GameState::moveCamera(const sf::Vector2f& position)

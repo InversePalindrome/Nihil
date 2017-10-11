@@ -12,13 +12,14 @@ InversePalindrome.com
 
 
 PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType bodyType, ObjectType objectType, std::int32_t collisionGroup,
-	float maxVelocity, float accelerationRate)  :
+	float maxVelocity, float jumpVelocity, float accelerationRate)  :
 	Component("Physics"),
 	body(nullptr),
 	bodySize(bodySize),
 	objectType(objectType),
 	collisionGroup(collisionGroup),
 	maxVelocity(maxVelocity),
+	jumpVelocity(jumpVelocity),
 	accelerationRate(accelerationRate),
 	direction(Direction::Right)
 {
@@ -93,6 +94,11 @@ float PhysicsComponent::getMaxVelocity() const
 	return this->maxVelocity;
 }
 
+float PhysicsComponent::getJumpVelocity() const
+{
+	return this->jumpVelocity;
+}
+
 float PhysicsComponent::getAccelerationRate() const
 {
 	return this->accelerationRate;
@@ -121,6 +127,11 @@ void PhysicsComponent::setVelocity(const b2Vec2& velocity)
 void PhysicsComponent::setMaxVelocity(float maxVelocity)
 {
 	this->maxVelocity = maxVelocity;
+}
+
+void PhysicsComponent::setJumpVelocity(float jumpVelocity)
+{
+	this->jumpVelocity = jumpVelocity;
 }
 
 void PhysicsComponent::setAccelerationRate(float accelerationRate)
