@@ -28,6 +28,7 @@ InversePalindrome.com
 #include "ChaseComponent.hpp"
 #include "TimerComponent.hpp"
 #include "PickupComponent.hpp"
+#include "PowerUpComponent.hpp"
 #include "InventoryComponent.hpp"
 #include "Direction.hpp"
 
@@ -51,6 +52,8 @@ struct EmitSound;
 struct PickedUpItem;
 struct DisplayHealthBar;
 struct DisplayCoins;
+struct DisplayPowerUp;
+struct HidePowerUp;
 struct PlayerDied;
 struct CrossedWaypoint;
 struct ShootProjectile;
@@ -68,15 +71,15 @@ struct IsMidAir;
 using Components = entityplus::component_list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
 	HealthComponent, MeleeAttackComponent, RangeAttackComponent, BulletComponent, BombComponent, SpriteComponent, TextComponent, 
 	AnimationComponent, SoundComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent,
-	ChaseComponent, PickupComponent, InventoryComponent>;
+	ChaseComponent, PickupComponent, PowerUpComponent, InventoryComponent>;
 
 using Tags = entityplus::tag_list<AI>;
 
 using Entities = entityplus::entity_manager<Components, Tags>;
 
 using Events = entityplus::event_manager<Components, Tags, DirectionChanged, Jumped, StopMovement, CombatOcurred, ChangeState,
-	StateChanged, ChangeLevel, DestroyEntity, EmitSound, PickedUpItem, DisplayHealthBar, DisplayCoins, PlayerDied,
-	CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform, ApplyForce, ApplyImpulse, ApplyBlastImpact, 
+	StateChanged, ChangeLevel, DestroyEntity, EmitSound, PickedUpItem, DisplayHealthBar, DisplayCoins, DisplayPowerUp, HidePowerUp,
+	PlayerDied, CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform, ApplyForce, ApplyImpulse, ApplyBlastImpact, 
 	ApplyKnockback, ChangePosition, IsMidAir>;
 
 using Entity = Entities::entity_t;
@@ -84,7 +87,7 @@ using Entity = Entities::entity_t;
 using ComponentList = brigand::list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
 	HealthComponent, MeleeAttackComponent, RangeAttackComponent, BulletComponent, BombComponent, SpriteComponent, TextComponent, 
 	AnimationComponent, SoundComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent,
-	ChaseComponent, PickupComponent, InventoryComponent>;
+	ChaseComponent, PickupComponent, PowerUpComponent, InventoryComponent>;
 
 
 struct DirectionChanged
@@ -155,6 +158,16 @@ struct DisplayHealthBar
 struct DisplayCoins
 {
 	const InventoryComponent& inventory;
+};
+
+struct DisplayPowerUp
+{
+	Item item;
+};
+
+struct HidePowerUp
+{
+	Item item;
 };
 
 struct PlayerDied

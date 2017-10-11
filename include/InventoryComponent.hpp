@@ -10,8 +10,6 @@ InversePalindrome.com
 #include "Component.hpp"
 #include "Item.hpp"
 
-#include <unordered_map>
-
 
 class InventoryComponent : public Component
 {

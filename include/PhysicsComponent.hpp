@@ -23,7 +23,7 @@ class PhysicsComponent : public Component
 
 public:
 	PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType physicalType, ObjectType objectType, std::int32_t collisionGroup,
-		float maxVelocity, float accelerationRate);
+		float maxVelocity, float jumpVelocity, float accelerationRate);
 
 	b2Body* getBody();
 
@@ -34,6 +34,7 @@ public:
 
 	float getMass() const;
 	float getMaxVelocity() const;
+	float getJumpVelocity() const;
 	float getAccelerationRate() const;
 	Direction getDirection() const;
 	std::int8_t getCollisionGroup() const;
@@ -41,6 +42,7 @@ public:
 	void setPosition(const b2Vec2& position);
 	void setVelocity(const b2Vec2& velocity);
 	void setMaxVelocity(float maxVelocity);
+	void setJumpVelocity(float jumpVelocity);
 	void setAccelerationRate(float accelerationRate);
 	void setGravityScale(float gravityScale);
 	void setDirection(Direction direction);
@@ -57,6 +59,7 @@ private:
 	std::int32_t collisionGroup;
 
 	float maxVelocity;
+	float jumpVelocity;
 	float accelerationRate;
 	Direction direction;
 };

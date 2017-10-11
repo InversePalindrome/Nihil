@@ -16,6 +16,7 @@ InversePalindrome.com
 #include "HealthBar.hpp"
 #include "CoinDisplay.hpp"
 #include "ItemsDisplay.hpp"
+#include "PowerUpDisplay.hpp"
 #include "Pathway.hpp"
 
 #include <Box2D/Dynamics/b2World.h>
@@ -49,6 +50,7 @@ private:
 	HealthBar healthBar;
 	CoinDisplay coinDisplay;
 	ItemsDisplay itemsDisplay;
+	PowerUpDisplay powerUpDisplay;
 
 	void moveCamera(const sf::Vector2f& position);
 

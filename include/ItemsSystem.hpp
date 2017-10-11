@@ -9,6 +9,12 @@ InversePalindrome.com
 
 #include "System.hpp"
 
+#include <Thor/Time/CallbackTimer.hpp>
+
+#include <vector>
+#include <unordered_map>
+#include <functional>
+
 
 class ItemsSystem : public System
 {
@@ -18,5 +24,8 @@ public:
 	virtual void update(float deltaTime);
 
 private:
+	std::vector<thor::CallbackTimer> powerUpTimers;
+	std::unordered_map<Item, std::function<void(PhysicsComponent&, PowerUpComponent&)>> powerUpEffects;
+
 	void handleItemPickup(Entity collector, Entity item);
 };
