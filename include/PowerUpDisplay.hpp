@@ -35,6 +35,7 @@ public:
 
 	void addPowerUp(Item powerUp);
 	void removePowerUp(Item powerUp);
+	void clearPowerUps();
 
 private:
 	std::unordered_map<Item, PowerUpGraphics> powerUps;

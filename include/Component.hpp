@@ -15,11 +15,12 @@ InversePalindrome.com
 class Component
 {
 public:
-	Component(const std::string& componentID);
+	Component(const std::string& name);
 
     std::string getName() const;
 	std::int32_t getEntityID() const;
 
+	void setName(const std::string& name);
 	void setEntityID(std::int32_t entity);
 
 private:

@@ -9,6 +9,7 @@ InversePalindrome.com
 
 #include "System.hpp"
 #include "Pathway.hpp"
+#include "Callbacks.hpp"
 
 #include <SFML/System/Vector2.hpp>
 
@@ -24,10 +25,11 @@ public:
 
 private:
 	Pathways& pathways;
+	Callbacks callbacks;
 
 	void updateMovement(Entity entity, PatrolComponent& patrol, const sf::Vector2f& position);
 
-	void addPathway(Entity entity, PatrolComponent& patrol);
+	void addPathway(Entity entity);
 
 	void changeWaypoint(Entity entity);
 	void chaseTarget(PatrolComponent& patrol, const sf::Vector2f& AIPosition, const sf::Vector2f& targetPosition);

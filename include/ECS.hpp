@@ -29,6 +29,7 @@ InversePalindrome.com
 #include "TimerComponent.hpp"
 #include "PickupComponent.hpp"
 #include "PowerUpComponent.hpp"
+#include "DropComponent.hpp"
 #include "InventoryComponent.hpp"
 #include "Direction.hpp"
 
@@ -40,6 +41,7 @@ InversePalindrome.com
 
 struct AI;
 
+struct CreateEntity;
 struct DirectionChanged;
 struct Jumped;
 struct StopMovement;
@@ -50,6 +52,7 @@ struct ChangeLevel;
 struct DestroyEntity;
 struct EmitSound;
 struct PickedUpItem;
+struct DroppedItem;
 struct DisplayHealthBar;
 struct DisplayCoins;
 struct DisplayPowerUp;
@@ -71,14 +74,14 @@ struct IsMidAir;
 using Components = entityplus::component_list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
 	HealthComponent, MeleeAttackComponent, RangeAttackComponent, BulletComponent, BombComponent, SpriteComponent, TextComponent, 
 	AnimationComponent, SoundComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent,
-	ChaseComponent, PickupComponent, PowerUpComponent, InventoryComponent>;
+	ChaseComponent, PickupComponent, PowerUpComponent, DropComponent, InventoryComponent>;
 
 using Tags = entityplus::tag_list<AI>;
 
 using Entities = entityplus::entity_manager<Components, Tags>;
 
-using Events = entityplus::event_manager<Components, Tags, DirectionChanged, Jumped, StopMovement, CombatOcurred, ChangeState,
-	StateChanged, ChangeLevel, DestroyEntity, EmitSound, PickedUpItem, DisplayHealthBar, DisplayCoins, DisplayPowerUp, HidePowerUp,
+using Events = entityplus::event_manager<Components, Tags, CreateEntity, DirectionChanged, Jumped, StopMovement, CombatOcurred, ChangeState,
+	StateChanged, ChangeLevel, DestroyEntity, EmitSound, PickedUpItem, DroppedItem, DisplayHealthBar, DisplayCoins, DisplayPowerUp, HidePowerUp,
 	PlayerDied, CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform, ApplyForce, ApplyImpulse, ApplyBlastImpact, 
 	ApplyKnockback, ChangePosition, IsMidAir>;
 
@@ -87,8 +90,14 @@ using Entity = Entities::entity_t;
 using ComponentList = brigand::list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
 	HealthComponent, MeleeAttackComponent, RangeAttackComponent, BulletComponent, BombComponent, SpriteComponent, TextComponent, 
 	AnimationComponent, SoundComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent,
-	ChaseComponent, PickupComponent, PowerUpComponent, InventoryComponent>;
+	ChaseComponent, PickupComponent, PowerUpComponent, DropComponent, InventoryComponent>;
 
+
+struct CreateEntity
+{
+	std::string fileName;
+	sf::Vector2f position;
+};
 
 struct DirectionChanged
 {
@@ -144,6 +153,11 @@ struct PickedUpItem
 {
 	Entity collector;
 	Entity item;
+};
+
+struct DroppedItem
+{
+	Entity dropper;
 };
 
 struct GameOver

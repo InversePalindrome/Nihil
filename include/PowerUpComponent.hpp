@@ -12,6 +12,8 @@ InversePalindrome.com
 
 class PowerUpComponent : public PickupComponent
 {
+	friend std::ostream& operator<<(std::ostream& os, const PowerUpComponent& component);
+
 public:
 	PowerUpComponent(Item item, SoundBuffersID soundID, float effectTime, float effectBoost);
 
@@ -25,3 +27,5 @@ private:
 	float effectBoost;
 	float effectTime;
 };
+
+std::ostream& operator<<(std::ostream& os, const PowerUpComponent& component);

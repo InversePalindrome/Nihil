@@ -24,8 +24,10 @@ public:
 	virtual void update(float deltaTime);
 
 private:
+	std::unordered_map<Item, std::string> itemNames;
 	std::vector<thor::CallbackTimer> powerUpTimers;
-	std::unordered_map<Item, std::function<void(PhysicsComponent&, PowerUpComponent&)>> powerUpEffects;
+	std::unordered_map<Item, std::function<void(Entity, PowerUpComponent&)>> powerUpEffects;
 
 	void handleItemPickup(Entity collector, Entity item);
+	void handleItemDrop(Entity dropper);
 };
