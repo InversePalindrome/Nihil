@@ -13,6 +13,14 @@ PowerUpComponent::PowerUpComponent(Item item, SoundBuffersID soundID, float effe
 	effectTime(effectTime),
 	effectBoost(effectBoost)
 {
+	setName("PowerUp");
+}
+
+std::ostream& operator<<(std::ostream& os, const PowerUpComponent& component)
+{
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.effectTime << ' ' << component.effectBoost;
+
+	return os;
 }
 
 float PowerUpComponent::getEffectTime() const

@@ -40,9 +40,17 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	entityManager.getEvents().subscribe<DisplayPowerUp>([this](const auto& event) { powerUpDisplay.addPowerUp(event.item); });
 	entityManager.getEvents().subscribe<HidePowerUp>([this](const auto& event) { powerUpDisplay.removePowerUp(event.item); });
 
+	entityManager.getEvents().subscribe<CreateEntity>([this](const auto& event) 
+	{ 
+		callbacks.addCallback([this, event]()
+		{
+			entityManager.createEntity(event.fileName, event.position);
+		});
+	});
+
 	entityManager.getEvents().subscribe<DestroyEntity>([this](const auto& event) 
 	{ 
-		callbacks.addCallback([this, event]
+		callbacks.addCallback([this, event]()
 		{ 
 		    entityManager.destroyEntity(event.entity);
 		}); 
@@ -150,7 +158,6 @@ void GameState::moveCamera(const sf::Vector2f& position)
 	case DirectionType::Vertical:
 		this->camera.setCenter(this->camera.getCenter().x, position.y);
 		break;
-		
 	}
 }
 
@@ -223,6 +230,7 @@ void GameState::changeLevel(const std::string& level)
 
 	this->entityManager.parseBlueprint("Entities-" + level + ".txt");
 	this->stateData.soundManager.stopAllSounds();
+	this->powerUpDisplay.clearPowerUps();
 
 	this->entityManager.getEntities().for_each<ControllableComponent, PositionComponent, PhysicsComponent>([this](auto entity, auto& controllable, auto& position, auto& physics)
 	{

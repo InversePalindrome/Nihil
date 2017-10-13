@@ -84,6 +84,11 @@ void CombatSystem::handleCombat(Entity attacker, Entity victim)
 		}
 		if (health.getHitpoints() == 0u)
 		{
+			if (victim.has_component<DropComponent>())
+			{
+				this->events.broadcast(DroppedItem{ victim });
+			}
+
 			this->events.broadcast(DestroyEntity{ victim });
 		}
 	}

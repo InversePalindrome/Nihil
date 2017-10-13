@@ -9,20 +9,23 @@ InversePalindrome.com
 
 
 ItemsSystem::ItemsSystem(Entities& entities, Events& events) :
-	System(entities, events)
+	System(entities, events),
+	itemNames({{Item::SpeedBoost, "SpeedBoost.txt"}, {Item::JumpBoost, "JumpBoost.txt"}})
 {
-	powerUpEffects[Item::SpeedBoost] = [this, &events](auto& physics, auto& powerUp)
+	powerUpEffects[Item::SpeedBoost] = [this, &events](auto collector, auto& powerUp)
 	{ 
-		const float maxVelocity = physics.getMaxVelocity();
-
-		physics.setMaxVelocity(maxVelocity * (1.f + powerUp.getEffectBoost()));
+		const float maxVelocity = collector.get_component<PhysicsComponent>().getMaxVelocity();
+		
+	    collector.get_component<PhysicsComponent>().setMaxVelocity(maxVelocity * (1.f + powerUp.getEffectBoost()));
 
 		powerUpTimers.push_back(thor::CallbackTimer());
 
-		powerUpTimers.back().connect0([maxVelocity, &events, &physics, &powerUp]() 
+		powerUpTimers.back().connect0([maxVelocity, collector, &events, &powerUp]() mutable 
 		{
-			physics.setMaxVelocity(maxVelocity);
-
+			collector.sync();
+			
+			collector.get_component<PhysicsComponent>().setMaxVelocity(maxVelocity);
+			
 			events.broadcast(HidePowerUp{ powerUp.getItem() });
 		});
 
@@ -31,27 +34,30 @@ ItemsSystem::ItemsSystem(Entities& entities, Events& events) :
 		events.broadcast(DisplayPowerUp{ powerUp.getItem() });
 	};
 
-	powerUpEffects[Item::JumpBoost] = [this, &events](auto& physics, auto& powerUp)
+	powerUpEffects[Item::JumpBoost] = [this, &events](auto collector, auto& powerUp)
 	{ 
-		const float jumpVelocity = physics.getJumpVelocity();
+		const float jumpVelocity = collector.get_component<PhysicsComponent>().getJumpVelocity();
 
-		physics.setJumpVelocity(jumpVelocity * (1.f + powerUp.getEffectBoost()));
+		collector.get_component<PhysicsComponent>().setJumpVelocity(jumpVelocity * (1.f + powerUp.getEffectBoost()));
 
 		powerUpTimers.push_back(thor::CallbackTimer());
 
-		powerUpTimers.back().connect0([jumpVelocity, &events, &physics, &powerUp]() 
+		powerUpTimers.back().connect0([jumpVelocity, collector, &events, &powerUp]() mutable
 		{
-			physics.setJumpVelocity(jumpVelocity);
+			collector.sync();
 
+			collector.get_component<PhysicsComponent>().setJumpVelocity(jumpVelocity);
+		
 			events.broadcast(HidePowerUp{ powerUp.getItem() });
 		});
-
+	
 		powerUpTimers.back().restart(sf::seconds(powerUp.getEffectTime()));
 
 		events.broadcast(DisplayPowerUp{ powerUp.getItem() });
 	};
 
 	events.subscribe<PickedUpItem>([this](const auto& event) { handleItemPickup(event.collector, event.item); });
+	events.subscribe<DroppedItem>([this](const auto& event) { handleItemDrop(event.dropper); });
 }
 
 void ItemsSystem::update(float deltaTime)
@@ -97,12 +103,27 @@ void ItemsSystem::handleItemPickup(Entity collector, Entity item)
 	else if (collector.has_component<PhysicsComponent>() && item.has_component<PowerUpComponent>())
 	{
 		auto& powerUp = item.get_component<PowerUpComponent>();
-
+		
 		if (this->powerUpEffects.count(powerUp.getItem()))
 		{
-			this->powerUpEffects[powerUp.getItem()](collector.get_component<PhysicsComponent>(), powerUp);
+			this->powerUpEffects[powerUp.getItem()](collector, powerUp);
+			this->events.broadcast(EmitSound{ powerUp.getSoundID(), false });
 		}
 	}
 
 	this->events.broadcast(DestroyEntity{ item });
+}
+
+void ItemsSystem::handleItemDrop(Entity dropper)
+{
+	if (dropper.has_component<DropComponent>() && dropper.has_component<PositionComponent>())
+	{
+		const auto& drop = dropper.get_component<DropComponent>();
+
+		if (auto item = dropper.get_component<DropComponent>().getDrop())
+		{
+			this->events.broadcast(CreateEntity{ this->itemNames[item.value()],
+				dropper.get_component<PositionComponent>().getPosition() });
+		}
+	}
 }

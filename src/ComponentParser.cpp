@@ -190,6 +190,11 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 		entity.add_component<PowerUpComponent>(static_cast<Item>(std::get<0>(params)), static_cast<SoundBuffersID>(std::get<1>(params)), std::get<2>(params), std::get<3>(params));
 	};
 
+	componentParsers["Drop"] = [this](auto& entity, auto& line)
+	{
+		entity.add_component(std::make_from_tuple<DropComponent>(parse<std::string>(line)));
+	};
+
 	componentParsers["Inventory"] = [this](auto& entity, auto& line)
 	{
 		entity.add_component<InventoryComponent>();

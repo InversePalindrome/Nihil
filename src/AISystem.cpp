@@ -15,7 +15,14 @@ AISystem::AISystem(Entities& entities, Events& events, Pathways& pathways) :
 	System(entities, events),
 	pathways(pathways)
 {
-	events.subscribe<entityplus::component_added<Entity, PatrolComponent>>([this](auto& event) { addPathway(event.entity, event.component); });
+	events.subscribe<entityplus::component_added<Entity, PatrolComponent>>([this](auto& event)
+	{ 
+		callbacks.addCallback([this, event]()
+		{
+			addPathway(event.entity);
+		});
+	});
+
 	events.subscribe<CrossedWaypoint>([this](const auto& event)
 	{
 		if (!event.entity.has_component<ChaseComponent>() ||
@@ -50,6 +57,9 @@ void AISystem::update(float deltaTime)
 			timer.restartTimer("Reload");
 		}
 	});
+	
+	this->callbacks.update();
+	this->callbacks.clear();
 }
 
 void AISystem::updateMovement(Entity entity, PatrolComponent& patrol, const sf::Vector2f& position)
@@ -71,15 +81,20 @@ void AISystem::updateMovement(Entity entity, PatrolComponent& patrol, const sf::
 	}
 }
 
-void AISystem::addPathway(Entity entity, PatrolComponent& patrol)
+void AISystem::addPathway(Entity entity)
 {
-	if (entity.has_component<PositionComponent>() && this->getClosestPathway(entity.get_component<PositionComponent>().getPosition()).has_value())
-	{
-		auto pathway = this->getClosestPathway(entity.get_component<PositionComponent>().getPosition()).value();
-	
-		pathway.sortWaypoints();
+	entity.sync();
 
-		patrol.setPathway(pathway);
+	if (!entity.has_component<PositionComponent>() || !entity.has_component<PatrolComponent>())
+	{
+		return;
+	}
+
+	if (auto pathway = this->getClosestPathway(entity.get_component<PositionComponent>().getPosition()))
+	{
+		pathway.value().sortWaypoints();
+		
+		entity.get_component<PatrolComponent>().setPathway(pathway.value());
 	}
 }
 

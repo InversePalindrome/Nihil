@@ -8,7 +8,7 @@ InversePalindrome.com
 #include "PowerUpDisplay.hpp"
 #include "FilePaths.hpp"
 #include "AnimationParser.hpp"
-#include <iostream>
+
 #include <fstream>
 #include <sstream>
 
@@ -53,6 +53,11 @@ void PowerUpDisplay::addPowerUp(Item powerUp)
 void PowerUpDisplay::removePowerUp(Item powerUp)
 {
 	this->powerUps.erase(powerUp);
+}
+
+void PowerUpDisplay::clearPowerUps()
+{
+	this->powerUps.clear();
 }
 
 void PowerUpDisplay::draw(sf::RenderTarget& target, sf::RenderStates states) const
