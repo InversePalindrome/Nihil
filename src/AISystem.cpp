@@ -25,8 +25,8 @@ AISystem::AISystem(Entities& entities, Events& events, Pathways& pathways) :
 
 	events.subscribe<CrossedWaypoint>([this](const auto& event)
 	{
-		if (!event.entity.has_component<ChaseComponent>() ||
-			!isWithinRange(event.entity.get_component<PositionComponent>().getPosition(), getTargetPosition(), event.entity.get_component<ChaseComponent>().getVisionRange()))
+		if (event.entity.has_component<PatrolComponent>() && (!event.entity.has_component<ChaseComponent>() || !isWithinRange(event.entity.get_component<PatrolComponent>().getRange(),
+			event.entity.get_component<PositionComponent>().getPosition(), getTargetPosition(), event.entity.get_component<ChaseComponent>().getVisionRange())))
 		{
 			changeWaypoint(event.entity);
 		}
@@ -39,7 +39,7 @@ void AISystem::update(float deltaTime)
 	{
 		if (patrol.hasWaypoints())
 		{
-			if (entity.has_component<ChaseComponent>() && this->isWithinRange(position.getPosition(), this->getTargetPosition(), entity.get_component<ChaseComponent>().getVisionRange()))
+			if (entity.has_component<ChaseComponent>() && this->isWithinRange(patrol.getRange(), position.getPosition(), this->getTargetPosition(), entity.get_component<ChaseComponent>().getVisionRange()))
 			{
 				this->chaseTarget(patrol, position.getPosition(), this->getTargetPosition());
 			}
@@ -48,9 +48,9 @@ void AISystem::update(float deltaTime)
 		}
 	});
 
-	this->entities.for_each<AI, RangeAttackComponent, ParentComponent, PositionComponent, TimerComponent>([this](auto entity, auto& rangeAttack, auto& parent, auto& position, auto& timer)
+	this->entities.for_each<AI, PatrolComponent, RangeAttackComponent, ParentComponent, PositionComponent, TimerComponent>([this](auto entity, auto& patrol, auto& rangeAttack, auto& parent, auto& position, auto& timer)
 	{
-		if (timer.hasTimer("Reload") && timer.hasTimerExpired("Reload") && this->isWithinRange(position.getPosition(), this->getTargetPosition(), rangeAttack.getAttackRange()))
+		if (timer.hasTimer("Reload") && timer.hasTimerExpired("Reload") && this->isWithinRange(patrol.getRange(), position.getPosition(), this->getTargetPosition(), rangeAttack.getAttackRange()))
 		{
 			this->events.broadcast(ShootProjectile{ entity, rangeAttack.getProjectileID(), this->getTargetPosition() });
 
@@ -164,7 +164,8 @@ sf::Vector2f AISystem::getTargetPosition() const
 	return targetPosition;
 }
 
-bool AISystem::isWithinRange(const sf::Vector2f& AIPosition, const sf::Vector2f& targetPosition, float range) const
+bool AISystem::isWithinRange(const std::pair<float, float>& patrolRange, const sf::Vector2f& AIPosition, const sf::Vector2f& targetPosition, float visionRange) const
 {
-	return MathUtils::distance(AIPosition, targetPosition) <= range;
+	return MathUtils::distance(AIPosition, targetPosition) <= visionRange && 
+		targetPosition.x > patrolRange.first && targetPosition.x < patrolRange.second;
 }

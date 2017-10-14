@@ -10,7 +10,7 @@ InversePalindrome.com
 
 ItemsSystem::ItemsSystem(Entities& entities, Events& events) :
 	System(entities, events),
-	itemNames({{Item::SpeedBoost, "SpeedBoost.txt"}, {Item::JumpBoost, "JumpBoost.txt"}})
+	itemNames({ {Item::SpeedBoost, "SpeedBoost.txt"}, {Item::JumpBoost, "JumpBoost.txt"}, {Item::Laser, "LaserBoost.txt"}, {Item::Heart, "Heart.txt" } })
 {
 	powerUpEffects[Item::SpeedBoost] = [this, &events](auto collector, auto& powerUp)
 	{ 
@@ -20,13 +20,16 @@ ItemsSystem::ItemsSystem(Entities& entities, Events& events) :
 
 		powerUpTimers.push_back(thor::CallbackTimer());
 
-		powerUpTimers.back().connect0([maxVelocity, collector, &events, &powerUp]() mutable 
+		powerUpTimers.back().connect0([maxVelocity, collector, powerUp, &events]() mutable 
 		{
-			collector.sync();
-			
-			collector.get_component<PhysicsComponent>().setMaxVelocity(maxVelocity);
-			
-			events.broadcast(HidePowerUp{ powerUp.getItem() });
+			if (collector.get_status() != entityplus::entity_status::DELETED)
+			{
+				collector.sync();
+
+				collector.get_component<PhysicsComponent>().setMaxVelocity(maxVelocity);
+
+				events.broadcast(HidePowerUp{ powerUp.getItem() });
+			}
 		});
 
 		powerUpTimers.back().restart(sf::seconds(powerUp.getEffectTime()));
@@ -42,18 +45,56 @@ ItemsSystem::ItemsSystem(Entities& entities, Events& events) :
 
 		powerUpTimers.push_back(thor::CallbackTimer());
 
-		powerUpTimers.back().connect0([jumpVelocity, collector, &events, &powerUp]() mutable
+		powerUpTimers.back().connect0([jumpVelocity, collector, powerUp, &events]() mutable
 		{
-			collector.sync();
+			if (collector.get_status() != entityplus::entity_status::DELETED)
+			{
+				collector.sync();
 
-			collector.get_component<PhysicsComponent>().setJumpVelocity(jumpVelocity);
-		
-			events.broadcast(HidePowerUp{ powerUp.getItem() });
+				collector.get_component<PhysicsComponent>().setJumpVelocity(jumpVelocity);
+
+				events.broadcast(HidePowerUp{ powerUp.getItem() });
+			}
 		});
 	
 		powerUpTimers.back().restart(sf::seconds(powerUp.getEffectTime()));
 
 		events.broadcast(DisplayPowerUp{ powerUp.getItem() });
+	};
+
+	powerUpEffects[Item::Laser] = [this, &events](auto collector, auto& powerUp)
+	{
+		collector.add_component<RangeAttackComponent>("Laser", powerUp.getEffectBoost());
+	
+		powerUpTimers.push_back(thor::CallbackTimer());
+
+		powerUpTimers.back().connect0([collector, powerUp, &events]() mutable
+		{
+			if (collector.get_status() != entityplus::entity_status::DELETED)
+			{
+				collector.sync();
+
+				collector.remove_component<RangeAttackComponent>();
+
+				events.broadcast(HidePowerUp{ powerUp.getItem() });
+			}
+		});
+
+		powerUpTimers.back().restart(sf::seconds(powerUp.getEffectTime()));
+
+		events.broadcast(DisplayPowerUp{ powerUp.getItem() });
+	};
+
+	powerUpEffects[Item::Heart] = [this, &events](auto collector, auto& powerUp)
+	{
+		if (collector.has_component<HealthComponent>())
+		{
+			auto& health = collector.get_component<HealthComponent>();
+
+			health.setHitpoints(health.getHitpoints() + 1u);
+
+			this->events.broadcast(DisplayHealthBar{ health });
+		}
 	};
 
 	events.subscribe<PickedUpItem>([this](const auto& event) { handleItemPickup(event.collector, event.item); });

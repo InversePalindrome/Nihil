@@ -53,7 +53,6 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 		entity.add_component<PositionComponent>();
 	};
 
-
 	componentParsers["State"] = [this](auto& entity, const auto& line)
 	{
 		entity.add_component<StateComponent>();
@@ -80,9 +79,10 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["SpriteA"] = [this, &resourceManager](auto& entity, auto& line)
 	{
-		auto& params = parse<std::size_t>(line);
+		auto& params = parse<std::size_t, float, float>(line);
 
-		entity.add_component<SpriteComponent>(resourceManager, static_cast<TexturesID>(std::get<0>(params)));
+		entity.add_component<SpriteComponent>(resourceManager, static_cast<TexturesID>(std::get<0>(params)),
+			sf::Vector2f(std::get<1>(params), std::get<2>(params)));
 	};
 
 	componentParsers["SpriteB"] = [this, &resourceManager](auto& entity, auto& line)
@@ -198,6 +198,16 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 	componentParsers["Inventory"] = [this](auto& entity, auto& line)
 	{
 		entity.add_component<InventoryComponent>();
+	};
+
+	componentParsers["Lock"] = [this](auto& entity, auto& line)
+	{
+		entity.add_component(std::make_from_tuple<LockComponent>(parse<bool, std::size_t>(line)));
+	}; 
+	
+	componentParsers["Key"] = [this](auto& entity, auto& line)
+	{
+		entity.add_component(std::make_from_tuple<KeyComponent>(parse<std::size_t>(line)));
 	};
 }
 

@@ -11,7 +11,6 @@ InversePalindrome.com
 #include <fstream>
 #include <sstream>
 
-
 TimerComponent::TimerComponent() :
 	Component("TimerA")
 {

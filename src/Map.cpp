@@ -8,7 +8,7 @@ InversePalindrome.com
 #include "Map.hpp"
 #include "FilePaths.hpp"
 #include "UnitConverter.hpp"
-
+#include <iostream>
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2Fixture.h>
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
@@ -31,6 +31,7 @@ Map::Map(Game& game, b2World& world, ComponentSerializer& componentSerializer, R
 void Map::load(const std::string& fileName)
 {
 	this->layers.clear();
+	this->pathways.clear();
 	
 	this->map.load(Path::levels / fileName);
 	this->fileName = Path::levels / fileName;
@@ -153,7 +154,7 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 					(object.getPosition().x + AABB.width / 2.f, object.getPosition().y + AABB.height / 2.f), waypointStep));
 				}
 			}
-            
+
             this->collisionsData.push_back(CollisionData(staticObject, static_cast<ObjectType>(properties["ID"].getIntValue()), properties));
             this->collisionsData.back().body->SetUserData(&this->collisionsData.back());
 		}

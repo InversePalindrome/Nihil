@@ -41,6 +41,11 @@ std::size_t Pathway::getCurrentWaypointIndex() const
 	return this->currentWaypointIndex;
 }
 
+std::pair<float, float> Pathway::getRange() const
+{
+	return this->range;
+}
+
 void Pathway::setCurrentWaypointIndex(std::size_t currentWaypointIndex)
 {
 	this->currentWaypointIndex = currentWaypointIndex;
@@ -69,6 +74,11 @@ void Pathway::addWaypoint(const Waypoint& waypoint)
 void Pathway::sortWaypoints()
 {
 	std::sort(std::begin(this->waypoints), std::end(this->waypoints));
+
+	auto rangeElements = std::minmax_element(std::cbegin(this->waypoints), std::cend(this->waypoints),
+		[](const auto& waypoint1, const auto& waypoint2) { return waypoint1.point.x < waypoint2.point.x; });
+
+	this->range = { rangeElements.first->point.x, rangeElements.second->point.x };
 }
 
 bool Pathway::hasWaypoints() const

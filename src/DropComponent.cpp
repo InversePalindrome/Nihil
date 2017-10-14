@@ -39,7 +39,7 @@ std::optional<Item> DropComponent::getDrop() const
 
 	auto odds = thor::random(0.f, 1.f);
 
-	if (this->drops[index].second <= odds)
+	if (this->drops[index].second >= odds)
 	{
 		return this->drops[index].first;
 	}

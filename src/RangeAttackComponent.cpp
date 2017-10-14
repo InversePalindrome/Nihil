@@ -8,6 +8,11 @@ InversePalindrome.com
 #include "RangeAttackComponent.hpp"
 
 
+RangeAttackComponent::RangeAttackComponent(const std::string& projectileID, float reloadTime) :
+	RangeAttackComponent(projectileID, reloadTime, 0.f)
+{
+}
+
 RangeAttackComponent::RangeAttackComponent(const std::string& projectileID, float reloadTime, float attackRange) :
 	Component("Range"),
 	projectileID(projectileID),

@@ -23,7 +23,7 @@ CombatSystem::CombatSystem(Entities& entities, Events& events, ComponentParser& 
 		}
 	});
 
-	events.subscribe<entityplus::component_added<Entity, RangeAttackComponent>>([this](const auto& event) { addReloadTimer(event.entity, event.component); });
+	events.subscribe<entityplus::component_added<Entity, RangeAttackComponent>>([this](const auto& event) { addReloadTimer(event.entity); });
 	events.subscribe<CombatOcurred>([this](const auto& event) { handleCombat(event.attacker, event.victim); });
 	events.subscribe<BombExploded>([this](const auto& event) { handleExplosion(event.bomb, event.explosion); });
 	events.subscribe<ShootProjectile>([this](const auto& event) { shootProjectile(event.shooter, event.projectileID, event.targetPosition ); });
@@ -119,7 +119,6 @@ void CombatSystem::shootProjectile(Entity shooter, const std::string& projectile
 	}
 	if (shooter.has_component<PhysicsComponent>() && projectileEntity.has_component<PhysicsComponent>() && projectileEntity.has_component<SpriteComponent>())
 	{
-		
 		const auto& shooterPhysics = shooter.get_component<PhysicsComponent>();
 		auto& projectilePhysics = projectileEntity.get_component<PhysicsComponent>();
 		auto& projectileSprite = projectileEntity.get_component<SpriteComponent>();
@@ -176,13 +175,13 @@ void CombatSystem::shootBomb(const PhysicsComponent& shooterPhysics, BombCompone
 	}
 }
 
-void CombatSystem::addReloadTimer(Entity entity, const RangeAttackComponent& rangeAttack)
+void CombatSystem::addReloadTimer(Entity entity)
 {
 	if (entity.has_component<TimerComponent>())
 	{
 		auto& timer = entity.get_component<TimerComponent>();
-
-		timer.addTimer("Reload", rangeAttack.getReloadTime());
+		
+		timer.addTimer("Reload", entity.get_component<RangeAttackComponent>().getReloadTime());
 		timer.restartTimer("Reload");
 	}
 }

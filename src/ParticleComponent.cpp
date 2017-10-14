@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #include "ParticleComponent.hpp"
 #include "EffectParser.hpp"
+
 #include <Thor/Math/Distributions.hpp>
 
 
@@ -25,7 +26,8 @@ ParticleComponent::ParticleComponent(ResourceManager& resourceManager, const sf:
 
 std::ostream& operator<<(std::ostream& os, const ParticleComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.particleFile << ' ' << component.emitterFile;
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.effectRange.x << ' ' 
+		<< component.effectRange.y << ' ' << component.particleFile << ' ' << component.emitterFile;
 
 	return os;
 }

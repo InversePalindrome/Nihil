@@ -8,12 +8,13 @@ InversePalindrome.com
 #include "SpriteComponent.hpp"
 
 
-SpriteComponent::SpriteComponent(ResourceManager& resourceManager, TexturesID textureID) :
+SpriteComponent::SpriteComponent(ResourceManager& resourceManager, TexturesID textureID, const sf::Vector2f& scale) :
 	Component("SpriteA"),
 	textureID(textureID),
 	sprite(resourceManager.getTexture(textureID))
 {
 	sprite.setOrigin(sprite.getLocalBounds().width / 2.f, sprite.getLocalBounds().height / 2.f);
+	sprite.setScale(scale);
 }
 
 SpriteComponent::SpriteComponent(ResourceManager& resourceManager, TexturesID textureID, const sf::IntRect& textureRect, const sf::Vector2f& scale) :

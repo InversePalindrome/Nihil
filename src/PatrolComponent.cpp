@@ -41,6 +41,11 @@ std::size_t PatrolComponent::getCurrentWaypointIndex() const
 	return this->pathway.getCurrentWaypointIndex();
 }
 
+std::pair<float, float> PatrolComponent::getRange() const
+{
+	return this->pathway.getRange();
+}
+
 void PatrolComponent::setPathway(const Pathway& pathway)
 {
 	this->pathway = pathway;
