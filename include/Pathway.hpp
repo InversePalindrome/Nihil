@@ -32,6 +32,7 @@ public:
 	std::vector<Waypoint> getWaypoints() const;
 	Waypoint getCurrentWaypoint() const;
 	std::size_t getCurrentWaypointIndex() const;
+	std::pair<float, float> getRange() const;
 
 	void setCurrentWaypointIndex(std::size_t currentWaypointIndex);
 
@@ -45,6 +46,7 @@ public:
 private:
 	std::vector<Waypoint> waypoints;
 	std::size_t currentWaypointIndex;
+	std::pair<float, float> range;
 };
 
 using Pathways = std::unordered_map<std::size_t, Pathway>;

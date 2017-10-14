@@ -23,7 +23,7 @@ class SpriteComponent : public Component, public sf::Transformable, public sf::D
 	friend std::ostream& operator<<(std::ostream& os, const SpriteComponent& component);
 
 public:
-	SpriteComponent(ResourceManager& resourceManager, TexturesID textureID);
+	SpriteComponent(ResourceManager& resourceManager, TexturesID textureID, const sf::Vector2f& scale);
 	SpriteComponent(ResourceManager& resourceManager, TexturesID textureID, const sf::IntRect& textureRect, const sf::Vector2f& scale);
 
 	sf::FloatRect getGlobalBounds() const;

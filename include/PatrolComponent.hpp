@@ -23,6 +23,7 @@ public:
 	Pathway getPathway() const;
 	Waypoint getCurrentWaypoint() const;
 	std::size_t getCurrentWaypointIndex() const;
+	std::pair<float, float> getRange() const;
 
 	void setPathway(const Pathway& pathway);
 	void setCurrentWaypointIndex(std::size_t currentWaypointIndex);

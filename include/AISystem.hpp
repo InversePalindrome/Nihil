@@ -37,5 +37,6 @@ private:
 	std::optional<Pathway> getClosestPathway(const sf::Vector2f& position);
 	sf::Vector2f getTargetPosition() const;
 
-	bool isWithinRange(const sf::Vector2f& AIPosition, const sf::Vector2f& targetPosition, float range) const;
+	bool isWithinRange(const std::pair<float, float>& patrolRange, const sf::Vector2f& AIPosition, const sf::Vector2f& targetPosition,
+		float visionRange) const;
 };

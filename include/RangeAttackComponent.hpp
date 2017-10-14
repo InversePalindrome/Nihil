@@ -15,6 +15,7 @@ class RangeAttackComponent : public Component
 	friend std::ostream& operator<<(std::ostream& os, const RangeAttackComponent& component);
 
 public:
+	RangeAttackComponent(const std::string& projectileID, float reloadTime);
 	RangeAttackComponent(const std::string& projectileID, float reloadTime, float attackRange);
 
 	std::string getProjectileID() const;

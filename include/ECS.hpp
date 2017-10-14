@@ -31,6 +31,8 @@ InversePalindrome.com
 #include "PowerUpComponent.hpp"
 #include "DropComponent.hpp"
 #include "InventoryComponent.hpp"
+#include "LockComponent.hpp"
+#include "KeyComponent.hpp"
 #include "Direction.hpp"
 
 #include <brigand/sequences/list.hpp>
@@ -74,7 +76,7 @@ struct IsMidAir;
 using Components = entityplus::component_list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
 	HealthComponent, MeleeAttackComponent, RangeAttackComponent, BulletComponent, BombComponent, SpriteComponent, TextComponent, 
 	AnimationComponent, SoundComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent,
-	ChaseComponent, PickupComponent, PowerUpComponent, DropComponent, InventoryComponent>;
+	ChaseComponent, PickupComponent, PowerUpComponent, DropComponent, InventoryComponent, LockComponent, KeyComponent>;
 
 using Tags = entityplus::tag_list<AI>;
 
@@ -90,7 +92,7 @@ using Entity = Entities::entity_t;
 using ComponentList = brigand::list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
 	HealthComponent, MeleeAttackComponent, RangeAttackComponent, BulletComponent, BombComponent, SpriteComponent, TextComponent, 
 	AnimationComponent, SoundComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent,
-	ChaseComponent, PickupComponent, PowerUpComponent, DropComponent, InventoryComponent>;
+	ChaseComponent, PickupComponent, PowerUpComponent, DropComponent, InventoryComponent, LockComponent, KeyComponent>;
 
 
 struct CreateEntity
