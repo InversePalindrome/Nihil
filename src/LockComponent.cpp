@@ -17,7 +17,7 @@ LockComponent::LockComponent(bool lockState, std::size_t unlockID) :
 
 std::ostream& operator<<(std::ostream& os, const LockComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName();
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.lockState << ' ' << component.unlockID;
 
 	return os;
 }

@@ -8,7 +8,11 @@ InversePalindrome.com
 #include "MenuState.hpp"
 #include "StateMachine.hpp"
 #include "FilePaths.hpp"
+#include "GUIParser.hpp"
+#include "EffectParser.hpp"
 #include "TextStyleParser.hpp"
+
+#include <Thor/Particles/Emitters.hpp>
 
 
 MenuState::MenuState(StateMachine& stateMachine, StateData& stateData) :
@@ -36,21 +40,16 @@ MenuState::MenuState(StateMachine& stateMachine, StateData& stateData) :
 	charactersButton->SetPosition(sf::Vector2f(760.f, 1180.f));
 	charactersButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { transitionToCharacters(); });
 	
-	stateData.guiManager.setProperty("*", "FontName", Path::fonts / "8-BIT-WONDER.ttf");
-	stateData.guiManager.setProperty("*", "Color", sf::Color(255u, 255u, 0u));
-	stateData.guiManager.setProperty("*", "FontSize", 40.f);
-	stateData.guiManager.setProperty("Button", "Padding", 25.f);
-	stateData.guiManager.setProperty("Button", "BackgroundColor", sf::Color(75u, 0u, 130u));
-	stateData.guiManager.setProperty("Button:PRELIGHT", "BackgroundColor", sf::Color(156u, 28u, 107u));
-	stateData.guiManager.setProperty("Button:ACTIVE", "BackgroundColor", sf::Color(75u, 0u, 130u));
-	stateData.guiManager.setProperty("Button:PRELIGHT", "Color", sf::Color(255u, 255u, 0u));
-	stateData.guiManager.setProperty("Button:ACTIVE", "Color", sf::Color(255u, 255u, 0u));
+	Parsers::parseGUIProperties(stateData.guiManager, "MenuGUI.txt");
 
 	stateData.guiManager.addWidget(playButton);
 	stateData.guiManager.addWidget(settingsButton);
 	stateData.guiManager.addWidget(charactersButton);
 
 	stateData.soundManager.playMusic("MenuDisco.wav", true);
+
+	Parsers::parseParticleSystem(stateData.resourceManager, "MenuParticles.txt", particleSystem);
+	particleSystem.addEmitter(Parsers::parseEmitter("MenuEmitters.txt"));
 }
 
 void MenuState::handleEvent(const sf::Event& event)
@@ -60,11 +59,13 @@ void MenuState::handleEvent(const sf::Event& event)
 
 void MenuState::update(float deltaTime)
 {
+	this->particleSystem.update(sf::seconds(deltaTime));
 }
 
 void MenuState::draw()
 {
 	this->stateData.window.draw(this->background);
+	this->stateData.window.draw(this->particleSystem);
 	this->stateData.window.draw(this->titleLabel);
 
 	this->playButton->Show(true);

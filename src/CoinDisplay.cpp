@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #include "CoinDisplay.hpp"
 #include "AnimationParser.hpp"
+#include "TextStyleParser.hpp"
 
 #include <Thor/Animations/FrameAnimation.hpp>
 
@@ -17,10 +18,10 @@ CoinDisplay::CoinDisplay(ResourceManager& resourceManager) :
 {
 	coin.setScale(1.5f, 1.5f);
 
-	text.setOutlineThickness(5.f);
-	text.setFillColor(sf::Color(156u, 20u, 107u));
-	text.setOutlineColor(sf::Color(75u, 0u, 130u));
-	text.setPosition(120.f, 0.f);
+	Parsers::parseStyle(resourceManager, "CoinStyle.txt", text);
+
+	text.setOrigin(text.getLocalBounds().width / 2.f, text.getLocalBounds().height / 2.f);
+	text.setPosition(155.f, 30.f);
 
 	thor::FrameAnimation frameAnimation;
 	std::size_t animationID = 0u;

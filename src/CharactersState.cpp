@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #include "CharactersState.hpp"
 #include "StateMachine.hpp"
+#include "GUIParser.hpp"
 #include "FilePaths.hpp"
 
 #include <SFGUI/Image.hpp>
@@ -60,7 +61,7 @@ CharactersState::CharactersState(StateMachine& stateMachine, StateData& stateDat
 	scrolledWindow->AddWithViewport(itemsTable);
 	
     scrollbarScale->SetAdjustment(scrollbarAdjustment);
-
+	
 	for (auto& characterButton : characterButtons->GetMembers())
 	{
 		characterButton._Get()->SetState(sfg::Widget::State::SELECTED);
@@ -72,24 +73,7 @@ CharactersState::CharactersState(StateMachine& stateMachine, StateData& stateDat
 		}
 	}
 
-	stateData.guiManager.setProperty("ComboBox:PRELIGHT", "BackgroundColor", sf::Color(75u, 0u, 130u));
-	stateData.guiManager.setProperty("ComboBox:NORMAL", "BackgroundColor", sf::Color(75u, 0u, 130u));
-	stateData.guiManager.setProperty("ComboBox:ACTIVE", "BackgroundColor", sf::Color(75u, 0u, 130u));
-	stateData.guiManager.setProperty("ComboBox:SELECTED", "BackgroundColor", sf::Color(75u, 0u, 130u));
-	stateData.guiManager.setProperty("ComboBox", "Color", sf::Color(255.f, 255.f, 0.f));
-	stateData.guiManager.setProperty("ComboBox", "ArrowColor", sf::Color(15u, 192u, 252u));
-	stateData.guiManager.setProperty("ScrolledWindow", "BorderWidth", 0.f);
-	stateData.guiManager.setProperty("ScrolledWindow", "ScrollbarSpacing", 20.f);
-	stateData.guiManager.setProperty("Scrollbar", "TroughColor", sf::Color(75u, 0u, 130u));
-	stateData.guiManager.setProperty("Scrollbar", "SliderColor", sf::Color(15u, 192u, 252u));
-	stateData.guiManager.setProperty("Scrollbar", "BorderColor", sf::Color(75u, 0u, 130u));
-	stateData.guiManager.setProperty("Scrollbar", "StepperBackgroundColor", sf::Color(75u, 0u, 130u));
-	stateData.guiManager.setProperty("Scrollbar", "StepperArrowColor", sf::Color(15u, 192u, 252u));
-	stateData.guiManager.setProperty("RadioButton", "BackgroundColor", sf::Color(102u, 0u, 204u));
-	stateData.guiManager.setProperty("RadioButton", "BoxSize", 30.f);
-	stateData.guiManager.setProperty("RadioButton:PRELIGHT", "BackgroundColor", sf::Color(15u, 192u, 252u));
-	stateData.guiManager.setProperty("RadioButton:ACTIVE", "BackgroundColor", sf::Color(15u, 192u, 252u));
-	stateData.guiManager.setProperty("RadioButton:SELECTED", "BackgroundColor", sf::Color(15u, 192u, 252u));
+	Parsers::parseGUIProperties(stateData.guiManager, "CharactersGUI.txt");
 
 	stateData.guiManager.addWidget(backButton);
 	stateData.guiManager.addWidget(gameChoices);

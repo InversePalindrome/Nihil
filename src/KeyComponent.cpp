@@ -16,7 +16,7 @@ KeyComponent::KeyComponent(std::size_t keyID) :
 
 std::ostream& operator<<(std::ostream& os, const KeyComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName();
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.getKeyID();
 
 	return os;
 }

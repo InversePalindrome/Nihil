@@ -13,6 +13,7 @@ InversePalindrome.com
 
 #include <Thor/Math/Distributions.hpp>
 
+
 StartState::StartState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
 	view(stateData.window.getDefaultView()),

@@ -18,7 +18,8 @@ InversePalindrome.com
 
 HubState::HubState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
-	addGamePopup(sfg::Window::Create(sfg::Window::Style::TITLEBAR | sfg::Window::Style::TOPLEVEL)),
+	background(stateData.resourceManager.getTexture(TexturesID::MenuBackground)),
+	addGamePopup(sfg::Window::Create(sfg::Window::Style::NO_STYLE)),
 	nameEntry(sfg::Entry::Create()),
 	backButton(sfg::Button::Create("BACK")),
 	playButton(sfg::Button::Create("\t Play \t")),
@@ -27,8 +28,9 @@ HubState::HubState(StateMachine& stateMachine, StateData& stateData) :
 	selectionBox(sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 50.f)),
 	selectionButtons(sfg::RadioButtonGroup::Create())
 {
-	addGamePopup->SetTitle("Add Game");
-	addGamePopup->SetPosition(sf::Vector2f(675.f, 400.f));
+	background.setScale(stateData.window.getSize().x / background.getGlobalBounds().width, stateData.window.getSize().y / background.getGlobalBounds().height);
+
+	addGamePopup->SetPosition(sf::Vector2f(640.f, 400.f));
 	addGamePopup->Show(false);
 	
 	auto gamePopupBox = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 70.f);
@@ -61,16 +63,16 @@ HubState::HubState(StateMachine& stateMachine, StateData& stateData) :
 	this->addGames();
 
 	stateData.guiManager.setProperty("Entry", "FontSize", 50.f);
-	stateData.guiManager.setProperty("Entry", "BackgroundColor", sf::Color(75u, 0u, 130u));
-	stateData.guiManager.setProperty("Entry", "Color", sf::Color(255u, 255u, 0u));
+	stateData.guiManager.setProperty("Entry", "BackgroundColor", sf::Color(255, 255, 255u));
+	stateData.guiManager.setProperty("Entry", "Color", sf::Color(0u, 0u, 0u));
 	stateData.guiManager.setProperty("RadioButton", "FontSize", 60.f);
 	stateData.guiManager.setProperty("RadioButton", "BoxSize", 30.f);
-	stateData.guiManager.setProperty("RadioButton", "BackgroundColor", sf::Color(102u, 0u, 204u));
-	stateData.guiManager.setProperty("RadioButton:PRELIGHT", "BackgroundColor", sf::Color(15u, 192u, 252u));
-	stateData.guiManager.setProperty("RadioButton:ACTIVE", "BackgroundColor", sf::Color(15u, 192u, 252u));
-	stateData.guiManager.setProperty("RadioButton:SELECTED", "BackgroundColor", sf::Color(15u, 192u, 252u));
-	stateData.guiManager.setProperty("Window", "BackgroundColor", sf::Color(25u, 25u, 112u));
-	stateData.guiManager.setProperty("Window", "Color", sf::Color(70u, 173u, 212u));
+	stateData.guiManager.setProperty("RadioButton", "BackgroundColor", sf::Color(0u, 0u, 0u));
+	stateData.guiManager.setProperty("RadioButton:PRELIGHT", "BackgroundColor", sf::Color(255u, 255u, 255u));
+	stateData.guiManager.setProperty("RadioButton:ACTIVE", "BackgroundColor", sf::Color(255u, 255u, 255u));
+	stateData.guiManager.setProperty("RadioButton:SELECTED", "BackgroundColor", sf::Color(255u, 255u, 255u));
+	stateData.guiManager.setProperty("Window", "BackgroundColor", sf::Color(40u, 40u, 40u));
+	stateData.guiManager.setProperty("Window", "Color", sf::Color(0u, 0u, 0u));
 
 	stateData.guiManager.addWidget(addGamePopup);
 	stateData.guiManager.addWidget(backButton);
@@ -122,7 +124,9 @@ void HubState::showAddGamePopup()
 
 void HubState::addGame()
 {
-	if (!this->nameEntry->GetText().isEmpty())
+	if (!this->nameEntry->GetText().isEmpty() &&
+		std::find_if(std::begin(this->stateData.games), std::end(this->stateData.games), [this](const auto& game)
+	   { return game.getGameName() == this->nameEntry->GetText(); }) == std::end(this->stateData.games))
 	{
 		this->stateData.games.push_back(Game());
 		this->stateData.games.back().setGameName(this->nameEntry->GetText());

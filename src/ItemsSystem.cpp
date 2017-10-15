@@ -151,6 +151,10 @@ void ItemsSystem::handleItemPickup(Entity collector, Entity item)
 			this->events.broadcast(EmitSound{ powerUp.getSoundID(), false });
 		}
 	}
+	else if (collector.has_component<InventoryComponent>() && item.has_component<KeyComponent>())
+	{
+		this->handleKeyPickup(item.get_component<KeyComponent>());
+	}
 
 	this->events.broadcast(DestroyEntity{ item });
 }
@@ -167,4 +171,15 @@ void ItemsSystem::handleItemDrop(Entity dropper)
 				dropper.get_component<PositionComponent>().getPosition() });
 		}
 	}
+}
+
+void ItemsSystem::handleKeyPickup(const KeyComponent& key)
+{
+	this->entities.for_each<LockComponent>([&key](auto entity, auto& lock)
+	{
+		if (key.getKeyID() == lock.getUnlockID())
+		{
+			
+		}
+	});
 }

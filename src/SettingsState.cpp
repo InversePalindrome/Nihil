@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #include "SettingsState.hpp"
 #include "StateMachine.hpp"
+#include "GUIParser.hpp"
 
 #include <SFGUI/RadioButton.hpp>
 
@@ -59,18 +60,8 @@ SettingsState::SettingsState(StateMachine& stateMachine, StateData& stateData) :
 	moveLeftButton->SetPosition(sf::Vector2f(1120.f, 1000.f));
 	jumpButton->SetPosition(sf::Vector2f(570.f, 1100.f));
 	shootButton->SetPosition(sf::Vector2f(1120.f, 1100.f));
-	
-	stateData.guiManager.setProperty("Scrollbar", "TroughColor", sf::Color(102u, 0u, 204u));
-	stateData.guiManager.setProperty("Scrollbar", "SliderColor", sf::Color(15u, 192u, 252u));
-	stateData.guiManager.setProperty("Scrollbar", "BorderColor", sf::Color(75u, 0u, 130u));
-	stateData.guiManager.setProperty("Scrollbar", "StepperBackgroundColor", sf::Color(75u, 0u, 130u));
-	stateData.guiManager.setProperty("Scrollbar", "StepperArrowColor", sf::Color(15u, 192u, 252u));
-	stateData.guiManager.setProperty("RadioButton", "BackgroundColor", sf::Color(102u, 0u, 204u));
-	stateData.guiManager.setProperty("RadioButton", "BoxSize", 30.f);
-	stateData.guiManager.setProperty("RadioButton", "FontSize", 40.f);
-	stateData.guiManager.setProperty("RadioButton:PRELIGHT", "BackgroundColor", sf::Color(15u, 192u, 252u));
-	stateData.guiManager.setProperty("RadioButton:ACTIVE", "BackgroundColor", sf::Color(15u, 192u, 252u));
-	stateData.guiManager.setProperty("RadioButton:SELECTED", "BackgroundColor", sf::Color(15u, 192u, 252u));
+
+	Parsers::parseGUIProperties(stateData.guiManager, "SettingsGUI.txt");
 
 	stateData.guiManager.addWidget(backButton);
 	stateData.guiManager.addWidget(soundLabel);
