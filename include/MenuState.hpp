@@ -9,6 +9,8 @@ InversePalindrome.com
 
 #include "State.hpp"
 
+#include <Thor/Particles/ParticleSystem.hpp>
+
 #include <SFGUI/Button.hpp>
 
 #include <SFML/Graphics/Text.hpp>
@@ -31,6 +33,8 @@ private:
 	sfg::Button::Ptr playButton;
 	sfg::Button::Ptr settingsButton;
 	sfg::Button::Ptr charactersButton;
+
+	thor::ParticleSystem particleSystem;
 
 	void transitionToPlay();
 	void transitionToSettings();

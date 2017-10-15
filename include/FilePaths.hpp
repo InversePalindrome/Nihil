@@ -27,6 +27,7 @@ namespace Path
 	extern FilePath blueprints;
 	extern FilePath animations;
 	extern FilePath particles;
+	extern FilePath GUI;
 	extern FilePath miscellaneous;
 	extern FilePath resources;
 	extern FilePath textures;

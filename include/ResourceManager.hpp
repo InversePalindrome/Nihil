@@ -23,10 +23,10 @@ enum class TexturesID
 {
 	SplashScreen, StartBackground, Particles, Character, Mushroom, RedMonster, MenuBackground,                 
     City, Desert, MushroomLand, PinkTown, FlowerLand, DarkTown, Coin, Heart, Laser, Gems, MistZone,
-	Bombs, PowerUps
+	Bombs, PowerUps, Keys
 };
 enum class ImagesID { RedMonster };
-enum class FontsID { BITWONDER, CODE, Roboto };
+enum class FontsID { BITWONDER, CODE, Roboto, Changa };
 enum class SoundBuffersID { Jump, Footsteps, Coin, Laser, SmallExplosion, Gem };
 
 class ResourceManager

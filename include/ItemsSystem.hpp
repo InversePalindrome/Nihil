@@ -30,4 +30,5 @@ private:
 
 	void handleItemPickup(Entity collector, Entity item);
 	void handleItemDrop(Entity dropper);
+	void handleKeyPickup(const KeyComponent& key);
 };
