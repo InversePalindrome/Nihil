@@ -62,5 +62,7 @@ private:
 	void changeLevel(const std::string& level);
 	void changeEntityPosition(Entity entity, const sf::Vector2f& position);
 
+	void destroyBody(PhysicsComponent& physics);
+
 	void saveData(const std::string& fileName);
 };

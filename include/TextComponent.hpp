@@ -26,6 +26,8 @@ public:
 
 	sf::FloatRect getGlobalBounds() const;
 
+	void setText(const std::string& text);
+
 private:
 	sf::Text text;
 	std::string fileName;

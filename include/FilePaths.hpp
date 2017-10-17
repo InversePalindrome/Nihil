@@ -28,6 +28,8 @@ namespace Path
 	extern FilePath animations;
 	extern FilePath particles;
 	extern FilePath GUI;
+	extern FilePath spriteInfo;
+	extern FilePath dialogues;
 	extern FilePath miscellaneous;
 	extern FilePath resources;
 	extern FilePath textures;

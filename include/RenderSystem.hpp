@@ -20,7 +20,7 @@ InversePalindrome.com
 
 class RenderSystem : public System, public sf::Drawable
 {
-	using Renderables = brigand::list<SpriteComponent, TextComponent, ParticleComponent>;
+	using Renderables = brigand::list<SpriteComponent, TextComponent, DialogComponent, ParticleComponent>;
 
 public:
 	RenderSystem(Entities& entities, Events& events);

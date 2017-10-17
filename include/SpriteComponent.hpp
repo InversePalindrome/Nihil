@@ -17,6 +17,8 @@ InversePalindrome.com
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 
+#include <string>
+
 
 class SpriteComponent : public Component, public sf::Transformable, public sf::Drawable
 {
@@ -25,15 +27,20 @@ class SpriteComponent : public Component, public sf::Transformable, public sf::D
 public:
 	SpriteComponent(ResourceManager& resourceManager, TexturesID textureID, const sf::Vector2f& scale);
 	SpriteComponent(ResourceManager& resourceManager, TexturesID textureID, const sf::IntRect& textureRect, const sf::Vector2f& scale);
+	SpriteComponent(ResourceManager& resourceManager, const std::string& fileName);
 
 	sf::FloatRect getGlobalBounds() const;
 
 	TexturesID getTextureID() const;
 	sf::Sprite& getSprite();
 
+	void parseSprite(const std::string& fileName);
+
 private:
 	TexturesID textureID;
 	sf::Sprite sprite;
+
+	ResourceManager* resourceManager;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

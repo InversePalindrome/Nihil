@@ -46,6 +46,7 @@ public:
 	void setAccelerationRate(float accelerationRate);
 	void setGravityScale(float gravityScale);
 	void setDirection(Direction direction);
+	void setCollisionGroup(std::int32_t collisionGroup);
 
 	void applyForce(const b2Vec2& force);
 	void applyImpulse(const b2Vec2& impulse);
@@ -54,6 +55,7 @@ public:
 
 private:
 	b2Body* body;
+	b2Fixture* fixture;
 	b2Vec2 bodySize;
 	ObjectType objectType;
 	std::int32_t collisionGroup;

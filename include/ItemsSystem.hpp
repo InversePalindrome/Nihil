@@ -8,6 +8,7 @@ InversePalindrome.com
 #pragma once
 
 #include "System.hpp"
+#include "Callbacks.hpp"
 
 #include <Thor/Time/CallbackTimer.hpp>
 
@@ -27,6 +28,8 @@ private:
 	std::unordered_map<Item, std::string> itemNames;
 	std::vector<thor::CallbackTimer> powerUpTimers;
 	std::unordered_map<Item, std::function<void(Entity, PowerUpComponent&)>> powerUpEffects;
+
+	Callbacks callbacks;
 
 	void handleItemPickup(Entity collector, Entity item);
 	void handleItemDrop(Entity dropper);

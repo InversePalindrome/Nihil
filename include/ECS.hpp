@@ -33,6 +33,7 @@ InversePalindrome.com
 #include "InventoryComponent.hpp"
 #include "LockComponent.hpp"
 #include "KeyComponent.hpp"
+#include "DialogComponent.hpp"
 #include "Direction.hpp"
 
 #include <brigand/sequences/list.hpp>
@@ -44,6 +45,7 @@ InversePalindrome.com
 struct AI;
 
 struct CreateEntity;
+struct DestroyBody;
 struct DirectionChanged;
 struct Jumped;
 struct StopMovement;
@@ -76,13 +78,13 @@ struct IsMidAir;
 using Components = entityplus::component_list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
 	HealthComponent, MeleeAttackComponent, RangeAttackComponent, BulletComponent, BombComponent, SpriteComponent, TextComponent, 
 	AnimationComponent, SoundComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent,
-	ChaseComponent, PickupComponent, PowerUpComponent, DropComponent, InventoryComponent, LockComponent, KeyComponent>;
+	ChaseComponent, PickupComponent, PowerUpComponent, DropComponent, InventoryComponent, LockComponent, KeyComponent, DialogComponent>;
 
 using Tags = entityplus::tag_list<AI>;
 
 using Entities = entityplus::entity_manager<Components, Tags>;
 
-using Events = entityplus::event_manager<Components, Tags, CreateEntity, DirectionChanged, Jumped, StopMovement, CombatOcurred, ChangeState,
+using Events = entityplus::event_manager<Components, Tags, CreateEntity, DestroyBody, DirectionChanged, Jumped, StopMovement, CombatOcurred, ChangeState,
 	StateChanged, ChangeLevel, DestroyEntity, EmitSound, PickedUpItem, DroppedItem, DisplayHealthBar, DisplayCoins, DisplayPowerUp, HidePowerUp,
 	PlayerDied, CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform, ApplyForce, ApplyImpulse, ApplyBlastImpact, 
 	ApplyKnockback, ChangePosition, IsMidAir>;
@@ -92,13 +94,18 @@ using Entity = Entities::entity_t;
 using ComponentList = brigand::list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
 	HealthComponent, MeleeAttackComponent, RangeAttackComponent, BulletComponent, BombComponent, SpriteComponent, TextComponent, 
 	AnimationComponent, SoundComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent,
-	ChaseComponent, PickupComponent, PowerUpComponent, DropComponent, InventoryComponent, LockComponent, KeyComponent>;
+	ChaseComponent, PickupComponent, PowerUpComponent, DropComponent, InventoryComponent, LockComponent, KeyComponent, DialogComponent>;
 
 
 struct CreateEntity
 {
 	std::string fileName;
 	sf::Vector2f position;
+};
+
+struct DestroyBody
+{
+	PhysicsComponent& physics;
 };
 
 struct DirectionChanged
