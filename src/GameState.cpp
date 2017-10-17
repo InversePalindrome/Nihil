@@ -34,6 +34,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 
 	powerUpDisplay.setPosition(600.f, 100.f);
 	
+	entityManager.getEvents().subscribe<DestroyBody>([this](const auto& event) { destroyBody(event.physics); });
 	entityManager.getEvents().subscribe<DisplayHealthBar>([this](const auto& event) { updateHealthBar(event.health); });
 	entityManager.getEvents().subscribe<DisplayCoins>([this](const auto& event) { updateCoinDisplay(event.inventory); });
 	entityManager.getEvents().subscribe<PickedUpItem>([this](const auto& event) { updateItemsDisplay(event.item); });
@@ -258,6 +259,11 @@ void GameState::changeEntityPosition(Entity entity, const sf::Vector2f& position
 			entity.get_component<PhysicsComponent>().setPosition({ UnitConverter::pixelsToMeters(position.x), UnitConverter::pixelsToMeters(-position.y) });
 		});
 	}
+}
+
+void GameState::destroyBody(PhysicsComponent& physics)
+{
+	this->world.DestroyBody(physics.getBody());
 }
 
 void GameState::saveData(const std::string& fileName)

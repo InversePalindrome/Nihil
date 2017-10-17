@@ -6,12 +6,14 @@ InversePalindrome.com
 
 
 #include "SpriteComponent.hpp"
+#include "SpriteParser.hpp"
 
 
 SpriteComponent::SpriteComponent(ResourceManager& resourceManager, TexturesID textureID, const sf::Vector2f& scale) :
 	Component("SpriteA"),
 	textureID(textureID),
-	sprite(resourceManager.getTexture(textureID))
+	sprite(resourceManager.getTexture(textureID)),
+	resourceManager(&resourceManager)
 {
 	sprite.setOrigin(sprite.getLocalBounds().width / 2.f, sprite.getLocalBounds().height / 2.f);
 	sprite.setScale(scale);
@@ -20,10 +22,18 @@ SpriteComponent::SpriteComponent(ResourceManager& resourceManager, TexturesID te
 SpriteComponent::SpriteComponent(ResourceManager& resourceManager, TexturesID textureID, const sf::IntRect& textureRect, const sf::Vector2f& scale) :
 	Component("SpriteB"),
 	textureID(textureID),
-	sprite(resourceManager.getTexture(textureID), textureRect)
+	sprite(resourceManager.getTexture(textureID), textureRect),
+	resourceManager(&resourceManager)
 {
 	sprite.setOrigin(sprite.getLocalBounds().width / 2.f, sprite.getLocalBounds().height / 2.f);
 	sprite.setScale(scale);
+}
+
+SpriteComponent::SpriteComponent(ResourceManager& resourceManager, const std::string& fileName) :
+	Component("SpriteA"),
+	resourceManager(&resourceManager)
+{
+	Parsers::parseSprite(resourceManager, fileName, sprite);
 }
 
 std::ostream& operator<<(std::ostream& os, const SpriteComponent& component)
@@ -50,9 +60,14 @@ sf::Sprite& SpriteComponent::getSprite()
 	return this->sprite;
 }
 
+void SpriteComponent::parseSprite(const std::string& fileName)
+{
+	Parsers::parseSprite(*resourceManager, fileName, this->sprite);
+}
+
 void SpriteComponent::draw(sf::RenderTarget& target, sf::RenderStates states) const 
 {
-	states.transform = this->getTransform();
+	states.transform *= this->getTransform();
 
 	target.draw(this->sprite, states);
 }

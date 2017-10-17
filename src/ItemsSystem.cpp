@@ -116,6 +116,9 @@ void ItemsSystem::update(float deltaTime)
 			++powerUpTimer;
 		}
 	}
+
+	callbacks.update();
+	callbacks.clear();
 }
 
 void ItemsSystem::handleItemPickup(Entity collector, Entity item)
@@ -175,11 +178,24 @@ void ItemsSystem::handleItemDrop(Entity dropper)
 
 void ItemsSystem::handleKeyPickup(const KeyComponent& key)
 {
-	this->entities.for_each<LockComponent>([&key](auto entity, auto& lock)
+	this->entities.for_each<LockComponent, PhysicsComponent>([this, &key](auto entity, auto& lock, auto& physics)
 	{
 		if (key.getKeyID() == lock.getUnlockID())
 		{
-			
+			if (entity.has_component<SpriteComponent>())
+			{
+				entity.get_component<SpriteComponent>().parseSprite(lock.getNewSpriteFile());
+			}
+
+			callbacks.addCallback([this, entity]() mutable
+			{
+				entity.sync();
+
+				this->events.broadcast(DestroyBody{ entity.get_component<PhysicsComponent>() });
+
+				entity.remove_component<LockComponent>();
+				entity.remove_component<PhysicsComponent>();
+			});
 		}
 	});
 }

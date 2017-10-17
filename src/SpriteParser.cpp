@@ -14,7 +14,7 @@ InversePalindrome.com
 
 void Parsers::parseSprite(ResourceManager& resourceManager, const std::string& fileName, sf::Sprite& sprite)
 {
-	std::ifstream inFile(Path::miscellaneous / fileName);
+	std::ifstream inFile(Path::spriteInfo / fileName);
 	std::string line;
 
 	while (std::getline(inFile, line))

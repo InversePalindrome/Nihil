@@ -30,14 +30,14 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2Bod
 	b2PolygonShape fixtureShape;
 	fixtureShape.SetAsBox(bodySize.x, bodySize.y);
 	
- 	b2FixtureDef fixture;
-	fixture.shape = &fixtureShape;
-	fixture.density = 1.f;
-	fixture.friction = 0.3f;
-	fixture.filter.groupIndex = collisionGroup;
+ 	b2FixtureDef fixtureDef;
+	fixtureDef.shape = &fixtureShape;
+	fixtureDef.density = 1.f;
+	fixtureDef.friction = 0.3f;
+	fixtureDef.filter.groupIndex = collisionGroup;
 
 	body = world.CreateBody(&bodyDefinition);
-	body->CreateFixture(&fixture);
+	fixture = body->CreateFixture(&fixtureDef);
 
 	switch (objectType)
 	{
@@ -147,6 +147,17 @@ void PhysicsComponent::setGravityScale(float gravityScale)
 void PhysicsComponent::setDirection(Direction direction)
 {
 	this->direction = direction;
+}
+
+void PhysicsComponent::setCollisionGroup(std::int32_t collisionGroup)
+{
+	this->collisionGroup = collisionGroup;
+
+	auto filterData = this->fixture->GetFilterData();
+
+	filterData.groupIndex = collisionGroup;
+
+	this->fixture->SetFilterData(filterData);
 }
 
 void PhysicsComponent::applyForce(const b2Vec2& force)

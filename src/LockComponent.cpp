@@ -8,23 +8,18 @@ InversePalindrome.com
 #include "LockComponent.hpp"
 
 
-LockComponent::LockComponent(bool lockState, std::size_t unlockID) :
+LockComponent::LockComponent(std::size_t unlockID, const std::string& newSpriteFile) :
 	Component("Lock"),
-	lockState(lockState),
-	unlockID(unlockID)
+	unlockID(unlockID),
+	newSpriteFile(newSpriteFile)
 {
 }
 
 std::ostream& operator<<(std::ostream& os, const LockComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.lockState << ' ' << component.unlockID;
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.unlockID << ' ' << component.newSpriteFile;
 
 	return os;
-}
-
-bool LockComponent::getLockState() const
-{
-	return this->lockState;
 }
 
 std::size_t LockComponent::getUnlockID() const
@@ -32,9 +27,9 @@ std::size_t LockComponent::getUnlockID() const
 	return this->unlockID;
 }
 
-void LockComponent::setLockState(bool lockState)
+std::string LockComponent::getNewSpriteFile() const
 {
-	this->lockState = lockState;
+	return this->newSpriteFile;
 }
 
 void LockComponent::setUnlockID(std::size_t unlockID)

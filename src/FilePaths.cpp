@@ -25,6 +25,8 @@ extern Path::FilePath Path::blueprints(files / "Blueprints/");
 extern Path::FilePath Path::animations(files / "Animations/");
 extern Path::FilePath Path::particles(files / "Particles/");
 extern Path::FilePath Path::GUI(files / "GUI/");
+extern Path::FilePath Path::spriteInfo(files / "SpriteInfo/");
+extern Path::FilePath Path::dialogues(files / "Dialogues/");
 extern Path::FilePath Path::miscellaneous(files / "Miscellaneous/");
 extern Path::FilePath Path::resources("Resources/");
 extern Path::FilePath Path::textures(resources / "Textures/");

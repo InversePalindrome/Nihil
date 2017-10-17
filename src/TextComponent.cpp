@@ -31,9 +31,14 @@ sf::FloatRect TextComponent::getGlobalBounds() const
 	return this->text.getGlobalBounds();
 }
 
+void TextComponent::setText(const std::string& text)
+{
+	this->text.setString(text);
+}
+
 void TextComponent::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	states.transform = this->getTransform();
+	states.transform *= this->getTransform();
 
 	target.draw(this->text, states);
 }
