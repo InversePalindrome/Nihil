@@ -16,13 +16,16 @@ InversePalindrome.com
 #include <streambuf>
 
 
-DialogComponent::DialogComponent(ResourceManager& resourceManager, const std::string& dialogFile, 
+DialogComponent::DialogComponent(ResourceManager& resourceManager, std::size_t conversationID, const std::string& dialogFile, 
 	const std::string& textStyleFile, const std::string& spriteFile, const sf::Vector2f& textOffset) :
 	Component("Dialog"),
+	conversationID(conversationID),
 	dialogFile(dialogFile),
 	textStyleFile(textStyleFile),
 	spriteFile(spriteFile),
-	currentSubDialog(0u),
+	textOffset(textOffset),
+	visibilityStatus(false),
+	dialogueCount(0u),
 	text(resourceManager, "", textStyleFile),
 	sprite(resourceManager, spriteFile)
 {
@@ -40,33 +43,41 @@ DialogComponent::DialogComponent(ResourceManager& resourceManager, const std::st
 
 	text.move(textOffset);
 	setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
-
-	if (!subDialogues.empty())
-	{
-		text.setText(subDialogues.front());
-	}
 }
 
 std::ostream& operator<<(std::ostream& os, const DialogComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName() << ' ' <<
-		component.dialogFile << ' ' << component.textStyleFile << ' ' << component.spriteFile;
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.conversationID << ' ' << component.dialogFile 
+		<< ' ' << component.textStyleFile << ' ' << component.spriteFile << ' ' << component.textOffset.x << ' ' << component.textOffset.y;
 
 	return os;
 }
 
 void DialogComponent::nextDialogue()
 {
-	if (this->currentSubDialog < this->subDialogues.size() - 1)
+	if (!this->subDialogues.empty() && this->dialogueCount < this->subDialogues.size())
 	{
-		++this->currentSubDialog;
+		this->text.setText(this->subDialogues.front());
 
-		text.setText(this->subDialogues[this->currentSubDialog]);
+		std::rotate(std::begin(this->subDialogues), std::begin(this->subDialogues) + 1, std::end(this->subDialogues));
+
+		++this->dialogueCount;
 	}
 	else
 	{
-		this->currentSubDialog = 0u;
+		this->dialogueCount = 0u;
+		this->visibilityStatus = false;
 	}
+}
+
+void DialogComponent::setVisibilityStatus(bool visibilityStatus)
+{
+	this->visibilityStatus = visibilityStatus;
+}
+
+std::size_t DialogComponent::getConversationID() const
+{
+	return this->conversationID;
 }
 
 sf::FloatRect DialogComponent::getGlobalBounds() const
@@ -74,10 +85,18 @@ sf::FloatRect DialogComponent::getGlobalBounds() const
 	return this->sprite.getGlobalBounds();
 }
 
+bool DialogComponent::isVisible() const
+{
+	return this->visibilityStatus;
+}
+
 void DialogComponent::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	states.transform = this->getTransform();
+	if (this->visibilityStatus)
+	{
+		states.transform = this->getTransform();
 
-	target.draw(sprite, states);
-	target.draw(text, states);
+		target.draw(sprite, states);
+		target.draw(text, states);
+	}
 }

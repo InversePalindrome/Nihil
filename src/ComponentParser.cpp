@@ -109,10 +109,10 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["Dialog"] = [this, &resourceManager](auto& entity, auto& line)
 	{
-		auto& params = parse<std::string, std::string, std::string, float, float>(line);
+		auto& params = parse<std::size_t, std::string, std::string, std::string, float, float>(line);
 
 		entity.add_component<DialogComponent>(resourceManager, std::get<0>(params), std::get<1>(params),
-			std::get<2>(params), sf::Vector2f(std::get<3>(params), std::get<4>(params)));
+			std::get<2>(params), std::get<3>(params), sf::Vector2f(std::get<4>(params), std::get<5>(params)));
 	};
 
 	componentParsers["Health"] = [this](auto& entity, auto& line)

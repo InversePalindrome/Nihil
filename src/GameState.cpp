@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #include "GameState.hpp"
+#include "ControlSystem.hpp"
 #include "StateMachine.hpp"
 #include "FilePaths.hpp"
 #include "UnitConverter.hpp"
@@ -14,7 +15,7 @@ InversePalindrome.com
 GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
 	world({ 0.f, -9.8f }),
-	entityManager(world, stateData.resourceManager, stateData.soundManager, stateData.inputHandler, collisionsData, pathways),
+	entityManager(world, stateData.resourceManager, stateData.soundManager, stateData.window, collisionsData, pathways),
 	map(stateData.games.front(), world, entityManager.getComponentSerializer(), stateData.resourceManager, collisionsData, pathways),
 	camera(stateData.window.getDefaultView()),
 	collisionHandler(entityManager.getEvents()),
@@ -39,6 +40,10 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	entityManager.getEvents().subscribe<DisplayCoins>([this](const auto& event) { updateCoinDisplay(event.inventory); });
 	entityManager.getEvents().subscribe<PickedUpItem>([this](const auto& event) { updateItemsDisplay(event.item); });
 	entityManager.getEvents().subscribe<DisplayPowerUp>([this](const auto& event) { powerUpDisplay.addPowerUp(event.item); });
+	entityManager.getEvents().subscribe<DisplayConversation>([this](const auto& event) { displayConversation(event.entity, event.visibilityStatus); });
+
+	entityManager.getEvents().subscribe<UpdateConversation>([this](const auto& event) { updateConversationDisplay(event.entity); });
+	
 	entityManager.getEvents().subscribe<HidePowerUp>([this](const auto& event) { powerUpDisplay.removePowerUp(event.item); });
 
 	entityManager.getEvents().subscribe<CreateEntity>([this](const auto& event) 
@@ -85,7 +90,12 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 			changeLevel(event.level);
 		});
 
-		this->saveData("SavedGames.txt");
+		 saveData("SavedGames.txt");
+	});
+
+	entityManager.getEvents().subscribe<entityplus::component_added<Entity, ControllableComponent>>([this](auto& event)
+	{
+		entityManager.getSystem<ControlSystem>("Control")->addControl(event.entity);
 	});
 
     entityManager.getEvents().subscribe<entityplus::component_added<Entity, InventoryComponent>>([this, &stateData](auto& event)
@@ -104,14 +114,15 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 
 void GameState::handleEvent(const sf::Event& event)
 {
-	if (this->stateData.inputHandler.isActive("Escape"))
+	if (stateData.inputHandler.isActive("Escape"))
 	{
-		this->saveData("SavedGames.txt");
-		this->stateMachine.pushState(StateID::Pause);
+		saveData("SavedGames.txt");
+
+		stateMachine.pushState(StateID::Pause);
 	}
 	else if (this->stateData.inputHandler.isActive("Inventory"))
 	{
-		this->itemsDisplay.setVisibility(!this->itemsDisplay.getVisibility());
+		itemsDisplay.setVisibility(!itemsDisplay.getVisibility());
 	}
 }
 
@@ -208,6 +219,25 @@ void GameState::updateItemsDisplay(Entity item)
 
 		++itemGraphic.quantity;
 		itemGraphic.info.setString(std::to_string(itemGraphic.quantity) + " / " + std::to_string(itemGraphic.maxQuantity));
+	}
+}
+
+void GameState::updateConversationDisplay(Entity entity)
+{
+	if (entity.has_component<DialogComponent>() && entity.has_component<PositionComponent>())
+	{
+		auto& dialog = entity.get_component<DialogComponent>();
+
+		dialog.nextDialogue();
+		dialog.setPosition(entity.get_component<PositionComponent>().getPosition());
+	}
+}
+
+void GameState::displayConversation(Entity entity, bool visibilityStatus)
+{
+	if (entity.has_component<DialogComponent>())
+	{
+		entity.get_component<DialogComponent>().setVisibilityStatus(visibilityStatus);
 	}
 }
 

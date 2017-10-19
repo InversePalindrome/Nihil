@@ -33,7 +33,7 @@ ItemsSystem::ItemsSystem(Entities& entities, Events& events) :
 		});
 
 		powerUpTimers.back().restart(sf::seconds(powerUp.getEffectTime()));
-
+		
 		events.broadcast(DisplayPowerUp{ powerUp.getItem() });
 	};
 

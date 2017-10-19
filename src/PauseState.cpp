@@ -33,6 +33,7 @@ void PauseState::handleEvent(const sf::Event& event)
 {
 	if (this->stateData.inputHandler.isActive("Escape"))
 	{
+		this->stateData.inputHandler.clearCallbacks();
 		this->stateMachine.popState();
 	}
 }

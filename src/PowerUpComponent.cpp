@@ -18,7 +18,8 @@ PowerUpComponent::PowerUpComponent(Item item, SoundBuffersID soundID, float effe
 
 std::ostream& operator<<(std::ostream& os, const PowerUpComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.effectTime << ' ' << component.effectBoost;
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << static_cast<std::size_t>(component.getItem()) 
+		<< ' ' << static_cast<std::size_t>(component.getSoundID()) << ' ' << component.effectTime << ' ' << component.effectBoost;
 
 	return os;
 }

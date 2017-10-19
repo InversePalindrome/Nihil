@@ -81,7 +81,6 @@ void Application::handleEvents()
 		}
 
 		this->inputHandler.pushEvent(event);
-
 		this->stateMachine.handleEvent(event);
 		this->guiManager.handleEvent(event);
 	}
@@ -90,6 +89,8 @@ void Application::handleEvents()
 void Application::update(float deltaTime)
 {
 	this->inputHandler.update(this->window);
+	this->inputHandler.invokeCallbacks();
+
 	this->stateMachine.update(deltaTime);
 	this->guiManager.update(deltaTime);
 	this->soundManager.update();

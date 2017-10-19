@@ -78,6 +78,14 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 
 		this->events.broadcast(ApplyBlastImpact{ orderedCollision.value().first.get().entity, orderedCollision.value().second.get().entity });
 	}
+	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Character))
+	{
+		orderedCollision.value().first.get().entity.sync();
+		orderedCollision.value().second.get().entity.sync();
+		
+		this->events.broadcast(CanConversate{ orderedCollision.value().first.get().entity, 
+			orderedCollision.value().second.get().entity, true });
+	}
 
 	if (auto& collider = this->getCollider(objectA, objectB, ObjectType::Bullet))
 	{
@@ -95,7 +103,19 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 
 void CollisionHandler::EndContact(b2Contact* contact)
 {
+	auto* objectA = static_cast<CollisionData*>(contact->GetFixtureA()->GetBody()->GetUserData());
+	auto* objectB = static_cast<CollisionData*>(contact->GetFixtureB()->GetBody()->GetUserData());
 
+	if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Character))
+	{
+		orderedCollision.value().first.get().entity.sync();
+		orderedCollision.value().second.get().entity.sync();
+
+		this->events.broadcast(CanConversate{ orderedCollision.value().first.get().entity,
+			orderedCollision.value().second.get().entity, false });
+
+		this->events.broadcast(DisplayConversation{ orderedCollision.value().second.get().entity, false });
+	}
 }
 
 void CollisionHandler::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
