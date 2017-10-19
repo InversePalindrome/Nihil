@@ -60,6 +60,8 @@ struct DroppedItem;
 struct DisplayHealthBar;
 struct DisplayCoins;
 struct DisplayPowerUp;
+struct DisplayConversation;
+struct UpdateConversation;
 struct HidePowerUp;
 struct PlayerDied;
 struct CrossedWaypoint;
@@ -73,6 +75,7 @@ struct ApplyBlastImpact;
 struct ApplyKnockback;
 struct ChangePosition;
 struct IsMidAir;
+struct CanConversate;
 
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
@@ -85,9 +88,9 @@ using Tags = entityplus::tag_list<AI>;
 using Entities = entityplus::entity_manager<Components, Tags>;
 
 using Events = entityplus::event_manager<Components, Tags, CreateEntity, DestroyBody, DirectionChanged, Jumped, StopMovement, CombatOcurred, ChangeState,
-	StateChanged, ChangeLevel, DestroyEntity, EmitSound, PickedUpItem, DroppedItem, DisplayHealthBar, DisplayCoins, DisplayPowerUp, HidePowerUp,
-	PlayerDied, CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform, ApplyForce, ApplyImpulse, ApplyBlastImpact, 
-	ApplyKnockback, ChangePosition, IsMidAir>;
+	StateChanged, ChangeLevel, DestroyEntity, EmitSound, PickedUpItem, DroppedItem, DisplayHealthBar, DisplayCoins, DisplayPowerUp, DisplayConversation,
+	UpdateConversation, HidePowerUp, PlayerDied, CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform, ApplyForce, ApplyImpulse,
+	ApplyBlastImpact, ApplyKnockback, ChangePosition, IsMidAir, CanConversate>;
 
 using Entity = Entities::entity_t;
 
@@ -188,6 +191,17 @@ struct DisplayPowerUp
 	Item item;
 };
 
+struct DisplayConversation
+{
+	Entity entity;
+	bool visibilityStatus;
+};
+
+struct UpdateConversation
+{
+	Entity entity;
+};
+
 struct HidePowerUp
 {
 	Item item;
@@ -261,4 +275,11 @@ struct IsMidAir
 {
 	Entity entity;
 	bool midAirStatus;
+};
+
+struct CanConversate
+{
+	Entity entity;
+	Entity conversatingEntity;
+	bool conversationStatus;
 };

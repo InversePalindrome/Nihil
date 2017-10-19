@@ -32,13 +32,17 @@ InversePalindrome.com
 class EntityManager : public sf::Drawable
 {
 public:
-	EntityManager(b2World& world, ResourceManager& resourceManager, SoundManager& soundManager, InputHandler& inputHandler, CollisionsData& collisionData, Pathways& pathways);
+	EntityManager(b2World& world, ResourceManager& resourceManager, SoundManager& soundManager, 
+		sf::RenderWindow& window, CollisionsData& collisionData, Pathways& pathways);
 	EntityManager(const EntityManager& entityManager) = delete;
     EntityManager& operator=(const EntityManager& entityManager) = delete;
 
 	Entities& getEntities();
 	Events& getEvents();
 	ComponentSerializer& getComponentSerializer();
+
+	template<typename T> 
+	T* getSystem(const std::string& system);
 
 	void update(float deltaTime);
 
@@ -66,3 +70,9 @@ private:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
+
+template<typename T>
+T* EntityManager::getSystem(const std::string& system)
+{
+	return dynamic_cast<T*>(this->systems.at(system).get());
+}

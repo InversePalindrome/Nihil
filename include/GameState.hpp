@@ -58,6 +58,9 @@ private:
 	void updateHealthBar(const HealthComponent& health);
 	void updateCoinDisplay(const InventoryComponent& inventory);
 	void updateItemsDisplay(Entity item);
+	void updateConversationDisplay(Entity entity);
+
+	void displayConversation(Entity entity, bool visibilityStatus);
 
 	void changeLevel(const std::string& level);
 	void changeEntityPosition(Entity entity, const sf::Vector2f& position);
