@@ -21,6 +21,8 @@ public:
 
 	void addControl(Entity entity);
 
+	void handleEvent(const sf::Event& event);
+
 	virtual void update(float deltaTime) override;
 
 private:
@@ -29,5 +31,4 @@ private:
 	sf::RenderWindow& window;
 
 	void setMidAirStatus(Entity entity, bool midAirStatus);
-	void setConversationStatus(Entity entity, Entity conversatingEntity, bool conversationStatus);
 };

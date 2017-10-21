@@ -75,7 +75,6 @@ struct ApplyBlastImpact;
 struct ApplyKnockback;
 struct ChangePosition;
 struct IsMidAir;
-struct CanConversate;
 
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
@@ -90,7 +89,7 @@ using Entities = entityplus::entity_manager<Components, Tags>;
 using Events = entityplus::event_manager<Components, Tags, CreateEntity, DestroyBody, DirectionChanged, Jumped, StopMovement, CombatOcurred, ChangeState,
 	StateChanged, ChangeLevel, DestroyEntity, EmitSound, PickedUpItem, DroppedItem, DisplayHealthBar, DisplayCoins, DisplayPowerUp, DisplayConversation,
 	UpdateConversation, HidePowerUp, PlayerDied, CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform, ApplyForce, ApplyImpulse,
-	ApplyBlastImpact, ApplyKnockback, ChangePosition, IsMidAir, CanConversate>;
+	ApplyBlastImpact, ApplyKnockback, ChangePosition, IsMidAir>;
 
 using Entity = Entities::entity_t;
 
@@ -275,11 +274,4 @@ struct IsMidAir
 {
 	Entity entity;
 	bool midAirStatus;
-};
-
-struct CanConversate
-{
-	Entity entity;
-	Entity conversatingEntity;
-	bool conversationStatus;
 };

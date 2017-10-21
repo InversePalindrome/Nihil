@@ -8,16 +8,13 @@ InversePalindrome.com
 #pragma once
 
 #include "Component.hpp"
+#include "Renderable.hpp"
 #include "ResourceManager.hpp"
 
 #include <SFML/Graphics/Text.hpp>
-#include <SFML/Graphics/Drawable.hpp>
-#include <SFML/Graphics/RenderTarget.hpp>
-#include <SFML/Graphics/RenderStates.hpp>
-#include <SFML/Graphics/Transformable.hpp>
 
 
-class TextComponent : public Component, public sf::Transformable, public sf::Drawable
+class TextComponent : public Component, public Renderable
 {
 	friend std::ostream& operator<<(std::ostream& os, const TextComponent& component);
 

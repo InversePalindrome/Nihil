@@ -39,7 +39,7 @@ public:
 	Direction getDirection() const;
 	std::int8_t getCollisionGroup() const;
 
-	void setPosition(const b2Vec2& position);
+	void setDialoguePosition(const b2Vec2& position);
 	void setVelocity(const b2Vec2& velocity);
 	void setMaxVelocity(float maxVelocity);
 	void setJumpVelocity(float jumpVelocity);

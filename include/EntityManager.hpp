@@ -19,13 +19,15 @@ InversePalindrome.com
 
 #include <Box2D/Dynamics/b2World.h>
 
+#include <brigand/sequences/map.hpp>
+
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 
-#include <tuple>
 #include <string>
 #include <memory>
+#include <typeinfo>
 #include <unordered_map>
 
 
@@ -42,7 +44,7 @@ public:
 	ComponentSerializer& getComponentSerializer();
 
 	template<typename T> 
-	T* getSystem(const std::string& system);
+	T* getSystem();
 
 	void update(float deltaTime);
 
@@ -72,7 +74,7 @@ private:
 };
 
 template<typename T>
-T* EntityManager::getSystem(const std::string& system)
+T* EntityManager::getSystem()
 {
-	return dynamic_cast<T*>(this->systems.at(system).get());
+	return dynamic_cast<T*>(this->systems.at(typeid(T).name()).get());
 }

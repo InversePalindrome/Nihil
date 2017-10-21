@@ -8,6 +8,7 @@ InversePalindrome.com
 #pragma once
 
 #include "ParticleData.hpp"
+#include "Renderable.hpp"
 #include "Component.hpp"
 #include "StateComponent.hpp"
 #include "ResourceManager.hpp"
@@ -15,15 +16,10 @@ InversePalindrome.com
 #include <Thor/Particles/Emitters.hpp>
 #include <Thor/Particles/ParticleSystem.hpp>
 
-#include <SFML/Graphics/Drawable.hpp>
-#include <SFML/Graphics/RenderTarget.hpp>
-#include <SFML/Graphics/RenderStates.hpp>
-#include <SFML/Graphics/Transformable.hpp>
-
 #include <unordered_map>
 
 
-class ParticleComponent : public Component, public sf::Transformable, public sf::Drawable
+class ParticleComponent : public Component, public Renderable
 {
 	friend std::ostream& operator<<(std::ostream& os, const ParticleComponent& component);
 

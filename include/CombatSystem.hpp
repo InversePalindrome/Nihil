@@ -8,11 +8,10 @@ InversePalindrome.com
 #pragma once
 
 #include "System.hpp"
+#include "Callbacks.hpp"
 #include "ComponentParser.hpp"
 
 #include <Thor/Time/CallbackTimer.hpp>
-
-#include <list>
 
 
 class CombatSystem : public System
@@ -24,7 +23,7 @@ public:
 
 private:
 	ComponentParser& componentParser;
-	std::list<thor::CallbackTimer> combatCallbacks;
+	Callbacks callbacks;
 
 	void handleCombat(Entity attacker, Entity victim);
 	void handleExplosion(Entity bomb, Entity explosion);

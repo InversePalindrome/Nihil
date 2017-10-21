@@ -10,31 +10,34 @@ InversePalindrome.com
 #include "Component.hpp"
 #include "TextComponent.hpp"
 #include "SpriteComponent.hpp"
+#include "Renderable.hpp"
 #include "ResourceManager.hpp"
 
 #include <string>
 #include <vector>
 
 
-class DialogComponent : public Component, public sf::Transformable, public sf::Drawable
+class DialogComponent : public Component, public Renderable
 {
 	friend std::ostream& operator<<(std::ostream& os, const DialogComponent& component);
 
 public:
-	DialogComponent(ResourceManager& resourceManager, std::size_t conversationID, const std::string& dialogFile, 
-		const std::string& textStyleFile, const std::string& spriteFile, const sf::Vector2f& textOffset);
+	DialogComponent(ResourceManager& resourceManager, float dialogueTime, const std::string& dialogFile, 
+		const std::string& textStyleFile, const std::string& spriteFile, const sf::Vector2f& textOffset, const sf::Vector2f& positionOffset);
 
 	void nextDialogue();
 
-	void setVisibilityStatus(bool visibilityStatus);
-
-	std::size_t getConversationID() const;
+	float getDialogueTime() const;
 	sf::FloatRect getGlobalBounds() const;
 
+	void setDialogueTime(float dialogueTime);
+	void setVisibilityStatus(bool visibilityStatus);
+
 	bool isVisible() const;
+	bool hasDialogueFinished() const;
 
 private:
-	std::size_t conversationID;
+	float dialogueTime;
 	std::string dialogue;
 	std::string dialogFile;
 	std::string textStyleFile;
