@@ -34,19 +34,7 @@ CombatSystem::CombatSystem(Entities& entities, Events& events, ComponentParser& 
 
 void CombatSystem::update(float deltaTime)
 {
-	for (auto combatCallback = std::begin(this->combatCallbacks); combatCallback != std::end(this->combatCallbacks); )
-	{
-		combatCallback->update();
-
-		if (combatCallback->isExpired())
-		{
-			combatCallback = this->combatCallbacks.erase(combatCallback);
-		}
-		else
-		{
-			++combatCallback;
-		}
-	}
+	this->callbacks.update();
 }
 
 void CombatSystem::handleCombat(Entity attacker, Entity victim)
@@ -96,17 +84,13 @@ void CombatSystem::handleCombat(Entity attacker, Entity victim)
 
 void CombatSystem::handleExplosion(Entity bomb, Entity explosion)
 {
-	this->combatCallbacks.push_back(thor::CallbackTimer());
-
-    const auto explosionTime = sf::seconds(0.5f);
-
-	this->combatCallbacks.back().restart(explosionTime);
-
-	this->combatCallbacks.back().connect0([this, explosion, bomb]() mutable
+    const float explosionTime = 0.5f;
+	
+	this->callbacks.addCallbackTimer([this, explosion, bomb]() mutable
 	{
 		this->events.broadcast(DestroyEntity{ bomb });
 		this->events.broadcast(DestroyEntity{ explosion });
-	});
+	}, explosionTime);
 }
 
 void CombatSystem::shootProjectile(Entity shooter, const std::string& projectileID, const sf::Vector2f& targetPosition)
@@ -139,12 +123,12 @@ void CombatSystem::shootBullet(const PhysicsComponent& shooterPhysics, BulletCom
 	switch (shooterPhysics.getDirection())
 	{
 	case Direction::Left:
-		projectilePhysics.setPosition(b2Vec2(projectilePhysics.getPosition().x - projectilePhysics.getBodySize().x - shooterPhysics.getBodySize().x - 0.1f, projectilePhysics.getPosition().y));
+		projectilePhysics.setDialoguePosition(b2Vec2(projectilePhysics.getPosition().x - projectilePhysics.getBodySize().x - shooterPhysics.getBodySize().x - 0.1f, projectilePhysics.getPosition().y));
 		projectilePhysics.applyForce(b2Vec2(-bulletComponent.getForce(), 0.f));
 		projectileSprite.setRotation(180.f);
 		break;
 	case Direction::Right:
-		projectilePhysics.setPosition(b2Vec2(projectilePhysics.getPosition().x + projectilePhysics.getBodySize().x + shooterPhysics.getBodySize().x + 0.1f, projectilePhysics.getPosition().y));
+		projectilePhysics.setDialoguePosition(b2Vec2(projectilePhysics.getPosition().x + projectilePhysics.getBodySize().x + shooterPhysics.getBodySize().x + 0.1f, projectilePhysics.getPosition().y));
 		projectilePhysics.applyForce(b2Vec2(bulletComponent.getForce(), 0.f));
 		projectileSprite.setRotation(0.f);
 		break;
@@ -155,7 +139,7 @@ void CombatSystem::shootBullet(const PhysicsComponent& shooterPhysics, BulletCom
 
 void CombatSystem::shootBomb(const PhysicsComponent& shooterPhysics, BombComponent& bombComponent, PhysicsComponent& projectilePhysics, SpriteComponent& spriteComponent, const sf::Vector2f& targetPosition)
 {
-	projectilePhysics.setPosition(b2Vec2(projectilePhysics.getPosition().x, projectilePhysics.getPosition().y + projectilePhysics.getBodySize().y + 0.1f));
+	projectilePhysics.setDialoguePosition(b2Vec2(projectilePhysics.getPosition().x, projectilePhysics.getPosition().y + projectilePhysics.getBodySize().y + 0.1f));
 
 	const auto xDistance = projectilePhysics.getPosition().x - UnitConverter::pixelsToMeters(targetPosition.x);
 	const float angle = 45.f;
@@ -188,15 +172,12 @@ void CombatSystem::addReloadTimer(Entity entity)
 
 void CombatSystem::addExplosion(Entity bomb)
 {
-	this->combatCallbacks.push_back(thor::CallbackTimer());
-
 	if (bomb.has_component<BombComponent>() && !bomb.get_component<BombComponent>().hasActivated())
 	{
 		bomb.get_component<BombComponent>().setActivationStatus(true);
-
-		this->combatCallbacks.back().restart(sf::seconds(bomb.get_component<BombComponent>().getExplosionTime()));
-
-		this->combatCallbacks.back().connect0([this, bomb]() mutable
+		
+		this->callbacks.addCallbackTimer(
+			[this, bomb]() mutable
 		{
 			if (bomb.get_status() == entityplus::entity_status::OK)
 			{
@@ -214,7 +195,7 @@ void CombatSystem::addExplosion(Entity bomb)
 				this->events.broadcast(BombExploded{ bomb, explosion });
 				this->events.broadcast(EmitSound{ bombComponent.getSoundID(), false });
 			}
-		});
+		}, bomb.get_component<BombComponent>().getExplosionTime());
 	}
 }
 

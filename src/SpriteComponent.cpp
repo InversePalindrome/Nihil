@@ -68,6 +68,6 @@ void SpriteComponent::parseSprite(const std::string& fileName)
 void SpriteComponent::draw(sf::RenderTarget& target, sf::RenderStates states) const 
 {
 	states.transform *= this->getTransform();
-
+	
 	target.draw(this->sprite, states);
 }

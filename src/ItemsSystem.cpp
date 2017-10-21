@@ -27,6 +27,7 @@ ItemsSystem::ItemsSystem(Entities& entities, Events& events) :
 				collector.sync();
 
 				collector.get_component<PhysicsComponent>().setMaxVelocity(maxVelocity);
+				collector.get_component<InventoryComponent>().removeItem(powerUp.getItem());
 
 				events.broadcast(HidePowerUp{ powerUp.getItem() });
 			}
@@ -52,6 +53,7 @@ ItemsSystem::ItemsSystem(Entities& entities, Events& events) :
 				collector.sync();
 
 				collector.get_component<PhysicsComponent>().setJumpVelocity(jumpVelocity);
+				collector.get_component<InventoryComponent>().removeItem(powerUp.getItem());
 
 				events.broadcast(HidePowerUp{ powerUp.getItem() });
 			}
@@ -75,6 +77,7 @@ ItemsSystem::ItemsSystem(Entities& entities, Events& events) :
 				collector.sync();
 
 				collector.remove_component<RangeAttackComponent>();
+				collector.get_component<InventoryComponent>().removeItem(powerUp.getItem());
 
 				events.broadcast(HidePowerUp{ powerUp.getItem() });
 			}
@@ -92,6 +95,8 @@ ItemsSystem::ItemsSystem(Entities& entities, Events& events) :
 			auto& health = collector.get_component<HealthComponent>();
 
 			health.setHitpoints(health.getHitpoints() + 1u);
+
+			collector.get_component<InventoryComponent>().removeItem(powerUp.getItem());
 
 			this->events.broadcast(DisplayHealthBar{ health });
 		}
@@ -118,7 +123,7 @@ void ItemsSystem::update(float deltaTime)
 	}
 
 	callbacks.update();
-	callbacks.clear();
+	callbacks.clearCallbacks();
 }
 
 void ItemsSystem::handleItemPickup(Entity collector, Entity item)
@@ -144,13 +149,20 @@ void ItemsSystem::handleItemPickup(Entity collector, Entity item)
 			this->events.broadcast(DisplayCoins{ inventory });
 		}
 	}
-	else if (collector.has_component<PhysicsComponent>() && item.has_component<PowerUpComponent>())
+	else if (collector.has_component<InventoryComponent>() && collector.has_component<PhysicsComponent>() && item.has_component<PowerUpComponent>())
 	{
+		auto& inventory = collector.get_component<InventoryComponent>();
 		auto& powerUp = item.get_component<PowerUpComponent>();
 		
 		if (this->powerUpEffects.count(powerUp.getItem()))
 		{
-			this->powerUpEffects[powerUp.getItem()](collector, powerUp);
+			if (!inventory.hasItem(powerUp.getItem()))
+			{
+				this->powerUpEffects[powerUp.getItem()](collector, powerUp);
+
+				inventory.addItem(powerUp.getItem(), 1);
+			}
+
 			this->events.broadcast(EmitSound{ powerUp.getSoundID(), false });
 		}
 	}
@@ -187,7 +199,7 @@ void ItemsSystem::handleKeyPickup(const KeyComponent& key)
 				entity.get_component<SpriteComponent>().parseSprite(lock.getNewSpriteFile());
 			}
 
-			callbacks.addCallback([this, entity]() mutable
+			this->callbacks.addCallback([this, entity]() mutable
 			{
 				entity.sync();
 

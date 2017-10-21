@@ -114,7 +114,7 @@ std::int8_t PhysicsComponent::getCollisionGroup() const
 	return this->collisionGroup;
 }
 
-void PhysicsComponent::setPosition(const b2Vec2& position)
+void PhysicsComponent::setDialoguePosition(const b2Vec2& position)
 {
 	this->body->SetTransform(position, this->body->GetAngle());
 }

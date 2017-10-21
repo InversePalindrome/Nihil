@@ -16,10 +16,10 @@ InversePalindrome.com
 #include <streambuf>
 
 
-DialogComponent::DialogComponent(ResourceManager& resourceManager, std::size_t conversationID, const std::string& dialogFile, 
-	const std::string& textStyleFile, const std::string& spriteFile, const sf::Vector2f& textOffset) :
+DialogComponent::DialogComponent(ResourceManager& resourceManager, float dialogueTime, const std::string& dialogFile, 
+	const std::string& textStyleFile, const std::string& spriteFile, const sf::Vector2f& textOffset, const sf::Vector2f& positionOffset) :
 	Component("Dialog"),
-	conversationID(conversationID),
+	dialogueTime(dialogueTime),
 	dialogFile(dialogFile),
 	textStyleFile(textStyleFile),
 	spriteFile(spriteFile),
@@ -42,13 +42,16 @@ DialogComponent::DialogComponent(ResourceManager& resourceManager, std::size_t c
 	}
 
 	text.move(textOffset);
+
 	setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
+	setOffset(positionOffset);
 }
 
 std::ostream& operator<<(std::ostream& os, const DialogComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.conversationID << ' ' << component.dialogFile 
-		<< ' ' << component.textStyleFile << ' ' << component.spriteFile << ' ' << component.textOffset.x << ' ' << component.textOffset.y;
+	os << component.getEntityID() << ' ' << component.getName() << ' '  << component.dialogueTime << ' ' 
+		<< component.dialogFile << ' ' << component.textStyleFile << ' ' << component.spriteFile << ' ' 
+		<< component.textOffset.x << ' ' << component.textOffset.y << ' ' << component.getOffset().x << ' ' << component.getOffset().y;
 
 	return os;
 }
@@ -57,9 +60,7 @@ void DialogComponent::nextDialogue()
 {
 	if (!this->subDialogues.empty() && this->dialogueCount < this->subDialogues.size())
 	{
-		this->text.setText(this->subDialogues.front());
-
-		std::rotate(std::begin(this->subDialogues), std::begin(this->subDialogues) + 1, std::end(this->subDialogues));
+		this->text.setText(this->subDialogues[this->dialogueCount]);
 
 		++this->dialogueCount;
 	}
@@ -70,14 +71,9 @@ void DialogComponent::nextDialogue()
 	}
 }
 
-void DialogComponent::setVisibilityStatus(bool visibilityStatus)
+float DialogComponent::getDialogueTime() const
 {
-	this->visibilityStatus = visibilityStatus;
-}
-
-std::size_t DialogComponent::getConversationID() const
-{
-	return this->conversationID;
+	return this->dialogueTime;
 }
 
 sf::FloatRect DialogComponent::getGlobalBounds() const
@@ -85,16 +81,32 @@ sf::FloatRect DialogComponent::getGlobalBounds() const
 	return this->sprite.getGlobalBounds();
 }
 
+void DialogComponent::setVisibilityStatus(bool visibilityStatus)
+{
+	this->visibilityStatus = visibilityStatus;
+	this->dialogueCount = 0u;
+}
+
+void DialogComponent::setDialogueTime(float dialogueTime)
+{
+	this->dialogueTime = dialogueTime;
+}
+
 bool DialogComponent::isVisible() const
 {
 	return this->visibilityStatus;
+}
+
+bool DialogComponent::hasDialogueFinished() const
+{
+	return this->dialogueCount == this->subDialogues.size();
 }
 
 void DialogComponent::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	if (this->visibilityStatus)
 	{
-		states.transform = this->getTransform();
+		states.transform *= this->getTransform();
 
 		target.draw(sprite, states);
 		target.draw(text, states);

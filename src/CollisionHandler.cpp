@@ -80,11 +80,10 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 	}
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Character))
 	{
-		orderedCollision.value().first.get().entity.sync();
 		orderedCollision.value().second.get().entity.sync();
-		
-		this->events.broadcast(CanConversate{ orderedCollision.value().first.get().entity, 
-			orderedCollision.value().second.get().entity, true });
+
+		this->events.broadcast(DisplayConversation{ orderedCollision.value().second.get().entity, true });
+		this->events.broadcast(UpdateConversation{ orderedCollision.value().second.get().entity });
 	}
 
 	if (auto& collider = this->getCollider(objectA, objectB, ObjectType::Bullet))
@@ -108,11 +107,7 @@ void CollisionHandler::EndContact(b2Contact* contact)
 
 	if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Character))
 	{
-		orderedCollision.value().first.get().entity.sync();
 		orderedCollision.value().second.get().entity.sync();
-
-		this->events.broadcast(CanConversate{ orderedCollision.value().first.get().entity,
-			orderedCollision.value().second.get().entity, false });
 
 		this->events.broadcast(DisplayConversation{ orderedCollision.value().second.get().entity, false });
 	}

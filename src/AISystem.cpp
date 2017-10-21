@@ -48,9 +48,11 @@ void AISystem::update(float deltaTime)
 		}
 	});
 
-	this->entities.for_each<AI, PatrolComponent, RangeAttackComponent, ParentComponent, PositionComponent, TimerComponent>([this](auto entity, auto& patrol, auto& rangeAttack, auto& parent, auto& position, auto& timer)
+	this->entities.for_each<AI, RangeAttackComponent, ParentComponent, PositionComponent, TimerComponent>([this](auto entity, auto& rangeAttack, auto& parent, auto& position, auto& timer)
 	{
-		if (timer.hasTimer("Reload") && timer.hasTimerExpired("Reload") && this->isWithinRange(patrol.getRange(), position.getPosition(), this->getTargetPosition(), rangeAttack.getAttackRange()))
+		if (timer.hasTimer("Reload") && timer.hasTimerExpired("Reload") && ((entity.has_component<PatrolComponent>() && 
+			this->isWithinRange(entity.get_component<PatrolComponent>().getRange(), position.getPosition(), this->getTargetPosition(), rangeAttack.getAttackRange())) ||
+			this->isWithinRange(position.getPosition(), this->getTargetPosition(), rangeAttack.getAttackRange())))
 		{
 			this->events.broadcast(ShootProjectile{ entity, rangeAttack.getProjectileID(), this->getTargetPosition() });
 
@@ -59,7 +61,7 @@ void AISystem::update(float deltaTime)
 	});
 	
 	this->callbacks.update();
-	this->callbacks.clear();
+	this->callbacks.clearCallbacks();
 }
 
 void AISystem::updateMovement(Entity entity, PatrolComponent& patrol, const sf::Vector2f& position)
@@ -162,6 +164,11 @@ sf::Vector2f AISystem::getTargetPosition() const
 	this->entities.for_each<ControllableComponent, PositionComponent>([&targetPosition](auto entity, auto& controllable, auto& position) { targetPosition = position.getPosition(); });
 
 	return targetPosition;
+}
+
+bool AISystem::isWithinRange(const sf::Vector2f& AIPosition, const sf::Vector2f& targetPosition, float visionRange)
+{
+	return MathUtils::distance(AIPosition, targetPosition) <= visionRange;
 }
 
 bool AISystem::isWithinRange(const std::pair<float, float>& patrolRange, const sf::Vector2f& AIPosition, const sf::Vector2f& targetPosition, float visionRange) const

@@ -12,9 +12,8 @@ InputHandler::InputHandler()
 {
 	keyBindings["Move Left"] = thor::Action(sf::Keyboard::A);
 	keyBindings["Move Right"] = thor::Action(sf::Keyboard::D);
-	keyBindings["Jump"] = thor::Action(sf::Keyboard::Space, thor::Action::PressOnce);
-	keyBindings["Shoot"] = thor::Action(sf::Keyboard::S, thor::Action::PressOnce);
-	keyBindings["Conversate"] = thor::Action(sf::Keyboard::Z, thor::Action::ReleaseOnce);
+	keyBindings["Jump"] = thor::Action(sf::Keyboard::Space);
+	keyBindings["Shoot"] = thor::Action(sf::Keyboard::S);
 	keyBindings["Escape"] = thor::Action(sf::Keyboard::Escape, thor::Action::ReleaseOnce);
 	keyBindings["Inventory"] = thor::Action(sf::Keyboard::E, thor::Action::ReleaseOnce);
 }

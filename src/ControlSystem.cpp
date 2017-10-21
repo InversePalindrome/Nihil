@@ -13,7 +13,6 @@ ControlSystem::ControlSystem(Entities& entities, Events& events, sf::RenderWindo
 	window(window)
 {
 	events.subscribe<IsMidAir>([this](const auto& event) { setMidAirStatus(event.entity, event.midAirStatus); });
-	events.subscribe<CanConversate>([this](const auto& event) { setConversationStatus(event.entity, event.conversatingEntity, event.conversationStatus); });
 
 	events.subscribe<entityplus::component_added<Entity, ControllableComponent>>([&events](const auto& event)
 	{
@@ -69,32 +68,23 @@ void ControlSystem::addControl(Entity entity)
 				entity.get_component<TimerComponent>().restartTimer("Reload");
 			}
 		});
-
-		this->inputHandler.addCallback("Conversate", [this, entity]() mutable
-		{
-			entity.sync();
-
-			this->entities.for_each<DialogComponent>([this, entity](auto dialogEntity, auto& dialog)
-			{
-				if (entity.get_component<ControllableComponent>().getCurrentConversationID() == dialog.getConversationID())
-				{
-					this->events.broadcast(DisplayConversation{ dialogEntity, true });
-					this->events.broadcast(UpdateConversation{ dialogEntity });
-				}
-			});
-		});
 	}
+}
+
+void ControlSystem::handleEvent(const sf::Event& event)
+{
+	this->inputHandler.pushEvent(event);
 }
 
 void ControlSystem::update(float deltaTime)
 {
-	this->inputHandler.clearEvents();
-
 	this->inputHandler.update(this->window);
 	this->inputHandler.invokeCallbacks(this->window);
 
 	this->callbacks.update();
-	this->callbacks.clear();
+	this->callbacks.clearCallbacks();
+
+	this->inputHandler.clearEvents();
 }
 
 void ControlSystem::setMidAirStatus(Entity entity, bool midAirStatus)
@@ -102,17 +92,5 @@ void ControlSystem::setMidAirStatus(Entity entity, bool midAirStatus)
 	if (entity.has_component<ControllableComponent>())
 	{
 		entity.get_component<ControllableComponent>().setMidAirStatus(midAirStatus);
-	}
-}
-
-void ControlSystem::setConversationStatus(Entity entity, Entity conversatingEntity, bool conversationStatus)
-{
-	if (entity.has_component<ControllableComponent>() && conversatingEntity.has_component<DialogComponent>())
-	{
-		auto& controllable = entity.get_component<ControllableComponent>();
-		auto& dialog = conversatingEntity.get_component<DialogComponent>();
-
-		controllable.setConversationStatus(conversationStatus);
-		controllable.setCurrentConversationID(dialog.getConversationID());
 	}
 }

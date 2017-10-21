@@ -30,17 +30,17 @@ EntityManager::EntityManager(b2World& world, ResourceManager& resourceManager, S
 {
 	entityManager.set_event_manager(eventManager);
 	
-	systems["Render"] = std::make_unique<RenderSystem>(entityManager, eventManager);
-	systems["Control"] = std::make_unique<ControlSystem>(entityManager, eventManager, window);
-	systems["State"] = std::make_unique<StateSystem>(entityManager, eventManager);
-	systems["Physics"] = std::make_unique<PhysicsSystem>(entityManager, eventManager, world, collisionsData);
-	systems["AI"] = std::make_unique<AISystem>(entityManager, eventManager, pathways);
-	systems["Combat"] = std::make_unique<CombatSystem>(entityManager, eventManager, componentParser);
-	systems["Animator"] = std::make_unique<AnimatorSystem>(entityManager, eventManager);
-	systems["Sound"] = std::make_unique<SoundSystem>(entityManager, eventManager, soundManager);
-	systems["Effects"] = std::make_unique<EffectsSystem>(entityManager, eventManager);
-	systems["Automator"] = std::make_unique<AutomatorSystem>(entityManager, eventManager);
-	systems["Item"] = std::make_unique<ItemsSystem>(entityManager, eventManager);
+	systems[typeid(RenderSystem).name()] = std::make_unique<RenderSystem>(entityManager, eventManager);
+	systems[typeid(ControlSystem).name()] = std::make_unique<ControlSystem>(entityManager, eventManager, window);
+	systems[typeid(StateSystem).name()] = std::make_unique<StateSystem>(entityManager, eventManager);
+	systems[typeid(PhysicsSystem).name()] = std::make_unique<PhysicsSystem>(entityManager, eventManager, world, collisionsData);
+	systems[typeid(AISystem).name()] = std::make_unique<AISystem>(entityManager, eventManager, pathways);
+	systems[typeid(CombatSystem).name()] = std::make_unique<CombatSystem>(entityManager, eventManager, componentParser);
+	systems[typeid(AnimatorSystem).name()] = std::make_unique<AnimatorSystem>(entityManager, eventManager);
+	systems[typeid(SoundSystem).name()] = std::make_unique<SoundSystem>(entityManager, eventManager, soundManager);
+	systems[typeid(EffectsSystem).name()] = std::make_unique<EffectsSystem>(entityManager, eventManager);
+	systems[typeid(AutomatorSystem).name()] = std::make_unique<AutomatorSystem>(entityManager, eventManager);
+	systems[typeid(ItemsSystem).name()] = std::make_unique<ItemsSystem>(entityManager, eventManager);
 }
 
 Entities& EntityManager::getEntities()
@@ -77,11 +77,11 @@ Entity EntityManager::createEntity(const std::string& fileName, const sf::Vector
 	
 	if (entity.has_component<PositionComponent>())
 	{
-		entity.get_component<PositionComponent>().setPosition(position);
+		entity.get_component<PositionComponent>().setDialoguePosition(position);
 	}
 	if (entity.has_component<PhysicsComponent>())
 	{
-		entity.get_component<PhysicsComponent>().setPosition(
+		entity.get_component<PhysicsComponent>().setDialoguePosition(
 			b2Vec2(UnitConverter::pixelsToMeters(position.x), UnitConverter::pixelsToMeters(-position.y)));
 	}
 
@@ -140,5 +140,5 @@ void EntityManager::saveEntities(const std::string& fileName)
 
 void EntityManager::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(*dynamic_cast<RenderSystem*>(this->systems.at("Render").get()));
+	target.draw(*dynamic_cast<RenderSystem*>(this->systems.at(typeid(RenderSystem).name()).get()));
 }

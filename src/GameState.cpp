@@ -95,7 +95,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 
 	entityManager.getEvents().subscribe<entityplus::component_added<Entity, ControllableComponent>>([this](auto& event)
 	{
-		entityManager.getSystem<ControlSystem>("Control")->addControl(event.entity);
+		entityManager.getSystem<ControlSystem>()->addControl(event.entity);
 	});
 
     entityManager.getEvents().subscribe<entityplus::component_added<Entity, InventoryComponent>>([this, &stateData](auto& event)
@@ -116,14 +116,16 @@ void GameState::handleEvent(const sf::Event& event)
 {
 	if (stateData.inputHandler.isActive("Escape"))
 	{
-		saveData("SavedGames.txt");
+		this->saveData("SavedGames.txt");
 
-		stateMachine.pushState(StateID::Pause);
+		this->stateMachine.pushState(StateID::Pause);
 	}
 	else if (this->stateData.inputHandler.isActive("Inventory"))
 	{
-		itemsDisplay.setVisibility(!itemsDisplay.getVisibility());
+		this->itemsDisplay.setVisibility(!itemsDisplay.getVisibility());
 	}
+
+	this->entityManager.getSystem<ControlSystem>()->handleEvent(event);
 }
 
 void GameState::update(float deltaTime)
@@ -142,7 +144,7 @@ void GameState::update(float deltaTime)
 	this->powerUpDisplay.update(deltaTime);
 
 	this->callbacks.update();
-	this->callbacks.clear();
+	this->callbacks.clearCallbacks();
 }
 
 void GameState::draw()
@@ -224,12 +226,39 @@ void GameState::updateItemsDisplay(Entity item)
 
 void GameState::updateConversationDisplay(Entity entity)
 {
-	if (entity.has_component<DialogComponent>() && entity.has_component<PositionComponent>())
+	if (entity.has_component<DialogComponent>())
 	{
 		auto& dialog = entity.get_component<DialogComponent>();
 
-		dialog.nextDialogue();
-		dialog.setPosition(entity.get_component<PositionComponent>().getPosition());
+		if (dialog.isVisible())
+		{
+			dialog.nextDialogue();
+
+			if (!dialog.hasDialogueFinished())
+			{
+				this->callbacks.addCallbackTimer([this, entity]() mutable
+				{
+					if (entity.get_status() == entityplus::entity_status::OK)
+					{
+						entity.sync();
+
+						this->entityManager.getEvents().broadcast(UpdateConversation{ entity });
+					}
+				}, dialog.getDialogueTime());
+			}
+			else
+			{
+				this->callbacks.addCallbackTimer([entity]() mutable
+				{
+					if (entity.get_status() == entityplus::entity_status::OK)
+					{
+						entity.sync();
+
+						entity.get_component<DialogComponent>().setVisibilityStatus(false);
+					}
+				}, dialog.getDialogueTime());
+			}
+		}
 	}
 }
 
@@ -267,8 +296,8 @@ void GameState::changeLevel(const std::string& level)
 	{
 		const auto& spawnPoint = this->stateData.games.front().getCurrentSpawnPoint();
 
-		position.setPosition({ spawnPoint.x, spawnPoint.y });
-		physics.setPosition({ UnitConverter::pixelsToMeters(spawnPoint.x), UnitConverter::pixelsToMeters(-spawnPoint.y) });
+		position.setDialoguePosition({ spawnPoint.x, spawnPoint.y });
+		physics.setDialoguePosition({ UnitConverter::pixelsToMeters(spawnPoint.x), UnitConverter::pixelsToMeters(-spawnPoint.y) });
 		
 		this->moveCamera(spawnPoint);
 	});
@@ -280,13 +309,13 @@ void GameState::changeEntityPosition(Entity entity, const sf::Vector2f& position
 {
 	if (entity.has_component<PositionComponent>())
 	{
-		entity.get_component<PositionComponent>().setPosition(position);
+		entity.get_component<PositionComponent>().setDialoguePosition(position);
 	}
 	if (entity.has_component<PhysicsComponent>())
 	{
 		this->callbacks.addCallback([entity, position]() mutable
 		{
-			entity.get_component<PhysicsComponent>().setPosition({ UnitConverter::pixelsToMeters(position.x), UnitConverter::pixelsToMeters(-position.y) });
+			entity.get_component<PhysicsComponent>().setDialoguePosition({ UnitConverter::pixelsToMeters(position.x), UnitConverter::pixelsToMeters(-position.y) });
 		});
 	}
 }

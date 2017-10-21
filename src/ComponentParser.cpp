@@ -109,10 +109,11 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["Dialog"] = [this, &resourceManager](auto& entity, auto& line)
 	{
-		auto& params = parse<std::size_t, std::string, std::string, std::string, float, float>(line);
+		auto& params = parse<float, std::string, std::string, std::string, float, float, float, float>(line);
 
-		entity.add_component<DialogComponent>(resourceManager, std::get<0>(params), std::get<1>(params),
-			std::get<2>(params), std::get<3>(params), sf::Vector2f(std::get<4>(params), std::get<5>(params)));
+		entity.add_component<DialogComponent>(resourceManager, std::get<0>(params),
+			std::get<1>(params), std::get<2>(params), std::get<3>(params), sf::Vector2f(std::get<4>(params), std::get<5>(params)),
+			sf::Vector2f(std::get<6>(params), std::get<7>(params)));
 	};
 
 	componentParsers["Health"] = [this](auto& entity, auto& line)
@@ -282,11 +283,11 @@ void ComponentParser::parseBlueprint(const std::string& fileName)
 
 		if (entity.has_component<PositionComponent>())
 		{
-			entity.get_component<PositionComponent>().setPosition(sf::Vector2f(xPosition, yPosition));
+			entity.get_component<PositionComponent>().setDialoguePosition(sf::Vector2f(xPosition, yPosition));
 		}
 		if (entity.has_component<PhysicsComponent>())
 		{
-			entity.get_component<PhysicsComponent>().setPosition(
+			entity.get_component<PhysicsComponent>().setDialoguePosition(
 				b2Vec2(UnitConverter::pixelsToMeters(xPosition), UnitConverter::pixelsToMeters(-yPosition)));
 		}
 	}
