@@ -27,9 +27,9 @@ public:
 	virtual void update(float deltaTime) override;
 	virtual void draw() override;
 
-private:
-	sf::Sprite background;
+	virtual bool isTransparent() const override;
 
+private:
 	sfg::Window::Ptr addGamePopup;
 	sfg::Entry::Ptr nameEntry;
 

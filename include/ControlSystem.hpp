@@ -11,24 +11,19 @@ InversePalindrome.com
 #include "InputHandler.hpp"
 #include "Callbacks.hpp"
 
-#include <SFML/Graphics/RenderWindow.hpp>
-
 
 class ControlSystem : public System
 {
 public:
-	ControlSystem(Entities& entities, Events& events, sf::RenderWindow& window);
+	ControlSystem(Entities& entities, Events& events, InputHandler& inputHandler);
 
 	void addControl(Entity entity);
-
-	void handleEvent(const sf::Event& event);
 
 	virtual void update(float deltaTime) override;
 
 private:
 	Callbacks callbacks;
-	InputHandler inputHandler;
-	sf::RenderWindow& window;
+	InputHandler& inputHandler;
 
 	void setMidAirStatus(Entity entity, bool midAirStatus);
 };

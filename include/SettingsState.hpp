@@ -8,6 +8,7 @@ InversePalindrome.com
 #pragma once
 
 #include "State.hpp"
+#include "StateID.hpp"
 
 #include <SFGUI/Label.hpp>
 #include <SFGUI/Scale.hpp>
@@ -28,9 +29,9 @@ public:
 	virtual void update(float deltaTime) override;
 	virtual void draw() override;
 
-private:
-	sf::Sprite background;
+	virtual bool isTransparent() const override;
 
+private:
 	sfg::Button::Ptr backButton;
 	sfg::Label::Ptr soundLabel;
 	sfg::Label::Ptr musicLabel;
@@ -46,5 +47,6 @@ private:
 	void adjustMusicVolume();
 	void changeKeyBinding(sf::Keyboard::Key key);
 
-	void transitionToMenu();
+	void saveSettings();
+	void transitionToState();
 };

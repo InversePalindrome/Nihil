@@ -35,8 +35,9 @@ public:
 	virtual void update(float deltaTime) override;
 	virtual void draw() override;
 
+	virtual bool isTransparent() const override;
+
 private:
-	sf::Sprite background;
 	CoinDisplay coinDisplay;
 
 	sfg::Button::Ptr backButton;

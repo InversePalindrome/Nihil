@@ -13,6 +13,10 @@ InversePalindrome.com
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Window.hpp>
 
+#include <unordered_map>
+
+
+enum class Action { MoveLeft, MoveRight, Jump, Shoot, Escape, Inventory, Size };
 
 class InputHandler
 {
@@ -25,17 +29,21 @@ public:
 
 	void pushEvent(const sf::Event& event);
 
-	bool isActive(const std::string& actionID) const;
+	bool isActive(Action action) const;
 
-	void addCallback(const std::string& key, const std::function<void()>& callback);
-	void removeCallback(const std::string& key);
+	void addCallback(Action action, const std::function<void()>& callback);
+	void removeCallback(Action action);
 
-	void changeKey(const std::string& actionID, thor::Action action);
+	void changeKey(Action action, sf::Keyboard::Key key);
 
 	void clearEvents();
 	void clearCallbacks();
 
+	void saveData();
+
 private:
-	thor::ActionMap<std::string> keyBindings;
-	thor::ActionMap<std::string>::CallbackSystem keyCallbacks;
+	thor::ActionMap<Action> keyBindings;
+	thor::ActionMap<Action>::CallbackSystem keyCallbacks;
+
+	std::unordered_map<Action, std::pair<std::size_t, std::size_t>> keyCodes;
 };

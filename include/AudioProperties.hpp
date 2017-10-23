@@ -7,16 +7,15 @@ InversePalindrome.com
 
 #pragma once
 
+#include <string>
+
 
 struct AudioProperties
 {
-	AudioProperties(float volume, float pitch, float attenuation, float minDistance) :
-		volume(volume),
-		pitch(pitch),
-		attenuation(attenuation),
-		minDistance(minDistance)
-	{
-	}
+	AudioProperties(const std::string& fileName);
+	AudioProperties(float volume, float pitch, float attenuation, float minDistance);
+
+	void saveData(const std::string& fileName) const;
 
 	float volume;
 	float pitch;

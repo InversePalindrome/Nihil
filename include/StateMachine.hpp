@@ -8,6 +8,7 @@ InversePalindrome.com
 #pragma once
 
 #include "State.hpp"
+#include "StateID.hpp"
 #include "StateData.hpp"
 
 #include <memory>
@@ -15,8 +16,6 @@ InversePalindrome.com
 #include <functional>
 #include <unordered_map>
 
-
-enum class StateID { Splash, Start, Menu, Hub, Game, Settings, Characters, Pause };
 
 class StateMachine
 {
@@ -28,6 +27,9 @@ public:
 	void handleEvent(const sf::Event& event);
 	void update(float deltaTime);
 	void draw();
+
+	StatePtr& operator[](std::size_t statePosition);
+	std::size_t size() const;
 
 	void changeState(StateID stateID);
 
@@ -41,7 +43,7 @@ public:
 private:
 	StateData& stateData;
 
-	std::vector<StatePtr> states;
+	std::vector<std::pair<StateID, StatePtr>> states;
 	std::vector<std::function<void()>> stateActions;
 	std::unordered_map<StateID, std::function<StatePtr()>> stateFactory;
 
