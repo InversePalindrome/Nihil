@@ -18,7 +18,6 @@ InversePalindrome.com
 
 CharactersState::CharactersState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
-	background(stateData.resourceManager.getTexture(TexturesID::MenuBackground)),
 	coinDisplay(stateData.resourceManager),
 	backButton(sfg::Button::Create("BACK")),
 	gameChoices(sfg::ComboBox::Create()),
@@ -28,11 +27,9 @@ CharactersState::CharactersState(StateMachine& stateMachine, StateData& stateDat
 	scrolledWindow(sfg::ScrolledWindow::Create()),
 	characterButtons(sfg::RadioButtonGroup::Create())
 {
-	background.setScale(stateData.window.getSize().x / background.getGlobalBounds().width, stateData.window.getSize().y / background.getGlobalBounds().height);
+	coinDisplay.setPosition(1600.f, 80.f);
 
-	coinDisplay.setPosition(1600.f, 120.f);
-
-	backButton->SetPosition(sf::Vector2f(12.f, 65.f));
+	backButton->SetPosition(sf::Vector2f(12.f, 25.f));
 	backButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { transitionToMenu(); });
 
 	gameChoices->SetPosition(sf::Vector2f(775.f, 275.f));
@@ -94,8 +91,12 @@ void CharactersState::update(float deltaTime)
 
 void CharactersState::draw()
 {
-	this->stateData.window.draw(this->background);
 	this->stateData.window.draw(this->coinDisplay);
+}
+
+bool CharactersState::isTransparent() const
+{
+	return true;
 }
 
 void CharactersState::loadCharacters(const std::string& fileName)
@@ -209,6 +210,11 @@ void CharactersState::selectGame()
 void CharactersState::transitionToMenu()
 {
 	this->stateMachine.popState();
+
+	auto menu = this->stateMachine[this->stateMachine.size() - 2].get();
+
+	menu->setVisibility(true);
+	menu->showWidgets(true);
 }
 
 CharacterGraphics::CharacterGraphics() :

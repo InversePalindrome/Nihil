@@ -20,7 +20,7 @@ void StateMachine::handleEvent(const sf::Event& event)
 {
 	if (!this->states.empty())
 	{
-		this->states.back()->handleEvent(event);
+		this->states.back().second->handleEvent(event);
 	}
 
 	this->processStateActions();
@@ -30,7 +30,27 @@ void StateMachine::update(float deltaTime)
 {
 	if (!this->states.empty())
 	{
-		this->states.back()->update(deltaTime);
+		if (this->states.back().second->isVisible() && this->states.size() > 1)
+		{
+			auto itr = std::end(this->states);
+
+			for (; itr != std::begin(this->states); --itr)
+			{
+				if (itr != std::end(this->states) && !(*itr).second->isVisible())
+				{
+					break;
+				}
+			}
+
+			for (; itr != std::end(this->states); ++itr)
+			{
+				(*itr).second->update(deltaTime);
+			}
+		}
+		else
+		{
+			this->states.back().second->update(deltaTime);
+		}
 	}
 
 	this->processStateActions();
@@ -40,13 +60,13 @@ void StateMachine::draw()
 {
 	if (!this->states.empty())
 	{
-		if (this->states.back()->isTransparent() && this->states.size() > 1)
+		if (this->states.back().second->isTransparent() && this->states.size() > 1)
 		{
 			auto itr = std::end(this->states);
 
 			for (; itr != std::begin(this->states); --itr)
 			{
-				if (itr != std::end(this->states) && !(*itr)->isTransparent())
+				if (itr != std::end(this->states) && !(*itr).second->isTransparent())
 				{
 					break;
 				}
@@ -54,14 +74,24 @@ void StateMachine::draw()
 
 			for (; itr != std::end(this->states); ++itr)
 			{
-				(*itr)->draw();
+				(*itr).second->draw();
 			}
 		}
 		else
 		{
-			this->states.back()->draw();
+			this->states.back().second->draw();
 		}
 	}
+}
+
+StateMachine::StatePtr& StateMachine::operator[](std::size_t statePosition)
+{
+	return this->states[statePosition].second;
+}
+
+std::size_t StateMachine::size() const
+{
+	return this->states.size();
 }
 
 void StateMachine::changeState(StateID stateID)
@@ -76,7 +106,7 @@ void StateMachine::pushState(StateID stateID)
 {
 	this->stateData.guiManager.hideAllWidgets();
 
-	this->stateActions.push_back([this, stateID] { this->states.push_back(this->getState(stateID)); });
+	this->stateActions.push_back([this, stateID] { this->states.push_back({ stateID, this->getState(stateID) }); });
 }
 
 void StateMachine::popState()

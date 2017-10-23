@@ -66,24 +66,34 @@ void MenuState::draw()
 {
 	this->stateData.window.draw(this->background);
 	this->stateData.window.draw(this->particleSystem);
-	this->stateData.window.draw(this->titleLabel);
 
-	this->playButton->Show(true);
-	this->settingsButton->Show(true);
-	this->charactersButton->Show(true);
+	if (this->isVisible())
+	{
+		this->stateData.window.draw(this->titleLabel);
+	}
+}
+
+void MenuState::showWidgets(bool showStatus) const
+{
+	this->playButton->Show(showStatus);
+	this->settingsButton->Show(showStatus);
+	this->charactersButton->Show(showStatus);
 }
 
 void MenuState::transitionToPlay()
 {
+	this->setVisibility(false);
 	this->stateMachine.pushState(StateID::Hub);
 }
 
 void MenuState::transitionToSettings()
 {
+	this->setVisibility(false);
 	this->stateMachine.pushState(StateID::Settings);
 }
 
 void MenuState::transitionToCharacters()
 {
+	this->setVisibility(false);
 	this->stateMachine.pushState(StateID::Characters);
 }

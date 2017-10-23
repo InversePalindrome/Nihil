@@ -6,16 +6,24 @@ InversePalindrome.com
 
 
 #include "InputHandler.hpp"
+#include "FilePaths.hpp"
+
+#include <fstream>
 
 
 InputHandler::InputHandler()
 {
-	keyBindings["Move Left"] = thor::Action(sf::Keyboard::A);
-	keyBindings["Move Right"] = thor::Action(sf::Keyboard::D);
-	keyBindings["Jump"] = thor::Action(sf::Keyboard::Space);
-	keyBindings["Shoot"] = thor::Action(sf::Keyboard::S);
-	keyBindings["Escape"] = thor::Action(sf::Keyboard::Escape, thor::Action::ReleaseOnce);
-	keyBindings["Inventory"] = thor::Action(sf::Keyboard::E, thor::Action::ReleaseOnce);
+	std::ifstream inFile(Path::miscellaneous / "InputKeys.txt");
+
+	std::size_t actionID = 0u, keyID = 0u, actionType = 0u;
+
+	while (inFile >> actionID >> keyID >> actionType)
+	{
+		keyBindings[static_cast<Action>(actionID)] = 
+			thor::Action(static_cast<sf::Keyboard::Key>(keyID), static_cast<thor::Action::ActionType>(actionType));
+
+		keyCodes[static_cast<Action>(actionID)] = { keyID, actionType };
+	}
 }
 
 void InputHandler::update(sf::Window& window)
@@ -38,24 +46,25 @@ void InputHandler::pushEvent(const sf::Event& event)
 	this->keyBindings.pushEvent(event);
 }
 
-bool InputHandler::isActive(const std::string& actionID) const
+bool InputHandler::isActive(Action action) const
 {
-	return this->keyBindings.isActive(actionID);
+	return this->keyBindings.isActive(action);
 }
 
-void InputHandler::addCallback(const std::string& key, const std::function<void()>& callback)
+void InputHandler::addCallback(Action action, const std::function<void()>& callback)
 {
-	this->keyCallbacks.connect0(key, callback);
+	this->keyCallbacks.connect0(action, callback);
 }
 
-void InputHandler::removeCallback(const std::string& key)
+void InputHandler::removeCallback(Action action)
 {
-	this->keyCallbacks.clearConnections(key);
+	this->keyCallbacks.clearConnections(action);
 }
 
-void InputHandler::changeKey(const std::string& actionID, thor::Action action)
+void InputHandler::changeKey(Action action, sf::Keyboard::Key key)
 {
-	this->keyBindings[actionID] = action;
+	this->keyBindings[action] = thor::Action(key);
+	this->keyCodes[action] = { static_cast<std::size_t>(key), 0u };
 }
 
 void InputHandler::clearEvents()
@@ -66,4 +75,15 @@ void InputHandler::clearEvents()
 void InputHandler::clearCallbacks()
 {
 	this->keyCallbacks.clearAllConnections();
+}
+
+void InputHandler::saveData()
+{
+	std::ofstream outFile(Path::miscellaneous / "InputKeys.txt");
+
+	for (const auto& keyCode : this->keyCodes)
+	{
+		outFile << static_cast<std::size_t>(keyCode.first) << ' ' 
+			<< keyCode.second.first << ' ' << keyCode.second.second << '\n';
+	}
 }

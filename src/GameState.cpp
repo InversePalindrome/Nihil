@@ -15,7 +15,7 @@ InversePalindrome.com
 GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
 	world({ 0.f, -9.8f }),
-	entityManager(world, stateData.resourceManager, stateData.soundManager, stateData.window, collisionsData, pathways),
+	entityManager(world, stateData.resourceManager, stateData.soundManager, stateData.inputHandler, collisionsData, pathways),
 	map(stateData.games.front(), world, entityManager.getComponentSerializer(), stateData.resourceManager, collisionsData, pathways),
 	camera(stateData.window.getDefaultView()),
 	collisionHandler(entityManager.getEvents()),
@@ -26,14 +26,14 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 {
 	world.SetContactListener(&collisionHandler);
 	
-	healthBar.setPosition(150.f, 120.f);
+	healthBar.setPosition(150.f, 70.f);
 
-	coinDisplay.setPosition(1600.f, 120.f);
+	coinDisplay.setPosition(1600.f, 60.f);
 	coinDisplay.setNumberOfCoins(stateData.games.front().getItems()[Item::Coin]);
 
-	itemsDisplay.setPosition(200.f, 200.f);
+	itemsDisplay.setPosition(200.f, 160.f);
 
-	powerUpDisplay.setPosition(600.f, 100.f);
+	powerUpDisplay.setPosition(600.f, 55.f);
 	
 	entityManager.getEvents().subscribe<DestroyBody>([this](const auto& event) { destroyBody(event.physics); });
 	entityManager.getEvents().subscribe<DisplayHealthBar>([this](const auto& event) { updateHealthBar(event.health); });
@@ -114,18 +114,16 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 
 void GameState::handleEvent(const sf::Event& event)
 {
-	if (stateData.inputHandler.isActive("Escape"))
+	if (stateData.inputHandler.isActive(Action::Escape))
 	{
 		this->saveData("SavedGames.txt");
 
 		this->stateMachine.pushState(StateID::Pause);
 	}
-	else if (this->stateData.inputHandler.isActive("Inventory"))
+	else if (this->stateData.inputHandler.isActive(Action::Inventory))
 	{
 		this->itemsDisplay.setVisibility(!itemsDisplay.getVisibility());
 	}
-
-	this->entityManager.getSystem<ControlSystem>()->handleEvent(event);
 }
 
 void GameState::update(float deltaTime)

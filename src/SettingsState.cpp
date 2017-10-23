@@ -8,13 +8,16 @@ InversePalindrome.com
 #include "SettingsState.hpp"
 #include "StateMachine.hpp"
 #include "GUIParser.hpp"
+#include "FilePaths.hpp"
 
 #include <SFGUI/RadioButton.hpp>
+
+#include <sstream>
+#include <fstream>
 
 
 SettingsState::SettingsState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
-	background(stateData.resourceManager.getTexture(TexturesID::MenuBackground)),
 	backButton(sfg::Button::Create("BACK")),
 	soundLabel(sfg::Label::Create("Sound")),
 	musicLabel(sfg::Label::Create("Music")),
@@ -26,10 +29,8 @@ SettingsState::SettingsState(StateMachine& stateMachine, StateData& stateData) :
 	musicScrollbar(sfg::Scrollbar::Create()),
 	keyButtons(sfg::RadioButtonGroup::Create())
 {
-	background.setScale(stateData.window.getSize().x / background.getGlobalBounds().width, stateData.window.getSize().y / background.getGlobalBounds().height);
-	
-	backButton->SetPosition(sf::Vector2f(12.f, 65.f));
-	backButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { transitionToMenu(); });
+	backButton->SetPosition(sf::Vector2f(12.f, 25.f));
+	backButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { transitionToState(); });
 
 	soundLabel->SetPosition(sf::Vector2f(900.f, 475.f));
 
@@ -55,6 +56,11 @@ SettingsState::SettingsState(StateMachine& stateMachine, StateData& stateData) :
 	auto moveLeftButton = sfg::RadioButton::Create("Move Left", keyButtons);
 	auto jumpButton = sfg::RadioButton::Create("Jump", keyButtons);
 	auto shootButton = sfg::RadioButton::Create("Shoot", keyButtons);
+
+	moveLeftButton->SetId("0");
+	moveRightButton->SetId("1");
+	jumpButton->SetId("2");
+	shootButton->SetId("3");
 
 	moveRightButton->SetPosition(sf::Vector2f(570.f, 1000.f));
 	moveLeftButton->SetPosition(sf::Vector2f(1120.f, 1000.f));
@@ -91,7 +97,12 @@ void SettingsState::update(float deltaTime)
 
 void SettingsState::draw()
 {
-	this->stateData.window.draw(this->background);
+
+}
+
+bool SettingsState::isTransparent() const
+{
+	return true;
 }
 
 void SettingsState::adjustSoundVolume()
@@ -106,16 +117,33 @@ void SettingsState::adjustMusicVolume()
 
 void SettingsState::changeKeyBinding(sf::Keyboard::Key key)
 {
-	for (auto& keyButton : this->keyButtons->GetMembers())
+	for (const auto& keyButton : this->keyButtons->GetMembers())
 	{
 		if (keyButton._Get()->IsActive())
 		{
-			this->stateData.inputHandler.changeKey(keyButton._Get()->GetLabel(), thor::Action(key));
+			this->stateData.inputHandler.changeKey(static_cast<Action>
+				(std::stoull(keyButton._Get()->GetId())), key);
 		}
 	}
 }
 
-void SettingsState::transitionToMenu()
+void SettingsState::saveSettings()
 {
+	std::ofstream outFile(Path::miscellaneous / "SettingsData.txt");
+
+	this->stateData.soundManager.getSoundProperties().saveData("SoundData.txt");
+	this->stateData.soundManager.getMusicProperties().saveData("MusicData.txt");
+	this->stateData.inputHandler.saveData();
+}
+
+void SettingsState::transitionToState()
+{
+	this->saveSettings();
+
 	this->stateMachine.popState();
+
+	auto menu = this->stateMachine[this->stateMachine.size() - 2].get();
+
+	menu->setVisibility(true);
+	menu->showWidgets(true);
 }

@@ -31,9 +31,8 @@ PauseState::PauseState(StateMachine& stateMachine, StateData& stateData) :
 
 void PauseState::handleEvent(const sf::Event& event)
 {
-	if (this->stateData.inputHandler.isActive("Escape"))
+	if (this->stateData.inputHandler.isActive(Action::Escape))
 	{
-		this->stateData.inputHandler.clearCallbacks();
 		this->stateMachine.popState();
 	}
 }
@@ -44,9 +43,7 @@ void PauseState::update(float deltaTime)
 
 void PauseState::draw()
 {
-	this->resumeButton->Show(true);
-	this->settingsButton->Show(true);
-	this->quitButton->Show(true);
+
 }
 
 bool PauseState::isTransparent() const
@@ -56,11 +53,13 @@ bool PauseState::isTransparent() const
 
 void PauseState::transitionToMenu()
 { 
+	this->stateData.inputHandler.clearCallbacks();
+
 	this->stateMachine.clearStates();
 	this->stateMachine.pushState(StateID::Menu);
 }
 
 void PauseState::transitionToSettings()
 {
-	this->stateMachine.pushState(StateID::Settings);
+	this->stateMachine.changeState(StateID::Settings);
 }

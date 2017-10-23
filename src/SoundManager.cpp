@@ -14,8 +14,8 @@ InversePalindrome.com
 
 
 SoundManager::SoundManager(ResourceManager& resourceManager) :
-	soundProperties(100.f, 1.f, 8.f, 200.f),
-	musicProperties(100.f, 1.f, 8.f, 200.f),
+	soundProperties("SoundData.txt"),
+	musicProperties("MusicData.txt"),
 	currentSoundID(0u),
 	resourceManager(resourceManager)
 {

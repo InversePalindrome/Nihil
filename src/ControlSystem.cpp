@@ -8,9 +8,9 @@ InversePalindrome.com
 #include "ControlSystem.hpp"
 
 
-ControlSystem::ControlSystem(Entities& entities, Events& events, sf::RenderWindow& window) :
+ControlSystem::ControlSystem(Entities& entities, Events& events, InputHandler& inputHandler) :
 	System(entities, events),
-	window(window)
+    inputHandler(inputHandler)
 {
 	events.subscribe<IsMidAir>([this](const auto& event) { setMidAirStatus(event.entity, event.midAirStatus); });
 
@@ -29,21 +29,21 @@ void ControlSystem::addControl(Entity entity)
 	{
 		this->inputHandler.clearCallbacks();
 
-		this->inputHandler.addCallback("Move Left", [this, entity]() mutable
+		this->inputHandler.addCallback(Action::MoveLeft, [this, entity]() mutable
 		{
 			entity.sync();
 
 			this->events.broadcast(DirectionChanged{ entity, Direction::Left });
 		});
 
-		this->inputHandler.addCallback("Move Right", [this, entity]() mutable
+		this->inputHandler.addCallback(Action::MoveRight, [this, entity]() mutable
 		{
 			entity.sync();
 
 			this->events.broadcast(DirectionChanged{ entity, Direction::Right });
 		});
 
-		this->inputHandler.addCallback("Jump", [this, entity]() mutable
+		this->inputHandler.addCallback(Action::Jump, [this, entity]() mutable
 		{
 			entity.sync();
 			
@@ -53,7 +53,7 @@ void ControlSystem::addControl(Entity entity)
 			}
 		});
 
-		this->inputHandler.addCallback("Shoot", [this, entity]() mutable
+		this->inputHandler.addCallback(Action::Shoot, [this, entity]() mutable
 		{
 			entity.sync();
 			
@@ -71,20 +71,10 @@ void ControlSystem::addControl(Entity entity)
 	}
 }
 
-void ControlSystem::handleEvent(const sf::Event& event)
-{
-	this->inputHandler.pushEvent(event);
-}
-
 void ControlSystem::update(float deltaTime)
 {
-	this->inputHandler.update(this->window);
-	this->inputHandler.invokeCallbacks(this->window);
-
 	this->callbacks.update();
 	this->callbacks.clearCallbacks();
-
-	this->inputHandler.clearEvents();
 }
 
 void ControlSystem::setMidAirStatus(Entity entity, bool midAirStatus)

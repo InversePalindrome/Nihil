@@ -23,7 +23,7 @@ InversePalindrome.com
 
 
 EntityManager::EntityManager(b2World& world, ResourceManager& resourceManager, SoundManager& soundManager,
-	sf::RenderWindow& window, CollisionsData& collisionsData, Pathways& pathways) :
+	InputHandler& inputHandler, CollisionsData& collisionsData, Pathways& pathways) :
 	world(world),
 	componentParser(entityManager, resourceManager, world),
 	componentSerializer(entityManager)
@@ -31,7 +31,7 @@ EntityManager::EntityManager(b2World& world, ResourceManager& resourceManager, S
 	entityManager.set_event_manager(eventManager);
 	
 	systems[typeid(RenderSystem).name()] = std::make_unique<RenderSystem>(entityManager, eventManager);
-	systems[typeid(ControlSystem).name()] = std::make_unique<ControlSystem>(entityManager, eventManager, window);
+	systems[typeid(ControlSystem).name()] = std::make_unique<ControlSystem>(entityManager, eventManager, inputHandler);
 	systems[typeid(StateSystem).name()] = std::make_unique<StateSystem>(entityManager, eventManager);
 	systems[typeid(PhysicsSystem).name()] = std::make_unique<PhysicsSystem>(entityManager, eventManager, world, collisionsData);
 	systems[typeid(AISystem).name()] = std::make_unique<AISystem>(entityManager, eventManager, pathways);

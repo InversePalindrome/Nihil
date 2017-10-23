@@ -17,7 +17,6 @@ InversePalindrome.com
 StartState::StartState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
 	view(stateData.window.getDefaultView()),
-	continueLabel("Press a key to Continue", stateData.resourceManager.getFont(FontsID::BITWONDER), 40u),
 	emitter(Parsers::parseEmitter("StartEmitters.txt"))
 {
 	auto& backgroundTexture = stateData.resourceManager.getTexture(TexturesID::StartBackground);
@@ -31,12 +30,13 @@ StartState::StartState(StateMachine& stateMachine, StateData& stateData) :
 
 	Parsers::parseStyle(stateData.resourceManager, "TitleStyle.txt", titleLabel);
 	titleLabel.setString("Nihil");
-	titleLabel.setOrigin(titleLabel.getGlobalBounds().width / 2.f, titleLabel.getGlobalBounds().height / 2.f);
+	titleLabel.setOrigin(titleLabel.getLocalBounds().width / 2.f, titleLabel.getLocalBounds().height / 2.f);
 	titleLabel.setPosition(this->view.getCenter());
 
-	continueLabel.setOrigin(continueLabel.getGlobalBounds().width / 2.f, continueLabel.getGlobalBounds().height / 2.f);
-	continueLabel.setPosition(sf::Vector2f(this->view.getCenter().x - 10.f, 1250.f));
-	continueLabel.setFillColor(sf::Color::Black);
+	Parsers::parseStyle(stateData.resourceManager, "ContinueLabelStyle.txt", continueLabel);
+	continueLabel.setString("Press A Key To Continue");
+	continueLabel.setOrigin(continueLabel.getLocalBounds().width / 2.f, continueLabel.getLocalBounds().height / 2.f);
+	continueLabel.setPosition(this->view.getCenter().x, 1300.f);
 
 	stateData.soundManager.playMusic("StartElectro.wav", true);
 }
@@ -79,7 +79,6 @@ void StartState::draw()
 
 void StartState::transitionToMenu()
 {
-	this->stateData.soundManager.stopAllMusic();
 	this->stateData.window.setView(this->stateData.window.getDefaultView());
 	this->stateMachine.changeState(StateID::Menu);
 }

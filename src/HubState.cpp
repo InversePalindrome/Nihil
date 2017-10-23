@@ -18,7 +18,6 @@ InversePalindrome.com
 
 HubState::HubState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
-	background(stateData.resourceManager.getTexture(TexturesID::MenuBackground)),
 	addGamePopup(sfg::Window::Create(sfg::Window::Style::NO_STYLE)),
 	nameEntry(sfg::Entry::Create()),
 	backButton(sfg::Button::Create("BACK")),
@@ -28,8 +27,6 @@ HubState::HubState(StateMachine& stateMachine, StateData& stateData) :
 	selectionBox(sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 50.f)),
 	selectionButtons(sfg::RadioButtonGroup::Create())
 {
-	background.setScale(stateData.window.getSize().x / background.getGlobalBounds().width, stateData.window.getSize().y / background.getGlobalBounds().height);
-
 	addGamePopup->SetPosition(sf::Vector2f(640.f, 400.f));
 	addGamePopup->Show(false);
 	
@@ -48,7 +45,7 @@ HubState::HubState(StateMachine& stateMachine, StateData& stateData) :
 
 	addGamePopup->Add(gamePopupBox);
 
-	backButton->SetPosition(sf::Vector2f(12.f, 65.f));
+	backButton->SetPosition(sf::Vector2f(12.f, 25.f));
 	backButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { transitionToMenu(); });
 
 	addButton->SetPosition(sf::Vector2f(450.f, 1300.f));
@@ -93,12 +90,16 @@ void HubState::update(float deltaTime)
 
 void HubState::draw()
 {
-	this->stateData.window.draw(this->background);
+}
+
+bool HubState::isTransparent() const
+{
+	return true;
 }
 
 void HubState::addGames()
 {
-	this->selectionBox->SetPosition(sf::Vector2f(750.f, 300.f));
+	this->selectionBox->SetPosition(sf::Vector2f(750.f, 260.f));
 
 	for (const auto& game : this->stateData.games)
 	{
@@ -188,6 +189,11 @@ void HubState::saveGames(const std::string& fileName)
 void HubState::transitionToMenu()
 {
 	this->stateMachine.popState();
+
+	auto menu = this->stateMachine[this->stateMachine.size() - 2].get();
+
+	menu->setVisibility(true);
+	menu->showWidgets(true);
 }
 
 void HubState::transitionToPlay()
