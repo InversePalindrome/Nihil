@@ -17,6 +17,7 @@ InversePalindrome.com
 #include <SFGUI/Adjustment.hpp>
 #include <SFGUI/RadioButtonGroup.hpp>
 
+#include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
 
@@ -30,8 +31,13 @@ public:
 	virtual void draw() override;
 
 	virtual bool isTransparent() const override;
+	virtual bool isDependent() const override;
 
 private:
+	sf::Sprite background;
+	sf::Sprite titleBar;
+	sf::Text title;
+
 	sfg::Button::Ptr backButton;
 	sfg::Label::Ptr soundLabel;
 	sfg::Label::Ptr musicLabel;

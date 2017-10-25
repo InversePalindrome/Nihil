@@ -8,6 +8,7 @@ InversePalindrome.com
 #pragma once
 
 #include "State.hpp"
+#include "StateID.hpp"
 
 #include <Thor/Particles/ParticleSystem.hpp>
 
@@ -26,7 +27,7 @@ public:
 	virtual void update(float deltaTime) override;
 	virtual void draw() override;
 
-	virtual void showWidgets(bool showStatus) const override;
+	virtual void showWidgets(bool showStatus) override;
 
 private:
 	sf::Sprite background;
@@ -34,11 +35,11 @@ private:
 	
 	sfg::Button::Ptr playButton;
 	sfg::Button::Ptr settingsButton;
-	sfg::Button::Ptr charactersButton;
+	sfg::Button::Ptr achievementsButton;
 
 	thor::ParticleSystem particleSystem;
+
+	bool isTitleVisible;
 	
-	void transitionToPlay();
-	void transitionToSettings();
-	void transitionToCharacters();
+	void transitionToState(StateID stateID);
 };

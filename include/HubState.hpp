@@ -28,6 +28,7 @@ public:
 	virtual void draw() override;
 
 	virtual bool isTransparent() const override;
+	virtual bool isDependent() const override;
 
 private:
 	sfg::Window::Ptr addGamePopup;

@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2017 InversePalindrome
-Nihil - PauseState.hpp
+Nihil - AchievementsState.hpp
 InversePalindrome.com
 */
 
@@ -12,23 +12,20 @@ InversePalindrome.com
 #include <SFGUI/Button.hpp>
 
 
-class PauseState : public State
+class AchievementsState : public State
 {
 public:
-	PauseState(StateMachine& stateMachine, StateData& stateData);
+	AchievementsState(StateMachine& stateMachine, StateData& stateData);
 
 	virtual void handleEvent(const sf::Event& event) override;
 	virtual void update(float deltaTime) override;
 	virtual void draw() override;
 
 	virtual bool isTransparent() const override;
-	virtual void showWidgets(bool showStatus) override;
+	virtual bool isDependent() const override;
 
 private:
-	sfg::Button::Ptr resumeButton;
-	sfg::Button::Ptr shopButton;
-	sfg::Button::Ptr settingsButton;
-	sfg::Button::Ptr quitButton;
+	sfg::Button::Ptr backButton;
 
 	void transitionToMenu();
 };
