@@ -36,7 +36,7 @@ StartState::StartState(StateMachine& stateMachine, StateData& stateData) :
 	Parsers::parseStyle(stateData.resourceManager, "ContinueLabelStyle.txt", continueLabel);
 	continueLabel.setString("Press A Key To Continue");
 	continueLabel.setOrigin(continueLabel.getLocalBounds().width / 2.f, continueLabel.getLocalBounds().height / 2.f);
-	continueLabel.setPosition(this->view.getCenter().x, 1300.f);
+	continueLabel.setPosition(this->view.getCenter().x, 1250.f);
 
 	stateData.soundManager.playMusic("StartElectro.wav", true);
 }

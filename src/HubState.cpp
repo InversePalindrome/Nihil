@@ -48,13 +48,13 @@ HubState::HubState(StateMachine& stateMachine, StateData& stateData) :
 	backButton->SetPosition(sf::Vector2f(12.f, 25.f));
 	backButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { transitionToMenu(); });
 
-	addButton->SetPosition(sf::Vector2f(450.f, 1300.f));
+	addButton->SetPosition(sf::Vector2f(445.f, 1300.f));
 	addButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { showAddGamePopup(); });
 
-	playButton->SetPosition(sf::Vector2f(850.f, 1300.f));;
+	playButton->SetPosition(sf::Vector2f(845.f, 1300.f));;
 	playButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { transitionToPlay(); });
 
-	deleteButton->SetPosition(sf::Vector2f(1250.f, 1300.f));
+	deleteButton->SetPosition(sf::Vector2f(1245.f, 1300.f));
 	deleteButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { deleteGame(); });
 
 	this->addGames();
@@ -93,6 +93,11 @@ void HubState::draw()
 }
 
 bool HubState::isTransparent() const
+{
+	return true;
+}
+
+bool HubState::isDependent() const
 {
 	return true;
 }
@@ -192,7 +197,6 @@ void HubState::transitionToMenu()
 
 	auto menu = this->stateMachine[this->stateMachine.size() - 2].get();
 
-	menu->setVisibility(true);
 	menu->showWidgets(true);
 }
 

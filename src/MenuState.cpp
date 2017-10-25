@@ -18,9 +18,10 @@ InversePalindrome.com
 MenuState::MenuState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
 	background(stateData.resourceManager.getTexture(TexturesID::MenuBackground)),
-	playButton(sfg::Button::Create("\t\t\tPlay\t\t\t")),
-	settingsButton(sfg::Button::Create("   Settings  ")),
-	charactersButton(sfg::Button::Create("Characters"))
+	playButton(sfg::Button::Create("\t\t\t\tPlay\t\t\t\t")),
+	settingsButton(sfg::Button::Create("   \tSettings\t  ")),
+	achievementsButton(sfg::Button::Create("Achievements")),
+	isTitleVisible(true)
 {
 	stateData.window.setView(stateData.window.getDefaultView());
 
@@ -31,20 +32,20 @@ MenuState::MenuState(StateMachine& stateMachine, StateData& stateData) :
 	titleLabel.setOrigin(titleLabel.getGlobalBounds().width / 2.f, titleLabel.getGlobalBounds().height / 2.f);
 	titleLabel.setPosition(this->stateData.window.getSize().x / 2.f, 400.f);
 	 
-	playButton->SetPosition(sf::Vector2f(760.f, 820.f));
-	playButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { transitionToPlay(); });
+	playButton->SetPosition(sf::Vector2f(730.f, 820.f));
+	playButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { transitionToState(StateID::Hub); });
 	
-	settingsButton->SetPosition(sf::Vector2f(760.f, 1000.f));
-	settingsButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { transitionToSettings(); });
-	
-	charactersButton->SetPosition(sf::Vector2f(760.f, 1180.f));
-	charactersButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { transitionToCharacters(); });
+	settingsButton->SetPosition(sf::Vector2f(730.f, 1000.f));
+	settingsButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { transitionToState(StateID::Settings); });
+
+    achievementsButton->SetPosition(sf::Vector2f(730.f, 1180.f));
+	achievementsButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { transitionToState(StateID::Achievements); });
 	
 	Parsers::parseGUIProperties(stateData.guiManager, "MenuGUI.txt");
 
 	stateData.guiManager.addWidget(playButton);
 	stateData.guiManager.addWidget(settingsButton);
-	stateData.guiManager.addWidget(charactersButton);
+	stateData.guiManager.addWidget(achievementsButton);
 
 	stateData.soundManager.playMusic("MenuDisco.wav", true);
 
@@ -67,33 +68,23 @@ void MenuState::draw()
 	this->stateData.window.draw(this->background);
 	this->stateData.window.draw(this->particleSystem);
 
-	if (this->isVisible())
+	if (this->isTitleVisible)
 	{
 		this->stateData.window.draw(this->titleLabel);
 	}
 }
 
-void MenuState::showWidgets(bool showStatus) const
+void MenuState::showWidgets(bool showStatus) 
 {
 	this->playButton->Show(showStatus);
 	this->settingsButton->Show(showStatus);
-	this->charactersButton->Show(showStatus);
+	this->achievementsButton->Show(showStatus);
+
+	this->isTitleVisible = showStatus;
 }
 
-void MenuState::transitionToPlay()
+void MenuState::transitionToState(StateID stateID)
 {
-	this->setVisibility(false);
-	this->stateMachine.pushState(StateID::Hub);
-}
-
-void MenuState::transitionToSettings()
-{
-	this->setVisibility(false);
-	this->stateMachine.pushState(StateID::Settings);
-}
-
-void MenuState::transitionToCharacters()
-{
-	this->setVisibility(false);
-	this->stateMachine.pushState(StateID::Characters);
+	this->isTitleVisible = false;
+	this->stateMachine.pushState(stateID);
 }

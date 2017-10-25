@@ -30,13 +30,13 @@ void StateMachine::update(float deltaTime)
 {
 	if (!this->states.empty())
 	{
-		if (this->states.back().second->isVisible() && this->states.size() > 1)
+		if (this->states.back().second->isDependent() && this->states.size() > 1)
 		{
 			auto itr = std::end(this->states);
 
 			for (; itr != std::begin(this->states); --itr)
 			{
-				if (itr != std::end(this->states) && !(*itr).second->isVisible())
+				if (itr != std::end(this->states) && !(*itr).second->isDependent())
 				{
 					break;
 				}

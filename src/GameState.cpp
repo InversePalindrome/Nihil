@@ -26,12 +26,12 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 {
 	world.SetContactListener(&collisionHandler);
 	
-	healthBar.setPosition(150.f, 70.f);
+	healthBar.setPosition(300.f, 70.f);
 
 	coinDisplay.setPosition(1600.f, 60.f);
 	coinDisplay.setNumberOfCoins(stateData.games.front().getItems()[Item::Coin]);
 
-	itemsDisplay.setPosition(200.f, 160.f);
+	itemsDisplay.setPosition(500.f, 160.f);
 
 	powerUpDisplay.setPosition(600.f, 55.f);
 	

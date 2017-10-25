@@ -12,19 +12,24 @@ InversePalindrome.com
 PauseState::PauseState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
 	resumeButton(sfg::Button::Create(" Resume ")),
+	shopButton(sfg::Button::Create("  \tShop\t ")),
 	settingsButton(sfg::Button::Create("Settings")),
 	quitButton(sfg::Button::Create("\t\tQuit\t\t"))
 {
-	resumeButton->SetPosition(sf::Vector2f(850, 625.f));
+	resumeButton->SetPosition(sf::Vector2f(835.f, 500.f));
 	resumeButton->GetSignal(sfg::Widget::OnLeftClick).Connect([&stateMachine]() { stateMachine.popState(); });
 
-	settingsButton->SetPosition(sf::Vector2f(850.f, 775.f));
-	settingsButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { transitionToSettings(); });
+	shopButton->SetPosition(sf::Vector2f(835.f, 650.f));
+	shopButton->GetSignal(sfg::Widget::OnLeftClick).Connect([&stateMachine]() { stateMachine.pushState(StateID::Shop); });
 
-	quitButton->SetPosition(sf::Vector2f(850.f, 925.f));
+	settingsButton->SetPosition(sf::Vector2f(835.f, 800.f));
+	settingsButton->GetSignal(sfg::Widget::OnLeftClick).Connect([&stateMachine]() { stateMachine.pushState(StateID::Settings); });
+
+	quitButton->SetPosition(sf::Vector2f(835.f, 950.f));
 	quitButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { transitionToMenu(); });
 
 	stateData.guiManager.addWidget(resumeButton);
+	stateData.guiManager.addWidget(shopButton);
 	stateData.guiManager.addWidget(settingsButton);
 	stateData.guiManager.addWidget(quitButton);
 }
@@ -51,15 +56,18 @@ bool PauseState::isTransparent() const
 	return true;
 }
 
+void PauseState::showWidgets(bool showStatus)
+{
+	this->resumeButton->Show(showStatus);
+	this->settingsButton->Show(showStatus);
+	this->shopButton->Show(showStatus);
+	this->quitButton->Show(showStatus);
+}
+
 void PauseState::transitionToMenu()
 { 
 	this->stateData.inputHandler.clearCallbacks();
 
 	this->stateMachine.clearStates();
 	this->stateMachine.pushState(StateID::Menu);
-}
-
-void PauseState::transitionToSettings()
-{
-	this->stateMachine.changeState(StateID::Settings);
 }

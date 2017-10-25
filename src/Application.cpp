@@ -12,8 +12,9 @@ InversePalindrome.com
 #include "HubState.hpp"
 #include "GameState.hpp"
 #include "SettingsState.hpp"
-#include "CharactersState.hpp"
+#include "ShopState.hpp"
 #include "PauseState.hpp"
+#include "AchievementsState.hpp"
 #include "FilePaths.hpp"
 
 #include <Thor/Resources/SfmlLoaders.hpp>
@@ -38,8 +39,9 @@ Application::Application() :
 	stateMachine.registerState<MenuState>(StateID::Menu);
 	stateMachine.registerState<GameState>(StateID::Game);
 	stateMachine.registerState<HubState>(StateID::Hub);
+	stateMachine.registerState<AchievementsState>(StateID::Achievements);
 	stateMachine.registerState<SettingsState>(StateID::Settings);
-	stateMachine.registerState<CharactersState>(StateID::Characters);
+	stateMachine.registerState<ShopState>(StateID::Shop);
 	stateMachine.registerState<PauseState>(StateID::Pause);
 
 	stateMachine.pushState(StateID::Splash);

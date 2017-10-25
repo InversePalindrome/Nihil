@@ -11,12 +11,11 @@ InversePalindrome.com
 
 State::State(StateMachine& stateMachine, StateData& stateData) :
 	stateMachine(stateMachine),
-	stateData(stateData),
-	visibilityStatus(true)
+	stateData(stateData)
 {
 }
 
-void State::showWidgets(bool showStatus) const
+void State::showWidgets(bool showStatus) 
 {
 }
 
@@ -25,12 +24,7 @@ bool State::isTransparent() const
 	return false;
 }
 
-bool State::isVisible() const
+bool State::isDependent() const
 {
-	return this->visibilityStatus;
-}
-
-void State::setVisibility(bool visibilityStatus)
-{
-	this->visibilityStatus = visibilityStatus;
+	return false;
 }

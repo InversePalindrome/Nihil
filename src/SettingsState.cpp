@@ -9,6 +9,8 @@ InversePalindrome.com
 #include "StateMachine.hpp"
 #include "GUIParser.hpp"
 #include "FilePaths.hpp"
+#include "SpriteParser.hpp"
+#include "TextStyleParser.hpp"
 
 #include <SFGUI/RadioButton.hpp>
 
@@ -29,23 +31,36 @@ SettingsState::SettingsState(StateMachine& stateMachine, StateData& stateData) :
 	musicScrollbar(sfg::Scrollbar::Create()),
 	keyButtons(sfg::RadioButtonGroup::Create())
 {
+	Parsers::parseSprite(stateData.resourceManager, "MediumPanel.txt", background);
+	background.setOrigin(background.getGlobalBounds().width / 2.f, background.getGlobalBounds().height / 2.f);
+	background.setPosition(897.f, 900.f);
+
+	Parsers::parseSprite(stateData.resourceManager, "StateTitleBar.txt", titleBar);
+	titleBar.setOrigin(titleBar.getLocalBounds().width / 2.f, titleBar.getLocalBounds().height / 2.f);
+	titleBar.setPosition(stateData.window.getDefaultView().getCenter().x - 15.f, 400.f);
+
+	Parsers::parseStyle(stateData.resourceManager, "StateTitle.txt", title);
+	title.setString("Settings");
+	title.setOrigin(title.getGlobalBounds().width / 2.f, title.getGlobalBounds().height / 2.f);
+	title.setPosition(stateData.window.getDefaultView().getCenter().x - 15.f, 394.f);
+
 	backButton->SetPosition(sf::Vector2f(12.f, 25.f));
 	backButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { transitionToState(); });
 
-	soundLabel->SetPosition(sf::Vector2f(900.f, 475.f));
+	soundLabel->SetPosition(sf::Vector2f(900.f, 590.f));
 
 	soundScrollbar->SetRequisition(sf::Vector2f(1000.f, 50.f));
-	soundScrollbar->SetPosition(sf::Vector2f(520.f, 550.f));
+	soundScrollbar->SetPosition(sf::Vector2f(515.f, 665.f));
 	soundScrollbar->SetAdjustment(soundVolumeAdjustment);
 	
 	soundVolumeAdjustment->GetSignal(sfg::Adjustment::OnChange).Connect([this] { adjustSoundVolume(); });
 
 	soundVolumeScale->SetAdjustment(soundVolumeAdjustment);
 
-	musicLabel->SetPosition(sf::Vector2f(900.f, 725.f));
+	musicLabel->SetPosition(sf::Vector2f(900.f, 840.f));
 
 	musicScrollbar->SetRequisition(sf::Vector2f(1000.f, 50.f));
-	musicScrollbar->SetPosition(sf::Vector2f(520.f, 800.f));
+	musicScrollbar->SetPosition(sf::Vector2f(515.f, 915.f));
 	musicScrollbar->SetAdjustment(musicVolumeAdjustment);
 
 	musicVolumeScale->SetAdjustment(musicVolumeAdjustment);
@@ -62,10 +77,10 @@ SettingsState::SettingsState(StateMachine& stateMachine, StateData& stateData) :
 	jumpButton->SetId("2");
 	shootButton->SetId("3");
 
-	moveRightButton->SetPosition(sf::Vector2f(570.f, 1000.f));
-	moveLeftButton->SetPosition(sf::Vector2f(1120.f, 1000.f));
-	jumpButton->SetPosition(sf::Vector2f(570.f, 1100.f));
-	shootButton->SetPosition(sf::Vector2f(1120.f, 1100.f));
+	moveRightButton->SetPosition(sf::Vector2f(565.f, 1040.f));
+	moveLeftButton->SetPosition(sf::Vector2f(1115.f, 1040.f));
+	jumpButton->SetPosition(sf::Vector2f(565.f, 1140.f));
+	shootButton->SetPosition(sf::Vector2f(1115.f, 1140.f));
 
 	Parsers::parseGUIProperties(stateData.guiManager, "SettingsGUI.txt");
 
@@ -97,10 +112,17 @@ void SettingsState::update(float deltaTime)
 
 void SettingsState::draw()
 {
-
+	this->stateData.window.draw(this->background);
+	this->stateData.window.draw(this->titleBar);
+	this->stateData.window.draw(this->title);
 }
 
 bool SettingsState::isTransparent() const
+{
+	return true;
+}
+
+bool SettingsState::isDependent() const
 {
 	return true;
 }
@@ -144,6 +166,5 @@ void SettingsState::transitionToState()
 
 	auto menu = this->stateMachine[this->stateMachine.size() - 2].get();
 
-	menu->setVisibility(true);
 	menu->showWidgets(true);
 }
