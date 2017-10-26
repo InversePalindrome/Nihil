@@ -14,21 +14,11 @@ InversePalindrome.com
 
 Game::Game() 
 {
-	loadCharacterNames();
 	loadLevels();
 
 	std::ifstream inFile(Path::levels / "Levels.txt");
 
 	inFile >> currentLevel;
-
-	inFile.close();
-	inFile.clear();
-
-	inFile.open(Path::miscellaneous / "Characters.txt");
-
-	inFile >> currentCharacter;
-
-	characters.modify(std::begin(characters), [](auto& character) { character.isLoaded = true; });
 }
 
 Game::Game(const std::string& data) 
@@ -49,10 +39,6 @@ Game::Game(const std::string& data)
 		if (category == "Game")
 		{
 			inLine >> gameName;
-		}
-		else if (category == "CurrentCharacter")
-		{
-			inLine >> currentCharacter;
 		}
 		else if (category == "CurrentLevel")
 		{
@@ -76,24 +62,16 @@ Game::Game(const std::string& data)
 		}
 	}
 
-	loadCharacterNames();
 	loadLevels();
 
     const auto& levelsBitset = boost::dynamic_bitset<std::size_t>(levelBits);
-	const auto& charactersBitset = boost::dynamic_bitset<std::size_t>(characterBits);
 
 	loadDataBitsets<LoadedLevels>(levels, levelsBitset);
-	loadDataBitsets<LoadedCharacters>(characters, charactersBitset);
 }
 
 std::string Game::getGameName() const
 {
 	return this->gameName;
-}
-
-std::string Game::getCurrentCharacter() const
-{
-	return this->currentCharacter;
 }
 
 std::string Game::getCurrentLevel() const
@@ -126,19 +104,9 @@ b2Vec2 Game::getCurrentGravity() const
 	return this->levels.get<1>().find(this->currentLevel)->gravity;
 }
 
-Game::LoadedCharacters& Game::getCharacters()
-{
-	return this->characters;
-}
-
 void Game::setGameName(const std::string& gameName)
 {
 	this->gameName = gameName;
-}
-
-void Game::setCurrentCharacter(const std::string& currentCharacter)
-{
-	this->currentCharacter = currentCharacter;
 }
 
 void Game::setCurrentLevel(const std::string& currentLevel)
@@ -149,16 +117,7 @@ void Game::setCurrentLevel(const std::string& currentLevel)
 std::ostream& operator<<(std::ostream& os, const Game& game)
 {
 	os << "Game " << game.gameName << '\n';
-	os << "CurrentCharacter " << game.currentCharacter << '\n';
 	os << "CurrentLevel " << game.currentLevel << '\n';
-	os << "Characters ";
-
-	for (const auto& character : game.characters)
-	{
-		os << character.isLoaded;
-	}
-
-	os << '\n';
 
 	os << "Levels ";
 
@@ -175,23 +134,6 @@ std::ostream& operator<<(std::ostream& os, const Game& game)
 	}
 
 	return os;
-}
-
-void Game::loadCharacterNames()
-{
-	std::ifstream inFile(Path::miscellaneous / "Characters.txt");
-	std::string line;
-
-	while (std::getline(inFile, line))
-	{
-		std::istringstream iStream(line);
-
-		std::string name;
-
-		iStream >> name;
-
-		this->characters.get<1>().insert({ name, false });
-	}
 }
 
 void Game::loadLevels()

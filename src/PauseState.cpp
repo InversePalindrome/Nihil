@@ -17,7 +17,14 @@ PauseState::PauseState(StateMachine& stateMachine, StateData& stateData) :
 	quitButton(sfg::Button::Create("\t\tQuit\t\t"))
 {
 	resumeButton->SetPosition(sf::Vector2f(835.f, 500.f));
-	resumeButton->GetSignal(sfg::Widget::OnLeftClick).Connect([&stateMachine]() { stateMachine.popState(); });
+	resumeButton->GetSignal(sfg::Widget::OnLeftClick).Connect([&stateMachine]() 
+	{ 
+		auto menu = stateMachine[stateMachine.size() - 2].get();
+
+		menu->showWidgets(true);
+
+		stateMachine.popState();
+	});
 
 	shopButton->SetPosition(sf::Vector2f(835.f, 650.f));
 	shopButton->GetSignal(sfg::Widget::OnLeftClick).Connect([&stateMachine]() { stateMachine.pushState(StateID::Shop); });
@@ -38,6 +45,10 @@ void PauseState::handleEvent(const sf::Event& event)
 {
 	if (this->stateData.inputHandler.isActive(Action::Escape))
 	{
+		auto menu = this->stateMachine[stateMachine.size() - 2].get();
+
+		menu->showWidgets(true);
+
 		this->stateMachine.popState();
 	}
 }

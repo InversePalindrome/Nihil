@@ -26,18 +26,18 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 {
 	world.SetContactListener(&collisionHandler);
 	
-	healthBar.setPosition(300.f, 70.f);
+	healthBar.setPosition(100.f, 70.f);
 
 	coinDisplay.setPosition(1600.f, 60.f);
 	coinDisplay.setNumberOfCoins(stateData.games.front().getItems()[Item::Coin]);
 
-	itemsDisplay.setPosition(500.f, 160.f);
+	itemsDisplay.setPosition(500.f, 130.f);
 
-	powerUpDisplay.setPosition(600.f, 55.f);
+	powerUpDisplay.setPosition(400.f, 55.f);
 	
 	entityManager.getEvents().subscribe<DestroyBody>([this](const auto& event) { destroyBody(event.physics); });
 	entityManager.getEvents().subscribe<DisplayHealthBar>([this](const auto& event) { updateHealthBar(event.health); });
-	entityManager.getEvents().subscribe<DisplayCoins>([this](const auto& event) { updateCoinDisplay(event.inventory); });
+	entityManager.getEvents().subscribe<DisplayCoins>([this](const auto& event) { updateCoinDisplay(); });
 	entityManager.getEvents().subscribe<PickedUpItem>([this](const auto& event) { updateItemsDisplay(event.item); });
 	entityManager.getEvents().subscribe<DisplayPowerUp>([this](const auto& event) { powerUpDisplay.addPowerUp(event.item); });
 	entityManager.getEvents().subscribe<DisplayConversation>([this](const auto& event) { displayConversation(event.entity, event.visibilityStatus); });
@@ -117,6 +117,7 @@ void GameState::handleEvent(const sf::Event& event)
 	if (stateData.inputHandler.isActive(Action::Escape))
 	{
 		this->saveData("SavedGames.txt");
+		this->showWidgets(false);
 
 		this->stateMachine.pushState(StateID::Pause);
 	}
@@ -156,6 +157,14 @@ void GameState::draw()
 	this->stateData.window.draw(this->coinDisplay);
 	this->stateData.window.draw(this->itemsDisplay);
 	this->stateData.window.draw(this->powerUpDisplay);
+}
+
+void GameState::showWidgets(bool showStatus)
+{
+	this->healthBar.setVisibilityStatus(showStatus);
+	this->coinDisplay.setVisibilityStatus(showStatus);
+
+	this->updateCoinDisplay();
 }
 
 void GameState::moveCamera(const sf::Vector2f& position)
@@ -206,9 +215,9 @@ void GameState::updateHealthBar(const HealthComponent& healthComponent)
 	this->healthBar.setHitpointsDisplay(healthComponent.getHitpoints());
 }
 
-void GameState::updateCoinDisplay(const InventoryComponent& inventory)
+void GameState::updateCoinDisplay()
 {
-	this->coinDisplay.setNumberOfCoins(inventory[Item::Coin]);
+	this->coinDisplay.setNumberOfCoins(this->stateData.games.front().getItems()[Item::Coin]);
 }
 
 void GameState::updateItemsDisplay(Entity item)

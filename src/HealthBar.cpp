@@ -26,10 +26,13 @@ void HealthBar::setHitpointsDisplay(std::size_t hitpoints)
 
 void HealthBar::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	states.transform = this->getTransform();
-
-	if(this->heart.getTextureRect().width > 0.f)
+	if (this->isVisible())
 	{
-		target.draw(this->heart, states);
+		states.transform = this->getTransform();
+
+		if (this->heart.getTextureRect().width > 0.f)
+		{
+			target.draw(this->heart, states);
+		}
 	}
 }

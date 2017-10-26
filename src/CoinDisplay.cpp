@@ -47,8 +47,11 @@ void CoinDisplay::setNumberOfCoins(std::size_t coins)
 
 void CoinDisplay::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	states.transform = this->getTransform();
+	if (this->isVisible())
+	{
+		states.transform = this->getTransform();
 
-	target.draw(this->coin, states);
-	target.draw(this->text, states);
+		target.draw(this->coin, states);
+		target.draw(this->text, states);
+	}
 }

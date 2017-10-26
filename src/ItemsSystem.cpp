@@ -146,7 +146,7 @@ void ItemsSystem::handleItemPickup(Entity collector, Entity item)
 
 		if (collector.has_component<ControllableComponent>() && pickup.getItem() == Item::Coin)
 		{
-			this->events.broadcast(DisplayCoins{ inventory });
+			this->events.broadcast(DisplayCoins{});
 		}
 	}
 	else if (collector.has_component<InventoryComponent>() && collector.has_component<PhysicsComponent>() && item.has_component<PowerUpComponent>())
