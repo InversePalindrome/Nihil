@@ -182,7 +182,6 @@ struct DisplayHealthBar
 
 struct DisplayCoins
 {
-	const InventoryComponent& inventory;
 };
 
 struct DisplayPowerUp

@@ -8,14 +8,10 @@ InversePalindrome.com
 #pragma once
 
 #include "State.hpp"
+#include "Item.hpp"
 #include "CoinDisplay.hpp"
 
-#include <SFGUI/Scale.hpp>
-#include <SFGUI/Table.hpp>
 #include <SFGUI/Button.hpp>
-#include <SFGUI/Notebook.hpp>
-#include <SFGUI/Adjustment.hpp>
-#include <SFGUI/ScrolledWindow.hpp>
 
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/Sprite.hpp>
@@ -44,23 +40,22 @@ private:
 	CoinDisplay coinDisplay;
 
 	sfg::Button::Ptr backButton;
-	sfg::Scale::Ptr scrollbarScale;
-	sfg::Adjustment::Ptr scrollbarAdjustment;
-	sfg::Notebook::Ptr itemCategories;
-	sfg::ScrolledWindow::Ptr scrolledWindow;
 
-	std::unordered_map<std::string, ShopData> graphicsData;
+	std::unordered_map<Item, ShopData> shopData;
 
-	sfg::Table::Ptr loadItems(const std::string& fileName);
+	void loadShopData(const std::string& fileName);
+	void saveShopData(const std::string& fileName);
+
+	void loadButtonFunctions(std::size_t itemID, bool hasBeenPurchased, std::size_t price, sfg::Button::Ptr itemButton);
 
 	void transitionToMenu();
 };
 
 struct ShopData
 {
-	ShopData();
-	ShopData(const std::string& itemName, std::size_t price);
+	ShopData() = default;
+	ShopData(std::size_t price);
 
-	std::string itemName;
+	sfg::Button::Ptr itemButton;
 	std::size_t price;
 };

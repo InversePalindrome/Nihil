@@ -8,15 +8,14 @@ InversePalindrome.com
 #pragma once
 
 #include "ResourceManager.hpp"
+#include "Renderable.hpp"
 
 #include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
-#include <SFML/Graphics/Transformable.hpp>
 
 
-class HealthBar : public sf::Drawable, public sf::Transformable
+class HealthBar : public Renderable
 {
 public:
 	HealthBar(ResourceManager& resourceManager);

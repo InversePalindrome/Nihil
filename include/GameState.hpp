@@ -35,6 +35,8 @@ public:
 	virtual void update(float deltaTime) override;
 	virtual void draw() override;
 
+	virtual void showWidgets(bool showStatus) override;
+
 private:
     b2World world;
 	EntityManager entityManager;
@@ -56,7 +58,7 @@ private:
 
 	void updateCamera();
 	void updateHealthBar(const HealthComponent& health);
-	void updateCoinDisplay(const InventoryComponent& inventory);
+	void updateCoinDisplay();
 	void updateItemsDisplay(Entity item);
 	void updateConversationDisplay(Entity entity);
 

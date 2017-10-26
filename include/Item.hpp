@@ -13,7 +13,7 @@ InversePalindrome.com
 
 enum class Item
 {
-	Coin, OrangeGem, RedGem, PurpleGem, BlueGem, YellowGem, WhiteGem, SpeedBoost, JumpBoost, Laser, Heart
+	Coin, OrangeGem, RedGem, PurpleGem, BlueGem, YellowGem, WhiteGem, SpeedBoost, JumpBoost, Laser, Heart, Character1, Character2
 };
 
 using Items = std::unordered_map<Item, std::size_t>;
