@@ -98,6 +98,11 @@ void EntityManager::parseBlueprint(const std::string& fileName)
 	this->componentParser.parseBlueprint(fileName);
 }
 
+void EntityManager::copyBlueprint(const std::string& fileName, const std::string& copiedFileName)
+{
+	this->componentParser.copyBlueprint(fileName, copiedFileName);
+}
+
 void EntityManager::destroyEntity(Entity entity)
 {
 	if (entity.get_status() != entityplus::entity_status::DELETED)

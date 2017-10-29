@@ -53,8 +53,8 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2Bod
 
 std::ostream& operator<<(std::ostream& os, const PhysicsComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.bodySize.x << ' ' << component.bodySize.y <<  ' ' << ' ' << static_cast<std::size_t>(component.getType()) 
-		<< ' ' << static_cast<std::size_t>(component.objectType) << ' ' << component.collisionGroup << ' ' << component.maxVelocity << ' ' << component.accelerationRate;
+	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.bodySize.x << ' ' << component.bodySize.y <<  ' ' << static_cast<std::size_t>(component.getType()) 
+		<< ' ' << static_cast<std::size_t>(component.objectType) << ' ' << component.collisionGroup << ' ' << component.maxVelocity << ' ' << component.jumpVelocity << ' ' << component.accelerationRate;
 
 	return os;
 }

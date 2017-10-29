@@ -163,6 +163,7 @@ void HubState::deleteGame()
 					for (const auto& level : gameIter->getLevels())
 					{
 						std::remove(std::string(Path::games / gameButton->_Get()->GetLabel() + '-' + level.name + ".txt").c_str());
+						std::remove(std::string(Path::blueprints / gameButton->_Get()->GetLabel() + "-Player.txt").c_str());
 					}
 
 					this->stateData.games.erase(gameIter);

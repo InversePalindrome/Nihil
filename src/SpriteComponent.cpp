@@ -60,7 +60,7 @@ sf::Sprite& SpriteComponent::getSprite()
 	return this->sprite;
 }
 
-void SpriteComponent::parseSprite(const std::string& fileName)
+void SpriteComponent::setSprite(const std::string& fileName)
 {
 	Parsers::parseSprite(*resourceManager, fileName, this->sprite);
 }

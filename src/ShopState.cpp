@@ -29,10 +29,11 @@ InversePalindrome.com
 ShopState::ShopState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
 	coinDisplay(stateData.resourceManager),
-	backButton(sfg::Button::Create("BACK"))
+	backButton(sfg::Button::Create("BACK")),
+	categoryNames({{ItemCategory::Characters, "Characters"}, {ItemCategory::Weapons, "Weapons"}})
 {
 	coinDisplay.setPosition(1600.f, 60.f);
-
+	
 	Parsers::parseSprite(stateData.resourceManager, "LargePanel.txt", background);
 	background.setOrigin(background.getGlobalBounds().width / 2.f, background.getGlobalBounds().height / 2.f);
 	background.setPosition(stateData.window.getDefaultView().getCenter().x - 160.f, 800.f);
@@ -93,34 +94,57 @@ void ShopState::loadShopData(const std::string& fileName)
 
 	const auto& inventory = this->stateData.games.front().getItems();
 
-	std::unordered_map<std::string, sfg::Table::Ptr> itemCategories = 
-	{ { "Characters", sfg::Table::Create() }, { "Weapons", sfg::Table::Create() } };
+	std::unordered_map<ItemCategory, sfg::Table::Ptr> itemCategories = 
+	{ { ItemCategory::Characters, sfg::Table::Create() }, { ItemCategory::Weapons, sfg::Table::Create() } };
 
 	while (std::getline(inFile, line))
 	{
 		std::istringstream iStream(line);
 
-		std::string category;
-		std::size_t itemID = 0u, imageID = 0u, price = 0u, row = 0u, column = 0u, rowSpan = 1u, columnSpan = 1u;
+		std::size_t categoryID = 0u, itemID = 0u, imageID = 0u, price = 0u, row = 0u, column = 0u, rowSpan = 1u, columnSpan = 1u;
 		float xPadding = 57.f, yPadding = 50.f;
 
-		iStream >> category >> itemID >> imageID >> price >> row >> column;
+		iStream >> categoryID >> itemID >> imageID >> price >> row >> column;
 
 		auto image = sfg::Image::Create(this->stateData.resourceManager.getImage(static_cast<ImagesID>(imageID)));
+		auto item = static_cast<Item>(itemID);
+		auto category = static_cast<ItemCategory>(categoryID);
 		
 		itemCategories[category]->Attach(image, { column + 1, row * 2, columnSpan, rowSpan },
 			0u, 0u, { xPadding, yPadding });
 
-		auto item = static_cast<Item>(itemID);
+		ShopGraphics data(category, price);
 
-		ShopData data(price);
+		this->shopGraphics.emplace(item, data);
 
-		this->shopData.emplace(item, data);
-
-		itemCategories[category]->Attach(this->shopData[item].itemButton, { column + 1, row * 2 + 1, columnSpan, rowSpan },
+		itemCategories[category]->Attach(this->shopGraphics[item].itemButton, { column + 1, row * 2 + 1, columnSpan, rowSpan },
 			0u, 0u, { xPadding, yPadding });
 
-		this->loadButtonFunctions(itemID, static_cast<bool>(inventory.count(item)), price, this->shopData[item].itemButton);
+		this->loadButtonFunctions(item, category, static_cast<bool>(inventory.count(item)),
+			price, this->shopGraphics[item].itemButton);
+
+		switch (category)
+		{
+		case ItemCategory::Characters:
+		{
+			std::string spriteFile, animationsFile;
+
+			iStream >> spriteFile >> animationsFile;
+
+			this->shopData.emplace(item, CharacterData(spriteFile, animationsFile));
+		}
+			break;
+		case ItemCategory::Weapons:
+		{
+			std::string weaponID;
+			float reloadTime;
+
+			iStream >> weaponID >> reloadTime;
+			
+			this->shopData.emplace(item, WeaponData(weaponID, reloadTime));
+		}
+			break;
+		}
 	}
 
 	for (const auto& category : itemCategories)
@@ -140,7 +164,7 @@ void ShopState::loadShopData(const std::string& fileName)
 
 		window->AddWithViewport(category.second);
 
-		notebook->AppendPage(window, sfg::Label::Create("  " + category.first + "  "));
+		notebook->AppendPage(window, sfg::Label::Create("  " + this->categoryNames[category.first] + "  "));
 	}
 
 	notebook->SetPosition(sf::Vector2f(250.f, 390.f));
@@ -148,27 +172,56 @@ void ShopState::loadShopData(const std::string& fileName)
 	this->stateData.guiManager.addWidget(notebook);
 }
 
-void ShopState::loadButtonFunctions(std::size_t itemID, bool hasBeenPurchased, std::size_t price, sfg::Button::Ptr itemButton)
+void ShopState::loadButtonFunctions(Item item, ItemCategory itemCategory, bool hasBeenPurchased, std::size_t price, sfg::Button::Ptr itemButton)
 {
-	itemButton->SetId(std::to_string(itemID));
+	auto useFunction = [this, item, itemCategory]()
+	{
+		auto& game = stateData.games.front();
+
+		switch (itemCategory)
+		{
+		case ItemCategory::Characters:
+			if (auto player = game.getPlayer())
+			{
+				if (player->has_component<SpriteComponent>() && player->has_component<AnimationComponent>())
+				{
+					auto& sprite = player->get_component<SpriteComponent>();
+					auto& animation = player->get_component<AnimationComponent>();
+
+					const auto& characterInfo = std::any_cast<CharacterData>(this->shopData[item]);
+
+					sprite.setSprite(characterInfo.spriteFile);
+					animation.setAnimations(true, characterInfo.animationsFile);
+				}
+			}
+			break;
+		case ItemCategory::Weapons:
+			if (auto player = game.getPlayer())
+			{
+				if (player->has_component<RangeAttackComponent>())
+				{
+					auto& range = player->get_component<RangeAttackComponent>();
+					const auto& weaponInfo = std::any_cast<WeaponData>(this->shopData[item]);
+
+					range.setProjectileID(weaponInfo.weaponID);
+					range.setReloadTime(weaponInfo.reloadTime);
+				}
+			}
+			break;
+		}
+	};
 
 	if (hasBeenPurchased)
 	{
 		itemButton->SetLabel("\t\tUse\t\t");
 		
-		itemButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]()
-		{
-			auto& game = stateData.games.front();
-
-			
-
-		});
+		itemButton->GetSignal(sfg::Widget::OnLeftClick).Connect(useFunction);
 	}
 	else
 	{
 		itemButton->SetLabel("\t\t" + std::to_string(price) + "\t\t");
 
-		itemButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this, itemButton, price]()
+		itemButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this, itemButton, useFunction, item, price]()
 		{
 			auto& game = stateData.games.front();
 
@@ -177,17 +230,14 @@ void ShopState::loadButtonFunctions(std::size_t itemID, bool hasBeenPurchased, s
 				itemButton->SetLabel("\t\tUse\t\t");
 
 				game.getItems()[Item::Coin] -= price;
-				++game.getItems()[static_cast<Item>(std::stoull(itemButton->GetId()))];
+				++game.getItems()[static_cast<Item>(item)];
 
 				this->coinDisplay.setNumberOfCoins(game.getItems()[Item::Coin]);
+
+				itemButton->GetSignal(sfg::Widget::OnLeftClick).Connect(useFunction);
 			}
 		});
 	}
-}
-
-void ShopState::saveShopData(const std::string& fileName)
-{
-	std::ofstream outFile(Path::miscellaneous / fileName);
 }
 
 void ShopState::transitionToMenu()
@@ -199,8 +249,21 @@ void ShopState::transitionToMenu()
 	pauseMenu->showWidgets(true);
 }
 
-ShopData::ShopData(std::size_t price) :
-	price(price),
-	itemButton(sfg::Button::Create())
+ShopGraphics::ShopGraphics(ItemCategory category, std::size_t price) :
+	itemButton(sfg::Button::Create()),
+	category(category),
+	price(price)
+{
+}
+
+CharacterData::CharacterData(const std::string& spriteFile, const std::string& animationsFile) :
+	spriteFile(spriteFile),
+	animationsFile(animationsFile)
+{
+}
+
+WeaponData::WeaponData(const std::string& weaponID, float reloadTime) :
+	weaponID(weaponID),
+	reloadTime(reloadTime)
 {
 }

@@ -20,83 +20,83 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 
 	if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Movable, ObjectType::Border))
 	{
-		orderedCollision.value().first.get().entity.sync();
+		orderedCollision->first.get().entity.sync();
 
-		this->events.broadcast(DestroyEntity{ orderedCollision.value().first.get().entity });
+		this->events.broadcast(DestroyEntity{ orderedCollision->first.get().entity });
 	}
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Enemy))
 	{
-		orderedCollision.value().first.get().entity.sync();
-		orderedCollision.value().second.get().entity.sync();
+		orderedCollision->first.get().entity.sync();
+		orderedCollision->second.get().entity.sync();
 
-		this->events.broadcast(CombatOcurred{ orderedCollision.value().second.get().entity, orderedCollision.value().first.get().entity });
-		this->events.broadcast(ApplyKnockback{ orderedCollision.value().second.get().entity, orderedCollision.value().first.get().entity });
-		this->events.broadcast(ChangeState{ orderedCollision.value().second.get().entity, EntityState::Attacking });
+		this->events.broadcast(CombatOcurred{ orderedCollision->second.get().entity, orderedCollision.value().first.get().entity });
+		this->events.broadcast(ApplyKnockback{ orderedCollision->second.get().entity, orderedCollision.value().first.get().entity });
+		this->events.broadcast(ChangeState{ orderedCollision->second.get().entity, EntityState::Attacking });
 	}
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Portal))
 	{
-		this->events.broadcast(ChangeLevel{ orderedCollision.value().second.get().properties["Destination"].getStringValue() });
+		this->events.broadcast(ChangeLevel{ orderedCollision->second.get().properties["Destination"].getStringValue() });
 	}
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Teleporter))
 	{
-		orderedCollision.value().first.get().entity.sync();
+		orderedCollision->first.get().entity.sync();
 
-		this->events.broadcast(ChangePosition{ orderedCollision.value().first.get().entity,
-		{orderedCollision.value().second.get().properties["xLocation"].getFloatValue(), orderedCollision.value().second.get().properties["yLocation"].getFloatValue()} });
+		this->events.broadcast(ChangePosition{ orderedCollision->first.get().entity,
+		{orderedCollision->second.get().properties["xLocation"].getFloatValue(), orderedCollision.value().second.get().properties["yLocation"].getFloatValue()} });
 	}
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Pickup))
 	{
-		orderedCollision.value().first.get().entity.sync();
-		orderedCollision.value().second.get().entity.sync();
+		orderedCollision->first.get().entity.sync();
+		orderedCollision->second.get().entity.sync();
 
-		this->events.broadcast(PickedUpItem{ orderedCollision.value().first.get().entity, orderedCollision.value().second.get().entity });
+		this->events.broadcast(PickedUpItem{ orderedCollision->first.get().entity, orderedCollision.value().second.get().entity });
 	}
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Alive , ObjectType::Trampoline))
 	{
-		orderedCollision.value().first.get().entity.sync();
+		orderedCollision->first.get().entity.sync();
 
-		this->events.broadcast(ApplyImpulse{ orderedCollision.value().first.get().entity, b2Vec2(0.f, orderedCollision.value().second.get().properties["Impulse"].getFloatValue())});
+		this->events.broadcast(ApplyImpulse{ orderedCollision->first.get().entity, b2Vec2(0.f, orderedCollision.value().second.get().properties["Impulse"].getFloatValue())});
 	}
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Enemy, ObjectType::Waypoint))
 	{
-		orderedCollision.value().first.get().entity.sync();
+		orderedCollision->first.get().entity.sync();
 
-		this->events.broadcast(CrossedWaypoint{ orderedCollision.value().first.get().entity });
+		this->events.broadcast(CrossedWaypoint{ orderedCollision->first.get().entity });
 	}
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Bullet, ObjectType::Alive))
 	{
-		orderedCollision.value().first.get().entity.sync();
-		orderedCollision.value().second.get().entity.sync();
+		orderedCollision->first.get().entity.sync();
+		orderedCollision->second.get().entity.sync();
 
-		this->events.broadcast(CombatOcurred{ orderedCollision.value().first.get().entity, orderedCollision.value().second.get().entity });
-		this->events.broadcast(StopMovement{ orderedCollision.value().second.get().entity });
+		this->events.broadcast(CombatOcurred{ orderedCollision->first.get().entity, orderedCollision.value().second.get().entity });
+		this->events.broadcast(StopMovement{ orderedCollision->second.get().entity });
 	}
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Explosion, ObjectType::Alive))
 	{
-		orderedCollision.value().first.get().entity.sync();
-		orderedCollision.value().second.get().entity.sync();
+		orderedCollision->first.get().entity.sync();
+		orderedCollision->second.get().entity.sync();
 
-		this->events.broadcast(ApplyBlastImpact{ orderedCollision.value().first.get().entity, orderedCollision.value().second.get().entity });
+		this->events.broadcast(ApplyBlastImpact{ orderedCollision->first.get().entity, orderedCollision->second.get().entity });
 	}
 	else if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Character))
 	{
-		orderedCollision.value().second.get().entity.sync();
+		orderedCollision->second.get().entity.sync();
 
-		this->events.broadcast(DisplayConversation{ orderedCollision.value().second.get().entity, true });
-		this->events.broadcast(UpdateConversation{ orderedCollision.value().second.get().entity });
+		this->events.broadcast(DisplayConversation{ orderedCollision->second.get().entity, true });
+		this->events.broadcast(UpdateConversation{ orderedCollision->second.get().entity });
 	}
 
 	if (auto& collider = this->getCollider(objectA, objectB, ObjectType::Bullet))
 	{
-		collider.value().get().entity.sync();
+		collider->get().entity.sync();
 
-		this->events.broadcast(DestroyEntity{ collider.value().get().entity });
+		this->events.broadcast(DestroyEntity{ collider->get().entity });
 	}
 	else if (auto& collider = this->getCollider(objectA, objectB, ObjectType::Bomb))
 	{
-		collider.value().get().entity.sync();
+		collider->get().entity.sync();
 
-		this->events.broadcast(ActivateBomb{ collider.value().get().entity });
+		this->events.broadcast(ActivateBomb{ collider->get().entity });
 	}
 }
 
@@ -107,9 +107,9 @@ void CollisionHandler::EndContact(b2Contact* contact)
 
 	if (auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Character))
 	{
-		orderedCollision.value().second.get().entity.sync();
+		orderedCollision->second.get().entity.sync();
 
-		this->events.broadcast(DisplayConversation{ orderedCollision.value().second.get().entity, false });
+		this->events.broadcast(DisplayConversation{ orderedCollision->second.get().entity, false });
 	}
 }
 

@@ -24,6 +24,8 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	itemsDisplay(stateData.resourceManager),
 	powerUpDisplay(stateData.resourceManager)
 {
+	entityManager.copyBlueprint("Player.txt", stateData.games.front().getGameName() + "-Player.txt");
+
 	world.SetContactListener(&collisionHandler);
 	
 	healthBar.setPosition(100.f, 70.f);
@@ -33,7 +35,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 
 	itemsDisplay.setPosition(500.f, 130.f);
 
-	powerUpDisplay.setPosition(400.f, 55.f);
+	powerUpDisplay.setPosition(500.f, 50.f);
 	
 	entityManager.getEvents().subscribe<DestroyBody>([this](const auto& event) { destroyBody(event.physics); });
 	entityManager.getEvents().subscribe<DisplayHealthBar>([this](const auto& event) { updateHealthBar(event.health); });
@@ -71,7 +73,9 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	{
 		callbacks.addCallback([this, &stateData]
 		{
-			entityManager.createEntity("Player.txt", stateData.games.front().getCurrentSpawnPoint());
+			auto player = entityManager.createEntity(stateData.games.front().getGameName() + "-Player.txt", stateData.games.front().getCurrentSpawnPoint());
+
+			stateData.games.front().setPlayer(player);
 			
 			moveCamera(stateData.games.front().getCurrentSpawnPoint());
 		});
@@ -279,37 +283,43 @@ void GameState::displayConversation(Entity entity, bool visibilityStatus)
 
 void GameState::changeLevel(const std::string& level)
 {
-	this->stateData.games.front().setCurrentLevel(level);
+	auto& game = this->stateData.games.front();
+
+	game.setCurrentLevel(level);
 
 	this->entityManager.destroyEntities();
 	
 	this->map.load(level + ".tmx");
-	
+
 	if (!this->stateData.games.front().getLevels().get<1>().find(level)->isLoaded)
 	{
-		this->stateData.games.front().getLevels().get<1>().modify(this->stateData.games.front().getLevels().get<1>().find(level), [](auto& iLevel) { iLevel.isLoaded = true; });
+		game.getLevels().get<1>().modify(game.getLevels().get<1>().find(level), [](auto& iLevel) { iLevel.isLoaded = true; });
 		this->entityManager.parseBlueprint("Objects-" + level + ".txt");
+
+		this->entityManager.createEntity(game.getGameName() + "-Player.txt", game.getCurrentSpawnPoint());
 	}
 	else
 	{
-		this->entityManager.parseEntities(this->stateData.games.front().getGameName() + '-' + level + ".txt");
+		this->entityManager.parseEntities(game.getGameName() + '-' + level + ".txt");
 	}
 
 	this->entityManager.parseBlueprint("Entities-" + level + ".txt");
 	this->stateData.soundManager.stopAllSounds();
 	this->powerUpDisplay.clearPowerUps();
 
-	this->entityManager.getEntities().for_each<ControllableComponent, PositionComponent, PhysicsComponent>([this](auto entity, auto& controllable, auto& position, auto& physics)
+	this->entityManager.getEntities().for_each<ControllableComponent, PositionComponent, PhysicsComponent>([this, &game](auto entity, auto& controllable, auto& position, auto& physics)
 	{
-		const auto& spawnPoint = this->stateData.games.front().getCurrentSpawnPoint();
+		const auto& spawnPoint = game.getCurrentSpawnPoint();
 
 		position.setDialoguePosition({ spawnPoint.x, spawnPoint.y });
 		physics.setDialoguePosition({ UnitConverter::pixelsToMeters(spawnPoint.x), UnitConverter::pixelsToMeters(-spawnPoint.y) });
+
+		game.setPlayer(entity);
 		
 		this->moveCamera(spawnPoint);
 	});
 
-	this->world.SetGravity(this->stateData.games.front().getCurrentGravity());
+	this->world.SetGravity(game.getCurrentGravity());
 }
 
 void GameState::changeEntityPosition(Entity entity, const sf::Vector2f& position)

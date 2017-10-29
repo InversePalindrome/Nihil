@@ -196,7 +196,7 @@ void ItemsSystem::handleKeyPickup(const KeyComponent& key)
 		{
 			if (entity.has_component<SpriteComponent>())
 			{
-				entity.get_component<SpriteComponent>().parseSprite(lock.getNewSpriteFile());
+				entity.get_component<SpriteComponent>().setSprite(lock.getNewSpriteFile());
 			}
 
 			this->callbacks.addCallback([this, entity]() mutable

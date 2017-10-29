@@ -18,7 +18,19 @@ AnimationComponent::AnimationComponent(bool hasMultipleAnimations, const std::st
 	animationsFile(animationsFile),
 	hasMultipleAnimations(hasMultipleAnimations)
 {
-	if (hasMultipleAnimations)
+	setAnimations(hasMultipleAnimations, animationsFile);
+}
+
+std::ostream& operator<<(std::ostream& os, const AnimationComponent& component)
+{
+	os << component.getEntityID() << ' ' << component.getName() << ' ' <<  component.hasMultipleAnimations << ' ' << component.animationsFile;
+
+	return os;
+}
+
+void AnimationComponent::setAnimations(bool hasMultipleAnimations, const std::string& animationsFile)
+{
+	if (this->hasMultipleAnimations)
 	{
 		std::ifstream inFile(Path::animations / animationsFile);
 		std::string line;
@@ -38,7 +50,7 @@ AnimationComponent::AnimationComponent(bool hasMultipleAnimations, const std::st
 
 				iStream >> state >> direction >> duration;
 
-				animations.emplace(std::make_pair(static_cast<EntityState>(state), static_cast<Direction>(direction)), std::make_pair(thor::FrameAnimation(), duration));
+				this->animations.emplace(std::make_pair(static_cast<EntityState>(state), static_cast<Direction>(direction)), std::make_pair(thor::FrameAnimation(), duration));
 			}
 			else if (category == "Frame")
 			{
@@ -47,18 +59,18 @@ AnimationComponent::AnimationComponent(bool hasMultipleAnimations, const std::st
 
 				iStream >> frameTime >> left >> top >> width >> length;
 
-				animations.rbegin()->second.first.addFrame(frameTime, sf::IntRect(left, top, width, length));
+				this->animations.rbegin()->second.first.addFrame(frameTime, sf::IntRect(left, top, width, length));
 			}
 		}
 
 		for (const auto& animation : animations)
 		{
-			stateAnimator.addAnimation(animation.first, animation.second.first, sf::seconds(animation.second.second));
+			this->stateAnimator.addAnimation(animation.first, animation.second.first, sf::seconds(animation.second.second));
 		}
 
 		if (!animations.empty())
 		{
-			stateAnimator.playAnimation(animations.begin()->first, true);
+			this->stateAnimator.playAnimation(animations.begin()->first, true);
 		}
 	}
 	else
@@ -69,16 +81,12 @@ AnimationComponent::AnimationComponent(bool hasMultipleAnimations, const std::st
 
 		Parsers::parseFrameAnimations(animationsFile, animation, animationID, animationTime);
 
-		singleAnimator.addAnimation(animationID, animation, sf::seconds(animationTime));
-		singleAnimator.playAnimation(animationID, true);
+		this->singleAnimator.addAnimation(animationID, animation, sf::seconds(animationTime));
+		this->singleAnimator.playAnimation(animationID, true);
 	}
-}
 
-std::ostream& operator<<(std::ostream& os, const AnimationComponent& component)
-{
-	os << component.getEntityID() << ' ' << component.getName() << ' ' <<  component.hasMultipleAnimations << ' ' << component.animationsFile;
-
-	return os;
+	this->hasMultipleAnimations = hasMultipleAnimations;
+	this->animationsFile = animationsFile;
 }
 
 std::optional<std::pair<EntityState, Direction>> AnimationComponent::getCurrentAnimation() const

@@ -9,8 +9,8 @@ InversePalindrome.com
 #include "FilePaths.hpp"
 #include "UnitConverter.hpp"
 
+#include <boost/filesystem/operations.hpp>
 #include <brigand/algorithms/for_each.hpp>
-
 #include <boost/range/algorithm_ext/erase.hpp>
 #include <boost/algorithm/string/classification.hpp>
 
@@ -336,6 +336,14 @@ void ComponentParser::parseEntities(const std::string& fileName)
 	if (!entitiesIDs.empty())
 	{
 		this->currentEntityID = std::rbegin(entitiesIDs)->first;
+	}
+}
+
+void ComponentParser::copyBlueprint(const std::string& fileName, const std::string& copiedFileName)
+{
+	if (!boost::filesystem::exists(Path::blueprints / copiedFileName))
+	{
+		boost::filesystem::copy_file(Path::blueprints / fileName, Path::blueprints / copiedFileName);
 	}
 }
 

@@ -44,10 +44,6 @@ Game::Game(const std::string& data)
 		{
 			inLine >> currentLevel;
 		}
-		else if (category == "Characters")
-		{
-			inLine >> characterBits;
-		}
 		else if (category == "Levels")
 		{
 			inLine >> levelBits;
@@ -67,6 +63,21 @@ Game::Game(const std::string& data)
     const auto& levelsBitset = boost::dynamic_bitset<std::size_t>(levelBits);
 
 	loadDataBitsets<LoadedLevels>(levels, levelsBitset);
+}
+
+std::optional<Entity> Game::getPlayer()
+{
+	if (this->player.get_status() != entityplus::entity_status::DELETED || 
+		this->player.get_status() != entityplus::entity_status::UNINITIALIZED)
+	{
+		this->player.sync();
+
+		return this->player;
+	}
+	else
+	{
+		return {};
+	}
 }
 
 std::string Game::getGameName() const
@@ -102,6 +113,11 @@ DirectionType Game::getCurrenDirectionType() const
 b2Vec2 Game::getCurrentGravity() const
 {
 	return this->levels.get<1>().find(this->currentLevel)->gravity;
+}
+
+void Game::setPlayer(Entity player)
+{
+	this->player = player;
 }
 
 void Game::setGameName(const std::string& gameName)
