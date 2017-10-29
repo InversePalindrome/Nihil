@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #pragma once
 
+#include "ECS.hpp"
 #include "Item.hpp"
 #include "Direction.hpp"
 
@@ -22,6 +23,7 @@ InversePalindrome.com
 #include <cstddef>
 #include <string>
 #include <ostream>
+#include <optional>
 #include <unordered_map>
 
 
@@ -46,6 +48,7 @@ public:
 	Game();
 	Game(const std::string& data);
 
+	std::optional<Entity> getPlayer();
 	std::string getGameName() const;
 	std::string getCurrentLevel() const;
 	Items& getItems();
@@ -55,10 +58,13 @@ public:
 
 	LoadedLevels& getLevels();
 
+	void setPlayer(Entity player);
 	void setGameName(const std::string& name);
 	void setCurrentLevel(const std::string& currentLevel);
 
 private:
+	Entity player;
+
 	std::string gameName;
 	std::string currentLevel;
 	Items items; 

@@ -9,6 +9,7 @@ InversePalindrome.com
 
 #include "State.hpp"
 #include "Item.hpp"
+#include "ItemCategory.hpp"
 #include "CoinDisplay.hpp"
 
 #include <SFGUI/Button.hpp>
@@ -16,10 +17,11 @@ InversePalindrome.com
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
+#include <any>
 #include <unordered_map>
 
 
-struct ShopData;
+struct ShopGraphics;
 
 class ShopState : public State
 {
@@ -41,21 +43,39 @@ private:
 
 	sfg::Button::Ptr backButton;
 
-	std::unordered_map<Item, ShopData> shopData;
+	std::unordered_map<Item, ShopGraphics> shopGraphics;
+	std::unordered_map<Item, std::any> shopData;
+	std::unordered_map<ItemCategory, std::string> categoryNames;
 
 	void loadShopData(const std::string& fileName);
-	void saveShopData(const std::string& fileName);
 
-	void loadButtonFunctions(std::size_t itemID, bool hasBeenPurchased, std::size_t price, sfg::Button::Ptr itemButton);
+	void loadButtonFunctions(Item item, ItemCategory itemCategory, bool hasBeenPurchased, std::size_t price, sfg::Button::Ptr itemButton);
 
 	void transitionToMenu();
 };
 
-struct ShopData
+struct ShopGraphics
 {
-	ShopData() = default;
-	ShopData(std::size_t price);
+	ShopGraphics() = default;
+	ShopGraphics(ItemCategory category, std::size_t price);
 
 	sfg::Button::Ptr itemButton;
+	ItemCategory category;
 	std::size_t price;
+};
+
+struct CharacterData
+{
+	CharacterData(const std::string& spriteFile, const std::string& animationsFile);
+
+	std::string spriteFile;
+	std::string animationsFile;
+};
+
+struct WeaponData
+{
+	WeaponData(const std::string& weaponID, float reloadTime);
+
+	std::string weaponID;
+	float reloadTime;
 };

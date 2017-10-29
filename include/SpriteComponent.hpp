@@ -31,7 +31,7 @@ public:
 	TexturesID getTextureID() const;
 	sf::Sprite& getSprite();
 
-	void parseSprite(const std::string& fileName);
+	void setSprite(const std::string& fileName);
 
 private:
 	TexturesID textureID;

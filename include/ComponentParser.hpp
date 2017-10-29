@@ -29,6 +29,8 @@ public:
 	void parseBlueprint(const std::string& fileName);
 	void parseEntities(const std::string& fileName);
 
+	void copyBlueprint(const std::string& fileName, const std::string& copiedFileName);
+
 	void setComponentsID(Entity entity, std::int32_t entityID);
 
 private:

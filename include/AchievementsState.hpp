@@ -10,6 +10,10 @@ InversePalindrome.com
 #include "State.hpp"
 
 #include <SFGUI/Button.hpp>
+#include <SFGUI/ScrolledWindow.hpp>
+
+#include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 
 
 class AchievementsState : public State
@@ -26,6 +30,13 @@ public:
 
 private:
 	sfg::Button::Ptr backButton;
+	sfg::ScrolledWindow::Ptr scrolledWindow;
+
+	sf::Sprite background;
+	sf::Sprite titleBar;
+	sf::Text title;
+
+	void loadAchievements(const std::string& fileName);
 
 	void transitionToMenu();
 };

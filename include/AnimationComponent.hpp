@@ -28,6 +28,8 @@ class AnimationComponent : public Component
 public:
 	AnimationComponent(bool hasMultipleAnimations, const std::string& animationsFile);
 
+	void setAnimations(bool hasMultipleAnimations, const std::string& animationsFile);
+
 	std::optional<std::pair<EntityState, Direction>> getCurrentAnimation() const;
 
 	void animate(sf::Sprite& sprite, float deltaTime);
