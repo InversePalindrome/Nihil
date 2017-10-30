@@ -7,6 +7,9 @@ InversePalindrome.com
 
 #include "HubState.hpp"
 #include "StateMachine.hpp"
+#include "SpriteParser.hpp"
+#include "TextStyleParser.hpp"
+#include "GUIParser.hpp"
 #include "FilePaths.hpp"
 
 #include <SFGUI/Label.hpp>
@@ -18,64 +21,69 @@ InversePalindrome.com
 
 HubState::HubState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
-	addGamePopup(sfg::Window::Create(sfg::Window::Style::NO_STYLE)),
+	scrolledWindow(sfg::ScrolledWindow::Create()),
 	nameEntry(sfg::Entry::Create()),
 	backButton(sfg::Button::Create("BACK")),
 	playButton(sfg::Button::Create("\t Play \t")),
 	addButton(sfg::Button::Create("\t\tAdd\t\t")),
 	deleteButton(sfg::Button::Create(" Delete ")),
 	selectionBox(sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 50.f)),
-	selectionButtons(sfg::RadioButtonGroup::Create())
+	gamePopupBox(sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 70.f)),
+	selectionButtons(sfg::RadioButtonGroup::Create()),
+	isAddingGame(false)
 {
-	addGamePopup->SetPosition(sf::Vector2f(640.f, 400.f));
-	addGamePopup->Show(false);
-	
-	auto gamePopupBox = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 70.f);
+	Parsers::parseSprite(stateData.resourceManager, "StateTitleBar.txt", titleBar);
+	titleBar.setPosition({ 625.f, 80.f });
+
+	Parsers::parseStyle(stateData.resourceManager, "StateTitle.txt", title);
+	title.setString("Games");
+	title.setPosition({ 780.f, 135.f });
+
+	Parsers::parseSprite(stateData.resourceManager, "AddGamePanel.txt", addGameBackground);
+	addGameBackground.setPosition({ 682.f, 530.f });
+
+	Parsers::parseSprite(stateData.resourceManager, "AddGameTitleBar.txt", addGameTitleBar);
+	addGameTitleBar.setPosition({766.f, 470.f});
+
+	scrolledWindow->SetRequisition({ 800.f, 900.f });
+	scrolledWindow->SetPosition(sf::Vector2f{ 750.f, 320.f });
+	scrolledWindow->SetScrollbarPolicy(sfg::ScrolledWindow::HORIZONTAL_NEVER | sfg::ScrolledWindow::VERTICAL_AUTOMATIC);
+	scrolledWindow->AddWithViewport(selectionBox);
 
 	auto nameLabel = sfg::Label::Create("Name");
 	auto doneButton = sfg::Button::Create("Done");
 
-	nameEntry->SetRequisition(sf::Vector2f(700.f, 0.f));
-
+	nameEntry->SetRequisition({ 585.f, 0.f });
 	doneButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { addGame(); });
 
+	gamePopupBox->SetPosition({ 710.f, 500.f });
+	gamePopupBox->Show(false);
 	gamePopupBox->Pack(nameLabel);
 	gamePopupBox->Pack(nameEntry);
 	gamePopupBox->Pack(doneButton);
 
-	addGamePopup->Add(gamePopupBox);
-
-	backButton->SetPosition(sf::Vector2f(12.f, 25.f));
+	backButton->SetPosition({ 12.f, 25.f });
 	backButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { transitionToMenu(); });
 
-	addButton->SetPosition(sf::Vector2f(445.f, 1300.f));
+	addButton->SetPosition({ 445.f, 1300.f });
 	addButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { showAddGamePopup(); });
 
-	playButton->SetPosition(sf::Vector2f(845.f, 1300.f));;
+	playButton->SetPosition({ 845.f, 1300.f });
 	playButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { transitionToPlay(); });
 
-	deleteButton->SetPosition(sf::Vector2f(1245.f, 1300.f));
+	deleteButton->SetPosition({ 1245.f, 1300.f });
 	deleteButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { deleteGame(); });
 
-	this->addGames();
+	addGames();
 
-	stateData.guiManager.setProperty("Entry", "FontSize", 50.f);
-	stateData.guiManager.setProperty("Entry", "BackgroundColor", sf::Color(255, 255, 255u));
-	stateData.guiManager.setProperty("Entry", "Color", sf::Color(0u, 0u, 0u));
-	stateData.guiManager.setProperty("RadioButton", "FontSize", 60.f);
-	stateData.guiManager.setProperty("RadioButton", "BoxSize", 30.f);
-	stateData.guiManager.setProperty("RadioButton", "BackgroundColor", sf::Color(0u, 0u, 0u));
-	stateData.guiManager.setProperty("RadioButton:PRELIGHT", "BackgroundColor", sf::Color(255u, 255u, 255u));
-	stateData.guiManager.setProperty("RadioButton:ACTIVE", "BackgroundColor", sf::Color(255u, 255u, 255u));
-	stateData.guiManager.setProperty("RadioButton:SELECTED", "BackgroundColor", sf::Color(255u, 255u, 255u));
-	stateData.guiManager.setProperty("Window", "BackgroundColor", sf::Color(40u, 40u, 40u));
-	stateData.guiManager.setProperty("Window", "Color", sf::Color(0u, 0u, 0u));
-
-	stateData.guiManager.addWidget(addGamePopup);
+	stateData.guiManager.addWidget(scrolledWindow);
+	stateData.guiManager.addWidget(gamePopupBox);
 	stateData.guiManager.addWidget(backButton);
 	stateData.guiManager.addWidget(playButton);
 	stateData.guiManager.addWidget(addButton);
 	stateData.guiManager.addWidget(deleteButton);
+
+	Parsers::parseGUIProperties(stateData.guiManager, "HubGUI.txt");
 }
 
 void HubState::handleEvent(const sf::Event& event)
@@ -90,6 +98,14 @@ void HubState::update(float deltaTime)
 
 void HubState::draw()
 {
+	this->stateData.window.draw(this->titleBar);
+	this->stateData.window.draw(this->title);
+
+	if (this->isAddingGame)
+	{
+		this->stateData.window.draw(this->addGameBackground);
+		this->stateData.window.draw(this->addGameTitleBar);
+	}
 }
 
 bool HubState::isTransparent() const
@@ -104,28 +120,21 @@ bool HubState::isDependent() const
 
 void HubState::addGames()
 {
-	this->selectionBox->SetPosition(sf::Vector2f(750.f, 260.f));
-
 	for (const auto& game : this->stateData.games)
 	{
 		auto gameButton = sfg::RadioButton::Create(game.getGameName(), this->selectionButtons);
 
 		selectionBox->Pack(gameButton);
 	}
-	
-	this->stateData.guiManager.addWidget(selectionBox);
 }
 
 void HubState::showAddGamePopup()
 {
-	const std::size_t maxNumberOfGames = 8u;
+	this->isAddingGame = true;
 
-	if (this->selectionButtons->GetMembers().size() < maxNumberOfGames)
-	{
-		this->nameEntry->SetText("");
-		this->selectionBox->Show(false);
-		this->addGamePopup->Show(true);
-	}
+	this->nameEntry->SetText("");
+	this->selectionBox->Show(false);
+	this->gamePopupBox->Show(true);
 }
 
 void HubState::addGame()
@@ -144,7 +153,8 @@ void HubState::addGame()
 		this->saveGames("SavedGames.txt");
 	}
 
-	this->addGamePopup->Show(false);
+	this->isAddingGame = false;
+	this->gamePopupBox->Show(false);
 	this->selectionBox->Show(true);
 }
 

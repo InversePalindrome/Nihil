@@ -14,16 +14,21 @@ InversePalindrome.com
 
 #include <SFGUI/Scale.hpp>
 #include <SFGUI/Table.hpp>
+#include <SFGUI/Image.hpp>
+#include <SFGUI/Label.hpp>
 #include <SFGUI/Adjustment.hpp>
 
+#include <boost/algorithm/string/replace.hpp>
+
 #include <fstream>
-#include <sstream>
 
 
 AchievementsState::AchievementsState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
 	backButton(sfg::Button::Create("Back")),
-	scrolledWindow(sfg::ScrolledWindow::Create())
+	scrolledWindow(sfg::ScrolledWindow::Create()),
+	achievementIDs({ {Achievement::Annihilator, "Annihilator" }, {Achievement::Traveler, "Traveller"},
+	{Achievement::Collector, "Collector"}, {Achievement::BigSpender, "BigSpender"} })
 {
 	Parsers::parseSprite(stateData.resourceManager, "AchievementsPanel.txt", background);
 	background.setOrigin(background.getGlobalBounds().width / 2.f, background.getGlobalBounds().height / 2.f);
@@ -91,6 +96,43 @@ void AchievementsState::loadAchievements(const std::string& fileName)
 	std::ifstream inFile(Path::miscellaneous / fileName);
 
 	auto table = sfg::Table::Create();
+
+	std::string description;
+	std::size_t achievementID = 0u, imageID = 0u;
+
+	std::size_t row = 0u, column = 0u;
+
+	const auto& achievements = this->stateData.games.front().getAchievements();
+
+	while (inFile >> achievementID >> description >> imageID)
+	{
+		boost::replace_all(description, "\\n", "\n");
+		boost::replace_all(description, "_", " ");
+
+		auto achievement = static_cast<Achievement>(achievementID);
+
+		auto image = sfg::Image::Create(this->stateData.resourceManager.getImage(static_cast<ImagesID>(imageID)));
+
+		auto info = sfg::Label::Create("\n\n" + achievementIDs[achievement] + "\n\n" + std::to_string(achievements.at(achievement).first)
+			+ " / " + std::to_string(achievements.at(achievement).second));
+
+		auto body = sfg::Label::Create("\n\n" + description);
+
+		float yOffset = 50.f;
+
+		table->Attach(image, { column, row, 1u, 1u }, 0u, 0u, { 40.f, yOffset });
+
+		++column;
+
+		table->Attach(info, { column, row, 1u, 1u }, 0u, 0u, { 80.f, yOffset });
+
+		++column;
+		
+		table->Attach(body, { column, row, 2u, 1u }, 0u, 0u, { 0.f, yOffset });
+
+		++row;
+		column = 0u;
+	}
 
 	this->scrolledWindow->AddWithViewport(table);
 }

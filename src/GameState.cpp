@@ -118,7 +118,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 
 void GameState::handleEvent(const sf::Event& event)
 {
-	if (stateData.inputHandler.isActive(Action::Escape))
+	if (this->stateData.inputHandler.isActive(Action::Escape))
 	{
 		this->saveData("SavedGames.txt");
 		this->showWidgets(false);
@@ -212,6 +212,18 @@ void GameState::updateCamera()
 		break;
 		}
 	});
+}
+
+void GameState::updateAchievements(Achievement achievement)
+{
+	auto& achievements = this->stateData.games.front().getAchievements();
+
+	++achievements[achievement].first;
+
+	if (achievements[achievement].first == achievements[achievement].second)
+	{
+
+	}
 }
 
 void GameState::updateHealthBar(const HealthComponent& healthComponent)

@@ -49,5 +49,13 @@ void Parsers::parseSprite(ResourceManager& resourceManager, const std::string& f
 
 			sprite.setScale(xScale, yScale);
 		}
+		else if (category == "Rotate")
+		{
+			float angle = 0.f;
+
+			iStream >> angle;
+
+			sprite.setRotation(angle);
+		}
 	}
 }

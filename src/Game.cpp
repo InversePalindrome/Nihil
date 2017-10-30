@@ -15,6 +15,7 @@ InversePalindrome.com
 Game::Game() 
 {
 	loadLevels();
+	loadAchievements();
 
 	std::ifstream inFile(Path::levels / "Levels.txt");
 
@@ -26,7 +27,7 @@ Game::Game(const std::string& data)
 	std::istringstream iStream(data);
 	std::string line;
 
-	std::string levelBits, characterBits;
+	std::string levelBits;
 
 	while (std::getline(iStream, line))
 	{
@@ -55,6 +56,14 @@ Game::Game(const std::string& data)
 			inLine >> item >> quantity;
 
 			this->items.emplace(static_cast<Item>(item), quantity);
+		}
+		else if (category == "Achievement")
+		{
+			std::size_t achievementID = 0u, currentQuantity = 0u, maxQuantity = 0u;
+
+			inLine >> achievementID >> currentQuantity >> maxQuantity;
+
+			this->achievements.emplace(static_cast<Achievement>(achievementID), std::make_pair(currentQuantity, maxQuantity));
 		}
 	}
 
@@ -93,6 +102,11 @@ std::string Game::getCurrentLevel() const
 Items& Game::getItems() 
 {
 	return this->items;
+}
+
+Achievements& Game::getAchievements()
+{
+	return this->achievements;
 }
 
 sf::Vector2f Game::getCurrentSpawnPoint() const
@@ -149,6 +163,12 @@ std::ostream& operator<<(std::ostream& os, const Game& game)
 		os << "Item " << static_cast<std::size_t>(item.first) << ' ' << item.second << '\n';
 	}
 
+	for (const auto& achievement : game.achievements)
+	{
+		os << "Achievement" << ' ' << static_cast<std::size_t>(achievement.first) << ' ' <<
+			achievement.second.first << ' ' << achievement.second.second << '\n';
+	}
+
 	return os;
 }
 
@@ -168,5 +188,22 @@ void Game::loadLevels()
 		iStream >> levelName >> directionType >> xGravity >> yGravity >> xPosition >> yPosition;
 
 		this->levels.get<1>().insert({ levelName, static_cast<DirectionType>(directionType), { xGravity, yGravity }, {xPosition, yPosition}, false });
+	}
+}
+
+void Game::loadAchievements()
+{
+	std::ifstream inFile(Path::miscellaneous / "AchievementsData.txt");
+	std::string line;
+
+	while (std::getline(inFile, line))
+	{
+		std::istringstream iStream(line);
+
+		std::size_t achievementID = 0u, maxQuantity = 0u;
+
+		iStream >> achievementID >> maxQuantity;
+
+		this->achievements[static_cast<Achievement>(achievementID)] = { 0u, maxQuantity };
 	}
 }

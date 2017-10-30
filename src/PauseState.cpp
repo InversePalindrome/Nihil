@@ -7,18 +7,32 @@ InversePalindrome.com
 
 #include "PauseState.hpp"
 #include "StateMachine.hpp"
+#include "SpriteParser.hpp"
+#include "TextStyleParser.hpp"
 
 
 PauseState::PauseState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
-	resumeButton(sfg::Button::Create(" Resume ")),
-	shopButton(sfg::Button::Create("  \tShop\t ")),
-	settingsButton(sfg::Button::Create("Settings")),
-	quitButton(sfg::Button::Create("\t\tQuit\t\t"))
+	resumeButton(sfg::Button::Create("     Resume      ")),
+	shopButton(sfg::Button::Create("        Shop        ")),
+	achievementsButton(sfg::Button::Create("Achievements")),
+	settingsButton(sfg::Button::Create("    Settings     ")),
+	quitButton(sfg::Button::Create("        Quit         ")),
+	isBackgroundVisible(true)
 {
-	resumeButton->SetPosition(sf::Vector2f(835.f, 500.f));
-	resumeButton->GetSignal(sfg::Widget::OnLeftClick).Connect([&stateMachine]() 
-	{ 
+	Parsers::parseStyle(stateData.resourceManager, "StateTitle.txt", title);
+	title.setString("Paused");
+	title.setPosition(752.f, 280.f);
+
+	Parsers::parseSprite(stateData.resourceManager, "PauseBackground.txt", background);
+	background.setPosition(660.f, 428.f);
+
+	Parsers::parseSprite(stateData.resourceManager, "StateTitleBar.txt", titleBar);
+	titleBar.setPosition(617.f, 230.f);
+
+	resumeButton->SetPosition({ 740.f, 535.f });
+	resumeButton->GetSignal(sfg::Widget::OnLeftClick).Connect([&stateMachine]()
+	{
 		auto menu = stateMachine[stateMachine.size() - 2].get();
 
 		menu->showWidgets(true);
@@ -26,17 +40,36 @@ PauseState::PauseState(StateMachine& stateMachine, StateData& stateData) :
 		stateMachine.popState();
 	});
 
-	shopButton->SetPosition(sf::Vector2f(835.f, 650.f));
-	shopButton->GetSignal(sfg::Widget::OnLeftClick).Connect([&stateMachine]() { stateMachine.pushState(StateID::Shop); });
+	shopButton->SetPosition({ 740.f, 685.f });
+	shopButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this, &stateMachine]()
+	{ 
+		isBackgroundVisible = false;
+		stateMachine.pushState(StateID::Shop);
+	});
 
-	settingsButton->SetPosition(sf::Vector2f(835.f, 800.f));
-	settingsButton->GetSignal(sfg::Widget::OnLeftClick).Connect([&stateMachine]() { stateMachine.pushState(StateID::Settings); });
+	achievementsButton->SetPosition({ 740.f, 835.f });
+	achievementsButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this, &stateMachine]() 
+	{ 
+		isBackgroundVisible = false;
+		stateMachine.pushState(StateID::Achievements); 
+	});
 
-	quitButton->SetPosition(sf::Vector2f(835.f, 950.f));
-	quitButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { transitionToMenu(); });
+	settingsButton->SetPosition({ 740.f, 985.f });
+	settingsButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this, &stateMachine]() 
+	{ 
+		isBackgroundVisible = false;
+		stateMachine.pushState(StateID::Settings); 
+	});
+
+	quitButton->SetPosition({ 740.f, 1135.f });
+	quitButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() 
+	{
+		transitionToMenu();
+	});
 
 	stateData.guiManager.addWidget(resumeButton);
 	stateData.guiManager.addWidget(shopButton);
+	stateData.guiManager.addWidget(achievementsButton);
 	stateData.guiManager.addWidget(settingsButton);
 	stateData.guiManager.addWidget(quitButton);
 }
@@ -59,7 +92,12 @@ void PauseState::update(float deltaTime)
 
 void PauseState::draw()
 {
-
+	if (this->isBackgroundVisible)
+	{
+		this->stateData.window.draw(this->background);
+		this->stateData.window.draw(this->titleBar);
+		this->stateData.window.draw(this->title);
+	}
 }
 
 bool PauseState::isTransparent() const
@@ -72,7 +110,10 @@ void PauseState::showWidgets(bool showStatus)
 	this->resumeButton->Show(showStatus);
 	this->settingsButton->Show(showStatus);
 	this->shopButton->Show(showStatus);
+	this->achievementsButton->Show(showStatus);
 	this->quitButton->Show(showStatus);
+
+	this->isBackgroundVisible = showStatus;
 }
 
 void PauseState::transitionToMenu()
