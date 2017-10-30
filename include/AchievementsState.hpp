@@ -8,12 +8,15 @@ InversePalindrome.com
 #pragma once
 
 #include "State.hpp"
+#include "Achievement.hpp"
 
 #include <SFGUI/Button.hpp>
 #include <SFGUI/ScrolledWindow.hpp>
 
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+
+#include <unordered_map>
 
 
 class AchievementsState : public State
@@ -35,6 +38,8 @@ private:
 	sf::Sprite background;
 	sf::Sprite titleBar;
 	sf::Text title;
+
+	std::unordered_map<Achievement, std::string> achievementIDs;
 
 	void loadAchievements(const std::string& fileName);
 

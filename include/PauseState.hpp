@@ -11,6 +11,9 @@ InversePalindrome.com
 
 #include <SFGUI/Button.hpp>
 
+#include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+
 
 class PauseState : public State
 {
@@ -25,10 +28,17 @@ public:
 	virtual void showWidgets(bool showStatus) override;
 
 private:
+	sf::Text title;
+	sf::Sprite titleBar;
+	sf::Sprite background;
+
 	sfg::Button::Ptr resumeButton;
 	sfg::Button::Ptr shopButton;
+	sfg::Button::Ptr achievementsButton;
 	sfg::Button::Ptr settingsButton;
 	sfg::Button::Ptr quitButton;
+
+	bool isBackgroundVisible;
 
 	void transitionToMenu();
 };

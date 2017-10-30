@@ -35,6 +35,7 @@ InversePalindrome.com
 #include "KeyComponent.hpp"
 #include "DialogComponent.hpp"
 #include "Direction.hpp"
+#include "Achievement.hpp"
 
 #include <brigand/sequences/list.hpp>
 
@@ -46,6 +47,7 @@ struct AI;
 
 struct CreateEntity;
 struct DestroyBody;
+struct UpdateAchievement;
 struct DirectionChanged;
 struct Jumped;
 struct StopMovement;
@@ -86,7 +88,7 @@ using Tags = entityplus::tag_list<AI>;
 
 using Entities = entityplus::entity_manager<Components, Tags>;
 
-using Events = entityplus::event_manager<Components, Tags, CreateEntity, DestroyBody, DirectionChanged, Jumped, StopMovement, CombatOcurred, ChangeState,
+using Events = entityplus::event_manager<Components, Tags, CreateEntity, DestroyBody, UpdateAchievement, DirectionChanged, Jumped, StopMovement, CombatOcurred, ChangeState,
 	StateChanged, ChangeLevel, DestroyEntity, EmitSound, PickedUpItem, DroppedItem, DisplayHealthBar, DisplayCoins, DisplayPowerUp, DisplayConversation,
 	UpdateConversation, HidePowerUp, PlayerDied, CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform, ApplyForce, ApplyImpulse,
 	ApplyBlastImpact, ApplyKnockback, ChangePosition, IsMidAir>;
@@ -108,6 +110,11 @@ struct CreateEntity
 struct DestroyBody
 {
 	PhysicsComponent& physics;
+};
+
+struct UpdateAchievement
+{
+	Achievement achievement;
 };
 
 struct DirectionChanged

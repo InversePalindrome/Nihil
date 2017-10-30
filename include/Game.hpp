@@ -9,6 +9,7 @@ InversePalindrome.com
 
 #include "ECS.hpp"
 #include "Item.hpp"
+#include "Achievement.hpp"
 #include "Direction.hpp"
 
 #include <Box2D/Common/b2Math.h>
@@ -52,6 +53,7 @@ public:
 	std::string getGameName() const;
 	std::string getCurrentLevel() const;
 	Items& getItems();
+	Achievements& getAchievements();
 	DirectionType getCurrenDirectionType() const;
 	b2Vec2 getCurrentGravity() const;
 	sf::Vector2f getCurrentSpawnPoint() const;
@@ -68,10 +70,12 @@ private:
 	std::string gameName;
 	std::string currentLevel;
 	Items items; 
+	Achievements achievements;
 
 	LoadedLevels levels;
 
 	void loadLevels();
+	void loadAchievements();
 
 	template<typename T>
 	void loadDataBitsets(T& dataset, const boost::dynamic_bitset<std::size_t>& bitset);

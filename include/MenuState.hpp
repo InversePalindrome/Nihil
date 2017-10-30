@@ -35,7 +35,7 @@ private:
 	
 	sfg::Button::Ptr playButton;
 	sfg::Button::Ptr settingsButton;
-	sfg::Button::Ptr achievementsButton;
+	sfg::Button::Ptr quitButton;
 
 	thor::ParticleSystem particleSystem;
 

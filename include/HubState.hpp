@@ -12,9 +12,10 @@ InversePalindrome.com
 #include <SFGUI/Box.hpp>
 #include <SFGUI/Entry.hpp>
 #include <SFGUI/Button.hpp>
-#include <SFGUI/Window.hpp>
+#include <SFGUI/ScrolledWindow.hpp>
 #include <SFGUI/RadioButtonGroup.hpp>
 
+#include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
 
@@ -31,7 +32,12 @@ public:
 	virtual bool isDependent() const override;
 
 private:
-	sfg::Window::Ptr addGamePopup;
+	sf::Sprite titleBar;
+	sf::Sprite addGameBackground;
+	sf::Sprite addGameTitleBar;
+	sf::Text title;
+
+	sfg::ScrolledWindow::Ptr scrolledWindow;
 	sfg::Entry::Ptr nameEntry;
 
 	sfg::Button::Ptr backButton;
@@ -39,7 +45,10 @@ private:
 	sfg::Button::Ptr addButton;
 	sfg::Button::Ptr deleteButton;
 	sfg::Box::Ptr selectionBox;
+	sfg::Box::Ptr gamePopupBox;
 	sfg::RadioButtonGroup::Ptr selectionButtons;
+
+	bool isAddingGame;
 
 	void addGames();
 
