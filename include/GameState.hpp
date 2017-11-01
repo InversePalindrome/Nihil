@@ -17,6 +17,7 @@ InversePalindrome.com
 #include "CoinDisplay.hpp"
 #include "ItemsDisplay.hpp"
 #include "PowerUpDisplay.hpp"
+#include "AchievementDisplay.hpp"
 #include "Pathway.hpp"
 
 #include <Box2D/Dynamics/b2World.h>
@@ -53,6 +54,7 @@ private:
 	CoinDisplay coinDisplay;
 	ItemsDisplay itemsDisplay;
 	PowerUpDisplay powerUpDisplay;
+	AchievementDisplay achievementDisplay;
 
 	void moveCamera(const sf::Vector2f& position);
 

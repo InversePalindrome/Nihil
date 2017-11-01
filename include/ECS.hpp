@@ -75,6 +75,8 @@ struct ApplyForce;
 struct ApplyImpulse;
 struct ApplyBlastImpact;
 struct ApplyKnockback;
+struct SetGravityScale;
+struct SetLinearDamping;
 struct ChangePosition;
 struct IsMidAir;
 
@@ -91,7 +93,7 @@ using Entities = entityplus::entity_manager<Components, Tags>;
 using Events = entityplus::event_manager<Components, Tags, CreateEntity, DestroyBody, UpdateAchievement, DirectionChanged, Jumped, StopMovement, CombatOcurred, ChangeState,
 	StateChanged, ChangeLevel, DestroyEntity, EmitSound, PickedUpItem, DroppedItem, DisplayHealthBar, DisplayCoins, DisplayPowerUp, DisplayConversation,
 	UpdateConversation, HidePowerUp, PlayerDied, CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform, ApplyForce, ApplyImpulse,
-	ApplyBlastImpact, ApplyKnockback, ChangePosition, IsMidAir>;
+	ApplyBlastImpact, ApplyKnockback, SetGravityScale, SetLinearDamping, ChangePosition, IsMidAir>;
 
 using Entity = Entities::entity_t;
 
@@ -268,6 +270,18 @@ struct ApplyKnockback
 {
 	Entity attacker;
 	Entity victim;
+};
+
+struct SetGravityScale
+{
+	Entity entity;
+	float gravity;
+};
+
+struct SetLinearDamping
+{
+	Entity entity;
+	float linearDamping;
 };
 
 struct ChangePosition

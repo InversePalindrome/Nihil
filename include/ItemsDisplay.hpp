@@ -8,6 +8,7 @@ InversePalindrome.com
 #pragma once
 
 #include "Item.hpp"
+#include "Renderable.hpp"
 #include "ResourceManager.hpp"
 
 #include <Thor/Animations/Animator.hpp>
@@ -15,10 +16,8 @@ InversePalindrome.com
 
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
-#include <SFML/Graphics/Transformable.hpp>
 
 #include <string>
 #include <unordered_map>
@@ -26,7 +25,7 @@ InversePalindrome.com
 
 struct ItemsGraphics;
 
-class ItemsDisplay : public sf::Drawable, public sf::Transformable
+class ItemsDisplay : public Renderable
 {
 public:
 	ItemsDisplay(ResourceManager& resourceManager);

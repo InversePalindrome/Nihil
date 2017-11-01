@@ -29,6 +29,9 @@ private:
 	void stopEntity(Entity entity);
 	void makeJump(Entity entity);
 
+	void setGravityScale(Entity entity, float gravityScale);
+	void setLinearDamping(Entity entity, float linearDamping);
+
 	void applyImpulse(Entity entity, const b2Vec2& impulse);
 	void applyForce(Entity entity, const b2Vec2& force);
 
