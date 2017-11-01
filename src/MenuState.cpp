@@ -18,9 +18,9 @@ InversePalindrome.com
 MenuState::MenuState(StateMachine& stateMachine, StateData& stateData) :
 	State(stateMachine, stateData),
 	background(stateData.resourceManager.getTexture(TexturesID::MenuBackground)),
-	playButton(sfg::Button::Create("      Play      ")),
-	settingsButton(sfg::Button::Create("   Settings  ")),
-	quitButton(sfg::Button::Create("      Quit       ")),
+	playButton(sfg::Button::Create("       Play       ")),
+	settingsButton(sfg::Button::Create("    Settings   ")),
+	quitButton(sfg::Button::Create("       Quit        ")),
 	isTitleVisible(true)
 {
 	stateData.window.setView(stateData.window.getDefaultView());

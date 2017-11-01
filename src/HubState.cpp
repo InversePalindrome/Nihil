@@ -40,10 +40,10 @@ HubState::HubState(StateMachine& stateMachine, StateData& stateData) :
 	title.setPosition({ 780.f, 135.f });
 
 	Parsers::parseSprite(stateData.resourceManager, "AddGamePanel.txt", addGameBackground);
-	addGameBackground.setPosition({ 682.f, 530.f });
+	addGameBackground.setPosition({ 682.f, 510.f });
 
 	Parsers::parseSprite(stateData.resourceManager, "AddGameTitleBar.txt", addGameTitleBar);
-	addGameTitleBar.setPosition({766.f, 470.f});
+	addGameTitleBar.setPosition({766.f, 450.f});
 
 	scrolledWindow->SetRequisition({ 800.f, 900.f });
 	scrolledWindow->SetPosition(sf::Vector2f{ 750.f, 320.f });
@@ -56,7 +56,7 @@ HubState::HubState(StateMachine& stateMachine, StateData& stateData) :
 	nameEntry->SetRequisition({ 585.f, 0.f });
 	doneButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]() { addGame(); });
 
-	gamePopupBox->SetPosition({ 710.f, 500.f });
+	gamePopupBox->SetPosition({ 713.f, 480.f });
 	gamePopupBox->Show(false);
 	gamePopupBox->Pack(nameLabel);
 	gamePopupBox->Pack(nameEntry);
@@ -134,12 +134,15 @@ void HubState::showAddGamePopup()
 
 	this->nameEntry->SetText("");
 	this->selectionBox->Show(false);
+	this->scrolledWindow->Show(false);
 	this->gamePopupBox->Show(true);
+
+	this->scrolledWindow->SetPosition({ 0.f, 0.f });
 }
 
 void HubState::addGame()
 {
-	if (!this->nameEntry->GetText().isEmpty() &&
+	if (!this->nameEntry->GetText().isEmpty() && this->nameEntry->GetText().toAnsiString().length() < 12u &&
 		std::find_if(std::begin(this->stateData.games), std::end(this->stateData.games), [this](const auto& game)
 	   { return game.getGameName() == this->nameEntry->GetText(); }) == std::end(this->stateData.games))
 	{
@@ -156,6 +159,9 @@ void HubState::addGame()
 	this->isAddingGame = false;
 	this->gamePopupBox->Show(false);
 	this->selectionBox->Show(true);
+	this->scrolledWindow->Show(true);
+
+	this->scrolledWindow->SetPosition({750.f, 320.f});
 }
 
 void HubState::deleteGame()

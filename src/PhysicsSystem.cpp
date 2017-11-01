@@ -21,6 +21,8 @@ PhysicsSystem::PhysicsSystem(Entities& entities, Events& events, b2World& world,
 	events.subscribe<StopMovement>([this](const auto& event) { stopEntity(event.entity); });
 	events.subscribe<ApplyForce>([this](const auto& event) { applyForce(event.entity, event.force); });
 	events.subscribe<ApplyImpulse>([this](const auto& event) { applyImpulse(event.entity, event.impulse); });
+	events.subscribe<SetGravityScale>([this](const auto& event) { setGravityScale(event.entity, event.gravity); });
+	events.subscribe<SetLinearDamping>([this](const auto& event) { setLinearDamping(event.entity, event.linearDamping); });
 }
 
 void PhysicsSystem::update(float deltaTime)
@@ -80,6 +82,25 @@ void PhysicsSystem::makeJump(Entity entity)
 	const auto& impulse = b2Vec2(0.f, physics.getJumpVelocity() * physics.getMass());
 
 	physics.applyImpulse(impulse);
+}
+
+
+void PhysicsSystem::setGravityScale(Entity entity, float gravityScale)
+{
+	if (entity.has_component<PhysicsComponent>())
+	{
+		auto& physics = entity.get_component<PhysicsComponent>();
+
+		physics.setGravityScale(gravityScale);
+	}
+}
+
+void PhysicsSystem::setLinearDamping(Entity entity, float linearDamping)
+{
+	if (entity.has_component<PhysicsComponent>())
+	{
+		entity.get_component<PhysicsComponent>().setLinearDamping(linearDamping);
+	}
 }
 
 void PhysicsSystem::applyImpulse(Entity entity, const b2Vec2& impulse)

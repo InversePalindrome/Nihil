@@ -21,14 +21,14 @@ HealthBar::HealthBar(ResourceManager& resourceManger) :
 
 void HealthBar::setHitpointsDisplay(std::size_t hitpoints)
 {
-	this->heart.setTextureRect(sf::IntRect(0.f, 0.f, this->heart.getTexture()->getSize().x * hitpoints, this->heart.getTexture()->getSize().y));
+	this->heart.setTextureRect(sf::IntRect(0u, 0u, this->heart.getTexture()->getSize().x * hitpoints, this->heart.getTexture()->getSize().y));
 }
 
 void HealthBar::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	if (this->isVisible())
 	{
-		states.transform = this->getTransform();
+		states.transform *= this->getTransform();
 
 		if (this->heart.getTextureRect().width > 0.f)
 		{

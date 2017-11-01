@@ -87,7 +87,7 @@ void ItemsDisplay::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	if (this->isVisible)
 	{
-		states.transform = this->getTransform();
+		states.transform *= this->getTransform();
 
 		for (const auto& item : this->itemsData)
 		{

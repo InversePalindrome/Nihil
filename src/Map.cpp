@@ -79,7 +79,7 @@ void Map::addImage(tmx::ImageLayer* imageLayer)
 	backgroundTexture.setRepeated(true);
 
 	this->background.setTexture(backgroundTexture);
-	this->background.setTextureRect(sf::IntRect(0.f, 0.f, this->bounds.width, this->bounds.height));
+	this->background.setTextureRect(sf::IntRect(0u, 0u, static_cast<std::size_t>(this->bounds.width), static_cast<std::size_t>(this->bounds.height)));
 }
 
 void Map::addObjects(tmx::ObjectGroup* objectLayer)
@@ -121,7 +121,7 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 			b2FixtureDef fixture;
 			fixture.shape = &shape;
 
-			if (object.getType() == "Waypoint")
+			if (object.getType() == "Waypoint" || object.getType() == "Liquid")
 			{
 				fixture.isSensor = true;
 			}

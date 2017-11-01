@@ -49,11 +49,11 @@ void Parsers::parseGUIProperties(GUIManager& guiManager, const std::string& file
 		}
 		else if (numberOfWords == 5)
 		{
-			float R = 0.f, G = 0.f, B = 0.f;
+			std::size_t R = 0u, G = 0u, B = 0u;
 
 			iStream >> R >> G >> B;
 
-			guiManager.setProperty(selector, category, sf::Color(R, G, B));
+			guiManager.setProperty(selector, category, sf::Color(static_cast<sf::Uint8>(R), static_cast<sf::Uint8>(G), static_cast<sf::Uint8>(B)));
 		}
 	}
 }

@@ -163,7 +163,7 @@ thor::UniversalEmitter Parsers::parseEmitter(const std::string& fileName)
 		}
 		else if (category == "Color")
 		{
-			std::size_t R = 0u, G = 0u, B = 0u;
+			sf::Uint8 R = 0u, G = 0u, B = 0u;
 
 			iStream >> R >> G >> B;
 		

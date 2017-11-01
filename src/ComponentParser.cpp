@@ -60,7 +60,7 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["Physics"] = [this, &world](auto& entity, auto& line)
 	{
-		auto& params = parse<float, float, std::size_t, std::size_t, std::int32_t, float, float, float>(line);
+		const auto& params = parse<float, float, std::size_t, std::size_t, std::int16_t, float, float, float>(line);
 
 		entity.add_component<PhysicsComponent>(world, b2Vec2(std::get<0>(params), std::get<1>(params)),
 			static_cast<b2BodyType>(std::get<2>(params)), static_cast<ObjectType>(std::get<3>(params)), std::get<4>(params),
@@ -79,7 +79,7 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["SpriteA"] = [this, &resourceManager](auto& entity, auto& line)
 	{
-		auto& params = parse<std::size_t, float, float>(line);
+		const auto& params = parse<std::size_t, float, float>(line);
 
 		entity.add_component<SpriteComponent>(resourceManager, static_cast<TexturesID>(std::get<0>(params)),
 			sf::Vector2f(std::get<1>(params), std::get<2>(params)));
@@ -87,7 +87,7 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["SpriteB"] = [this, &resourceManager](auto& entity, auto& line)
 	{
-		auto& params = parse<std::size_t, std::size_t, std::size_t, std::size_t, std::size_t, float, float>(line);
+		const auto& params = parse<std::size_t, std::size_t, std::size_t, std::size_t, std::size_t, float, float>(line);
 
 		entity.add_component<SpriteComponent>(resourceManager, static_cast<TexturesID>(std::get<0>(params)),
 			sf::IntRect(std::get<1>(params), std::get<2>(params), std::get<3>(params), std::get<4>(params)), sf::Vector2f(std::get<5>(params), std::get<6>(params)));
@@ -95,21 +95,21 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["SpriteC"] = [this, &resourceManager](auto& entity, auto& line)
 	{
-		auto& params = parse<std::string>(line);
+		const auto& params = parse<std::string>(line);
 
 		entity.add_component<SpriteComponent>(resourceManager, std::get<0>(params));
 	};
 
 	componentParsers["Text"] = [this, &resourceManager](auto& entity, auto& line)
 	{
-		auto& params = parse<std::string, std::string>(line);
+		const auto& params = parse<std::string, std::string>(line);
 
 		entity.add_component<TextComponent>(resourceManager, std::get<0>(params), std::get<1>(params));
 	};
 
 	componentParsers["Dialog"] = [this, &resourceManager](auto& entity, auto& line)
 	{
-		auto& params = parse<float, std::string, std::string, std::string, float, float, float, float>(line);
+		const auto& params = parse<float, std::string, std::string, std::string, float, float, float, float>(line);
 
 		entity.add_component<DialogComponent>(resourceManager, std::get<0>(params),
 			std::get<1>(params), std::get<2>(params), std::get<3>(params), sf::Vector2f(std::get<4>(params), std::get<5>(params)),
@@ -138,14 +138,14 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["Bullet"] = [this](auto& entity, auto& line)
 	{
-		auto& params = this->parse<std::size_t, std::size_t, float>(line);
+		const auto& params = this->parse<std::size_t, std::size_t, float>(line);
 
 		entity.add_component<BulletComponent>(std::get<0>(params), static_cast<SoundBuffersID>(std::get<1>(params)), std::get<2>(params));
 	};
 
 	componentParsers["Bomb"] = [this](auto& entity, auto& line)
 	{
-		auto& params = this->parse<std::size_t, std::size_t, float, float, std::string>(line);
+		const auto& params = this->parse<std::size_t, std::size_t, float, float, std::string>(line);
 
 		entity.add_component<BombComponent>(std::get<0>(params), static_cast<SoundBuffersID>(std::get<1>(params)), std::get<2>(params), std::get<3>(params), std::get<4>(params));
 	};
@@ -162,7 +162,7 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["Particle"] = [this, &resourceManager](auto& entity, auto& line)
 	{
-		auto& params = parse<float, float, std::string, std::string>(line);
+		const auto& params = parse<float, float, std::string, std::string>(line);
 		
 		entity.add_component<ParticleComponent>(resourceManager, sf::Vector2f(std::get<0>(params), std::get<1>(params)), std::get<2>(params), std::get<3>(params));
 	};
@@ -194,14 +194,14 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["Pickup"] = [this](auto& entity, auto& line)
 	{
-		auto& params = this->parse<std::size_t, std::size_t>(line);
+		const auto& params = this->parse<std::size_t, std::size_t>(line);
 
 		entity.add_component<PickupComponent>(static_cast<Item>(std::get<0>(params)), static_cast<SoundBuffersID>(std::get<1>(params)));
 	};
 
 	componentParsers["PowerUp"] = [this](auto& entity, auto& line)
 	{
-		auto& params = this->parse<std::size_t, std::size_t, float, float>(line);
+		const auto& params = this->parse<std::size_t, std::size_t, float, float>(line);
 
 		entity.add_component<PowerUpComponent>(static_cast<Item>(std::get<0>(params)), static_cast<SoundBuffersID>(std::get<1>(params)), std::get<2>(params), std::get<3>(params));
 	};

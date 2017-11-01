@@ -51,7 +51,7 @@ thor::ColorGradient Parsers::parseColors(const std::string& fileName)
 
 	while (inFile >> gradientPosition >> R >> G >> B)
 	{
-		colors[gradientPosition] = sf::Color(R, G, B);
+		colors[gradientPosition] = sf::Color(static_cast<sf::Uint8>(R), static_cast<sf::Uint8>(G), static_cast<sf::Uint8>(B));
 	}
 
 	return colors;

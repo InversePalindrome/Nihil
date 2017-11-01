@@ -15,15 +15,14 @@ Chunk::Chunk(const tmx::TileLayer& layer, std::vector<const tmx::Tileset*> tiles
 	sf::Color vertexColor = sf::Color::White;
 	vertexColor.a = opacity;
 
-	auto offset = layer.getOffset();
-	sf::Vector2f layerOffset(offset.x, offset.y);
+	sf::Vector2f layerOffset(static_cast<float>(layer.getOffset().x), static_cast<float>(layer.getOffset().y));
 
 	const auto& tileIDs = layer.getTiles();
 
 	for (const auto ts : tilesets)
 	{
 		bool chunkArrayCreated = false;
-		auto tileSize = ts->getTileSize();
+		auto tileSize = tmx::Vector2f(static_cast<float>(ts->getTileSize().x), static_cast<float>(ts->getTileSize().y));
 
 		sf::Vector2u tsTileCount;
 
@@ -43,8 +42,8 @@ Chunk::Chunk(const tmx::TileLayer& layer, std::vector<const tmx::Tileset*> tiles
 					{
 						this->chunkTilesContainer.emplace_back(std::make_unique<ChunkTiles>(*textures.find(ts->getImagePath())->second));
 						auto texSize = chunkTilesContainer.back()->getTextureSize();
-						tsTileCount.x = texSize.x / tileSize.x;
-						tsTileCount.y = texSize.y / tileSize.y;
+						tsTileCount.x = texSize.x / static_cast<std::size_t>(tileSize.x);
+						tsTileCount.y = texSize.y / static_cast<std::size_t>(tileSize.y);
 						chunkArrayCreated = true;
 					}
 
@@ -53,7 +52,7 @@ Chunk::Chunk(const tmx::TileLayer& layer, std::vector<const tmx::Tileset*> tiles
 					sf::Vector2f tileOffset(x * tileSize.x, y * tileSize.y);
 
 					auto idIndex = tileIDs[idx].ID - ts->getFirstGID();
-					;					sf::Vector2f tileIndex(idIndex % tsTileCount.x, idIndex / tsTileCount.x);
+					sf::Vector2f tileIndex(static_cast<float>(idIndex % tsTileCount.x), static_cast<float>(idIndex / tsTileCount.x));
 					tileIndex.x *= tileSize.x;
 					tileIndex.y *= tileSize.y;
 

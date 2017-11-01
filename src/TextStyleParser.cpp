@@ -55,7 +55,7 @@ void Parsers::parseStyle(ResourceManager& resourceManager, const std::string& fi
 
 			iStream >> R >> G >> B;
 
-			text.setFillColor(sf::Color(R, G, B));
+			text.setFillColor(sf::Color(static_cast<sf::Uint8>(R), static_cast<sf::Uint8>(G), static_cast<sf::Uint8>(B)));
 		}
 		else if (category == "BorderColor")
 		{
@@ -63,7 +63,7 @@ void Parsers::parseStyle(ResourceManager& resourceManager, const std::string& fi
 
 			iStream >> R >> G >> B;
 
-			text.setOutlineColor(sf::Color(R, G, B));
+			text.setOutlineColor(sf::Color(static_cast<sf::Uint8>(R), static_cast<sf::Uint8>(G), static_cast<sf::Uint8>(B)));
 		}
 	}
 }

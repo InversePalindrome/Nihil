@@ -22,7 +22,8 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	healthBar(stateData.resourceManager),
 	coinDisplay(stateData.resourceManager),
 	itemsDisplay(stateData.resourceManager),
-	powerUpDisplay(stateData.resourceManager)
+	powerUpDisplay(stateData.resourceManager),
+	achievementDisplay(stateData.resourceManager)
 {
 	entityManager.copyBlueprint("Player.txt", stateData.games.front().getGameName() + "-Player.txt");
 
@@ -33,9 +34,10 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	coinDisplay.setPosition(1600.f, 60.f);
 	coinDisplay.setNumberOfCoins(stateData.games.front().getItems()[Item::Coin]);
 
-	itemsDisplay.setPosition(500.f, 130.f);
+	itemsDisplay.setPosition(500.f, 110.f);
 
 	powerUpDisplay.setPosition(500.f, 50.f);
+	achievementDisplay.setPosition(740.f, 60.f);
 	
 	entityManager.getEvents().subscribe<DestroyBody>([this](const auto& event) { destroyBody(event.physics); });
 	entityManager.getEvents().subscribe<DisplayHealthBar>([this](const auto& event) { updateHealthBar(event.health); });
@@ -45,6 +47,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	entityManager.getEvents().subscribe<DisplayConversation>([this](const auto& event) { displayConversation(event.entity, event.visibilityStatus); });
 
 	entityManager.getEvents().subscribe<UpdateConversation>([this](const auto& event) { updateConversationDisplay(event.entity); });
+	entityManager.getEvents().subscribe<UpdateAchievement>([this](const auto& event) { updateAchievements(event.achievement); });
 	
 	entityManager.getEvents().subscribe<HidePowerUp>([this](const auto& event) { powerUpDisplay.removePowerUp(event.item); });
 
@@ -145,6 +148,7 @@ void GameState::update(float deltaTime)
 	this->coinDisplay.update(deltaTime);
 	this->itemsDisplay.update(deltaTime);
 	this->powerUpDisplay.update(deltaTime);
+	this->achievementDisplay.update();
 
 	this->callbacks.update();
 	this->callbacks.clearCallbacks();
@@ -161,6 +165,7 @@ void GameState::draw()
 	this->stateData.window.draw(this->coinDisplay);
 	this->stateData.window.draw(this->itemsDisplay);
 	this->stateData.window.draw(this->powerUpDisplay);
+	this->stateData.window.draw(this->achievementDisplay);
 }
 
 void GameState::showWidgets(bool showStatus)
@@ -222,7 +227,9 @@ void GameState::updateAchievements(Achievement achievement)
 
 	if (achievements[achievement].first == achievements[achievement].second)
 	{
+		this->achievementDisplay.displayAchievement(achievement);
 
+		this->entityManager.getEvents().broadcast(EmitSound{ SoundBuffersID::Achievement });
 	}
 }
 

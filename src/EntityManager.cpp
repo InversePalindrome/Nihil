@@ -73,7 +73,7 @@ Entity EntityManager::createEntity(const std::string& fileName)
 
 Entity EntityManager::createEntity(const std::string& fileName, const sf::Vector2f& position)
 {
-	auto& entity = this->createEntity(fileName);
+	auto entity = this->createEntity(fileName);
 	
 	if (entity.has_component<PositionComponent>())
 	{
@@ -118,8 +118,6 @@ void EntityManager::destroyEntity(Entity entity)
 
 void EntityManager::destroyEntities()
 {
-	auto& entities = this->entityManager.get_entities();
-
 	for (auto* body = this->world.GetBodyList(); body; )
 	{
 		if (body)
@@ -132,7 +130,7 @@ void EntityManager::destroyEntities()
 		}
 	}
 
-	for (auto& entity : entities)
+	for (auto& entity : this->entityManager.get_entities())
 	{
 		entity.destroy();
 	}

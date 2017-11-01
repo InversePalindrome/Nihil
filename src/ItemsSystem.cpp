@@ -147,6 +147,7 @@ void ItemsSystem::handleItemPickup(Entity collector, Entity item)
 		if (collector.has_component<ControllableComponent>() && pickup.getItem() == Item::Coin)
 		{
 			this->events.broadcast(DisplayCoins{});
+			this->events.broadcast(UpdateAchievement{ Achievement::Collector });
 		}
 	}
 	else if (collector.has_component<InventoryComponent>() && collector.has_component<PhysicsComponent>() && item.has_component<PowerUpComponent>())
@@ -178,8 +179,6 @@ void ItemsSystem::handleItemDrop(Entity dropper)
 {
 	if (dropper.has_component<DropComponent>() && dropper.has_component<PositionComponent>())
 	{
-		const auto& drop = dropper.get_component<DropComponent>();
-
 		if (auto item = dropper.get_component<DropComponent>().getDrop())
 		{
 			this->events.broadcast(CreateEntity{ this->itemNames[item.value()],

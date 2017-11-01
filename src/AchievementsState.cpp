@@ -115,7 +115,7 @@ void AchievementsState::loadAchievements(const std::string& fileName)
 
 		auto info = sfg::Label::Create("\n\n" + achievementIDs[achievement] + "\n\n" + std::to_string(achievements.at(achievement).first)
 			+ " / " + std::to_string(achievements.at(achievement).second));
-
+		
 		auto body = sfg::Label::Create("\n\n" + description);
 
 		float yOffset = 50.f;

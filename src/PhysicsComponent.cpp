@@ -11,7 +11,7 @@ InversePalindrome.com
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
 
-PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType bodyType, ObjectType objectType, std::int32_t collisionGroup,
+PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType bodyType, ObjectType objectType, std::int16_t collisionGroup,
 	float maxVelocity, float jumpVelocity, float accelerationRate)  :
 	Component("Physics"),
 	body(nullptr),
@@ -47,6 +47,9 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2Bod
 	case ObjectType::Bullet:
 		body->SetGravityScale(0.f);
 		body->SetBullet(true);
+		break;
+	case ObjectType::Liquid:
+		fixture->SetSensor(true);
 		break;
 	}
 }
@@ -109,9 +112,14 @@ Direction PhysicsComponent::getDirection() const
 	return this->direction;
 }
 
-std::int8_t PhysicsComponent::getCollisionGroup() const
+std::int16_t PhysicsComponent::getCollisionGroup() const
 {
 	return this->collisionGroup;
+}
+
+float PhysicsComponent::getLinearDamping() const
+{
+	return this->body->GetLinearDamping();
 }
 
 void PhysicsComponent::setDialoguePosition(const b2Vec2& position)
@@ -149,7 +157,7 @@ void PhysicsComponent::setDirection(Direction direction)
 	this->direction = direction;
 }
 
-void PhysicsComponent::setCollisionGroup(std::int32_t collisionGroup)
+void PhysicsComponent::setCollisionGroup(std::int16_t collisionGroup)
 {
 	this->collisionGroup = collisionGroup;
 
@@ -158,6 +166,11 @@ void PhysicsComponent::setCollisionGroup(std::int32_t collisionGroup)
 	filterData.groupIndex = collisionGroup;
 
 	this->fixture->SetFilterData(filterData);
+}
+
+void PhysicsComponent::setLinearDamping(float linearDamping)
+{
+	this->body->SetLinearDamping(linearDamping);
 }
 
 void PhysicsComponent::applyForce(const b2Vec2& force)
