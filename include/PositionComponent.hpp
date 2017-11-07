@@ -22,7 +22,7 @@ public:
 
 	sf::Vector2f getPosition() const;
 
-	void setDialoguePosition(const sf::Vector2f& position);
+	void setPosition(const sf::Vector2f& position);
 
 	void move(const sf::Vector2f& displacement);
 

@@ -40,7 +40,7 @@ public:
 	std::int16_t getCollisionGroup() const;
 	float getLinearDamping() const;
 
-	void setDialoguePosition(const b2Vec2& position);
+	void setPosition(const b2Vec2& position);
 	void setVelocity(const b2Vec2& velocity);
 	void setMaxVelocity(float maxVelocity);
 	void setJumpVelocity(float jumpVelocity);

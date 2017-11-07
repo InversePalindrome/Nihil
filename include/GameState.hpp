@@ -56,8 +56,6 @@ private:
 	PowerUpDisplay powerUpDisplay;
 	AchievementDisplay achievementDisplay;
 
-	void moveCamera(const sf::Vector2f& position);
-
 	void updateCamera();
 	void updateAchievements(Achievement achievement);
 	void updateHealthBar(const HealthComponent& health);
