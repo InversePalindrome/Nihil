@@ -92,6 +92,13 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 		this->events.broadcast(SetGravityScale{ orderedCollision->first.get().entity, -0.4f });
 		this->events.broadcast(SetLinearDamping{ orderedCollision->first.get().entity, 0.3f });
 	}
+	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Spike))
+	{
+		orderedCollision->first.get().entity.sync();
+
+		this->events.broadcast(DestroyEntity{ orderedCollision->first.get().entity });
+	}
+
 
 	if (const auto& collider = this->getCollider(objectA, objectB, ObjectType::Bullet))
 	{

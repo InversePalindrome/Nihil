@@ -122,7 +122,7 @@ float PhysicsComponent::getLinearDamping() const
 	return this->body->GetLinearDamping();
 }
 
-void PhysicsComponent::setDialoguePosition(const b2Vec2& position)
+void PhysicsComponent::setPosition(const b2Vec2& position)
 {
 	this->body->SetTransform(position, this->body->GetAngle());
 }

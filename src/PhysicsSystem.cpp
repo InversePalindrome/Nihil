@@ -123,7 +123,7 @@ void PhysicsSystem::convertPositionCoordinates(const PhysicsComponent& physics, 
 {
 	if (physics.getType() == b2BodyType::b2_dynamicBody || physics.getType() == b2BodyType::b2_kinematicBody)
 	{
-		position.setDialoguePosition(sf::Vector2f(UnitConverter::metersToPixels(physics.getPosition().x), UnitConverter::metersToPixels(-physics.getPosition().y)));
+		position.setPosition(sf::Vector2f(UnitConverter::metersToPixels(physics.getPosition().x), UnitConverter::metersToPixels(-physics.getPosition().y)));
 	}
 }
 
@@ -152,6 +152,7 @@ void PhysicsSystem::addInitialData(Entity entity, PhysicsComponent& physics)
 	if (entity.has_component<PositionComponent>())
 	{
 		const auto& position = entity.get_component<PositionComponent>().getPosition();
-		physics.setDialoguePosition(b2Vec2(UnitConverter::pixelsToMeters(position.x), UnitConverter::pixelsToMeters(-position.y)));
+
+		physics.setPosition(b2Vec2(UnitConverter::pixelsToMeters(position.x), UnitConverter::pixelsToMeters(-position.y)));
 	}
 }

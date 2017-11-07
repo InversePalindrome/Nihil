@@ -283,11 +283,11 @@ void ComponentParser::parseBlueprint(const std::string& fileName)
 
 		if (entity.has_component<PositionComponent>())
 		{
-			entity.get_component<PositionComponent>().setDialoguePosition(sf::Vector2f(xPosition, yPosition));
+			entity.get_component<PositionComponent>().setPosition(sf::Vector2f(xPosition, yPosition));
 		}
 		if (entity.has_component<PhysicsComponent>())
 		{
-			entity.get_component<PhysicsComponent>().setDialoguePosition(
+			entity.get_component<PhysicsComponent>().setPosition(
 				b2Vec2(UnitConverter::pixelsToMeters(xPosition), UnitConverter::pixelsToMeters(-yPosition)));
 		}
 	}

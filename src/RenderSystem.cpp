@@ -76,11 +76,11 @@ void RenderSystem::setParentTransforms(Entity childEntity, ChildComponent& child
 
 			if (childEntity.has_component<PositionComponent>())
 			{
-				childEntity.get_component<PositionComponent>().setDialoguePosition(foundEntity->get_component<PositionComponent>().getPosition());
+				childEntity.get_component<PositionComponent>().setPosition(foundEntity->get_component<PositionComponent>().getPosition());
 			}
 			if (childEntity.has_component<PhysicsComponent>())
 			{
-				childEntity.get_component<PhysicsComponent>().setDialoguePosition(
+				childEntity.get_component<PhysicsComponent>().setPosition(
 					b2Vec2(UnitConverter::pixelsToMeters(parentPosition.x + 0.1f), UnitConverter::pixelsToMeters(-parentPosition.y)));
 			}
 		}

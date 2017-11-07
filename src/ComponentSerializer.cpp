@@ -30,7 +30,7 @@ void ComponentSerializer::serialize(const std::string& fileName)
 	{
 		using Type = decltype(componentType)::type;
 		
-		this->entities.for_each<Type>([&entities](auto entity, auto& component)
+		this->entities.for_each<Type>([&entities](auto entity, auto& component) 
 		{
 			std::stringstream stream;
 

@@ -155,8 +155,8 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 				}
 			}
 
-            this->collisionsData.push_back(CollisionData(staticObject, static_cast<ObjectType>(properties["ID"].getIntValue()), properties));
-            this->collisionsData.back().body->SetUserData(&this->collisionsData.back());
+      	   this->collisionsData.push_back(CollisionData(staticObject, static_cast<ObjectType>(properties["ID"].getIntValue()), properties));
+           this->collisionsData.back().body->SetUserData(&this->collisionsData.back());
 		}
 	}
 	

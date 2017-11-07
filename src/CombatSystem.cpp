@@ -123,12 +123,12 @@ void CombatSystem::shootBullet(const PhysicsComponent& shooterPhysics, BulletCom
 	switch (shooterPhysics.getDirection())
 	{
 	case Direction::Left:
-		projectilePhysics.setDialoguePosition(b2Vec2(projectilePhysics.getPosition().x - projectilePhysics.getBodySize().x - shooterPhysics.getBodySize().x - 0.1f, projectilePhysics.getPosition().y));
+		projectilePhysics.setPosition(b2Vec2(projectilePhysics.getPosition().x - projectilePhysics.getBodySize().x - shooterPhysics.getBodySize().x - 0.1f, projectilePhysics.getPosition().y));
 		projectilePhysics.applyForce(b2Vec2(-bulletComponent.getForce(), 0.f));
 		projectileSprite.setRotation(180.f);
 		break;
 	case Direction::Right:
-		projectilePhysics.setDialoguePosition(b2Vec2(projectilePhysics.getPosition().x + projectilePhysics.getBodySize().x + shooterPhysics.getBodySize().x + 0.1f, projectilePhysics.getPosition().y));
+		projectilePhysics.setPosition(b2Vec2(projectilePhysics.getPosition().x + projectilePhysics.getBodySize().x + shooterPhysics.getBodySize().x + 0.1f, projectilePhysics.getPosition().y));
 		projectilePhysics.applyForce(b2Vec2(bulletComponent.getForce(), 0.f));
 		projectileSprite.setRotation(0.f);
 		break;
@@ -139,7 +139,7 @@ void CombatSystem::shootBullet(const PhysicsComponent& shooterPhysics, BulletCom
 
 void CombatSystem::shootBomb(const PhysicsComponent& shooterPhysics, BombComponent& bombComponent, PhysicsComponent& projectilePhysics, SpriteComponent& spriteComponent, const sf::Vector2f& targetPosition)
 {
-	projectilePhysics.setDialoguePosition(b2Vec2(projectilePhysics.getPosition().x, projectilePhysics.getPosition().y + projectilePhysics.getBodySize().y + 0.1f));
+	projectilePhysics.setPosition(b2Vec2(projectilePhysics.getPosition().x, projectilePhysics.getPosition().y + projectilePhysics.getBodySize().y + 0.1f));
 
 	const auto xDistance = projectilePhysics.getPosition().x - UnitConverter::pixelsToMeters(targetPosition.x);
 	const float angle = 45.f;

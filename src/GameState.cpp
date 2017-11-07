@@ -79,15 +79,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 			auto player = entityManager.createEntity(stateData.games.front().getGameName() + "-Player.txt", stateData.games.front().getCurrentSpawnPoint());
 
 			stateData.games.front().setPlayer(player);
-			
-			moveCamera(stateData.games.front().getCurrentSpawnPoint());
 		});
-	});
-
-	entityManager.getEvents().subscribe<ChangePosition>([this](const auto& event)
-	{
-		changeEntityPosition(event.entity, event.location);
-		moveCamera(event.location);
 	});
 
 	entityManager.getEvents().subscribe<ChangeLevel>([this, &stateData](const auto& event)
@@ -176,21 +168,6 @@ void GameState::showWidgets(bool showStatus)
 	this->updateCoinDisplay();
 }
 
-void GameState::moveCamera(const sf::Vector2f& position)
-{
-	this->camera.setCenter(this->stateData.window.getDefaultView().getCenter());
-
-	switch (this->stateData.games.front().getCurrenDirectionType())
-	{
-	case DirectionType::Horizontal:
-		this->camera.setCenter(position.x, this->camera.getCenter().y);
-		break;
-	case DirectionType::Vertical:
-		this->camera.setCenter(this->camera.getCenter().x, position.y);
-		break;
-	}
-}
-
 void GameState::updateCamera()
 {
 	this->entityManager.getEntities().for_each<ControllableComponent, PositionComponent>([this](auto entity, auto& controllable, auto& position)
@@ -205,6 +182,14 @@ void GameState::updateCamera()
 			{
 				this->camera.setCenter(centerPosition.x, this->camera.getCenter().y);
 			}
+			else if (centerPosition.x <= this->camera.getSize().x / 2.f)
+			{
+				this->camera.setCenter(this->stateData.window.getDefaultView().getCenter());
+			}
+			else
+			{
+				this->camera.setCenter(this->map.getBounds().width - this->camera.getCenter().x / 2.f, this->stateData.window.getDefaultView().getCenter().y);
+			}
 		}
 		break;
 		case DirectionType::Vertical:
@@ -212,6 +197,14 @@ void GameState::updateCamera()
 			if (centerPosition.y > this->camera.getSize().y / 2.f && centerPosition.y < this->map.getBounds().height - this->camera.getSize().y / 2.f)
 			{
 				this->camera.setCenter(this->camera.getCenter().x, centerPosition.y);
+			}
+			else if (centerPosition.y >= this->camera.getSize().y > 2.f)
+			{
+				this->camera.setCenter(this->stateData.window.getDefaultView().getCenter());
+			}
+			else
+			{
+				this->camera.setCenter(this->stateData.window.getDefaultView().getCenter().x, this->map.getBounds().height - this->camera.getSize().y / 2.f);
 			}
 		}
 		break;
@@ -313,8 +306,8 @@ void GameState::changeLevel(const std::string& level)
 	if (!this->stateData.games.front().getLevels().get<1>().find(level)->isLoaded)
 	{
 		game.getLevels().get<1>().modify(game.getLevels().get<1>().find(level), [](auto& iLevel) { iLevel.isLoaded = true; });
-		this->entityManager.parseBlueprint("Objects-" + level + ".txt");
 
+		this->entityManager.parseBlueprint("Objects-" + level + ".txt");
 		this->entityManager.createEntity(game.getGameName() + "-Player.txt", game.getCurrentSpawnPoint());
 	}
 	else
@@ -323,19 +316,19 @@ void GameState::changeLevel(const std::string& level)
 	}
 
 	this->entityManager.parseBlueprint("Entities-" + level + ".txt");
+
 	this->stateData.soundManager.stopAllSounds();
 	this->powerUpDisplay.clearPowerUps();
 
-	this->entityManager.getEntities().for_each<ControllableComponent, PositionComponent, PhysicsComponent>([this, &game](auto entity, auto& controllable, auto& position, auto& physics)
+	this->entityManager.getEntities().for_each<ControllableComponent, PositionComponent, PhysicsComponent>(
+		[&game](auto player, auto& control, auto& position, auto& physics)
 	{
 		const auto& spawnPoint = game.getCurrentSpawnPoint();
 
-		position.setDialoguePosition({ spawnPoint.x, spawnPoint.y });
-		physics.setDialoguePosition({ UnitConverter::pixelsToMeters(spawnPoint.x), UnitConverter::pixelsToMeters(-spawnPoint.y) });
-
-		game.setPlayer(entity);
+		position.setPosition({ spawnPoint.x, spawnPoint.y });
+		physics.setPosition({ UnitConverter::pixelsToMeters(spawnPoint.x), UnitConverter::pixelsToMeters(-spawnPoint.y) });
 		
-		this->moveCamera(spawnPoint);
+		game.setPlayer(player);
 	});
 
 	this->world.SetGravity(game.getCurrentGravity());
@@ -345,13 +338,13 @@ void GameState::changeEntityPosition(Entity entity, const sf::Vector2f& position
 {
 	if (entity.has_component<PositionComponent>())
 	{
-		entity.get_component<PositionComponent>().setDialoguePosition(position);
+		entity.get_component<PositionComponent>().setPosition(position);
 	}
 	if (entity.has_component<PhysicsComponent>())
 	{
 		this->callbacks.addCallback([entity, position]() mutable
 		{
-			entity.get_component<PhysicsComponent>().setDialoguePosition({ UnitConverter::pixelsToMeters(position.x), UnitConverter::pixelsToMeters(-position.y) });
+			entity.get_component<PhysicsComponent>().setPosition({ UnitConverter::pixelsToMeters(position.x), UnitConverter::pixelsToMeters(-position.y) });
 		});
 	}
 }

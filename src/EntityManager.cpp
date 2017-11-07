@@ -77,11 +77,11 @@ Entity EntityManager::createEntity(const std::string& fileName, const sf::Vector
 	
 	if (entity.has_component<PositionComponent>())
 	{
-		entity.get_component<PositionComponent>().setDialoguePosition(position);
+		entity.get_component<PositionComponent>().setPosition(position);
 	}
 	if (entity.has_component<PhysicsComponent>())
 	{
-		entity.get_component<PhysicsComponent>().setDialoguePosition(
+		entity.get_component<PhysicsComponent>().setPosition(
 			b2Vec2(UnitConverter::pixelsToMeters(position.x), UnitConverter::pixelsToMeters(-position.y)));
 	}
 
