@@ -118,16 +118,16 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 			b2PolygonShape shape;
 			shape.SetAsBox(UnitConverter::pixelsToMeters(AABB.width / 2.f), UnitConverter::pixelsToMeters(AABB.height / 2.f));
 
-			b2FixtureDef fixture;
-			fixture.shape = &shape;
+			b2FixtureDef fixtureDef;
+			fixtureDef.shape = &shape;
 
 			if (object.getType() == "Waypoint" || object.getType() == "Liquid")
 			{
-				fixture.isSensor = true;
+				fixtureDef.isSensor = true;
 			}
 
 			auto* staticObject = this->world.CreateBody(&bodyDefinition);
-			staticObject->CreateFixture(&fixture);
+			auto* fixture = staticObject->CreateFixture(&fixtureDef);
 
 			std::unordered_map<std::string, tmx::Property> properties;
 			
@@ -155,8 +155,8 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 				}
 			}
 
-      	   this->collisionsData.push_back(CollisionData(staticObject, static_cast<ObjectType>(properties["ID"].getIntValue()), properties));
-           this->collisionsData.back().body->SetUserData(&this->collisionsData.back());
+      	   this->collisionsData.push_back(CollisionData(fixture, static_cast<ObjectType>(properties["ID"].getIntValue()), properties));
+           this->collisionsData.back().fixture->SetUserData(&this->collisionsData.back());
 		}
 	}
 	

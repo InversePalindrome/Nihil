@@ -37,7 +37,6 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2Bod
 	fixtureDef.filter.groupIndex = collisionGroup;
 
 	body = world.CreateBody(&bodyDefinition);
-	fixture = body->CreateFixture(&fixtureDef);
 
 	switch (objectType)
 	{
@@ -49,9 +48,24 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2Bod
 		body->SetBullet(true);
 		break;
 	case ObjectType::Liquid:
-		fixture->SetSensor(true);
+		fixtureDef.isSensor = true;
+		break;
+	case ObjectType::Player:
+	{
+		b2PolygonShape feetShape;
+		feetShape.SetAsBox(bodySize.x / 8.f, bodySize.y / 8.f, { bodySize.x  / 2.f, -bodySize.y }, 0.f);
+		
+		b2FixtureDef feetDef;
+		feetDef.isSensor = true;
+		feetDef.density = 0.f;
+		feetDef.shape = &feetShape;
+
+		fixtures[ObjectType::Feet] = body->CreateFixture(&feetDef);
+	}
 		break;
 	}
+
+	fixtures[objectType] = body->CreateFixture(&fixtureDef);
 }
 
 std::ostream& operator<<(std::ostream& os, const PhysicsComponent& component)
@@ -65,6 +79,11 @@ std::ostream& operator<<(std::ostream& os, const PhysicsComponent& component)
 b2Body* PhysicsComponent::getBody()
 {
 	return this->body;
+}
+
+std::unordered_map<ObjectType, b2Fixture*>& PhysicsComponent::getFixtures()
+{
+	return this->fixtures;
 }
 
 b2Vec2 PhysicsComponent::getPosition() const
@@ -132,6 +151,11 @@ void PhysicsComponent::setVelocity(const b2Vec2& velocity)
 	this->body->SetLinearVelocity(velocity);
 }
 
+void PhysicsComponent::setType(b2BodyType type)
+{
+	this->body->SetType(type);
+}
+
 void PhysicsComponent::setMaxVelocity(float maxVelocity)
 {
 	this->maxVelocity = maxVelocity;
@@ -161,11 +185,14 @@ void PhysicsComponent::setCollisionGroup(std::int16_t collisionGroup)
 {
 	this->collisionGroup = collisionGroup;
 
-	auto filterData = this->fixture->GetFilterData();
+	for (auto& fixture : this->fixtures)
+	{
+		auto filterData = fixture.second->GetFilterData();
 
-	filterData.groupIndex = collisionGroup;
+		filterData.groupIndex = collisionGroup;
 
-	this->fixture->SetFilterData(filterData);
+		fixture.second->SetFilterData(filterData);
+	}
 }
 
 void PhysicsComponent::setLinearDamping(float linearDamping)

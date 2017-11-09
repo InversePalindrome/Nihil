@@ -34,7 +34,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	coinDisplay.setPosition(1600.f, 60.f);
 	coinDisplay.setNumberOfCoins(stateData.games.front().getItems()[Item::Coin]);
 
-	itemsDisplay.setPosition(500.f, 110.f);
+	itemsDisplay.setPosition(500.f, 85.f);
 
 	powerUpDisplay.setPosition(500.f, 50.f);
 	achievementDisplay.setPosition(740.f, 60.f);
@@ -50,6 +50,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	entityManager.getEvents().subscribe<UpdateAchievement>([this](const auto& event) { updateAchievements(event.achievement); });
 	
 	entityManager.getEvents().subscribe<HidePowerUp>([this](const auto& event) { powerUpDisplay.removePowerUp(event.item); });
+	entityManager.getEvents().subscribe<AvoidImpulse>([this](const auto& event) { avoidImpulse(event.acceleratingEntity, event.constantEntity); });
 
 	entityManager.getEvents().subscribe<CreateEntity>([this](const auto& event) 
 	{ 
@@ -198,7 +199,7 @@ void GameState::updateCamera()
 			{
 				this->camera.setCenter(this->camera.getCenter().x, centerPosition.y);
 			}
-			else if (centerPosition.y >= this->camera.getSize().y > 2.f)
+			else if (centerPosition.y >= this->camera.getSize().y / 2.f)
 			{
 				this->camera.setCenter(this->stateData.window.getDefaultView().getCenter());
 			}
@@ -352,6 +353,18 @@ void GameState::changeEntityPosition(Entity entity, const sf::Vector2f& position
 void GameState::destroyBody(PhysicsComponent& physics)
 {
 	this->world.DestroyBody(physics.getBody());
+}
+
+void GameState::avoidImpulse(Entity acceleratingEntity, Entity constantEntity)
+{
+	if (acceleratingEntity.has_component<PhysicsComponent>() && constantEntity.has_component<PhysicsComponent>())
+	{
+		auto& acceleratingPhysics = acceleratingEntity.get_component<PhysicsComponent>();
+		auto& constantPhysics = constantEntity.get_component<PhysicsComponent>();
+		
+		//acceleratingPhysics.setVelocity({ 0.f, 0.f });
+		//constantPhysics.applyForce({ 0.f, 1000.f });
+	}
 }
 
 void GameState::saveData(const std::string& fileName)

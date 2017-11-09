@@ -10,6 +10,7 @@ InversePalindrome.com
 
 #include <fstream>
 
+
 AudioProperties::AudioProperties(const std::string& fileName)
 {
 	std::ifstream inFile(Path::miscellaneous / fileName);

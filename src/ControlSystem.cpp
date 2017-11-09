@@ -12,7 +12,7 @@ ControlSystem::ControlSystem(Entities& entities, Events& events, InputHandler& i
 	System(entities, events),
     inputHandler(inputHandler)
 {
-	events.subscribe<IsMidAir>([this](const auto& event) { setMidAirStatus(event.entity, event.midAirStatus); });
+	events.subscribe<SetMidAirStatus>([this](const auto& event) { setMidAirStatus(event.entity, event.midAirStatus); });
 
 	events.subscribe<entityplus::component_added<Entity, ControllableComponent>>([&events](const auto& event)
 	{

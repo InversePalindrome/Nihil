@@ -8,6 +8,7 @@ InversePalindrome.com
 #include "CollisionHandler.hpp"
 
 
+
 CollisionHandler::CollisionHandler(Events& events) :
 	events(events)
 {
@@ -15,8 +16,8 @@ CollisionHandler::CollisionHandler(Events& events) :
 
 void CollisionHandler::BeginContact(b2Contact* contact)
 {
-	auto* objectA = static_cast<CollisionData*>(contact->GetFixtureA()->GetBody()->GetUserData());
-	auto* objectB = static_cast<CollisionData*>(contact->GetFixtureB()->GetBody()->GetUserData());
+	auto* objectA = static_cast<CollisionData*>(contact->GetFixtureA()->GetUserData());
+	auto* objectB = static_cast<CollisionData*>(contact->GetFixtureB()->GetUserData());
 
 	if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Movable, ObjectType::Border))
 	{
@@ -98,7 +99,12 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 
 		this->events.broadcast(DestroyEntity{ orderedCollision->first.get().entity });
 	}
-
+	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Feet, ObjectType::Block))
+	{
+		orderedCollision->first.get().entity.sync();
+		
+		this->events.broadcast(SetMidAirStatus{ orderedCollision->first.get().entity, false });
+	}
 
 	if (const auto& collider = this->getCollider(objectA, objectB, ObjectType::Bullet))
 	{
@@ -116,8 +122,8 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 
 void CollisionHandler::EndContact(b2Contact* contact)
 {
-	auto* objectA = static_cast<CollisionData*>(contact->GetFixtureA()->GetBody()->GetUserData());
-	auto* objectB = static_cast<CollisionData*>(contact->GetFixtureB()->GetBody()->GetUserData());
+	auto* objectA = static_cast<CollisionData*>(contact->GetFixtureA()->GetUserData());
+	auto* objectB = static_cast<CollisionData*>(contact->GetFixtureB()->GetUserData());
 
 	if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Character))
 	{
@@ -131,6 +137,12 @@ void CollisionHandler::EndContact(b2Contact* contact)
 
 		this->events.broadcast(SetGravityScale{ orderedCollision->first.get().entity, 1.f });
 		this->events.broadcast(SetLinearDamping{ orderedCollision->first.get().entity, 0.f });
+	}
+	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Feet, ObjectType::Block))
+	{
+		orderedCollision->first.get().entity.sync();
+
+		this->events.broadcast(SetMidAirStatus{ orderedCollision->first.get().entity, true });
 	}
 }
 

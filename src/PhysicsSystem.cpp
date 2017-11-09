@@ -15,7 +15,7 @@ PhysicsSystem::PhysicsSystem(Entities& entities, Events& events, b2World& world,
 	world(world),
 	collisionsData(collisionsData)
 {
-	events.subscribe<entityplus::component_added<Entity, PhysicsComponent>>([this](const auto& event) { addInitialData(event.entity, event.component); });
+	events.subscribe<entityplus::component_added<Entity, PhysicsComponent>>([this](const auto& event) { setInitialData(event.entity, event.component); });
 	events.subscribe<DirectionChanged>([this](const auto& event) { changeEntityPosition(event.entity, event.direction); });
 	events.subscribe<Jumped>([this](const auto& event) { makeJump(event.entity); });
 	events.subscribe<StopMovement>([this](const auto& event) { stopEntity(event.entity); });
@@ -55,6 +55,14 @@ void PhysicsSystem::changeEntityPosition(Entity entity, Direction direction)
 	case Direction::Left:
 		newVelocity.x = b2Max(currentVelocity.x - physics.getAccelerationRate(), -physics.getMaxVelocity());
 		deltaVelocity.x = newVelocity.x - currentVelocity.x;
+		break;
+	case Direction::Up:
+		newVelocity.y = b2Min(currentVelocity.y + physics.getAccelerationRate(), -physics.getMaxVelocity());
+		deltaVelocity.y = newVelocity.y - currentVelocity.y;
+		break;
+	case Direction::Down:
+		newVelocity.y = b2Max(currentVelocity.y - physics.getAccelerationRate(), physics.getMaxVelocity());
+		deltaVelocity.y = newVelocity.y - currentVelocity.y;
 		break;
 	}
 
@@ -133,26 +141,22 @@ void PhysicsSystem::checkPhysicalStatus(Entity entity, const PhysicsComponent& p
 	{
 		this->events.broadcast(ChangeState{ entity, EntityState::Idle });
 	}
-
-	if (physics.getVelocity().y != 0.f)
-	{
-		this->events.broadcast(IsMidAir{ entity, true });
-	}
-	else
-	{
-		this->events.broadcast(IsMidAir{ entity, false });
-	}
 }
 
-void PhysicsSystem::addInitialData(Entity entity, PhysicsComponent& physics)
+void PhysicsSystem::setInitialData(Entity entity, PhysicsComponent& physics)
 {
-	this->collisionsData.push_back(CollisionData(entity, physics.getBody(), physics.getObjectType()));
-	this->collisionsData.back().body->SetUserData(&this->collisionsData.back());
-
 	if (entity.has_component<PositionComponent>())
 	{
 		const auto& position = entity.get_component<PositionComponent>().getPosition();
 
 		physics.setPosition(b2Vec2(UnitConverter::pixelsToMeters(position.x), UnitConverter::pixelsToMeters(-position.y)));
+
+		auto& fixtures = physics.getFixtures();
+
+		for (auto& fixture : fixtures)
+		{
+			this->collisionsData.push_back(CollisionData(entity, fixture.second, fixture.first));
+			fixture.second->SetUserData(&this->collisionsData.back());
+		}
 	}
 }
