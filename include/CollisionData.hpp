@@ -12,7 +12,7 @@ InversePalindrome.com
 
 #include <tmxlite/Property.hpp>
 
-#include <Box2D/Dynamics/b2Body.h>
+#include <Box2D/Dynamics/b2Fixture.h>
 
 #include <list>
 #include <unordered_map>
@@ -20,22 +20,22 @@ InversePalindrome.com
 
 struct CollisionData
 {
-	CollisionData(b2Body* body, ObjectType objectType, const std::unordered_map<std::string, tmx::Property>& properties) :
-		body(body),
+	CollisionData(b2Fixture* fixture, ObjectType objectType, const std::unordered_map<std::string, tmx::Property>& properties) :
+		fixture(fixture),
 		objectType(objectType),
 		properties(properties)
 	{
 	}
 
-	CollisionData(Entity entity, b2Body* body, ObjectType objectType) :
+	CollisionData(Entity entity, b2Fixture* fixture, ObjectType objectType) :
 		entity(entity),
-		body(body),
+		fixture(fixture),
 		objectType(objectType)
 	{
 	}
 
 	Entity entity;
-	b2Body* body;
+	b2Fixture* fixture;
 	ObjectType objectType;
 	std::unordered_map<std::string, tmx::Property> properties;
 };

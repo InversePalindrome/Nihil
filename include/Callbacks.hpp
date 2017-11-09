@@ -7,7 +7,6 @@ InversePalindrome.com
 
 #pragma once
 
-#include <vector>
 #include <list>
 #include <functional>
 
@@ -28,6 +27,6 @@ public:
 	void disconnectCallbackTimers();
 
 private:
-	std::vector<std::function<void()>> callbacks;
+	std::list<std::function<void()>> callbacks;
 	std::list<thor::CallbackTimer> callbackTimers;
 };

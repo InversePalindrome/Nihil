@@ -78,7 +78,8 @@ struct ApplyKnockback;
 struct SetGravityScale;
 struct SetLinearDamping;
 struct ChangePosition;
-struct IsMidAir;
+struct SetMidAirStatus;
+struct AvoidImpulse;
 
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
@@ -93,7 +94,7 @@ using Entities = entityplus::entity_manager<Components, Tags>;
 using Events = entityplus::event_manager<Components, Tags, CreateEntity, DestroyBody, UpdateAchievement, DirectionChanged, Jumped, StopMovement, CombatOcurred, ChangeState,
 	StateChanged, ChangeLevel, DestroyEntity, EmitSound, PickedUpItem, DroppedItem, DisplayHealthBar, DisplayCoins, DisplayPowerUp, DisplayConversation,
 	UpdateConversation, HidePowerUp, PlayerDied, CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform, ApplyForce, ApplyImpulse,
-	ApplyBlastImpact, ApplyKnockback, SetGravityScale, SetLinearDamping, ChangePosition, IsMidAir>;
+	ApplyBlastImpact, ApplyKnockback, SetGravityScale, SetLinearDamping, ChangePosition, SetMidAirStatus, AvoidImpulse>;
 
 using Entity = Entities::entity_t;
 
@@ -290,8 +291,14 @@ struct ChangePosition
 	sf::Vector2f location;
 };
 
-struct IsMidAir
+struct SetMidAirStatus
 {
 	Entity entity;
 	bool midAirStatus;
+};
+
+struct AvoidImpulse
+{
+	Entity acceleratingEntity;
+	Entity constantEntity;
 };

@@ -69,6 +69,7 @@ private:
 	void changeEntityPosition(Entity entity, const sf::Vector2f& position);
 
 	void destroyBody(PhysicsComponent& physics);
+	void avoidImpulse(Entity acceleratingEntity, Entity constantEntity);
 
 	void saveData(const std::string& fileName);
 };

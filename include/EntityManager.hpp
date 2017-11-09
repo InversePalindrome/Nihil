@@ -35,7 +35,7 @@ class EntityManager : public sf::Drawable
 {
 public:
 	EntityManager(b2World& world, ResourceManager& resourceManager, SoundManager& soundManager, 
-		InputHandler& inputHandler, CollisionsData& collisionData, Pathways& pathways);
+		InputHandler& inputHandler, CollisionsData& collisionsData, Pathways& pathways);
 	EntityManager(const EntityManager& entityManager) = delete;
     EntityManager& operator=(const EntityManager& entityManager) = delete;
 

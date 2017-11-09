@@ -16,6 +16,8 @@ InversePalindrome.com
 
 #include <SFML/System/Vector2.hpp>
 
+#include <unordered_map>
+
 
 class PhysicsComponent : public Component
 {
@@ -26,6 +28,7 @@ public:
 		float maxVelocity, float jumpVelocity, float accelerationRate);
 
 	b2Body* getBody();
+	std::unordered_map<ObjectType, b2Fixture*>& getFixtures();
 
 	b2Vec2 getPosition() const;
 	b2Vec2 getBodySize() const;
@@ -42,6 +45,7 @@ public:
 
 	void setPosition(const b2Vec2& position);
 	void setVelocity(const b2Vec2& velocity);
+	void setType(b2BodyType type);
 	void setMaxVelocity(float maxVelocity);
 	void setJumpVelocity(float jumpVelocity);
 	void setAccelerationRate(float accelerationRate);
@@ -57,7 +61,7 @@ public:
 
 private:
 	b2Body* body;
-	b2Fixture* fixture;
+	std::unordered_map<ObjectType, b2Fixture*> fixtures;
 	b2Vec2 bodySize;
 	ObjectType objectType;
 	std::int16_t collisionGroup;

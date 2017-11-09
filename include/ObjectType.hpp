@@ -14,11 +14,12 @@ enum class ObjectType : std::size_t
 {
 	Tile = (1 << 0), Player = (1 << 1), Spike = (1 << 2), Enemy = (1 << 3), Portal = (1 << 4), Pickup = (1 << 5), Trampoline = (1 << 6),
 	Border = (1 << 7), Platform = (1 << 8), Waypoint = (1 << 9), Bullet = (1 << 10), Bomb = (1 << 11), Explosion = (1 << 12), Teleporter = (1 << 13), 
-	Character = (1 << 14), Liquid = (1 << 15),
+	Character = (1 << 14), Liquid = (1 << 15), Feet = (1 << 16),
 	Alive = Player | Enemy,
 	Projectile = Bullet | Bomb,
 	Lethal = Bullet | Explosion,
-	Movable = Player | Enemy | Projectile
+	Movable = Player | Enemy | Projectile,
+	Block = Tile | Platform
 };
 
 using T = std::underlying_type_t<ObjectType>;

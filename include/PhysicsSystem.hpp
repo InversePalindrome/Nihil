@@ -23,7 +23,6 @@ public:
 
 private:
 	b2World& world;
-	CollisionsData& collisionsData;
 
 	void changeEntityPosition(Entity entity, Direction direction);
 	void stopEntity(Entity entity);
@@ -38,5 +37,7 @@ private:
 	void convertPositionCoordinates(const PhysicsComponent& physics, PositionComponent& position);
 	void checkPhysicalStatus(Entity entity, const PhysicsComponent& physics);
 
-	void addInitialData(Entity entity, PhysicsComponent& physics);
+	void setInitialData(Entity entity, PhysicsComponent& physics);
+
+	CollisionsData& collisionsData;
 };
