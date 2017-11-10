@@ -30,12 +30,13 @@ private:
 
 	void setGravityScale(Entity entity, float gravityScale);
 	void setLinearDamping(Entity entity, float linearDamping);
+	void setVelocity(Entity entity, Direction direction);
 
 	void applyImpulse(Entity entity, const b2Vec2& impulse);
 	void applyForce(Entity entity, const b2Vec2& force);
 
 	void convertPositionCoordinates(const PhysicsComponent& physics, PositionComponent& position);
-	void checkPhysicalStatus(Entity entity, const PhysicsComponent& physics);
+	void checkPhysicalStatus(Entity entity, PhysicsComponent& physics);
 
 	void setInitialData(Entity entity, PhysicsComponent& physics);
 

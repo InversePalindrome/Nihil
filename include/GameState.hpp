@@ -65,11 +65,13 @@ private:
 
 	void displayConversation(Entity entity, bool visibilityStatus);
 
-	void changeLevel(const std::string& level);
+	void changeLevel(const std::string& level, const sf::Vector2f& spawnpoint);
 	void changeEntityPosition(Entity entity, const sf::Vector2f& position);
 
+	void setCheckpoint(const sf::Vector2f& position);
+	void setPosition(Entity entity, const sf::Vector2f& position);
+
 	void destroyBody(PhysicsComponent& physics);
-	void avoidImpulse(Entity acceleratingEntity, Entity constantEntity);
 
 	void saveData(const std::string& fileName);
 };

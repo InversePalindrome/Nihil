@@ -13,6 +13,7 @@ InversePalindrome.com
 
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2World.h>
+#include <Box2D/Dynamics/Contacts/b2Contact.h>
 
 #include <SFML/System/Vector2.hpp>
 
@@ -28,7 +29,9 @@ public:
 		float maxVelocity, float jumpVelocity, float accelerationRate);
 
 	b2Body* getBody();
+	ObjectType getObjectType() const;
 	std::unordered_map<ObjectType, b2Fixture*>& getFixtures();
+	b2ContactEdge* getContactList();
 
 	b2Vec2 getPosition() const;
 	b2Vec2 getBodySize() const;
@@ -54,10 +57,10 @@ public:
 	void setCollisionGroup(std::int16_t collisionGroup);
 	void setLinearDamping(float linearDamping);
 
+	bool isColliding(ObjectType fixtureObject, ObjectType collidableObject) const;
+
 	void applyForce(const b2Vec2& force);
 	void applyImpulse(const b2Vec2& impulse);
-
-	ObjectType getObjectType() const;
 
 private:
 	b2Body* body;

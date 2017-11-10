@@ -66,6 +66,7 @@ struct DisplayConversation;
 struct UpdateConversation;
 struct HidePowerUp;
 struct PlayerDied;
+struct CrossedCheckpoint;
 struct CrossedWaypoint;
 struct ShootProjectile;
 struct ActivateBomb;
@@ -77,9 +78,9 @@ struct ApplyBlastImpact;
 struct ApplyKnockback;
 struct SetGravityScale;
 struct SetLinearDamping;
-struct ChangePosition;
+struct SetVelocity;
+struct SetPosition;
 struct SetMidAirStatus;
-struct AvoidImpulse;
 
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
@@ -92,9 +93,9 @@ using Tags = entityplus::tag_list<AI>;
 using Entities = entityplus::entity_manager<Components, Tags>;
 
 using Events = entityplus::event_manager<Components, Tags, CreateEntity, DestroyBody, UpdateAchievement, DirectionChanged, Jumped, StopMovement, CombatOcurred, ChangeState,
-	StateChanged, ChangeLevel, DestroyEntity, EmitSound, PickedUpItem, DroppedItem, DisplayHealthBar, DisplayCoins, DisplayPowerUp, DisplayConversation,
-	UpdateConversation, HidePowerUp, PlayerDied, CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform, ApplyForce, ApplyImpulse,
-	ApplyBlastImpact, ApplyKnockback, SetGravityScale, SetLinearDamping, ChangePosition, SetMidAirStatus, AvoidImpulse>;
+	StateChanged, ChangeLevel, DestroyEntity, EmitSound, PickedUpItem, DroppedItem, DisplayHealthBar, DisplayCoins, DisplayPowerUp, DisplayConversation, UpdateConversation,
+	HidePowerUp, PlayerDied, CrossedCheckpoint, CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform, ApplyForce, ApplyImpulse, ApplyBlastImpact,
+	ApplyKnockback, SetGravityScale, SetLinearDamping, SetVelocity, SetPosition, SetMidAirStatus>;
 
 using Entity = Entities::entity_t;
 
@@ -157,6 +158,7 @@ struct StateChanged
 struct ChangeLevel
 {
 	std::string level;
+	sf::Vector2f position;
 };
 
 struct DestroyEntity
@@ -217,6 +219,11 @@ struct HidePowerUp
 
 struct PlayerDied
 {
+};
+
+struct CrossedCheckpoint
+{
+	sf::Vector2f position;
 };
 
 struct CrossedWaypoint
@@ -285,20 +292,20 @@ struct SetLinearDamping
 	float linearDamping;
 };
 
-struct ChangePosition
+struct SetVelocity
 {
 	Entity entity;
-	sf::Vector2f location;
+	Direction direction;
+};
+
+struct SetPosition
+{
+	Entity entity;
+	sf::Vector2f position;
 };
 
 struct SetMidAirStatus
 {
 	Entity entity;
 	bool midAirStatus;
-};
-
-struct AvoidImpulse
-{
-	Entity acceleratingEntity;
-	Entity constantEntity;
 };

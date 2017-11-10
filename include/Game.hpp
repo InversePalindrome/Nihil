@@ -33,7 +33,6 @@ struct LevelData
 	std::string name;
 	DirectionType directionType;
 	b2Vec2 gravity;
-	sf::Vector2f spawnPosition;
 	bool isLoaded;
 };
 
@@ -56,13 +55,14 @@ public:
 	Achievements& getAchievements();
 	DirectionType getCurrenDirectionType() const;
 	b2Vec2 getCurrentGravity() const;
-	sf::Vector2f getCurrentSpawnPoint() const;
+	sf::Vector2f getSpawnpoint() const;
 
 	LoadedLevels& getLevels();
 
 	void setPlayer(Entity player);
 	void setGameName(const std::string& name);
 	void setCurrentLevel(const std::string& currentLevel);
+	void setSpawnpoint(const sf::Vector2f& spawnpoint);
 
 private:
 	Entity player;
@@ -71,6 +71,7 @@ private:
 	std::string currentLevel;
 	Items items; 
 	Achievements achievements;
+	sf::Vector2f spawnpoint;
 
 	LoadedLevels levels;
 
