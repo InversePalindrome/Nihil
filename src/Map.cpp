@@ -8,7 +8,7 @@ InversePalindrome.com
 #include "Map.hpp"
 #include "FilePaths.hpp"
 #include "UnitConverter.hpp"
-#include <iostream>
+
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2Fixture.h>
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
@@ -18,7 +18,8 @@ InversePalindrome.com
 #include <unordered_map>
 
 
-Map::Map(Game& game, b2World& world, ComponentSerializer& componentSerializer, ResourceManager& resourceManager, CollisionsData& collisionsData, Pathways& pathways) :
+Map::Map(Game& game, b2World& world, ComponentSerializer& componentSerializer, ResourceManager& resourceManager,
+	CollisionsData& collisionsData, Pathways& pathways) :
 	game(game),
 	world(world),
 	componentSerializer(componentSerializer),
@@ -121,7 +122,7 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 			b2FixtureDef fixtureDef;
 			fixtureDef.shape = &shape;
 
-			if (object.getType() == "Waypoint" || object.getType() == "Liquid")
+			if (object.getType() == "Sensor")
 			{
 				fixtureDef.isSensor = true;
 			}

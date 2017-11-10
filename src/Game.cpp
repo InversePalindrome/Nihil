@@ -19,7 +19,10 @@ Game::Game()
 
 	std::ifstream inFile(Path::levels / "Levels.txt");
 
-	inFile >> currentLevel;
+	std::size_t directionType = 0u;
+	float xGravity = 0.f, yGravity = 0.f;
+
+	inFile >> currentLevel >> directionType >> xGravity >> yGravity >> spawnpoint.x >> spawnpoint.y;
 }
 
 Game::Game(const std::string& data) 
@@ -44,6 +47,10 @@ Game::Game(const std::string& data)
 		else if (category == "CurrentLevel")
 		{
 			inLine >> currentLevel;
+		}
+		else if (category == "Spawnpoint")
+		{
+			inLine >> spawnpoint.x >> spawnpoint.y;
 		}
 		else if (category == "Levels")
 		{
@@ -109,9 +116,9 @@ Achievements& Game::getAchievements()
 	return this->achievements;
 }
 
-sf::Vector2f Game::getCurrentSpawnPoint() const
+sf::Vector2f Game::getSpawnpoint() const
 {
-	return this->levels.get<1>().find(this->currentLevel)->spawnPosition;
+	return this->spawnpoint;
 }
 
 Game::LoadedLevels& Game::getLevels()
@@ -144,10 +151,16 @@ void Game::setCurrentLevel(const std::string& currentLevel)
 	this->currentLevel = currentLevel;
 }
 
+void Game::setSpawnpoint(const sf::Vector2f& spawnpoint)
+{
+	this->spawnpoint = spawnpoint;
+}
+
 std::ostream& operator<<(std::ostream& os, const Game& game)
 {
 	os << "Game " << game.gameName << '\n';
 	os << "CurrentLevel " << game.currentLevel << '\n';
+	os << "Spawnpoint " << game.spawnpoint.x << ' ' << game.spawnpoint.y << '\n';
 
 	os << "Levels ";
 
@@ -183,11 +196,11 @@ void Game::loadLevels()
 		
 	    std::string levelName;
 		std::size_t directionType = 0u;
-		float xGravity = 0.f, yGravity = 0.f, xPosition = 0.f, yPosition = 0.f;
+		float xGravity = 0.f, yGravity = 0.f;
 
-		iStream >> levelName >> directionType >> xGravity >> yGravity >> xPosition >> yPosition;
+		iStream >> levelName >> directionType >> xGravity >> yGravity;
 
-		this->levels.get<1>().insert({ levelName, static_cast<DirectionType>(directionType), { xGravity, yGravity }, {xPosition, yPosition}, false });
+		this->levels.get<1>().insert({ levelName, static_cast<DirectionType>(directionType), { xGravity, yGravity }, false });
 	}
 }
 

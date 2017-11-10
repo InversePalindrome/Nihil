@@ -10,7 +10,7 @@ InversePalindrome.com
 
 ControllableComponent::ControllableComponent() :
 	Component("Controllable"),
-	midAirStatus(false)
+	midAirStatus(true)
 {
 }
 

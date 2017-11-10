@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #include "PhysicsComponent.hpp"
+#include "CollisionData.hpp"
 
 #include <Box2D/Dynamics/b2Fixture.h>
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
@@ -53,7 +54,7 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2Bod
 	case ObjectType::Player:
 	{
 		b2PolygonShape feetShape;
-		feetShape.SetAsBox(bodySize.x / 8.f, bodySize.y / 8.f, { bodySize.x  / 2.f, -bodySize.y }, 0.f);
+		feetShape.SetAsBox(bodySize.x / 4.f, bodySize.y / 4.f, { 0.f, -bodySize.y }, 0.f);
 		
 		b2FixtureDef feetDef;
 		feetDef.isSensor = true;
@@ -81,9 +82,19 @@ b2Body* PhysicsComponent::getBody()
 	return this->body;
 }
 
+ObjectType PhysicsComponent::getObjectType() const
+{
+	return this->objectType;
+}
+
 std::unordered_map<ObjectType, b2Fixture*>& PhysicsComponent::getFixtures()
 {
 	return this->fixtures;
+}
+
+b2ContactEdge* PhysicsComponent::getContactList()
+{
+	return this->body->GetContactList();
 }
 
 b2Vec2 PhysicsComponent::getPosition() const
@@ -200,6 +211,26 @@ void PhysicsComponent::setLinearDamping(float linearDamping)
 	this->body->SetLinearDamping(linearDamping);
 }
 
+bool PhysicsComponent::isColliding(ObjectType fixtureObject, ObjectType collidableObject) const
+{
+	for (const auto* edge = this->body->GetContactList(); edge; edge = edge->next)
+	{
+		if (edge->contact->IsTouching())
+		{
+			const auto* objectA = static_cast<CollisionData*>(edge->contact->GetFixtureA()->GetUserData());
+			const auto* objectB = static_cast<CollisionData*>(edge->contact->GetFixtureB()->GetUserData());
+
+			if ((objectA->objectType & fixtureObject && objectB->objectType & collidableObject) ||
+				(objectA->objectType & collidableObject && objectB->objectType & fixtureObject))
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
 void PhysicsComponent::applyForce(const b2Vec2& force)
 {
 	this->body->ApplyForceToCenter(force, true);
@@ -208,9 +239,4 @@ void PhysicsComponent::applyForce(const b2Vec2& force)
 void PhysicsComponent::applyImpulse(const b2Vec2& impulse)
 {
 	this->body->ApplyLinearImpulseToCenter(impulse, true);
-}
-
-ObjectType PhysicsComponent::getObjectType() const
-{
-	return this->objectType;
 }

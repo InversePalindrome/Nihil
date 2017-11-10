@@ -32,13 +32,13 @@ MenuState::MenuState(StateMachine& stateMachine, StateData& stateData) :
 	titleLabel.setOrigin(titleLabel.getGlobalBounds().width / 2.f, titleLabel.getGlobalBounds().height / 2.f);
 	titleLabel.setPosition(this->stateData.window.getSize().x / 2.f, 400.f);
 	 
-	playButton->SetPosition(sf::Vector2f(755.f, 820.f));
+	playButton->SetPosition(sf::Vector2f(740.f, 820.f));
 	playButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { transitionToState(StateID::Hub); });
 	
-	settingsButton->SetPosition(sf::Vector2f(755.f, 1000.f));
+	settingsButton->SetPosition(sf::Vector2f(740.f, 1000.f));
 	settingsButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { transitionToState(StateID::Settings); });
 
-    quitButton->SetPosition(sf::Vector2f(755.f, 1180.f));
+    quitButton->SetPosition(sf::Vector2f(740.f, 1180.f));
 	quitButton->GetSignal(sfg::Widget::OnLeftClick).Connect([&stateData] { stateData.window.close(); });
 	
 	Parsers::parseGUIProperties(stateData.guiManager, "MenuGUI.txt");

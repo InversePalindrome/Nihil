@@ -23,12 +23,13 @@ PhysicsSystem::PhysicsSystem(Entities& entities, Events& events, b2World& world,
 	events.subscribe<ApplyImpulse>([this](const auto& event) { applyImpulse(event.entity, event.impulse); });
 	events.subscribe<SetGravityScale>([this](const auto& event) { setGravityScale(event.entity, event.gravity); });
 	events.subscribe<SetLinearDamping>([this](const auto& event) { setLinearDamping(event.entity, event.linearDamping); });
+	events.subscribe<SetVelocity>([this](const auto& event) { setVelocity(event.entity, event.direction); });
 }
 
 void PhysicsSystem::update(float deltaTime)
 {
 	this->entities.for_each<PhysicsComponent, PositionComponent>(
-		[this](auto entity, const auto& physics, auto& position) 
+		[this](auto entity, auto& physics, auto& position) 
 	{
 		this->convertPositionCoordinates(physics, position);
 		this->checkPhysicalStatus(entity, physics);
@@ -78,18 +79,24 @@ void PhysicsSystem::changeEntityPosition(Entity entity, Direction direction)
 
 void PhysicsSystem::stopEntity(Entity entity)
 {
-	entity.get_component<PhysicsComponent>().setVelocity(b2Vec2(0.f, 0.f));
+	if (entity.has_component<PhysicsComponent>())
+	{
+		entity.get_component<PhysicsComponent>().setVelocity(b2Vec2(0.f, 0.f));
+	}
 }
 
 void PhysicsSystem::makeJump(Entity entity)
 {
-	auto& physics = entity.get_component<PhysicsComponent>();
+	if (entity.has_component<PhysicsComponent>())
+	{
+		auto& physics = entity.get_component<PhysicsComponent>();
 
-	this->events.broadcast(ChangeState{ entity, EntityState::Jumping });
+		this->events.broadcast(ChangeState{ entity, EntityState::Jumping });
 
-	const auto& impulse = b2Vec2(0.f, physics.getJumpVelocity() * physics.getMass());
+		const auto& impulse = b2Vec2(0.f, physics.getJumpVelocity() * physics.getMass());
 
-	physics.applyImpulse(impulse);
+		physics.applyImpulse(impulse);
+	}
 }
 
 
@@ -108,6 +115,34 @@ void PhysicsSystem::setLinearDamping(Entity entity, float linearDamping)
 	if (entity.has_component<PhysicsComponent>())
 	{
 		entity.get_component<PhysicsComponent>().setLinearDamping(linearDamping);
+	}
+}
+
+void PhysicsSystem::setVelocity(Entity entity, Direction direction)
+{
+	if (entity.has_component<PhysicsComponent>())
+	{
+		auto& physics = entity.get_component<PhysicsComponent>();
+
+		b2Vec2 velocity(0.f, 0.f);
+
+		switch (direction)
+		{
+		case Direction::Up:
+			velocity.y = -physics.getMaxVelocity();
+			break;
+		case Direction::Down:
+			velocity.y = physics.getMaxVelocity();
+			break;
+		case Direction::Right:
+			velocity.x = physics.getMaxVelocity();
+			break;
+		case Direction::Left:
+			velocity.x = -physics.getMaxVelocity();
+			break;
+		}
+
+		physics.setVelocity(velocity);
 	}
 }
 
@@ -135,11 +170,16 @@ void PhysicsSystem::convertPositionCoordinates(const PhysicsComponent& physics, 
 	}
 }
 
-void PhysicsSystem::checkPhysicalStatus(Entity entity, const PhysicsComponent& physics)
+void PhysicsSystem::checkPhysicalStatus(Entity entity, PhysicsComponent& physics)
 {
 	if (entity.has_component<StateComponent>() && physics.getVelocity() == b2Vec2(0.f, 0.f))
 	{
 		this->events.broadcast(ChangeState{ entity, EntityState::Idle });
+	}
+
+	if (physics.isColliding(ObjectType::Feet, ObjectType::Tile))
+	{
+		this->events.broadcast(SetMidAirStatus{ entity, false });
 	}
 }
 

@@ -25,50 +25,47 @@ ControlSystem::ControlSystem(Entities& entities, Events& events, InputHandler& i
 
 void ControlSystem::addControl(Entity entity)
 {
-	if (entity.has_component<ControllableComponent>())
+	this->inputHandler.clearCallbacks();
+
+	this->inputHandler.addCallback(Action::MoveLeft, [this, entity]() mutable
 	{
-		this->inputHandler.clearCallbacks();
+		entity.sync();
 
-		this->inputHandler.addCallback(Action::MoveLeft, [this, entity]() mutable
+		this->events.broadcast(DirectionChanged{ entity, Direction::Left });
+	});
+
+	this->inputHandler.addCallback(Action::MoveRight, [this, entity]() mutable
+	{
+		entity.sync();
+
+		this->events.broadcast(DirectionChanged{ entity, Direction::Right });
+	});
+
+	this->inputHandler.addCallback(Action::Jump, [this, entity]() mutable
+	{
+		entity.sync();
+
+		if (!entity.get_component<ControllableComponent>().isMidAir())
 		{
-			entity.sync();
+			this->events.broadcast(Jumped{ entity });
+		}
+	});
 
-			this->events.broadcast(DirectionChanged{ entity, Direction::Left });
-		});
+	this->inputHandler.addCallback(Action::Shoot, [this, entity]() mutable
+	{
+		entity.sync();
 
-		this->inputHandler.addCallback(Action::MoveRight, [this, entity]() mutable
+		if (entity.has_component<RangeAttackComponent>() && entity.has_component<TimerComponent>()
+			&& entity.get_component<TimerComponent>().hasTimerExpired("Reload"))
 		{
-			entity.sync();
-
-			this->events.broadcast(DirectionChanged{ entity, Direction::Right });
-		});
-
-		this->inputHandler.addCallback(Action::Jump, [this, entity]() mutable
-		{
-			entity.sync();
-			
-			if (!entity.get_component<ControllableComponent>().isMidAir())
+			this->callbacks.addCallback([this, entity]()
 			{
-				this->events.broadcast(Jumped{ entity });
-			}
-		});
+				this->events.broadcast(ShootProjectile{ entity, entity.get_component<RangeAttackComponent>().getProjectileID(),{ 0.f, 0.f } });
+			});
 
-		this->inputHandler.addCallback(Action::Shoot, [this, entity]() mutable
-		{
-			entity.sync();
-			
-			if (entity.has_component<RangeAttackComponent>() && entity.has_component<TimerComponent>() 
-				&& entity.get_component<TimerComponent>().hasTimerExpired("Reload"))
-			{
-				this->callbacks.addCallback([this, entity]()
-				{
-					this->events.broadcast(ShootProjectile{ entity, entity.get_component<RangeAttackComponent>().getProjectileID(),{ 0.f, 0.f } });
-				});
-
-				entity.get_component<TimerComponent>().restartTimer("Reload");
-			}
-		});
-	}
+			entity.get_component<TimerComponent>().restartTimer("Reload");
+		}
+	});
 }
 
 void ControlSystem::update(float deltaTime)

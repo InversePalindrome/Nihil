@@ -8,7 +8,6 @@ InversePalindrome.com
 #include "CollisionHandler.hpp"
 
 
-
 CollisionHandler::CollisionHandler(Events& events) :
 	events(events)
 {
@@ -25,6 +24,10 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 
 		this->events.broadcast(DestroyEntity{ orderedCollision->first.get().entity });
 	}
+	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Checkpoint))
+	{
+		this->events.broadcast(CrossedCheckpoint{ { orderedCollision->second.get().properties["xPosition"].getFloatValue(), orderedCollision->second.get().properties["yPosition"].getFloatValue() } });
+	}
 	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Enemy))
 	{
 		orderedCollision->first.get().entity.sync();
@@ -36,13 +39,14 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 	}
 	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Portal))
 	{
-		this->events.broadcast(ChangeLevel{ orderedCollision->second.get().properties["Destination"].getStringValue() });
+		this->events.broadcast(ChangeLevel{ orderedCollision->second.get().properties["Destination"].getStringValue(),
+		{ orderedCollision->second.get().properties["xPosition"].getFloatValue(), orderedCollision->second.get().properties["yPosition"].getFloatValue() } });
 	}
 	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Teleporter))
 	{
 		orderedCollision->first.get().entity.sync();
 
-		this->events.broadcast(ChangePosition{ orderedCollision->first.get().entity,
+		this->events.broadcast(SetPosition{ orderedCollision->first.get().entity,
 		{orderedCollision->second.get().properties["xLocation"].getFloatValue(), orderedCollision.value().second.get().properties["yLocation"].getFloatValue()} });
 	}
 	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Pickup))
@@ -141,7 +145,7 @@ void CollisionHandler::EndContact(b2Contact* contact)
 	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Feet, ObjectType::Block))
 	{
 		orderedCollision->first.get().entity.sync();
-
+		
 		this->events.broadcast(SetMidAirStatus{ orderedCollision->first.get().entity, true });
 	}
 }

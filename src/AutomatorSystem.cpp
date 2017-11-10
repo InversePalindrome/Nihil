@@ -11,10 +11,10 @@ InversePalindrome.com
 AutomatorSystem::AutomatorSystem(Entities& entities, Events& events) :
 	System(entities, events)
 {
-	registeredTasks["Left"] = [&events](auto entity) { events.broadcast(DirectionChanged{ entity, Direction::Left}); };
-	registeredTasks["Right"] = [&events](auto entity) { events.broadcast(DirectionChanged{ entity, Direction::Right }); };
-	registeredTasks["Up"] = [&events](auto entity) { events.broadcast(DirectionChanged{ entity, Direction::Up }); };
-	registeredTasks["Down"] = [&events](auto entity) { events.broadcast(DirectionChanged{ entity, Direction::Down }); };
+	registeredTasks["Left"] = [&events](auto entity) { events.broadcast(SetVelocity{ entity, Direction::Left}); };
+	registeredTasks["Right"] = [&events](auto entity) { events.broadcast(SetVelocity{ entity, Direction::Right }); };
+	registeredTasks["Up"] = [&events](auto entity) { events.broadcast(SetVelocity{ entity, Direction::Up }); };
+	registeredTasks["Down"] = [&events](auto entity) { events.broadcast(SetVelocity{ entity, Direction::Down }); };
 	registeredTasks["Wait"] = [&events](auto entity) { events.broadcast(StopMovement{ entity }); };
 }
 

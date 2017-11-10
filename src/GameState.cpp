@@ -38,7 +38,11 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 
 	powerUpDisplay.setPosition(500.f, 50.f);
 	achievementDisplay.setPosition(740.f, 60.f);
-	
+
+
+	entityManager.getEvents().subscribe<CrossedCheckpoint>([this](const auto& event) { setCheckpoint(event.position);  });
+	entityManager.getEvents().subscribe<SetPosition>([this](const auto& event) { setPosition(event.entity, event.position); });
+
 	entityManager.getEvents().subscribe<DestroyBody>([this](const auto& event) { destroyBody(event.physics); });
 	entityManager.getEvents().subscribe<DisplayHealthBar>([this](const auto& event) { updateHealthBar(event.health); });
 	entityManager.getEvents().subscribe<DisplayCoins>([this](const auto& event) { updateCoinDisplay(); });
@@ -50,7 +54,6 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	entityManager.getEvents().subscribe<UpdateAchievement>([this](const auto& event) { updateAchievements(event.achievement); });
 	
 	entityManager.getEvents().subscribe<HidePowerUp>([this](const auto& event) { powerUpDisplay.removePowerUp(event.item); });
-	entityManager.getEvents().subscribe<AvoidImpulse>([this](const auto& event) { avoidImpulse(event.acceleratingEntity, event.constantEntity); });
 
 	entityManager.getEvents().subscribe<CreateEntity>([this](const auto& event) 
 	{ 
@@ -77,7 +80,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	{
 		callbacks.addCallback([this, &stateData]
 		{
-			auto player = entityManager.createEntity(stateData.games.front().getGameName() + "-Player.txt", stateData.games.front().getCurrentSpawnPoint());
+			auto player = entityManager.createEntity(stateData.games.front().getGameName() + "-Player.txt", stateData.games.front().getSpawnpoint());
 
 			stateData.games.front().setPlayer(player);
 		});
@@ -87,7 +90,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	{
 		callbacks.addCallback([this, event]
 		{ 
-			changeLevel(event.level);
+			changeLevel(event.level, event.position);
 		});
 
 		 saveData("SavedGames.txt");
@@ -109,7 +112,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 		}
 	});
 
-	changeLevel(stateData.games.front().getCurrentLevel());
+	changeLevel(stateData.games.front().getCurrentLevel(), stateData.games.front().getSpawnpoint());
 }
 
 void GameState::handleEvent(const sf::Event& event)
@@ -294,11 +297,12 @@ void GameState::displayConversation(Entity entity, bool visibilityStatus)
 	}
 }
 
-void GameState::changeLevel(const std::string& level)
+void GameState::changeLevel(const std::string& level, const sf::Vector2f& spawnpoint)
 {
 	auto& game = this->stateData.games.front();
 
 	game.setCurrentLevel(level);
+	game.setSpawnpoint(spawnpoint);
 
 	this->entityManager.destroyEntities();
 	
@@ -309,7 +313,7 @@ void GameState::changeLevel(const std::string& level)
 		game.getLevels().get<1>().modify(game.getLevels().get<1>().find(level), [](auto& iLevel) { iLevel.isLoaded = true; });
 
 		this->entityManager.parseBlueprint("Objects-" + level + ".txt");
-		this->entityManager.createEntity(game.getGameName() + "-Player.txt", game.getCurrentSpawnPoint());
+		this->entityManager.createEntity(game.getGameName() + "-Player.txt", game.getSpawnpoint());
 	}
 	else
 	{
@@ -322,12 +326,9 @@ void GameState::changeLevel(const std::string& level)
 	this->powerUpDisplay.clearPowerUps();
 
 	this->entityManager.getEntities().for_each<ControllableComponent, PositionComponent, PhysicsComponent>(
-		[&game](auto player, auto& control, auto& position, auto& physics)
+		[this, spawnpoint, &game](auto player, const auto& control, const auto& position, const auto& physics)
 	{
-		const auto& spawnPoint = game.getCurrentSpawnPoint();
-
-		position.setPosition({ spawnPoint.x, spawnPoint.y });
-		physics.setPosition({ UnitConverter::pixelsToMeters(spawnPoint.x), UnitConverter::pixelsToMeters(-spawnPoint.y) });
+		this->setPosition(player, spawnpoint);
 		
 		game.setPlayer(player);
 	});
@@ -350,21 +351,31 @@ void GameState::changeEntityPosition(Entity entity, const sf::Vector2f& position
 	}
 }
 
+void GameState::setCheckpoint(const sf::Vector2f& position)
+{
+	this->stateData.games.front().setSpawnpoint(position);
+}
+
+void GameState::setPosition(Entity entity, const sf::Vector2f& position)
+{
+	if (entity.has_component<PositionComponent>())
+	{
+		entity.get_component<PositionComponent>().setPosition(position);
+	}
+	if (entity.has_component<PhysicsComponent>())
+	{
+		this->callbacks.addCallback([entity, position]() mutable
+		{
+			entity.sync();
+
+			entity.get_component<PhysicsComponent>().setPosition({ UnitConverter::pixelsToMeters(position.x), UnitConverter::pixelsToMeters(-position.y) });
+		});
+	}
+}
+
 void GameState::destroyBody(PhysicsComponent& physics)
 {
 	this->world.DestroyBody(physics.getBody());
-}
-
-void GameState::avoidImpulse(Entity acceleratingEntity, Entity constantEntity)
-{
-	if (acceleratingEntity.has_component<PhysicsComponent>() && constantEntity.has_component<PhysicsComponent>())
-	{
-		auto& acceleratingPhysics = acceleratingEntity.get_component<PhysicsComponent>();
-		auto& constantPhysics = constantEntity.get_component<PhysicsComponent>();
-		
-		//acceleratingPhysics.setVelocity({ 0.f, 0.f });
-		//constantPhysics.applyForce({ 0.f, 1000.f });
-	}
 }
 
 void GameState::saveData(const std::string& fileName)
