@@ -66,7 +66,6 @@ private:
 	void displayConversation(Entity entity, bool visibilityStatus);
 
 	void changeLevel(const std::string& level, const sf::Vector2f& spawnpoint);
-	void changeEntityPosition(Entity entity, const sf::Vector2f& position);
 
 	void setCheckpoint(const sf::Vector2f& position);
 	void setPosition(Entity entity, const sf::Vector2f& position);

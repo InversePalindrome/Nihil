@@ -31,9 +31,11 @@ InversePalindrome.com
 struct LevelData
 {
 	std::string name;
+
 	DirectionType directionType;
 	b2Vec2 gravity;
 	bool isLoaded;
+	std::string musicFile;
 };
 
 class Game
@@ -51,13 +53,14 @@ public:
 	std::optional<Entity> getPlayer();
 	std::string getGameName() const;
 	std::string getCurrentLevel() const;
-	Items& getItems();
-	Achievements& getAchievements();
 	DirectionType getCurrenDirectionType() const;
 	b2Vec2 getCurrentGravity() const;
 	sf::Vector2f getSpawnpoint() const;
+	std::string getLevelMusic() const;
 
 	LoadedLevels& getLevels();
+	Items& getItems();
+	Achievements& getAchievements();
 
 	void setPlayer(Entity player);
 	void setGameName(const std::string& name);
