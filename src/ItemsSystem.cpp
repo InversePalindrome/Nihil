@@ -22,10 +22,8 @@ ItemsSystem::ItemsSystem(Entities& entities, Events& events) :
 
 		powerUpTimers.back().connect0([maxVelocity, collector, powerUp, &events]() mutable 
 		{
-			if (collector.get_status() != entityplus::entity_status::DELETED)
+			if (collector.sync())
 			{
-				collector.sync();
-
 				collector.get_component<PhysicsComponent>().setMaxVelocity(maxVelocity);
 				collector.get_component<InventoryComponent>().removeItem(powerUp.getItem());
 
@@ -48,10 +46,8 @@ ItemsSystem::ItemsSystem(Entities& entities, Events& events) :
 
 		powerUpTimers.back().connect0([jumpVelocity, collector, powerUp, &events]() mutable
 		{
-			if (collector.get_status() != entityplus::entity_status::DELETED)
+			if (collector.sync())
 			{
-				collector.sync();
-
 				collector.get_component<PhysicsComponent>().setJumpVelocity(jumpVelocity);
 				collector.get_component<InventoryComponent>().removeItem(powerUp.getItem());
 
@@ -72,10 +68,8 @@ ItemsSystem::ItemsSystem(Entities& entities, Events& events) :
 
 		powerUpTimers.back().connect0([collector, powerUp, &events]() mutable
 		{
-			if (collector.get_status() != entityplus::entity_status::DELETED)
+			if (collector.sync())
 			{
-				collector.sync();
-
 				collector.remove_component<RangeAttackComponent>();
 				collector.get_component<InventoryComponent>().removeItem(powerUp.getItem());
 

@@ -156,18 +156,18 @@ void ShopState::loadShopData(const std::string& fileName)
 		auto scale = sfg::Scale::Create(sfg::Scale::Orientation::VERTICAL);
 		auto adjustment = sfg::Adjustment::Create(0.f, 0.f, 100.f, 1.f, 10.f, 10.f);
 
-		window->SetRequisition(sf::Vector2f(1535.f, 969.f));
+		window->SetRequisition({ 1535.f, 969.f });
 		window->SetScrollbarPolicy(sfg::ScrolledWindow::VERTICAL_ALWAYS | sfg::ScrolledWindow::HORIZONTAL_NEVER);
 		window->SetVerticalAdjustment(adjustment);
 
 		scale->SetAdjustment(adjustment);
 
 		window->AddWithViewport(category.second);
-
+		
 		notebook->AppendPage(window, sfg::Label::Create("  " + this->categoryNames[category.first] + "  "));
 	}
 
-	notebook->SetPosition(sf::Vector2f(250.f, 390.f));
+	notebook->SetPosition({ 250.f, 390.f });
 
 	this->stateData.guiManager.addWidget(notebook);
 }

@@ -21,7 +21,7 @@ HealthBar::HealthBar(ResourceManager& resourceManger) :
 
 void HealthBar::setHitpointsDisplay(std::size_t hitpoints)
 {
-	this->heart.setTextureRect(sf::IntRect(0u, 0u, this->heart.getTexture()->getSize().x * hitpoints, this->heart.getTexture()->getSize().y));
+	this->heart.setTextureRect({ 0, 0, static_cast<int>(this->heart.getTexture()->getSize().x * hitpoints), static_cast<int>(this->heart.getTexture()->getSize().y) });
 }
 
 void HealthBar::draw(sf::RenderTarget& target, sf::RenderStates states) const

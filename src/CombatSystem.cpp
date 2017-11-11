@@ -139,7 +139,7 @@ void CombatSystem::shootBullet(const PhysicsComponent& shooterPhysics, BulletCom
 
 void CombatSystem::shootBomb(const PhysicsComponent& shooterPhysics, BombComponent& bombComponent, PhysicsComponent& projectilePhysics, SpriteComponent& spriteComponent, const sf::Vector2f& targetPosition)
 {
-	projectilePhysics.setPosition(b2Vec2(projectilePhysics.getPosition().x, projectilePhysics.getPosition().y + projectilePhysics.getBodySize().y + 0.1f));
+	projectilePhysics.setPosition({ projectilePhysics.getPosition().x, projectilePhysics.getPosition().y + projectilePhysics.getBodySize().y + 0.1f });
 
 	const auto xDistance = projectilePhysics.getPosition().x - UnitConverter::pixelsToMeters(targetPosition.x);
 	const float angle = 45.f;
@@ -150,11 +150,11 @@ void CombatSystem::shootBomb(const PhysicsComponent& shooterPhysics, BombCompone
 	{
 		if (shooterPhysics.getPosition().x > UnitConverter::pixelsToMeters(targetPosition.x))
 		{
-			projectilePhysics.setVelocity(b2Vec2(-velocity * std::cos(angle), velocity * std::sin(angle)));
+			projectilePhysics.setVelocity({ -velocity * std::cos(angle), velocity * std::sin(angle) });
 		}
 		else
 		{
-			projectilePhysics.setVelocity(b2Vec2(velocity * std::cos(angle), velocity * std::sin(angle)));
+			projectilePhysics.setVelocity({ velocity * std::cos(angle), velocity * std::sin(angle) });
 		}
 	}
 }
@@ -179,7 +179,7 @@ void CombatSystem::addExplosion(Entity bomb)
 		this->callbacks.addCallbackTimer(
 			[this, bomb]() mutable
 		{
-			if (bomb.get_status() == entityplus::entity_status::OK)
+			if (bomb.sync())
 			{
 				auto& bombComponent = bomb.get_component<BombComponent>();
 

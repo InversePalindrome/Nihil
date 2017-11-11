@@ -46,7 +46,7 @@ HubState::HubState(StateMachine& stateMachine, StateData& stateData) :
 	addGameTitleBar.setPosition({766.f, 450.f});
 
 	scrolledWindow->SetRequisition({ 800.f, 900.f });
-	scrolledWindow->SetPosition(sf::Vector2f{ 750.f, 320.f });
+	scrolledWindow->SetPosition({ 750.f, 320.f });
 	scrolledWindow->SetScrollbarPolicy(sfg::ScrolledWindow::HORIZONTAL_NEVER | sfg::ScrolledWindow::VERTICAL_AUTOMATIC);
 	scrolledWindow->AddWithViewport(selectionBox);
 

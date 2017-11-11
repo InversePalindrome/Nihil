@@ -15,8 +15,8 @@ EffectsSystem::EffectsSystem(Entities& entities, Events& events) :
 
 void EffectsSystem::update(float deltaTime)
 {
-	entities.for_each<ParticleComponent, PositionComponent>(
-		[this, deltaTime](auto entity, auto& particle, const auto& position)
+	entities.for_each<ParticleComponent>(
+		[this, deltaTime](auto entity, auto& particle)
 	{
 		particle.update(deltaTime);
 	});

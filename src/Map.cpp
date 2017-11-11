@@ -36,8 +36,8 @@ void Map::load(const std::string& fileName)
 	
 	this->map.load(Path::levels / fileName);
 	this->fileName = Path::levels / fileName;
-	this->bounds = sf::FloatRect(this->map.getBounds().left, this->map.getBounds().top, this->map.getBounds().width, this->map.getBounds().height);
-
+	this->bounds = { this->map.getBounds().left, this->map.getBounds().top, this->map.getBounds().width, this->map.getBounds().height };
+	
 	for (std::size_t i = 0; i < this->map.getLayers().size(); ++i)
 	{
 		this->layers.push_back(std::make_unique<Layer>(this->map, i, sf::Vector2f(this->bounds.width, this->bounds.height)));
@@ -80,7 +80,7 @@ void Map::addImage(tmx::ImageLayer* imageLayer)
 	backgroundTexture.setRepeated(true);
 
 	this->background.setTexture(backgroundTexture);
-	this->background.setTextureRect(sf::IntRect(0u, 0u, static_cast<std::size_t>(this->bounds.width), static_cast<std::size_t>(this->bounds.height)));
+	this->background.setTextureRect({ 0, 0, static_cast<int>(this->bounds.width), static_cast<int>(this->bounds.height) });
 }
 
 void Map::addObjects(tmx::ObjectGroup* objectLayer)
@@ -102,11 +102,11 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 			{
 				if (property.getName() == "ObjectFile")
 				{
-					staticObjectFiles.push_back(std::make_tuple(entityID, property.getStringValue(), sf::Vector2f(object.getPosition().x + AABB.width / 2.f, object.getPosition().y + AABB.height / 2.f)));
+					staticObjectFiles.push_back(std::make_tuple(entityID, property.getStringValue(), sf::Vector2f(object.getPosition().x + AABB.width / 2.f, object.getPosition().y + AABB.height / 2.f )));
 				}
 				else if (property.getName() == "EntityFile")
 				{
-					entityFiles.push_back(std::make_tuple(-entityID, property.getStringValue(), sf::Vector2f(object.getPosition().x + AABB.width / 2.f, object.getPosition().y + AABB.height / 2.f)));
+					entityFiles.push_back(std::make_tuple(-entityID, property.getStringValue(), sf::Vector2f(object.getPosition().x + AABB.width / 2.f, object.getPosition().y + AABB.height / 2.f )));
 				}
 			}
 		}
@@ -151,8 +151,8 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 						this->pathways.emplace(pathwayIndex, Pathway());
 					}
 
-					this->pathways[pathwayIndex].addWaypoint(Waypoint(sf::Vector2f
-					(object.getPosition().x + AABB.width / 2.f, object.getPosition().y + AABB.height / 2.f), waypointStep));
+					this->pathways[pathwayIndex].addWaypoint(Waypoint(
+					{ object.getPosition().x + AABB.width / 2.f, object.getPosition().y + AABB.height / 2.f }, waypointStep));
 				}
 			}
 

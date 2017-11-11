@@ -77,10 +77,10 @@ SettingsState::SettingsState(StateMachine& stateMachine, StateData& stateData) :
 	jumpButton->SetId("2");
 	shootButton->SetId("3");
 
-	moveRightButton->SetPosition(sf::Vector2f(565.f, 1040.f));
-	moveLeftButton->SetPosition(sf::Vector2f(1115.f, 1040.f));
-	jumpButton->SetPosition(sf::Vector2f(565.f, 1140.f));
-	shootButton->SetPosition(sf::Vector2f(1115.f, 1140.f));
+	moveRightButton->SetPosition({ 565.f, 1040.f });
+	moveLeftButton->SetPosition({ 1115.f, 1040.f });
+	jumpButton->SetPosition({ 565.f, 1140.f });
+	shootButton->SetPosition({ 1115.f, 1140.f });
 
 	Parsers::parseGUIProperties(stateData.guiManager, "SettingsGUI.txt");
 

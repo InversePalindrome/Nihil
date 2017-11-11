@@ -105,7 +105,7 @@ void EntityManager::copyBlueprint(const std::string& fileName, const std::string
 
 void EntityManager::destroyEntity(Entity entity)
 {
-	if (entity.get_status() != entityplus::entity_status::DELETED)
+	if (entity.sync())
 	{
 		if (entity.has_component<PhysicsComponent>() && entity.get_component<PhysicsComponent>().getBody())
 		{

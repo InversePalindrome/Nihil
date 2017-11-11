@@ -46,7 +46,7 @@ void RenderSystem::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 		using Type = decltype(renderableComponent)::type;
 
-		this->entities.for_each<Type>([this, &target, states](auto entity, auto& renderable) mutable
+		this->entities.for_each<Type>([this, &target, states](auto entity, const auto& renderable) mutable
 		{
 			if (this->isInsideView(target.getView(), renderable.getPosition(), renderable.getGlobalBounds()))
 			{

@@ -39,7 +39,6 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	powerUpDisplay.setPosition(500.f, 50.f);
 	achievementDisplay.setPosition(740.f, 60.f);
 
-
 	entityManager.getEvents().subscribe<CrossedCheckpoint>([this](const auto& event) { setCheckpoint(event.position);  });
 	entityManager.getEvents().subscribe<SetPosition>([this](const auto& event) { setPosition(event.entity, event.position); });
 
@@ -65,7 +64,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 
 	entityManager.getEvents().subscribe<DestroyEntity>([this](const auto& event) 
 	{ 
-		callbacks.addCallback([this, event]()
+		callbacks.addCallback([this, event]() 
 		{ 
 		    entityManager.destroyEntity(event.entity);
 		}); 
@@ -174,10 +173,10 @@ void GameState::showWidgets(bool showStatus)
 
 void GameState::updateCamera()
 {
-	this->entityManager.getEntities().for_each<ControllableComponent, PositionComponent>([this](auto entity, auto& controllable, auto& position)
+	this->entityManager.getEntities().for_each<ControllableComponent, PositionComponent>([this](auto entity, const auto& controllable, const auto& position)
 	{
 		const auto& centerPosition = position.getPosition();
-
+		
 		switch (this->stateData.games.front().getCurrenDirectionType())
 		{
 		case DirectionType::Horizontal:
@@ -202,7 +201,7 @@ void GameState::updateCamera()
 			{
 				this->camera.setCenter(this->camera.getCenter().x, centerPosition.y);
 			}
-			else if (centerPosition.y >= this->camera.getSize().y / 2.f)
+			else if (centerPosition.y <= this->camera.getSize().y / 2.f)
 			{
 				this->camera.setCenter(this->stateData.window.getDefaultView().getCenter());
 			}
@@ -265,10 +264,8 @@ void GameState::updateConversationDisplay(Entity entity)
 			{
 				this->callbacks.addCallbackTimer([this, entity]() mutable
 				{
-					if (entity.get_status() == entityplus::entity_status::OK)
+					if (entity.sync())
 					{
-						entity.sync();
-
 						this->entityManager.getEvents().broadcast(UpdateConversation{ entity });
 					}
 				}, dialog.getDialogueTime());
@@ -277,10 +274,8 @@ void GameState::updateConversationDisplay(Entity entity)
 			{
 				this->callbacks.addCallbackTimer([entity]() mutable
 				{
-					if (entity.get_status() == entityplus::entity_status::OK)
+					if (entity.sync())
 					{
-						entity.sync();
-
 						entity.get_component<DialogComponent>().setVisibilityStatus(false);
 					}
 				}, dialog.getDialogueTime());
@@ -303,7 +298,7 @@ void GameState::changeLevel(const std::string& level, const sf::Vector2f& spawnp
 
 	game.setCurrentLevel(level);
 	game.setSpawnpoint(spawnpoint);
-
+	
 	this->entityManager.destroyEntities();
 	
 	this->map.load(level + ".tmx");
@@ -323,6 +318,10 @@ void GameState::changeLevel(const std::string& level, const sf::Vector2f& spawnp
 	this->entityManager.parseBlueprint("Entities-" + level + ".txt");
 
 	this->stateData.soundManager.stopAllSounds();
+	this->stateData.soundManager.stopAllMusic();
+	
+	this->camera.setCenter(this->camera.getSize().x / 2.f, this->camera.getSize().y / 2.f);
+
 	this->powerUpDisplay.clearPowerUps();
 
 	this->entityManager.getEntities().for_each<ControllableComponent, PositionComponent, PhysicsComponent>(
@@ -334,21 +333,6 @@ void GameState::changeLevel(const std::string& level, const sf::Vector2f& spawnp
 	});
 
 	this->world.SetGravity(game.getCurrentGravity());
-}
-
-void GameState::changeEntityPosition(Entity entity, const sf::Vector2f& position)
-{
-	if (entity.has_component<PositionComponent>())
-	{
-		entity.get_component<PositionComponent>().setPosition(position);
-	}
-	if (entity.has_component<PhysicsComponent>())
-	{
-		this->callbacks.addCallback([entity, position]() mutable
-		{
-			entity.get_component<PhysicsComponent>().setPosition({ UnitConverter::pixelsToMeters(position.x), UnitConverter::pixelsToMeters(-position.y) });
-		});
-	}
 }
 
 void GameState::setCheckpoint(const sf::Vector2f& position)

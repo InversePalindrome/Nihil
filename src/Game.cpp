@@ -106,14 +106,9 @@ std::string Game::getCurrentLevel() const
 	return this->currentLevel;
 }
 
-Items& Game::getItems() 
+DirectionType Game::getCurrenDirectionType() const
 {
-	return this->items;
-}
-
-Achievements& Game::getAchievements()
-{
-	return this->achievements;
+	return this->levels.get<1>().find(this->currentLevel)->directionType;
 }
 
 sf::Vector2f Game::getSpawnpoint() const
@@ -121,14 +116,24 @@ sf::Vector2f Game::getSpawnpoint() const
 	return this->spawnpoint;
 }
 
+std::string Game::getLevelMusic() const
+{
+	return this->levels.get<1>().find(this->currentLevel)->musicFile;
+}
+
 Game::LoadedLevels& Game::getLevels()
 {
 	return this->levels;
 }
 
-DirectionType Game::getCurrenDirectionType() const
+Items& Game::getItems()
 {
-	return this->levels.get<1>().find(this->currentLevel)->directionType;
+	return this->items;
+}
+
+Achievements& Game::getAchievements()
+{
+	return this->achievements;
 }
 
 b2Vec2 Game::getCurrentGravity() const
@@ -194,13 +199,13 @@ void Game::loadLevels()
 	{
 		std::istringstream iStream(line);
 		
-	    std::string levelName;
+	    std::string levelName, musicFile;
 		std::size_t directionType = 0u;
-		float xGravity = 0.f, yGravity = 0.f;
+		float xGravity = 0.f, yGravity = 0.f, xSpawnpoint = 0.f, ySpawnpoint = 0.f;
 
-		iStream >> levelName >> directionType >> xGravity >> yGravity;
+		iStream >> levelName >> directionType >> xGravity >> yGravity >> xSpawnpoint >> ySpawnpoint >> musicFile;
 
-		this->levels.get<1>().insert({ levelName, static_cast<DirectionType>(directionType), { xGravity, yGravity }, false });
+		this->levels.get<1>().insert({ levelName, static_cast<DirectionType>(directionType), { xGravity, yGravity }, false, musicFile });
 	}
 }
 

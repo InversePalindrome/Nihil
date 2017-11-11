@@ -20,9 +20,9 @@ SoundSystem::SoundSystem(Entities& entities, Events& events, SoundManager& sound
 void SoundSystem::update(float deltaTime)
 {
 	this->entities.for_each<SoundComponent, PositionComponent>(
-		[this](auto entity, auto& sound, const auto& position)
+		[this](auto entity, const auto& sound, const auto& position)
 	{
-	    this->soundManager.setSoundPosition(sound.getSoundID(), sf::Vector3f(position.getPosition().x, position.getPosition().y, 0.f));
+		this->soundManager.setSoundPosition(sound.getSoundID(), { position.getPosition().x, position.getPosition().y, 0.f });
 
 		this->updateListenerPosition(entity);
 	});

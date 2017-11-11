@@ -23,14 +23,14 @@ PowerUpDisplay::PowerUpDisplay(ResourceManager& resourceManager) :
 	{
 		std::istringstream iStream(line);
 
-		std::size_t itemID = 0u, left = 0u, top = 0u, width = 0u, height = 0u;
+		int itemID = 0, left = 0, top = 0, width = 0, height = 0;
 		std::string animationFile;
 		float scale = 0.f;
 
 		iStream >> itemID >> animationFile >> left >> top >> width >> height >> scale;
 
 		powerUpData.emplace(static_cast<Item>(itemID),
-			PowerUpGraphicsData(animationFile, sf::IntRect(left, top, width, height), scale));
+			PowerUpGraphicsData(animationFile, { left, top, width, height }, scale));
 	}
 }
 

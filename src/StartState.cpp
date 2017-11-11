@@ -62,8 +62,8 @@ void StartState::update(float deltaTime)
 
 	this->background.setPosition(this->view.getCenter().x - this->view.getSize().x / 2.f, 0.f);
 
-	this->emitter.setParticlePosition(thor::Distributions::rect(sf::Vector2f(this->view.getCenter().x -  this->view.getSize().x / 2.f - 200.f, 
-		0.f), sf::Vector2f(this->view.getSize().x, this->view.getSize().y - 200.f)));
+	this->emitter.setParticlePosition(thor::Distributions::rect({this->view.getCenter().x - this->view.getSize().x / 2.f - 200.f,
+		0.f }, {this->view.getSize().x, this->view.getSize().y - 200.f} ));
 }
 
 void StartState::draw()

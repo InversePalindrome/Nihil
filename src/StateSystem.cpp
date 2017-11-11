@@ -27,6 +27,7 @@ void StateSystem::changeState(Entity entity, EntityState state)
 	if (stateComponent.getState() != state)
 	{
 		stateComponent.setState(state);
+
 		this->events.broadcast(StateChanged{ entity, state });
 	}
 }

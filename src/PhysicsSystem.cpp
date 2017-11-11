@@ -81,7 +81,7 @@ void PhysicsSystem::stopEntity(Entity entity)
 {
 	if (entity.has_component<PhysicsComponent>())
 	{
-		entity.get_component<PhysicsComponent>().setVelocity(b2Vec2(0.f, 0.f));
+		entity.get_component<PhysicsComponent>().setVelocity({ 0.f, 0.f });
 	}
 }
 
