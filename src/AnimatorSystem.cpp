@@ -37,7 +37,7 @@ void AnimatorSystem::changeAnimationState(Entity entity, EntityState state)
 
 		const auto& currentAnimation = animation.getCurrentAnimation();
 
-		if (currentAnimation.has_value() && animation.hasAnimation(std::make_pair(state, currentAnimation.value().second)) &&
+		if (currentAnimation.has_value() && animation.hasAnimation({ state, currentAnimation.value().second }) &&
 			currentAnimation.value().first != state)
 		{
 			animation.playAnimation(state, currentAnimation.value().second, true);
@@ -53,7 +53,7 @@ void AnimatorSystem::changeAnimationDirection(Entity entity, Direction direction
 
 		const auto& currentAnimation = animation.getCurrentAnimation();
 
-		if (currentAnimation.has_value() && animation.hasAnimation(std::make_pair(currentAnimation.value().first, direction)) && 
+		if (currentAnimation.has_value() && animation.hasAnimation({ currentAnimation.value().first, direction }) &&
 			currentAnimation.value().second != direction)
 		{
 			animation.playAnimation(currentAnimation.value().first, direction, true);

@@ -121,6 +121,9 @@ void GameState::handleEvent(const sf::Event& event)
 		this->saveData("SavedGames.txt");
 		this->showWidgets(false);
 
+		this->stateData.soundManager.stopAllSounds();
+		this->stateData.soundManager.stopAllMusic();
+
 		this->stateMachine.pushState(StateID::Pause);
 	}
 	else if (this->stateData.inputHandler.isActive(Action::Inventory))

@@ -55,11 +55,11 @@ void AnimationComponent::setAnimations(bool hasMultipleAnimations, const std::st
 			else if (category == "Frame")
 			{
 				float frameTime = 0.f;
-				std::size_t left = 0u, top = 0u, width = 0u, length = 0u;
+				int left = 0, top = 0, width = 0, length = 0;
 
 				iStream >> frameTime >> left >> top >> width >> length;
 
-				this->animations.rbegin()->second.first.addFrame(frameTime, sf::IntRect(left, top, width, length));
+				this->animations.rbegin()->second.first.addFrame(frameTime, { left, top, width, length });
 			}
 		}
 
@@ -117,7 +117,10 @@ void AnimationComponent::animate(sf::Sprite& sprite, float deltaTime)
 
 void AnimationComponent::playAnimation(EntityState state, Direction direction, bool loop)
 {
-	this->stateAnimator.playAnimation(std::make_pair(state, direction), loop);
+	if (this->hasAnimation({ state, direction }))
+	{
+		this->stateAnimator.playAnimation({ state, direction }, loop);
+	}
 }
 
 bool AnimationComponent::isPlayingAnimation() const

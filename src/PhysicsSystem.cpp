@@ -16,7 +16,7 @@ PhysicsSystem::PhysicsSystem(Entities& entities, Events& events, b2World& world,
 	collisionsData(collisionsData)
 {
 	events.subscribe<entityplus::component_added<Entity, PhysicsComponent>>([this](const auto& event) { setInitialData(event.entity, event.component); });
-	events.subscribe<DirectionChanged>([this](const auto& event) { changeEntityPosition(event.entity, event.direction); });
+	events.subscribe<DirectionChanged>([this](const auto& event) { moveEntity(event.entity, event.direction); });
 	events.subscribe<Jumped>([this](const auto& event) { makeJump(event.entity); });
 	events.subscribe<StopMovement>([this](const auto& event) { stopEntity(event.entity); });
 	events.subscribe<ApplyForce>([this](const auto& event) { applyForce(event.entity, event.force); });
@@ -36,7 +36,7 @@ void PhysicsSystem::update(float deltaTime)
 	});
 }
 
-void PhysicsSystem::changeEntityPosition(Entity entity, Direction direction)
+void PhysicsSystem::moveEntity(Entity entity, Direction direction)
 {
 	auto& physics = entity.get_component<PhysicsComponent>();
 
@@ -67,11 +67,6 @@ void PhysicsSystem::changeEntityPosition(Entity entity, Direction direction)
 		break;
 	}
 
-	if (entity.has_component<StateComponent>())
-	{
-		this->events.broadcast(ChangeState{ entity, EntityState::Walking });
-	}
-
 	const auto& impulse = b2Vec2(deltaVelocity.x * physics.getMass(), deltaVelocity.y * physics.getMass());
 
 	physics.applyImpulse(impulse);
@@ -96,6 +91,11 @@ void PhysicsSystem::makeJump(Entity entity)
 		const auto& impulse = b2Vec2(0.f, physics.getJumpVelocity() * physics.getMass());
 
 		physics.applyImpulse(impulse);
+
+		if (entity.has_component<ControllableComponent>())
+		{
+			this->events.broadcast(EmitSound{ SoundBuffersID::Jump, false });
+		}
 	}
 }
 
@@ -172,14 +172,32 @@ void PhysicsSystem::convertPositionCoordinates(const PhysicsComponent& physics, 
 
 void PhysicsSystem::checkPhysicalStatus(Entity entity, PhysicsComponent& physics)
 {
-	if (entity.has_component<StateComponent>() && physics.getVelocity() == b2Vec2(0.f, 0.f))
+	if (entity.has_component<StateComponent>())
 	{
-		this->events.broadcast(ChangeState{ entity, EntityState::Idle });
+		const auto& state = entity.get_component<StateComponent>();
+
+		if (state.getState() != EntityState::Swimming)
+		{
+			if (physics.getVelocity() == b2Vec2(0.f, 0.f))
+			{
+				this->events.broadcast(ChangeState{ entity, EntityState::Idle });
+			}
+			else
+			{
+				this->events.broadcast(ChangeState{ entity , EntityState::Walking });
+			}
+		}
 	}
 
 	if (physics.isColliding(ObjectType::Feet, ObjectType::Tile))
 	{
 		this->events.broadcast(SetMidAirStatus{ entity, false });
+	}
+	if (physics.isColliding(ObjectType::Player, ObjectType::Liquid))
+	{
+		this->events.broadcast(ChangeState{ entity , EntityState::Swimming });
+		this->events.broadcast(SetGravityScale{ entity, 0.f });
+		this->events.broadcast(SetLinearDamping{ entity, 1.f });
 	}
 }
 

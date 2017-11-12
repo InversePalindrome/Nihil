@@ -81,6 +81,8 @@ void StartState::draw()
 
 void StartState::transitionToMenu()
 {
+	this->stateData.soundManager.stopAllMusic();
+
 	this->stateData.window.setView(this->stateData.window.getDefaultView());
 	this->stateMachine.changeState(StateID::Menu);
 }

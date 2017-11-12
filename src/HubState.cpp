@@ -229,6 +229,8 @@ void HubState::transitionToPlay()
 			{
 				std::iter_swap(gameIter, std::begin(this->stateData.games));
 			
+				this->stateData.soundManager.stopAllMusic();
+
 				this->stateMachine.clearStates();
 				this->stateMachine.pushState(StateID::Game);
 

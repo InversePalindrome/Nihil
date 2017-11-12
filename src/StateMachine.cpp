@@ -96,8 +96,6 @@ std::size_t StateMachine::size() const
 
 void StateMachine::changeState(StateID stateID)
 {
-	this->stateData.soundManager.stopAllMusic();
-
 	this->popState();
 	this->pushState(stateID);
 }
@@ -119,7 +117,6 @@ void StateMachine::popState()
 void StateMachine::clearStates()
 {
 	this->stateData.guiManager.hideAllWidgets();
-	this->stateData.soundManager.stopAllMusic();
 
 	this->stateActions.push_back([this] { this->states.clear(); });
 }

@@ -41,6 +41,26 @@ void ControlSystem::addControl(Entity entity)
 		this->events.broadcast(DirectionChanged{ entity, Direction::Right });
 	});
 
+	this->inputHandler.addCallback(Action::MoveDown, [this, entity]() mutable
+	{
+		entity.sync();
+
+		if (entity.has_component<StateComponent>() && entity.get_component<StateComponent>().getState() == EntityState::Swimming)
+		{
+			this->events.broadcast(DirectionChanged{ entity, Direction::Down });
+		}
+	});
+
+	this->inputHandler.addCallback(Action::MoveUp, [this, entity]() mutable
+	{
+		entity.sync();
+	
+		if (entity.has_component<StateComponent>() && entity.get_component<StateComponent>().getState() == EntityState::Swimming)
+		{
+			this->events.broadcast(DirectionChanged{ entity, Direction::Up });
+		}
+	});
+
 	this->inputHandler.addCallback(Action::Jump, [this, entity]() mutable
 	{
 		entity.sync();

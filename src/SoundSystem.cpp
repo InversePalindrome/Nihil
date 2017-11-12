@@ -38,13 +38,12 @@ void SoundSystem::changeSound(Entity entity, EntityState state)
 			this->stopSound(entity);
 			break;
 		case EntityState::Walking:
+			this->stopSound(entity);
 			this->emitSound(entity, SoundBuffersID::Footsteps, true);
 			break;
-		case EntityState::Jumping:
+		case EntityState::Swimming:
 			this->stopSound(entity);
-			this->emitSound(entity, SoundBuffersID::Jump, false);
-			break;
-		case EntityState::Attacking:
+			this->emitSound(entity, SoundBuffersID::Swimming, true);
 			break;
 		}
 	}

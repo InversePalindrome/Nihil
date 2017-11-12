@@ -49,7 +49,6 @@ void SoundManager::playSound(SoundBuffersID soundBuffersID, bool loop)
 	this->applySoundProperties(sound, loop);
 
 	this->sounds.emplace(this->currentSoundID, std::move(sound));
-
 	this->sounds.at(this->currentSoundID)->play();
 
 	++this->currentSoundID;
