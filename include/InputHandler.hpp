@@ -16,7 +16,7 @@ InversePalindrome.com
 #include <unordered_map>
 
 
-enum class Action { MoveLeft, MoveRight, Jump, Shoot, Escape, Inventory, Size };
+enum class Action { MoveLeft, MoveRight, MoveDown, MoveUp, Jump, Shoot, Escape, Inventory, Size };
 
 class InputHandler
 {

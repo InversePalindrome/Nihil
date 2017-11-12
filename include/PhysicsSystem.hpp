@@ -24,7 +24,7 @@ public:
 private:
 	b2World& world;
 
-	void changeEntityPosition(Entity entity, Direction direction);
+	void moveEntity(Entity entity, Direction direction);
 	void stopEntity(Entity entity);
 	void makeJump(Entity entity);
 

@@ -19,7 +19,7 @@ enum class ObjectType : std::size_t
 	Projectile = Bullet | Bomb,
 	Lethal = Bullet | Explosion,
 	Movable = Player | Enemy | Projectile,
-	Block = Tile | Platform
+	Block = Tile | Platform 
 };
 
 using T = std::underlying_type_t<ObjectType>;
