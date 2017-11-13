@@ -81,6 +81,7 @@ struct SetLinearDamping;
 struct SetVelocity;
 struct SetPosition;
 struct SetMidAirStatus;
+struct UpdateUnderWaterBubbles;
 
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
@@ -94,8 +95,8 @@ using Entities = entityplus::entity_manager<Components, Tags>;
 
 using Events = entityplus::event_manager<Components, Tags, CreateEntity, DestroyBody, UpdateAchievement, DirectionChanged, Jumped, StopMovement, CombatOcurred, ChangeState,
 	StateChanged, ChangeLevel, DestroyEntity, EmitSound, PickedUpItem, DroppedItem, DisplayHealthBar, DisplayCoins, DisplayPowerUp, DisplayConversation, UpdateConversation,
-	HidePowerUp, PlayerDied, CrossedCheckpoint, CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform, ApplyForce, ApplyImpulse, ApplyBlastImpact,
-	ApplyKnockback, SetGravityScale, SetLinearDamping, SetVelocity, SetPosition, SetMidAirStatus>;
+	HidePowerUp, PlayerDied, CrossedCheckpoint, CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform, ApplyForce, ApplyImpulse, ApplyBlastImpact, 
+	ApplyKnockback, SetGravityScale, SetLinearDamping, SetVelocity, SetPosition, SetMidAirStatus, UpdateUnderWaterBubbles>;
 
 using Entity = Entities::entity_t;
 
@@ -308,4 +309,10 @@ struct SetMidAirStatus
 {
 	Entity entity;
 	bool midAirStatus;
+};
+
+struct UpdateUnderWaterBubbles
+{
+	Entity entity;
+	std::size_t numberOfBubbles;
 };

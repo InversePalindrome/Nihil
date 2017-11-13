@@ -18,6 +18,7 @@ InversePalindrome.com
 #include "ItemsDisplay.hpp"
 #include "PowerUpDisplay.hpp"
 #include "AchievementDisplay.hpp"
+#include "UnderWaterDisplay.hpp"
 #include "Pathway.hpp"
 
 #include <Box2D/Dynamics/b2World.h>
@@ -54,6 +55,7 @@ private:
 	CoinDisplay coinDisplay;
 	ItemsDisplay itemsDisplay;
 	PowerUpDisplay powerUpDisplay;
+	UnderWaterDisplay underWaterDisplay;
 	AchievementDisplay achievementDisplay;
 
 	void updateCamera();
@@ -62,6 +64,7 @@ private:
 	void updateCoinDisplay();
 	void updateItemsDisplay(Entity item);
 	void updateConversationDisplay(Entity entity);
+	void updateUnderWaterDisplay(Entity entity, std::size_t numberOfBubbles);
 
 	void displayConversation(Entity entity, bool visibilityStatus);
 
