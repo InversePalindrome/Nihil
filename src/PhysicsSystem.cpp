@@ -99,7 +99,6 @@ void PhysicsSystem::makeJump(Entity entity)
 	}
 }
 
-
 void PhysicsSystem::setGravityScale(Entity entity, float gravityScale)
 {
 	if (entity.has_component<PhysicsComponent>())
@@ -188,16 +187,10 @@ void PhysicsSystem::checkPhysicalStatus(Entity entity, PhysicsComponent& physics
 			}
 		}
 	}
-
+	  
 	if (physics.isColliding(ObjectType::Feet, ObjectType::Tile))
 	{
 		this->events.broadcast(SetMidAirStatus{ entity, false });
-	}
-	if (physics.isColliding(ObjectType::Player, ObjectType::Liquid))
-	{
-		this->events.broadcast(ChangeState{ entity , EntityState::Swimming });
-		this->events.broadcast(SetGravityScale{ entity, 0.f });
-		this->events.broadcast(SetLinearDamping{ entity, 1.f });
 	}
 }
 

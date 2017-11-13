@@ -8,10 +8,9 @@ InversePalindrome.com
 #include "HealthBar.hpp"
 
 
-HealthBar::HealthBar(ResourceManager& resourceManger) :
-	heart()
+HealthBar::HealthBar(ResourceManager& resourceManager) 
 {
-	auto& heartTexture = resourceManger.getTexture(TexturesID::Heart);
+	auto& heartTexture = resourceManager.getTexture(TexturesID::Heart);
 
 	heartTexture.setRepeated(true);
 

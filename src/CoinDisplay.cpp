@@ -21,7 +21,7 @@ CoinDisplay::CoinDisplay(ResourceManager& resourceManager) :
 	Parsers::parseStyle(resourceManager, "CoinStyle.txt", text);
 
 	text.setOrigin(text.getLocalBounds().width / 2.f, text.getLocalBounds().height / 2.f);
-	text.setPosition(155.f, 30.f);
+	text.setPosition(155.f, 27.f);
 
 	thor::FrameAnimation frameAnimation;
 	std::size_t animationID = 0u;

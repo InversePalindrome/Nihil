@@ -23,6 +23,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	coinDisplay(stateData.resourceManager),
 	itemsDisplay(stateData.resourceManager),
 	powerUpDisplay(stateData.resourceManager),
+	underWaterDisplay(stateData.resourceManager),
 	achievementDisplay(stateData.resourceManager)
 {
 	entityManager.copyBlueprint("Player.txt", stateData.games.front().getGameName() + "-Player.txt");
@@ -34,13 +35,15 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	coinDisplay.setPosition(1600.f, 60.f);
 	coinDisplay.setNumberOfCoins(stateData.games.front().getItems()[Item::Coin]);
 
-	itemsDisplay.setPosition(500.f, 85.f);
+	underWaterDisplay.setPosition(600.f, 55.f);
+	underWaterDisplay.setNumberOfBubbles(0u);
 
-	powerUpDisplay.setPosition(500.f, 50.f);
+	powerUpDisplay.setPosition(1000.f, 50.f);
 	achievementDisplay.setPosition(740.f, 60.f);
 
 	entityManager.getEvents().subscribe<CrossedCheckpoint>([this](const auto& event) { setCheckpoint(event.position);  });
 	entityManager.getEvents().subscribe<SetPosition>([this](const auto& event) { setPosition(event.entity, event.position); });
+	entityManager.getEvents().subscribe<UpdateUnderWaterBubbles>([this](const auto& event) { updateUnderWaterDisplay(event.entity, event.numberOfBubbles); });
 
 	entityManager.getEvents().subscribe<DestroyBody>([this](const auto& event) { destroyBody(event.physics); });
 	entityManager.getEvents().subscribe<DisplayHealthBar>([this](const auto& event) { updateHealthBar(event.health); });
@@ -163,6 +166,7 @@ void GameState::draw()
 	this->stateData.window.draw(this->coinDisplay);
 	this->stateData.window.draw(this->itemsDisplay);
 	this->stateData.window.draw(this->powerUpDisplay);
+	this->stateData.window.draw(this->underWaterDisplay);
 	this->stateData.window.draw(this->achievementDisplay);
 }
 
@@ -285,6 +289,11 @@ void GameState::updateConversationDisplay(Entity entity)
 			}
 		}
 	}
+}
+
+void GameState::updateUnderWaterDisplay(Entity entity, std::size_t numberOfBubbles)
+{
+		this->underWaterDisplay.setNumberOfBubbles(numberOfBubbles);
 }
 
 void GameState::displayConversation(Entity entity, bool visibilityStatus)

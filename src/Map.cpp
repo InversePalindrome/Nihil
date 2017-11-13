@@ -11,6 +11,8 @@ InversePalindrome.com
 
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2Fixture.h>
+#include <Box2D/Collision/Shapes/b2ChainShape.h>
+#include <Box2D/Collision/Shapes/b2CircleShape.h>
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
 #include <tuple>
@@ -90,10 +92,10 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 
 	std::int32_t entityID = 0;
 
-	for (const auto& object : objectLayer->getObjects())
+	for (auto& object : objectLayer->getObjects())
 	{
 		const auto& AABB = object.getAABB();
-
+		
 		if (object.getType() == "Entity")
 		{
 			++entityID;
@@ -116,11 +118,53 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 			bodyDefinition.type = b2_staticBody;
 			bodyDefinition.position.Set(UnitConverter::pixelsToMeters(object.getPosition().x + AABB.width / 2.f), UnitConverter::pixelsToMeters(-(object.getPosition().y + AABB.height / 2.f)));
 
-			b2PolygonShape shape;
-			shape.SetAsBox(UnitConverter::pixelsToMeters(AABB.width / 2.f), UnitConverter::pixelsToMeters(AABB.height / 2.f));
-
 			b2FixtureDef fixtureDef;
-			fixtureDef.shape = &shape;
+			b2PolygonShape polygon;
+			b2CircleShape circle;
+			b2ChainShape chain;
+			
+			switch (object.getShape())
+			{
+			case tmx::Object::Shape::Rectangle:
+			{
+				polygon.SetAsBox(UnitConverter::pixelsToMeters(AABB.width / 2.f), UnitConverter::pixelsToMeters(AABB.height / 2.f));
+				fixtureDef.shape = &polygon;
+			}
+				break;
+			case tmx::Object::Shape::Ellipse:
+			{
+				circle.m_radius = UnitConverter::pixelsToMeters(AABB.width / 2.f);
+				fixtureDef.shape = &circle;
+			}
+				break;
+			case tmx::Object::Shape::Polygon:
+			{
+				std::vector<b2Vec2> points;
+				
+				for (const auto& point : object.getPoints())
+				{
+					points.push_back({ UnitConverter::pixelsToMeters(point.x), UnitConverter::pixelsToMeters(-point.y) });
+				}
+
+				polygon.Set(points.data(), points.size());
+				fixtureDef.shape = &polygon;
+			}
+				break;
+			case tmx::Object::Shape::Polyline:
+			{
+				std::vector<b2Vec2> points;
+
+				for (const auto& point : object.getPoints())
+				{
+					points.push_back({ UnitConverter::pixelsToMeters(point.x), UnitConverter::pixelsToMeters(-point.y) });
+				}
+
+				chain.CreateChain(points.data(), points.size());
+				
+				fixtureDef.shape = &chain;
+				break;
+			}
+			}
 
 			if (object.getType() == "Sensor")
 			{
