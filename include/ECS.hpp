@@ -48,6 +48,7 @@ struct AI;
 struct CreateEntity;
 struct DestroyBody;
 struct UpdateAchievement;
+struct UpdateConversation;
 struct DirectionChanged;
 struct Jumped;
 struct StopMovement;
@@ -63,9 +64,7 @@ struct DisplayHealthBar;
 struct DisplayCoins;
 struct DisplayPowerUp;
 struct DisplayConversation;
-struct UpdateConversation;
 struct HidePowerUp;
-struct PlayerDied;
 struct CrossedCheckpoint;
 struct CrossedWaypoint;
 struct ShootProjectile;
@@ -81,7 +80,7 @@ struct SetLinearDamping;
 struct SetVelocity;
 struct SetPosition;
 struct SetMidAirStatus;
-struct UpdateUnderWaterBubbles;
+struct IsUnderWater;
 
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
@@ -93,10 +92,10 @@ using Tags = entityplus::tag_list<AI>;
 
 using Entities = entityplus::entity_manager<Components, Tags>;
 
-using Events = entityplus::event_manager<Components, Tags, CreateEntity, DestroyBody, UpdateAchievement, DirectionChanged, Jumped, StopMovement, CombatOcurred, ChangeState,
-	StateChanged, ChangeLevel, DestroyEntity, EmitSound, PickedUpItem, DroppedItem, DisplayHealthBar, DisplayCoins, DisplayPowerUp, DisplayConversation, UpdateConversation,
-	HidePowerUp, PlayerDied, CrossedCheckpoint, CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform, ApplyForce, ApplyImpulse, ApplyBlastImpact, 
-	ApplyKnockback, SetGravityScale, SetLinearDamping, SetVelocity, SetPosition, SetMidAirStatus, UpdateUnderWaterBubbles>;
+using Events = entityplus::event_manager<Components, Tags, CreateEntity, DestroyBody, UpdateAchievement, UpdateConversation, DirectionChanged, Jumped,
+	StopMovement, CombatOcurred, ChangeState,StateChanged, ChangeLevel, DestroyEntity, EmitSound, PickedUpItem, DroppedItem, DisplayHealthBar, DisplayCoins,
+	DisplayPowerUp, DisplayConversation, HidePowerUp, CrossedCheckpoint, CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform,
+	ApplyForce, ApplyImpulse, ApplyBlastImpact, ApplyKnockback, SetGravityScale, SetLinearDamping, SetVelocity, SetPosition, SetMidAirStatus, IsUnderWater>;
 
 using Entity = Entities::entity_t;
 
@@ -120,6 +119,11 @@ struct DestroyBody
 struct UpdateAchievement
 {
 	Achievement achievement;
+};
+
+struct UpdateConversation
+{
+	Entity entity;
 };
 
 struct DirectionChanged
@@ -208,18 +212,9 @@ struct DisplayConversation
 	bool visibilityStatus;
 };
 
-struct UpdateConversation
-{
-	Entity entity;
-};
-
 struct HidePowerUp
 {
 	Item item;
-};
-
-struct PlayerDied
-{
 };
 
 struct CrossedCheckpoint
@@ -311,8 +306,7 @@ struct SetMidAirStatus
 	bool midAirStatus;
 };
 
-struct UpdateUnderWaterBubbles
+struct IsUnderWater
 {
 	Entity entity;
-	std::size_t numberOfBubbles;
 };

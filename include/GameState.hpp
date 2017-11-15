@@ -64,7 +64,6 @@ private:
 	void updateCoinDisplay();
 	void updateItemsDisplay(Entity item);
 	void updateConversationDisplay(Entity entity);
-	void updateUnderWaterDisplay(Entity entity, std::size_t numberOfBubbles);
 
 	void displayConversation(Entity entity, bool visibilityStatus);
 
@@ -73,7 +72,11 @@ private:
 	void setCheckpoint(const sf::Vector2f& position);
 	void setPosition(Entity entity, const sf::Vector2f& position);
 
+	void destroyEntity(Entity entity);
 	void destroyBody(PhysicsComponent& physics);
+
+	void handleIsUnderWater(Entity entity);
+	void addUnderWaterTimer(Entity entity, std::size_t numberOfBubbles, float timePerBubble, bool forceCallback);
 
 	void saveData(const std::string& fileName);
 };
