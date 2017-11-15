@@ -33,7 +33,7 @@ TimerComponent::TimerComponent(const std::string& fileName) :
 
 		iStream >> timerName >> durationTime;
 
-		timers.emplace(timerName, std::make_pair(thor::Timer(), durationTime));
+		timers.emplace(timerName, std::make_pair(thor::Timer(), durationTime ));
 	}
 }
 

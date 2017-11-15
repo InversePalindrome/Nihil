@@ -29,7 +29,6 @@ CombatSystem::CombatSystem(Entities& entities, Events& events, ComponentParser& 
 	events.subscribe<ShootProjectile>([this](const auto& event) { shootProjectile(event.shooter, event.projectileID, event.targetPosition ); });
 	events.subscribe<ActivateBomb>([this](const auto& event) { addExplosion(event.bomb); });
 	events.subscribe<ApplyKnockback>([this](const auto& event) { applyKnockback(event.attacker, event.victim); });
-	events.subscribe<ApplyBlastImpact>([this](const auto& event) { applyBlastImpact(event.explosion, event.victim); });
 }
 
 void CombatSystem::update(float deltaTime)
@@ -123,13 +122,13 @@ void CombatSystem::shootBullet(const PhysicsComponent& shooterPhysics, BulletCom
 	switch (shooterPhysics.getDirection())
 	{
 	case Direction::Left:
-		projectilePhysics.setPosition(b2Vec2(projectilePhysics.getPosition().x - projectilePhysics.getBodySize().x - shooterPhysics.getBodySize().x - 0.1f, projectilePhysics.getPosition().y));
-		projectilePhysics.applyForce(b2Vec2(-bulletComponent.getForce(), 0.f));
+		projectilePhysics.setPosition({ projectilePhysics.getPosition().x - projectilePhysics.getBodySize().x - shooterPhysics.getBodySize().x - 0.1f, projectilePhysics.getPosition().y });
+		projectilePhysics.applyForce({ -bulletComponent.getForce(), 0.f });
 		projectileSprite.setRotation(180.f);
 		break;
 	case Direction::Right:
-		projectilePhysics.setPosition(b2Vec2(projectilePhysics.getPosition().x + projectilePhysics.getBodySize().x + shooterPhysics.getBodySize().x + 0.1f, projectilePhysics.getPosition().y));
-		projectilePhysics.applyForce(b2Vec2(bulletComponent.getForce(), 0.f));
+		projectilePhysics.setPosition({ projectilePhysics.getPosition().x + projectilePhysics.getBodySize().x + shooterPhysics.getBodySize().x + 0.1f, projectilePhysics.getPosition().y });
+		projectilePhysics.applyForce({ bulletComponent.getForce(), 0.f });
 		projectileSprite.setRotation(0.f);
 		break;
 	}
@@ -218,9 +217,9 @@ void CombatSystem::applyBlastImpact(Entity explosion, Entity victim)
 
 			auto& victimPhysics = victim.get_component<PhysicsComponent>();
 
-			auto& blastDistance = victimPhysics.getPosition() - explosion.get_component<PhysicsComponent>().getPosition();
+			const auto& blastDistance = victimPhysics.getPosition() - explosion.get_component<PhysicsComponent>().getPosition();
 
-			victimPhysics.applyImpulse(b2Vec2(MathUtils::sign(blastDistance.x) * bombKnockback, 0.f));
+			victimPhysics.applyImpulse({ MathUtils::sign(blastDistance.x) * bombKnockback, 0.f });
 
 			this->handleCombat(*foundBomb, victim);
 		}
@@ -239,10 +238,10 @@ void CombatSystem::applyKnockback(Entity attacker, Entity victim)
 		switch (attackingDirection)
 		{
 		case Direction::Left:
-			victimPhysics.applyImpulse(b2Vec2(-knockback, 0.f));
+			victimPhysics.applyImpulse({ -knockback, 0.f });
 			break;
 		case Direction::Right:
-			victimPhysics.applyImpulse(b2Vec2(knockback, 0.f));
+			victimPhysics.applyImpulse({ knockback, 0.f });
 			break;
 		}
 	}

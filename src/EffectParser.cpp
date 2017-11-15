@@ -41,11 +41,11 @@ void Parsers::parseParticleSystem(ResourceManager& resourceManager, const std::s
 		}
 		else if (category == "SubRect")
 		{
-			std::size_t left = 0u, top = 0u, width = 0u, height = 0u;
+			int left = 0, top = 0, width = 0, height = 0;
 
 			iStream >> left >> top >> width >> height;
 
-			particleSystem.addTextureRect(sf::IntRect(left, top, width, height));
+			particleSystem.addTextureRect({ left, top, width, height });
 		}
 		else if(category == "ForceAffector")
 		{

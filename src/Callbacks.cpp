@@ -10,7 +10,7 @@ InversePalindrome.com
 
 void Callbacks::update()
 {
-	for (auto& callback : this->callbacks)
+	for (const auto& callback : this->callbacks)
 	{
 		callback();
 	}

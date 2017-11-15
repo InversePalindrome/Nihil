@@ -67,7 +67,7 @@ void PhysicsSystem::moveEntity(Entity entity, Direction direction)
 		break;
 	}
 
-	const auto& impulse = b2Vec2(deltaVelocity.x * physics.getMass(), deltaVelocity.y * physics.getMass());
+	const b2Vec2 impulse({ deltaVelocity.x * physics.getMass(), deltaVelocity.y * physics.getMass() });
 
 	physics.applyImpulse(impulse);
 }
@@ -88,7 +88,7 @@ void PhysicsSystem::makeJump(Entity entity)
 
 		this->events.broadcast(ChangeState{ entity, EntityState::Jumping });
 
-		const auto& impulse = b2Vec2(0.f, physics.getJumpVelocity() * physics.getMass());
+		const b2Vec2 impulse({ 0.f, physics.getJumpVelocity() * physics.getMass() });
 
 		physics.applyImpulse(impulse);
 
@@ -165,7 +165,7 @@ void PhysicsSystem::convertPositionCoordinates(const PhysicsComponent& physics, 
 {
 	if (physics.getType() == b2BodyType::b2_dynamicBody || physics.getType() == b2BodyType::b2_kinematicBody)
 	{
-		position.setPosition(sf::Vector2f(UnitConverter::metersToPixels(physics.getPosition().x), UnitConverter::metersToPixels(-physics.getPosition().y)));
+		position.setPosition({ UnitConverter::metersToPixels(physics.getPosition().x), UnitConverter::metersToPixels(-physics.getPosition().y) });
 	}
 }
 
@@ -192,6 +192,13 @@ void PhysicsSystem::checkPhysicalStatus(Entity entity, PhysicsComponent& physics
 	{
 		this->events.broadcast(SetMidAirStatus{ entity, false });
 	}
+
+	if (physics.isColliding(ObjectType::Head, ObjectType::Liquid))
+	{
+		this->events.broadcast(ChangeState{ entity , EntityState::Swimming });
+		this->events.broadcast(SetGravityScale{ entity, 0.f });
+		this->events.broadcast(SetLinearDamping{ entity, 1.f });
+	}
 }
 
 void PhysicsSystem::setInitialData(Entity entity, PhysicsComponent& physics)
@@ -200,7 +207,7 @@ void PhysicsSystem::setInitialData(Entity entity, PhysicsComponent& physics)
 	{
 		const auto& position = entity.get_component<PositionComponent>().getPosition();
 
-		physics.setPosition(b2Vec2(UnitConverter::pixelsToMeters(position.x), UnitConverter::pixelsToMeters(-position.y)));
+		physics.setPosition({ UnitConverter::pixelsToMeters(position.x), UnitConverter::pixelsToMeters(-position.y) });
 
 		auto& fixtures = physics.getFixtures();
 

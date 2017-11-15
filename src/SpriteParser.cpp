@@ -35,11 +35,11 @@ void Parsers::parseSprite(ResourceManager& resourceManager, const std::string& f
 		}
 		else if (category == "SubRect")
 		{
-			std::size_t left = 0u, top = 0u, width = 0u, height = 0u;
+			int left = 0, top = 0, width = 0, height = 0;
 
 			iStream >> left >> top >> width >> height;
 
-			sprite.setTextureRect(sf::IntRect(left, top, width, height));
+			sprite.setTextureRect({ left, top, width, height });
 		}
 		else if (category == "Scale")
 		{

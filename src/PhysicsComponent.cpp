@@ -53,7 +53,15 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2Bod
 		break;
 	case ObjectType::Player:
 	{
-		b2PolygonShape feetShape;
+		b2PolygonShape headShape;
+		headShape.SetAsBox(bodySize.x, bodySize.y / 4.f, { 0.f, bodySize.y - bodySize.y / 4.f }, 0.f);
+
+		b2FixtureDef headDef;
+		headDef.isSensor = true;
+		headDef.density = 0.f;
+		headDef.shape = &headShape;
+		
+		b2PolygonShape feetShape; 
 		feetShape.SetAsBox(bodySize.x / 4.f, bodySize.y / 4.f, { 0.f, -bodySize.y }, 0.f);
 		
 		b2FixtureDef feetDef;
@@ -61,6 +69,7 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2Bod
 		feetDef.density = 0.f;
 		feetDef.shape = &feetShape;
 
+		fixtures[ObjectType::Head] = body->CreateFixture(&headDef);
 		fixtures[ObjectType::Feet] = body->CreateFixture(&feetDef);
 	}
 		break;
