@@ -18,7 +18,7 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 	auto* objectA = static_cast<CollisionData*>(contact->GetFixtureA()->GetUserData());
 	auto* objectB = static_cast<CollisionData*>(contact->GetFixtureB()->GetUserData());
 
-	if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Movable, ObjectType::Border))
+	if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Feet, ObjectType::Border))
 	{
 		orderedCollision->first.get().entity.sync();
 
@@ -47,16 +47,16 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 		orderedCollision->first.get().entity.sync();
 
 		this->events.broadcast(SetPosition{ orderedCollision->first.get().entity,
-		{orderedCollision->second.get().properties["xLocation"].getFloatValue(), orderedCollision.value().second.get().properties["yLocation"].getFloatValue()} });
+		{orderedCollision->second.get().properties["xPosition"].getFloatValue(), orderedCollision.value().second.get().properties["yPosition"].getFloatValue()} });
 	}
-	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Pickup))
+	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Body, ObjectType::Pickup))
 	{
 		orderedCollision->first.get().entity.sync();
 		orderedCollision->second.get().entity.sync();
 
 		this->events.broadcast(PickedUpItem{ orderedCollision->first.get().entity, orderedCollision.value().second.get().entity });
 	}
-	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Alive , ObjectType::Trampoline))
+	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Movable, ObjectType::Trampoline))
 	{
 		orderedCollision->first.get().entity.sync();
 
@@ -90,7 +90,7 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 		this->events.broadcast(DisplayConversation{ orderedCollision->second.get().entity, true });
 		this->events.broadcast(UpdateConversation{ orderedCollision->second.get().entity });
 	}
-	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Spike))
+	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Body, ObjectType::Spike))
 	{
 		orderedCollision->first.get().entity.sync();
 
@@ -100,13 +100,27 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 	{
 		orderedCollision->first.get().entity.sync();
 		
-		this->events.broadcast(IsUnderWater{ orderedCollision->first.get().entity });
+		this->events.broadcast(AddUnderWaterTimer{ orderedCollision->first.get().entity });
 	}
 	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Feet, ObjectType::Block))
 	{
 		orderedCollision->first.get().entity.sync();
 		
 		this->events.broadcast(SetMidAirStatus{ orderedCollision->first.get().entity, false });
+	}
+	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Character))
+	{
+		orderedCollision->second.get().entity.sync();
+
+		this->events.broadcast(DisplayConversation{ orderedCollision->second.get().entity, true });
+	}
+	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Feet, ObjectType::ActivationPlatform))
+	{
+		orderedCollision->first.get().entity.sync();
+		orderedCollision->second.get().entity.sync();
+
+		this->events.broadcast(SetMidAirStatus{ orderedCollision->first.get().entity, false });
+		this->events.broadcast(SetAutomatedStatus{ orderedCollision->second.get().entity, true });
 	}
 
 	if (const auto& collider = this->getCollider(objectA, objectB, ObjectType::Bullet))
@@ -143,7 +157,8 @@ void CollisionHandler::EndContact(b2Contact* contact)
 	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Head, ObjectType::Liquid))
 	{
 		orderedCollision->first.get().entity.sync();
-
+		
+		this->events.broadcast(RemoveUnderWaterTimer{ orderedCollision->first.get().entity });
 		this->events.broadcast(ChangeState{ orderedCollision->first.get().entity, EntityState::Idle });
 		this->events.broadcast(SetGravityScale{ orderedCollision->first.get().entity, 1.f });
 		this->events.broadcast(SetLinearDamping{ orderedCollision->first.get().entity, 0.f });

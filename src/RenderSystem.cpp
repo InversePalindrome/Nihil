@@ -120,5 +120,5 @@ bool RenderSystem::isInsideView(const sf::View& view, const sf::Vector2f& positi
 	const auto& bottom = view.getCenter().y + view.getSize().y / 2.f;
 
 	return position.x + globalBounds.width / 2.f > left && position.x - globalBounds.width / 2.f < right
-		&& position.y - globalBounds.height / 2.f > top && position.y + globalBounds.height / 2.f < bottom;
+		&& position.y + globalBounds.height / 2.f > top && position.y - globalBounds.height / 2.f < bottom;
 }

@@ -13,7 +13,7 @@ InversePalindrome.com
 
 
 PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType bodyType, ObjectType objectType, std::int16_t collisionGroup,
-	float maxVelocity, float jumpVelocity, float accelerationRate)  :
+	const b2Vec2& maxVelocity, const b2Vec2& accelerationRate, float jumpVelocity)  :
 	Component("Physics"),
 	body(nullptr),
 	bodySize(bodySize),
@@ -34,14 +34,14 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2Bod
  	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &fixtureShape;
 	fixtureDef.density = 1.f;
-	fixtureDef.friction = 0.3f;
+	fixtureDef.friction = 0.f;
 	fixtureDef.filter.groupIndex = collisionGroup;
 
 	body = world.CreateBody(&bodyDefinition);
 
 	switch (objectType)
 	{
-	case ObjectType::Platform:
+	case ObjectType::NormalPlatform:
 		body->SetGravityScale(0.f);
 		break;
 	case ObjectType::Bullet:
@@ -52,6 +52,7 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2Bod
 		fixtureDef.isSensor = true;
 		break;
 	case ObjectType::Player:
+	case ObjectType::Enemy:
 	{
 		b2PolygonShape headShape;
 		headShape.SetAsBox(bodySize.x, bodySize.y / 4.f, { 0.f, bodySize.y - bodySize.y / 4.f }, 0.f);
@@ -62,11 +63,11 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2Bod
 		headDef.shape = &headShape;
 		
 		b2PolygonShape feetShape; 
-		feetShape.SetAsBox(bodySize.x / 4.f, bodySize.y / 4.f, { 0.f, -bodySize.y }, 0.f);
+		feetShape.SetAsBox(bodySize.x / 4.f, bodySize.y / 4.f, { 0.f, -bodySize.y + bodySize.y / 6.f }, 0.f);
 		
 		b2FixtureDef feetDef;
-		feetDef.isSensor = true;
 		feetDef.density = 0.f;
+		feetDef.friction = 0.5f;
 		feetDef.shape = &feetShape;
 
 		fixtures[ObjectType::Head] = body->CreateFixture(&headDef);
@@ -81,7 +82,8 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2Bod
 std::ostream& operator<<(std::ostream& os, const PhysicsComponent& component)
 {
 	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.bodySize.x << ' ' << component.bodySize.y <<  ' ' << static_cast<std::size_t>(component.getType()) 
-		<< ' ' << static_cast<std::size_t>(component.objectType) << ' ' << component.collisionGroup << ' ' << component.maxVelocity << ' ' << component.jumpVelocity << ' ' << component.accelerationRate;
+		<< ' ' << static_cast<std::size_t>(component.objectType) << ' ' << component.collisionGroup << ' ' << component.maxVelocity.x << ' ' << component.maxVelocity.y << ' ' << component.accelerationRate.x
+		<< ' ' << component.accelerationRate.y << ' ' << component.jumpVelocity;
 
 	return os;
 }
@@ -131,19 +133,19 @@ float PhysicsComponent::getMass() const
 	return this->body->GetMass();
 }
 
-float PhysicsComponent::getMaxVelocity() const
+b2Vec2 PhysicsComponent::getMaxVelocity() const
 {
 	return this->maxVelocity;
+}
+
+b2Vec2 PhysicsComponent::getAccelerationRate() const
+{
+	return this->accelerationRate;
 }
 
 float PhysicsComponent::getJumpVelocity() const
 {
 	return this->jumpVelocity;
-}
-
-float PhysicsComponent::getAccelerationRate() const
-{
-	return this->accelerationRate;
 }
 
 Direction PhysicsComponent::getDirection() const
@@ -176,19 +178,19 @@ void PhysicsComponent::setType(b2BodyType type)
 	this->body->SetType(type);
 }
 
-void PhysicsComponent::setMaxVelocity(float maxVelocity)
+void PhysicsComponent::setMaxVelocity(const b2Vec2& maxVelocity)
 {
 	this->maxVelocity = maxVelocity;
+}
+
+void PhysicsComponent::setAccelerationRate(const b2Vec2& accelerationRate)
+{
+	this->accelerationRate = accelerationRate;
 }
 
 void PhysicsComponent::setJumpVelocity(float jumpVelocity)
 {
 	this->jumpVelocity = jumpVelocity;
-}
-
-void PhysicsComponent::setAccelerationRate(float accelerationRate)
-{
-	this->accelerationRate = accelerationRate;
 }
 
 void PhysicsComponent::setGravityScale(float gravityScale)

@@ -14,9 +14,9 @@ ItemsSystem::ItemsSystem(Entities& entities, Events& events) :
 {
 	powerUpEffects[Item::SpeedBoost] = [this, &events](auto collector, auto& powerUp)
 	{ 
-		const float maxVelocity = collector.get_component<PhysicsComponent>().getMaxVelocity();
+		const auto maxVelocity = collector.get_component<PhysicsComponent>().getMaxVelocity();
 		
-	    collector.get_component<PhysicsComponent>().setMaxVelocity(maxVelocity * (1.f + powerUp.getEffectBoost()));
+		collector.get_component<PhysicsComponent>().setMaxVelocity({ maxVelocity.x * (1.f + powerUp.getEffectBoost()), maxVelocity.y * (1.f + powerUp.getEffectBoost()) });
 
 		powerUpTimers.push_back(thor::CallbackTimer());
 
@@ -38,7 +38,7 @@ ItemsSystem::ItemsSystem(Entities& entities, Events& events) :
 
 	powerUpEffects[Item::JumpBoost] = [this, &events](auto collector, auto& powerUp)
 	{ 
-		const float jumpVelocity = collector.get_component<PhysicsComponent>().getJumpVelocity();
+		const auto jumpVelocity = collector.get_component<PhysicsComponent>().getJumpVelocity();
 
 		collector.get_component<PhysicsComponent>().setJumpVelocity(jumpVelocity * (1.f + powerUp.getEffectBoost()));
 
@@ -116,8 +116,8 @@ void ItemsSystem::update(float deltaTime)
 		}
 	}
 
-	callbacks.update();
-	callbacks.clearCallbacks();
+	this->callbacks.update();
+	this->callbacks.clearCallbacks();
 }
 
 void ItemsSystem::handleItemPickup(Entity collector, Entity item)

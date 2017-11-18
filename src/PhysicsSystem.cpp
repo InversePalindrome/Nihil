@@ -50,19 +50,19 @@ void PhysicsSystem::moveEntity(Entity entity, Direction direction)
 	switch (direction)
 	{
 	case Direction::Right:
-		newVelocity.x = b2Min(currentVelocity.x + physics.getAccelerationRate(), physics.getMaxVelocity());
+		newVelocity.x = b2Min(currentVelocity.x + physics.getAccelerationRate().x, physics.getMaxVelocity().x);
 		deltaVelocity.x = newVelocity.x - currentVelocity.x;
 		break;
 	case Direction::Left:
-		newVelocity.x = b2Max(currentVelocity.x - physics.getAccelerationRate(), -physics.getMaxVelocity());
+		newVelocity.x = b2Max(currentVelocity.x - physics.getAccelerationRate().x, -physics.getMaxVelocity().x);
 		deltaVelocity.x = newVelocity.x - currentVelocity.x;
 		break;
 	case Direction::Up:
-		newVelocity.y = b2Min(currentVelocity.y + physics.getAccelerationRate(), -physics.getMaxVelocity());
+		newVelocity.y = b2Min(currentVelocity.y + physics.getAccelerationRate().y, -physics.getMaxVelocity().y);
 		deltaVelocity.y = newVelocity.y - currentVelocity.y;
 		break;
 	case Direction::Down:
-		newVelocity.y = b2Max(currentVelocity.y - physics.getAccelerationRate(), physics.getMaxVelocity());
+		newVelocity.y = b2Max(currentVelocity.y - physics.getAccelerationRate().y, physics.getMaxVelocity().y);
 		deltaVelocity.y = newVelocity.y - currentVelocity.y;
 		break;
 	}
@@ -128,16 +128,28 @@ void PhysicsSystem::setVelocity(Entity entity, Direction direction)
 		switch (direction)
 		{
 		case Direction::Up:
-			velocity.y = -physics.getMaxVelocity();
+			velocity.y = physics.getMaxVelocity().y;
 			break;
 		case Direction::Down:
-			velocity.y = physics.getMaxVelocity();
+			velocity.y = -physics.getMaxVelocity().y;
 			break;
 		case Direction::Right:
-			velocity.x = physics.getMaxVelocity();
+			velocity.x = physics.getMaxVelocity().x;
 			break;
 		case Direction::Left:
-			velocity.x = -physics.getMaxVelocity();
+			velocity.x = -physics.getMaxVelocity().x;
+			break;
+		case Direction::RightUp:
+			velocity = { physics.getMaxVelocity().x, physics.getMaxVelocity().y };
+			break;
+		case Direction::RightDown:
+			velocity = { physics.getMaxVelocity().x, -physics.getMaxVelocity().y };
+			break;
+		case Direction::LeftUp:
+			velocity = { -physics.getMaxVelocity().x, physics.getMaxVelocity().y };
+			break;
+		case Direction::LeftDown:
+			velocity = { -physics.getMaxVelocity().x, -physics.getMaxVelocity().y };
 			break;
 		}
 
@@ -216,5 +228,9 @@ void PhysicsSystem::setInitialData(Entity entity, PhysicsComponent& physics)
 			this->collisionsData.push_back(CollisionData(entity, fixture.second, fixture.first));
 			fixture.second->SetUserData(&this->collisionsData.back());
 		}
+	}
+	if (physics.getObjectType() == ObjectType::ActivationPlatform)
+	{
+		this->events.broadcast(SetAutomatedStatus{ entity, false });
 	}
 }

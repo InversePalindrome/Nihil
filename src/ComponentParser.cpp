@@ -60,11 +60,11 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["Physics"] = [this, &world](auto& entity, auto& line)
 	{
-		const auto& params = parse<float, float, std::size_t, std::size_t, std::int16_t, float, float, float>(line);
+		const auto& params = parse<float, float, std::size_t, std::size_t, std::int16_t, float, float, float, float, float>(line);
 
 		entity.add_component<PhysicsComponent>(world, b2Vec2(std::get<0>(params), std::get<1>(params)),
 			static_cast<b2BodyType>(std::get<2>(params)), static_cast<ObjectType>(std::get<3>(params)), std::get<4>(params),
-			std::get<5>(params), std::get<6>(params), std::get<7>(params));
+			b2Vec2(std::get<5>(params), std::get<6>(params)), b2Vec2(std::get<7>(params), std::get<8>(params)), std::get<9>(params));
 	};
 
 	componentParsers["Patrol"] = [this](auto& entity, auto& line)

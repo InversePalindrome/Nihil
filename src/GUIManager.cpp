@@ -34,6 +34,11 @@ void GUIManager::addWidget(widgetPtr widget)
 	this->hud.Add(this->widgets.back());
 }
 
+void GUIManager::removeAllWidgets()
+{
+	this->hud.RemoveAll();
+}
+
 void GUIManager::hideAllWidgets()
 {
 	for (auto& widget : this->widgets)

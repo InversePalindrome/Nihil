@@ -34,6 +34,8 @@ Application::Application() :
 	stateData(games, resourceManager, soundManager, guiManager, inputHandler, window),
 	stateMachine(stateData)
 {
+	stateData.window.resetGLStates();
+
 	stateMachine.registerState<SplashState>(StateID::Splash);
 	stateMachine.registerState<StartState>(StateID::Start);
 	stateMachine.registerState<MenuState>(StateID::Menu);

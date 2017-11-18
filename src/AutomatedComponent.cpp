@@ -16,7 +16,8 @@ InversePalindrome.com
 AutomatedComponent::AutomatedComponent(const std::string& fileName) :
 	Component("Automated"),
 	fileName(fileName),
-	currentTask(0u)
+	currentTask(0u),
+	activeStatus(true)
 {
 	std::ifstream inFile(Path::miscellaneous / fileName);
 	std::string line;
@@ -30,7 +31,7 @@ AutomatedComponent::AutomatedComponent(const std::string& fileName) :
 
 		iStream >> function >> time;
 
-		tasks.push_back(std::make_pair(function, time));
+		tasks.push_back({ function, time });
 	}
 
 	timer.restart(sf::seconds(tasks.front().second));
@@ -58,6 +59,11 @@ void AutomatedComponent::pushNextTask()
 	}
 }
 
+void AutomatedComponent::setActiveStatus(bool activeStatus)
+{
+	this->activeStatus = activeStatus;
+}
+
 bool AutomatedComponent::hasTasks() const
 {
 	return !this->tasks.empty();
@@ -66,4 +72,9 @@ bool AutomatedComponent::hasTasks() const
 bool AutomatedComponent::hasCurrentTaskExpired() const
 {
 	return this->timer.isExpired();
+}
+
+bool AutomatedComponent::isActive() const
+{
+	return this->activeStatus;
 }

@@ -38,7 +38,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	underWaterDisplay.setPosition(600.f, 45.f);
 	underWaterDisplay.setNumberOfBubbles(0u);
 
-	powerUpDisplay.setPosition(1000.f, 50.f);
+	powerUpDisplay.setPosition(1050.f, 50.f);
 	achievementDisplay.setPosition(740.f, 60.f);
 
 	entityManager.getEvents().subscribe<CrossedCheckpoint>([this](const auto& event) { setCheckpoint(event.position);  });
@@ -62,7 +62,8 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	entityManager.getEvents().subscribe<UpdateConversation>([this](const auto& event) { updateConversationDisplay(event.entity); });
 	entityManager.getEvents().subscribe<UpdateAchievement>([this](const auto& event) { updateAchievements(event.achievement); });
 
-	entityManager.getEvents().subscribe<IsUnderWater>([this](const auto& event) { handleIsUnderWater(event.entity); });
+	entityManager.getEvents().subscribe<AddUnderWaterTimer>([this](const auto& event) { manageUnderWaterTimer(event.entity); });
+    entityManager.getEvents().subscribe<RemoveUnderWaterTimer>([this](const auto& event) { removeUnderWaterTimer(event.entity); });
 	
 	entityManager.getEvents().subscribe<HidePowerUp>([this](const auto& event) { powerUpDisplay.removePowerUp(event.item); });
 
@@ -130,6 +131,11 @@ void GameState::update(float deltaTime)
 	this->world.Step(timeStep, velocityIterations, positionIterations);
 	
 	this->updateCamera();
+
+	this->entityManager.getEntities().for_each<TimerComponent>([](auto entity, auto& timer)
+	{
+		timer.update();
+	});
 
 	this->entityManager.update(deltaTime);
 	this->coinDisplay.update(deltaTime);
@@ -357,7 +363,9 @@ void GameState::destroyEntity(Entity entity)
 	if (entity.has_component<ControllableComponent>())
 	{
 		this->stateData.games.front().setPlayer(this->entityManager.createEntity(stateData.games.front().getGameName()
-			+ "-Player.txt", stateData.games.front().getSpawnpoint()));
+				+ "-Player.txt", stateData.games.front().getSpawnpoint()));
+
+		this->powerUpDisplay.clearPowerUps();
 	}
 }
 
@@ -366,7 +374,7 @@ void GameState::destroyBody(PhysicsComponent& physics)
 	this->world.DestroyBody(physics.getBody());
 }
 
-void GameState::handleIsUnderWater(Entity entity)
+void GameState::manageUnderWaterTimer(Entity entity)
 {
 	if (entity.has_component<StateComponent>() && entity.get_component<StateComponent>().getState() != EntityState::Swimming)
 	{
@@ -402,8 +410,13 @@ void GameState::addUnderWaterTimer(Entity entity, std::size_t numberOfBubbles, f
 			}
 		}, timePerBubble);
 	}
-	else
+}
+
+void GameState::removeUnderWaterTimer(Entity entity)
+{
+	if (entity.has_component<PhysicsComponent>() && !entity.get_component<PhysicsComponent>().isColliding(ObjectType::Head, ObjectType::Liquid))
 	{
+		this->callbacks.disconnectCallbackTimers();
 		this->underWaterDisplay.setNumberOfBubbles(0u);
 	}
 }

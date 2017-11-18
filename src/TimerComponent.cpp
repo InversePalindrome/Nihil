@@ -10,7 +10,7 @@ InversePalindrome.com
 
 #include <fstream>
 #include <sstream>
-
+#include <iostream>
 
 TimerComponent::TimerComponent() :
 	Component("TimerA")
@@ -44,9 +44,19 @@ std::ostream& operator<<(std::ostream& os, const TimerComponent& component)
 	return os;
 }
 
+void TimerComponent::update()
+{
+	this->callbacks.update();
+}
+
 void TimerComponent::addTimer(const std::string& timer, float time)
 {
 	this->timers[timer] = std::make_pair(thor::Timer(), time);
+}
+
+void TimerComponent::addCallbackTimer(std::function<void()> function, float callbackTime)
+{
+	this->callbacks.addCallbackTimer(function, callbackTime);
 }
 
 void TimerComponent::removeTimer(const std::string& timer)
@@ -77,4 +87,9 @@ bool TimerComponent::hasTimer(const std::string& timer) const
 bool TimerComponent::hasTimerExpired(const std::string& timer) const 
 {
 	return this->timers.at(timer).first.isExpired();
+}
+
+void TimerComponent::disconnectCallbackTimers()
+{
+	this->callbacks.disconnectCallbackTimers();
 }
