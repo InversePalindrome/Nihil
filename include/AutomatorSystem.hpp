@@ -24,4 +24,6 @@ private:
 	std::unordered_map<std::string, std::function<void(Entity)>> registeredTasks;
 
 	void sendTask(Entity entity, AutomatedComponent& automated);
+
+	void setActiveStatus(Entity entity, bool activeStatus);
 };

@@ -31,6 +31,8 @@ public:
 
 	void addWidget(widgetPtr widget);
 
+	void removeAllWidgets();
+
 	void hideAllWidgets();
 
 	template<typename T>

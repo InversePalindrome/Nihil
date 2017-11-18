@@ -8,6 +8,7 @@ InversePalindrome.com
 #pragma once
 
 #include "Component.hpp"
+#include "Callbacks.hpp"
 
 #include <Thor/Time/Timer.hpp>
 
@@ -22,7 +23,11 @@ public:
 	TimerComponent();
 	TimerComponent(const std::string& fileName);
 
+	void update();
+
 	void addTimer(const std::string& timer, float time);
+	void addCallbackTimer(std::function<void()> function, float callbackTime);
+
 	void removeTimer(const std::string& timer);
 
 	void restartTimer(const std::string& timer);
@@ -32,9 +37,12 @@ public:
 	bool hasTimer(const std::string& timer) const;
 	bool hasTimerExpired(const std::string& timer) const;
 
+	void disconnectCallbackTimers();
+
 private:
 	std::string fileName;
 	std::unordered_map<std::string, std::pair<thor::Timer, float>> timers;
+	Callbacks callbacks;
 };
 
 std::ostream& operator<<(std::ostream& os, const TimerComponent& component);

@@ -26,7 +26,7 @@ class PhysicsComponent : public Component
 
 public:
 	PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType physicalType, ObjectType objectType, std::int16_t collisionGroup,
-		float maxVelocity, float jumpVelocity, float accelerationRate);
+		const b2Vec2& maxVelocity, const b2Vec2& accelerationRate, float jumpVelocity);
 
 	b2Body* getBody();
 	ObjectType getObjectType() const;
@@ -39,9 +39,9 @@ public:
 	b2BodyType getType() const;
 
 	float getMass() const;
-	float getMaxVelocity() const;
+	b2Vec2 getMaxVelocity() const;
+	b2Vec2 getAccelerationRate() const;
 	float getJumpVelocity() const;
-	float getAccelerationRate() const;
 	Direction getDirection() const;
 	std::int16_t getCollisionGroup() const;
 	float getLinearDamping() const;
@@ -49,9 +49,9 @@ public:
 	void setPosition(const b2Vec2& position);
 	void setVelocity(const b2Vec2& velocity);
 	void setType(b2BodyType type);
-	void setMaxVelocity(float maxVelocity);
+	void setMaxVelocity(const b2Vec2& maxVelocity);
+	void setAccelerationRate(const b2Vec2& accelerationRate);
 	void setJumpVelocity(float jumpVelocity);
-	void setAccelerationRate(float accelerationRate);
 	void setGravityScale(float gravityScale);
 	void setDirection(Direction direction);
 	void setCollisionGroup(std::int16_t collisionGroup);
@@ -69,9 +69,9 @@ private:
 	ObjectType objectType;
 	std::int16_t collisionGroup;
 
-	float maxVelocity;
+	b2Vec2 maxVelocity;
+	b2Vec2 accelerationRate;
 	float jumpVelocity;
-	float accelerationRate;
 	Direction direction;
 };
 

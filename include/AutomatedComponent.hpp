@@ -27,14 +27,19 @@ public:
 
 	void pushNextTask();
 
+	void setActiveStatus(bool activeStatus);
+
 	bool hasTasks() const;
 	bool hasCurrentTaskExpired() const;
+	bool isActive() const;
 
 private:
 	std::string fileName;
 	std::vector<Task> tasks;
 	thor::Timer timer;
 	std::size_t currentTask;
+
+	bool activeStatus;
 };
 
 std::ostream& operator<<(std::ostream& os, const AutomatedComponent& component);

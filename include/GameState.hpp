@@ -75,8 +75,9 @@ private:
 	void destroyEntity(Entity entity);
 	void destroyBody(PhysicsComponent& physics);
 
-	void handleIsUnderWater(Entity entity);
+	void manageUnderWaterTimer(Entity entity);
 	void addUnderWaterTimer(Entity entity, std::size_t numberOfBubbles, float timePerBubble, bool forceCallback);
+	void removeUnderWaterTimer(Entity entity);
 
 	void saveData(const std::string& fileName);
 };
