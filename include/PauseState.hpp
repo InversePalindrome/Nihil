@@ -40,5 +40,7 @@ private:
 
 	bool isBackgroundVisible;
 
+	void resumeGame();
+
 	void transitionToMenu();
 };

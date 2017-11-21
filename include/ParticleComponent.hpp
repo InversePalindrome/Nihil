@@ -12,7 +12,6 @@ InversePalindrome.com
 #include "StateComponent.hpp"
 #include "ResourceManager.hpp"
 
-#include <Thor/Particles/Emitters.hpp>
 #include <Thor/Particles/ParticleSystem.hpp>
 
 #include <unordered_map>
@@ -36,7 +35,6 @@ private:
 	std::string emitterFile;
 
 	thor::ParticleSystem particleSystem;
-	thor::UniversalEmitter emitter;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

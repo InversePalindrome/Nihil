@@ -28,6 +28,8 @@ private:
 	void stopEntity(Entity entity);
 	void makeJump(Entity entity);
 
+	void propelFromWater(Entity entity);
+
 	void setGravityScale(Entity entity, float gravityScale);
 	void setLinearDamping(Entity entity, float linearDamping);
 	void setVelocity(Entity entity, Direction direction);

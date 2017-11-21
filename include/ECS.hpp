@@ -83,6 +83,7 @@ struct SetMidAirStatus;
 struct SetAutomatedStatus;
 struct AddUnderWaterTimer;
 struct RemoveUnderWaterTimer;
+struct PropelFromWater;
 
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
@@ -98,7 +99,7 @@ using Events = entityplus::event_manager<Components, Tags, CreateEntity, Destroy
 	StopMovement, CombatOcurred, ChangeState,StateChanged, ChangeLevel, DestroyEntity, EmitSound, PickedUpItem, DroppedItem, DisplayHealthBar, DisplayCoins,
 	DisplayPowerUp, DisplayConversation, HidePowerUp, CrossedCheckpoint, CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform,
 	ApplyForce, ApplyImpulse, ApplyBlastImpact, ApplyKnockback, SetGravityScale, SetLinearDamping, SetVelocity, SetPosition, SetMidAirStatus, SetAutomatedStatus,
-	AddUnderWaterTimer, RemoveUnderWaterTimer>;
+	AddUnderWaterTimer, RemoveUnderWaterTimer, PropelFromWater>;
 
 using Entity = Entities::entity_t;
 
@@ -321,6 +322,11 @@ struct AddUnderWaterTimer
 };
 
 struct RemoveUnderWaterTimer
+{
+	Entity entity;
+};
+
+struct PropelFromWater
 {
 	Entity entity;
 };

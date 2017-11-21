@@ -27,6 +27,9 @@ public:
 
 	void pushNextTask();
 
+	void playCurrentTask();
+	void stopCurrentTask();
+
 	void setActiveStatus(bool activeStatus);
 
 	bool hasTasks() const;
