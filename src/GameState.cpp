@@ -114,6 +114,11 @@ void GameState::handleEvent(const sf::Event& event)
 		this->stateData.soundManager.stopAllSounds();
 		this->stateData.soundManager.stopAllMusic();
 
+		this->entityManager.getEntities().for_each<AutomatedComponent>([](auto entity, auto& automated)
+		{
+			automated.stopCurrentTask();
+		});
+
 		this->stateMachine.pushState(StateID::Pause);
 	}
 	else if (this->stateData.inputHandler.isActive(Action::Inventory))
@@ -190,7 +195,7 @@ void GameState::updateCamera()
 			}
 			else
 			{
-				this->camera.setCenter(this->map.getBounds().width - this->camera.getCenter().x / 2.f, this->stateData.window.getDefaultView().getCenter().y);
+				this->camera.setCenter(this->map.getBounds().width - this->camera.getSize().x / 2.f, this->stateData.window.getDefaultView().getCenter().y);
 			}
 		}
 		break;

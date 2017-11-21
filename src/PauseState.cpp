@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #include "PauseState.hpp"
+#include "GameState.hpp"
 #include "StateMachine.hpp"
 #include "SpriteParser.hpp"
 #include "TextStyleParser.hpp"
@@ -31,13 +32,9 @@ PauseState::PauseState(StateMachine& stateMachine, StateData& stateData) :
 	titleBar.setPosition(617.f, 230.f);
 
 	resumeButton->SetPosition({ 740.f, 535.f });
-	resumeButton->GetSignal(sfg::Widget::OnLeftClick).Connect([&stateMachine]()
+	resumeButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this]()
 	{
-		auto menu = stateMachine[stateMachine.size() - 2].get();
-
-		menu->showWidgets(true);
-
-		stateMachine.popState();
+		resumeGame();
 	});
 
 	shopButton->SetPosition({ 740.f, 685.f });
@@ -78,11 +75,7 @@ void PauseState::handleEvent(const sf::Event& event)
 {
 	if (this->stateData.inputHandler.isActive(Action::Escape))
 	{
-		auto menu = this->stateMachine[stateMachine.size() - 2].get();
-
-		menu->showWidgets(true);
-
-		this->stateMachine.popState();
+		this->resumeGame();
 	}
 }
 
@@ -114,6 +107,15 @@ void PauseState::showWidgets(bool showStatus)
 	this->quitButton->Show(showStatus);
 
 	this->isBackgroundVisible = showStatus;
+}
+
+void PauseState::resumeGame()
+{
+	auto game = this->stateMachine[stateMachine.size() - 2].get();
+
+	game->showWidgets(true);
+
+	this->stateMachine.popState();
 }
 
 void PauseState::transitionToMenu()

@@ -34,7 +34,10 @@ AutomatedComponent::AutomatedComponent(const std::string& fileName) :
 		tasks.push_back({ function, time });
 	}
 
-	timer.restart(sf::seconds(tasks.front().second));
+	if (!tasks.empty())
+	{
+		timer.restart(sf::seconds(tasks.front().second));
+	}
 }
 
 std::ostream& operator<<(std::ostream& os, const AutomatedComponent& component)
@@ -57,6 +60,16 @@ void AutomatedComponent::pushNextTask()
 
 		this->timer.restart(sf::seconds(this->tasks.front().second));
 	}
+}
+
+void AutomatedComponent::playCurrentTask()
+{
+	this->timer.start();
+}
+
+void AutomatedComponent::stopCurrentTask()
+{
+	this->timer.stop();
 }
 
 void AutomatedComponent::setActiveStatus(bool activeStatus)

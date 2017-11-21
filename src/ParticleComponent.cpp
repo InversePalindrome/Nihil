@@ -16,12 +16,11 @@ ParticleComponent::ParticleComponent(ResourceManager& resourceManager, const sf:
 	Component("Particle"),
 	effectRange(effectRange),
 	particleFile(particleFile),
-	emitterFile(emitterFile),
-	emitter(std::move(Parsers::parseEmitter(emitterFile)))
+	emitterFile(emitterFile)
 {
 	Parsers::parseParticleSystem(resourceManager, particleFile, particleSystem);
     
-	particleSystem.addEmitter(thor::refEmitter(emitter));
+	particleSystem.addEmitter(Parsers::parseEmitter(emitterFile));
 }
 
 std::ostream& operator<<(std::ostream& os, const ParticleComponent& component)
@@ -39,12 +38,12 @@ void ParticleComponent::update(float deltaTime)
 
 sf::FloatRect ParticleComponent::getGlobalBounds() const
 {
-	return sf::FloatRect(this->getPosition(), { this->effectRange.x, this->effectRange.y });
+	return { this->getPosition(), { this->effectRange.x, this->effectRange.y } };
 }
 
 void ParticleComponent::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	states.transform = this->getTransform();
+	states.transform *= this->getTransform();
 
 	target.draw(this->particleSystem, states);
 }

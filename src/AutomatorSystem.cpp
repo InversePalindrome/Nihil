@@ -28,6 +28,8 @@ void AutomatorSystem::update(float deltaTime)
 {
 	this->entities.for_each<AutomatedComponent>([this](auto entity, auto& automated)
 	{
+		automated.playCurrentTask();
+
 		if (automated.isActive() && automated.hasTasks())
 		{
 			if (automated.hasCurrentTaskExpired())

@@ -90,7 +90,7 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 		this->events.broadcast(DisplayConversation{ orderedCollision->second.get().entity, true });
 		this->events.broadcast(UpdateConversation{ orderedCollision->second.get().entity });
 	}
-	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Body, ObjectType::Spike))
+	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Feet, ObjectType::Spike))
 	{
 		orderedCollision->first.get().entity.sync();
 
@@ -162,6 +162,7 @@ void CollisionHandler::EndContact(b2Contact* contact)
 		this->events.broadcast(ChangeState{ orderedCollision->first.get().entity, EntityState::Idle });
 		this->events.broadcast(SetGravityScale{ orderedCollision->first.get().entity, 1.f });
 		this->events.broadcast(SetLinearDamping{ orderedCollision->first.get().entity, 0.f });
+		this->events.broadcast(PropelFromWater{ orderedCollision->first.get().entity });
 	}
 }
 

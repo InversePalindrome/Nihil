@@ -42,7 +42,7 @@ void Map::load(const std::string& fileName)
 	
 	for (std::size_t i = 0; i < this->map.getLayers().size(); ++i)
 	{
-		this->layers.push_back(std::make_unique<Layer>(this->map, i, sf::Vector2f(this->bounds.width, this->bounds.height)));
+		this->layers.push_back(std::make_unique<Layer>(this->map, i, sf::Vector2f(this->bounds.width, this->bounds.height )));
 	}
 
 	this->parseMap();

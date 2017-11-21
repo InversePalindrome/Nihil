@@ -18,6 +18,7 @@ PhysicsSystem::PhysicsSystem(Entities& entities, Events& events, b2World& world,
 	events.subscribe<entityplus::component_added<Entity, PhysicsComponent>>([this](const auto& event) { setInitialData(event.entity, event.component); });
 	events.subscribe<DirectionChanged>([this](const auto& event) { moveEntity(event.entity, event.direction); });
 	events.subscribe<Jumped>([this](const auto& event) { makeJump(event.entity); });
+	events.subscribe<PropelFromWater>([this](const auto& event) { propelFromWater(event.entity); });
 	events.subscribe<StopMovement>([this](const auto& event) { stopEntity(event.entity); });
 	events.subscribe<ApplyForce>([this](const auto& event) { applyForce(event.entity, event.force); });
 	events.subscribe<ApplyImpulse>([this](const auto& event) { applyImpulse(event.entity, event.impulse); });
@@ -40,8 +41,6 @@ void PhysicsSystem::moveEntity(Entity entity, Direction direction)
 {
 	auto& physics = entity.get_component<PhysicsComponent>();
 
-	physics.setDirection(direction);
-
 	const auto& currentVelocity = physics.getVelocity();
 	
 	b2Vec2 newVelocity(0.f, 0.f);
@@ -58,11 +57,11 @@ void PhysicsSystem::moveEntity(Entity entity, Direction direction)
 		deltaVelocity.x = newVelocity.x - currentVelocity.x;
 		break;
 	case Direction::Up:
-		newVelocity.y = b2Min(currentVelocity.y + physics.getAccelerationRate().y, -physics.getMaxVelocity().y);
+		newVelocity.y = b2Min(currentVelocity.y + physics.getAccelerationRate().y, physics.getMaxVelocity().y);
 		deltaVelocity.y = newVelocity.y - currentVelocity.y;
 		break;
 	case Direction::Down:
-		newVelocity.y = b2Max(currentVelocity.y - physics.getAccelerationRate().y, physics.getMaxVelocity().y);
+		newVelocity.y = b2Max(currentVelocity.y - physics.getAccelerationRate().y, -physics.getMaxVelocity().y);
 		deltaVelocity.y = newVelocity.y - currentVelocity.y;
 		break;
 	}
@@ -70,6 +69,7 @@ void PhysicsSystem::moveEntity(Entity entity, Direction direction)
 	const b2Vec2 impulse({ deltaVelocity.x * physics.getMass(), deltaVelocity.y * physics.getMass() });
 
 	physics.applyImpulse(impulse);
+	physics.setDirection(direction);
 }
 
 void PhysicsSystem::stopEntity(Entity entity)
@@ -95,6 +95,21 @@ void PhysicsSystem::makeJump(Entity entity)
 		if (entity.has_component<ControllableComponent>())
 		{
 			this->events.broadcast(EmitSound{ SoundBuffersID::Jump, false });
+		}
+	}
+}
+
+void PhysicsSystem::propelFromWater(Entity entity)
+{
+	if (entity.has_component<PhysicsComponent>())
+	{
+		auto& physics = entity.get_component<PhysicsComponent>();
+		
+		if (physics.getDirection() == Direction::Up)
+		{
+			const float forcePerMassRatio = 400.f;
+
+			physics.applyForce({0.f, physics.getMass() * forcePerMassRatio});
 		}
 	}
 }

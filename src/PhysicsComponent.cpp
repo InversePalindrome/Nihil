@@ -34,7 +34,8 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2Bod
  	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &fixtureShape;
 	fixtureDef.density = 1.f;
-	fixtureDef.friction = 0.f;
+	fixtureDef.friction = 0.3f;
+	fixtureDef.restitution = 0.f;
 	fixtureDef.filter.groupIndex = collisionGroup;
 
 	body = world.CreateBody(&bodyDefinition);
@@ -66,8 +67,8 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2Bod
 		feetShape.SetAsBox(bodySize.x / 4.f, bodySize.y / 4.f, { 0.f, -bodySize.y + bodySize.y / 6.f }, 0.f);
 		
 		b2FixtureDef feetDef;
+		feetDef.isSensor = true;
 		feetDef.density = 0.f;
-		feetDef.friction = 0.5f;
 		feetDef.shape = &feetShape;
 
 		fixtures[ObjectType::Head] = body->CreateFixture(&headDef);
