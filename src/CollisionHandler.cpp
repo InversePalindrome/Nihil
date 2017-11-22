@@ -108,6 +108,20 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 		
 		this->events.broadcast(SetMidAirStatus{ orderedCollision->first.get().entity, false });
 	}
+	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Feet, ObjectType::Ice))
+	{
+		orderedCollision->first.get().entity.sync();
+
+		this->events.broadcast(SetMidAirStatus{ orderedCollision->first.get().entity, false });
+		this->events.broadcast(SetFriction{ orderedCollision->first.get().entity, ObjectType::Player, 0.f });
+
+		contact->SetFriction(0.f);
+
+		for (const auto* edge = orderedCollision->first.get().fixture->GetBody()->GetContactList(); edge; edge = edge->next)
+		{
+			edge->contact->ResetFriction();
+		}
+	}
 	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Character))
 	{
 		orderedCollision->second.get().entity.sync();
@@ -123,6 +137,12 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 		this->events.broadcast(SetAutomatedStatus{ orderedCollision->second.get().entity, true });
 	}
 
+	if (const auto& collider = this->getCollider(objectA, objectB, ObjectType::Player))
+	{
+		collider->get().entity.sync();
+
+		this->updatePlayerFriction(collider->get().entity, contact);
+	}
 	if (const auto& collider = this->getCollider(objectA, objectB, ObjectType::Bullet))
 	{
 		collider->get().entity.sync();
@@ -141,7 +161,7 @@ void CollisionHandler::EndContact(b2Contact* contact)
 {
 	auto* objectA = static_cast<CollisionData*>(contact->GetFixtureA()->GetUserData());
 	auto* objectB = static_cast<CollisionData*>(contact->GetFixtureB()->GetUserData());
-
+	
 	if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Character))
 	{
 		orderedCollision->second.get().entity.sync();
@@ -153,6 +173,13 @@ void CollisionHandler::EndContact(b2Contact* contact)
 		orderedCollision->first.get().entity.sync();
 		
 		this->events.broadcast(SetMidAirStatus{ orderedCollision->first.get().entity, true });
+	}
+	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Feet, ObjectType::Ice))
+	{
+		orderedCollision->first.get().entity.sync();
+
+		this->events.broadcast(SetMidAirStatus{ orderedCollision->first.get().entity, true });
+		this->events.broadcast(SetFriction{ orderedCollision->first.get().entity, ObjectType::Player, 0.3f });
 	}
 	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Head, ObjectType::Liquid))
 	{
@@ -205,5 +232,16 @@ std::optional<CollisionHandler::OrderedCollision> CollisionHandler::getOrderedCo
 	else
 	{
 		return {};
+	}
+}
+
+void CollisionHandler::updatePlayerFriction(Entity player, b2Contact* contact)
+{
+	if (player.has_component<ControllableComponent>())
+	{
+		if (player.get_component<ControllableComponent>().isMidAir())
+		{
+			contact->SetFriction(0.f);
+		}
 	}
 }

@@ -223,6 +223,19 @@ void PhysicsComponent::setLinearDamping(float linearDamping)
 	this->body->SetLinearDamping(linearDamping);
 }
 
+void PhysicsComponent::setFriction(ObjectType fixtureObject, float friction)
+{
+	for (auto* fixture = this->body->GetFixtureList(); fixture; fixture = fixture->GetNext())
+	{
+		auto* fixtureData = static_cast<CollisionData*>(fixture->GetUserData());
+
+		if (fixtureData->objectType == fixtureObject)
+		{
+			fixture->SetFriction(friction);
+		}
+	}
+}
+
 bool PhysicsComponent::isColliding(ObjectType fixtureObject, ObjectType collidableObject) const
 {
 	for (const auto* edge = this->body->GetContactList(); edge; edge = edge->next)

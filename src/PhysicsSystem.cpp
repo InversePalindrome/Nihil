@@ -25,6 +25,7 @@ PhysicsSystem::PhysicsSystem(Entities& entities, Events& events, b2World& world,
 	events.subscribe<SetGravityScale>([this](const auto& event) { setGravityScale(event.entity, event.gravity); });
 	events.subscribe<SetLinearDamping>([this](const auto& event) { setLinearDamping(event.entity, event.linearDamping); });
 	events.subscribe<SetVelocity>([this](const auto& event) { setVelocity(event.entity, event.direction); });
+	events.subscribe<SetFriction>([this](const auto& event) { setFriction(event.entity, event.fixtureType, event.friction); });
 }
 
 void PhysicsSystem::update(float deltaTime)
@@ -169,6 +170,14 @@ void PhysicsSystem::setVelocity(Entity entity, Direction direction)
 		}
 
 		physics.setVelocity(velocity);
+	}
+}
+
+void PhysicsSystem::setFriction(Entity entity, ObjectType fixtureType, float friction)
+{
+	if (entity.has_component<PhysicsComponent>())
+	{
+		entity.get_component<PhysicsComponent>().setFriction(fixtureType, friction);
 	}
 }
 

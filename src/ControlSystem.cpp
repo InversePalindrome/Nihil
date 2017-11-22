@@ -29,23 +29,23 @@ void ControlSystem::addControl(Entity entity)
 
 	this->inputHandler.addCallback(Action::MoveLeft, [this, entity]() mutable
 	{
-		entity.sync();
-
-		this->events.broadcast(DirectionChanged{ entity, Direction::Left });
+		if (entity.sync())
+		{
+			this->events.broadcast(DirectionChanged{ entity, Direction::Left });
+		}
 	});
 
 	this->inputHandler.addCallback(Action::MoveRight, [this, entity]() mutable
 	{
-		entity.sync();
-
-		this->events.broadcast(DirectionChanged{ entity, Direction::Right });
+		if (entity.sync())
+		{
+			this->events.broadcast(DirectionChanged{ entity, Direction::Right });
+		}
 	});
 
 	this->inputHandler.addCallback(Action::MoveDown, [this, entity]() mutable
 	{
-		entity.sync();
-
-		if (entity.has_component<StateComponent>() && entity.get_component<StateComponent>().getState() == EntityState::Swimming)
+		if (entity.sync() && entity.has_component<StateComponent>() && entity.get_component<StateComponent>().getState() == EntityState::Swimming)
 		{
 			this->events.broadcast(DirectionChanged{ entity, Direction::Down });
 		}
@@ -53,9 +53,7 @@ void ControlSystem::addControl(Entity entity)
 
 	this->inputHandler.addCallback(Action::MoveUp, [this, entity]() mutable
 	{
-		entity.sync();
-	
-		if (entity.has_component<StateComponent>() && entity.get_component<StateComponent>().getState() == EntityState::Swimming)
+		if (entity.sync() && entity.has_component<StateComponent>() && entity.get_component<StateComponent>().getState() == EntityState::Swimming)
 		{
 			this->events.broadcast(DirectionChanged{ entity, Direction::Up });
 		}
@@ -63,9 +61,7 @@ void ControlSystem::addControl(Entity entity)
 
 	this->inputHandler.addCallback(Action::Jump, [this, entity]() mutable
 	{
-		entity.sync();
-
-		if (!entity.get_component<ControllableComponent>().isMidAir())
+		if (entity.sync() && !entity.get_component<ControllableComponent>().isMidAir())
 		{
 			this->events.broadcast(Jumped{ entity });
 		}
@@ -73,9 +69,7 @@ void ControlSystem::addControl(Entity entity)
 
 	this->inputHandler.addCallback(Action::Shoot, [this, entity]() mutable
 	{
-		entity.sync();
-
-		if (entity.has_component<RangeAttackComponent>() && entity.has_component<TimerComponent>()
+		if (entity.sync() && entity.has_component<RangeAttackComponent>() && entity.has_component<TimerComponent>()
 			&& entity.get_component<TimerComponent>().hasTimerExpired("Reload"))
 		{
 			this->callbacks.addCallback([this, entity]()
