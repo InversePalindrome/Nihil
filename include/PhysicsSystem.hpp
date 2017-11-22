@@ -33,6 +33,7 @@ private:
 	void setGravityScale(Entity entity, float gravityScale);
 	void setLinearDamping(Entity entity, float linearDamping);
 	void setVelocity(Entity entity, Direction direction);
+	void setFriction(Entity entity, ObjectType fixtureType, float friction);
 
 	void applyImpulse(Entity entity, const b2Vec2& impulse);
 	void applyForce(Entity entity, const b2Vec2& force);

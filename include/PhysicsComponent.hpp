@@ -56,6 +56,7 @@ public:
 	void setDirection(Direction direction);
 	void setCollisionGroup(std::int16_t collisionGroup);
 	void setLinearDamping(float linearDamping);
+	void setFriction(ObjectType fixtureObject, float friction);
 
 	bool isColliding(ObjectType fixtureObject, ObjectType collidableObject) const;
 
