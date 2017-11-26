@@ -32,7 +32,8 @@ public:
 
 	std::optional<std::pair<EntityState, Direction>> getCurrentAnimation() const;
 
-	void animate(sf::Sprite& sprite, float deltaTime);
+	void update(float deltaTime);
+	void animate(sf::Sprite& sprite);
 
 	void playAnimation(EntityState state, Direction direction, bool loop);
 

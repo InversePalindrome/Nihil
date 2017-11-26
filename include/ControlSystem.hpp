@@ -24,6 +24,4 @@ public:
 private:
 	Callbacks callbacks;
 	InputHandler& inputHandler;
-
-	void setMidAirStatus(Entity entity, bool midAirStatus);
 };

@@ -14,7 +14,7 @@ InversePalindrome.com
 #include <cmath>
 
 
-namespace MathUtils
+namespace Utility
 {
 	template<typename T> 
 	int sign(T number)

@@ -36,7 +36,5 @@ private:
 
 	std::int32_t getNewTransformationID() const;
 
-	bool isInsideView(const sf::View& view, const sf::Vector2f& position, const sf::FloatRect& globalBounds) const;
-
 	std::set<std::int32_t> transformationIDs;
 };

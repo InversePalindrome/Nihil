@@ -9,6 +9,8 @@ InversePalindrome.com
 
 #include "System.hpp"
 
+#include <SFML/Graphics/RenderWindow.hpp>
+
 
 class AnimatorSystem : public System
 {
@@ -16,6 +18,8 @@ public:
 	AnimatorSystem(Entities& entities, Events& events);
 
 	virtual void update(float deltaTime) override;
+
+	void animate(sf::RenderTarget& target);
 
 private:
 	void changeAnimationState(Entity entity, EntityState state);

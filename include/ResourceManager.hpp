@@ -24,7 +24,7 @@ enum class TexturesID
 	SplashScreen, StartBackground, Particles, Character, Mushroom, RedMonster, MenuBackground,                 
     City, Desert, MushroomLand, PinkTown, FlowerLand, DarkTown, Coin, Heart, Laser, Gems, MistZone,
 	Bombs, PowerUps, Keys, DialogBox, Panels, RectangularBoxes, Jungle, Moon, PinkRocks, Plain, SkyZone,
-	IceZone, Tileset, Bubble, Platforms
+	IceZone, Tileset, Bubble, Platforms, Skeleton, Goblin, Wizard
 };
 enum class ImagesID { RedMonster };
 enum class FontsID { BITWONDER, CODE, Roboto, Changa };
@@ -33,7 +33,7 @@ enum class SoundBuffersID { Jump, Footsteps, Coin, Laser, SmallExplosion, Gem, A
 class ResourceManager
 {
 public:
-	ResourceManager();
+	ResourceManager() = default;
 	ResourceManager(const std::string& resourcesFilePath);
 	ResourceManager(const ResourceManager& resourceManager) = delete;
 	ResourceManager& operator=(const ResourceManager& resourceManager) = delete;

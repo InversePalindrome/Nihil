@@ -57,8 +57,10 @@ public:
 	void setCollisionGroup(std::int16_t collisionGroup);
 	void setLinearDamping(float linearDamping);
 	void setFriction(ObjectType fixtureObject, float friction);
+	void setMidAirStatus(bool midAirStatus);
 
 	bool isColliding(ObjectType fixtureObject, ObjectType collidableObject) const;
+	bool isMidAir() const;
 
 	void applyForce(const b2Vec2& force);
 	void applyImpulse(const b2Vec2& impulse);
@@ -74,6 +76,8 @@ private:
 	b2Vec2 accelerationRate;
 	float jumpVelocity;
 	Direction direction;
+
+	bool midAirStatus;
 };
 
 std::ostream& operator<<(std::ostream& os, const PhysicsComponent& component);

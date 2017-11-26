@@ -34,6 +34,7 @@ private:
 	void setLinearDamping(Entity entity, float linearDamping);
 	void setVelocity(Entity entity, Direction direction);
 	void setFriction(Entity entity, ObjectType fixtureType, float friction);
+	void setMidAirStatus(Entity entity, bool midAirStatus);
 
 	void applyImpulse(Entity entity, const b2Vec2& impulse);
 	void applyForce(Entity entity, const b2Vec2& force);
