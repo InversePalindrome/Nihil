@@ -26,6 +26,7 @@ PhysicsSystem::PhysicsSystem(Entities& entities, Events& events, b2World& world,
 	events.subscribe<SetLinearDamping>([this](const auto& event) { setLinearDamping(event.entity, event.linearDamping); });
 	events.subscribe<SetVelocity>([this](const auto& event) { setVelocity(event.entity, event.direction); });
 	events.subscribe<SetFriction>([this](const auto& event) { setFriction(event.entity, event.fixtureType, event.friction); });
+	events.subscribe<SetMidAirStatus>([this](const auto& event) { setMidAirStatus(event.entity, event.midAirStatus); });
 }
 
 void PhysicsSystem::update(float deltaTime)
@@ -87,15 +88,18 @@ void PhysicsSystem::makeJump(Entity entity)
 	{
 		auto& physics = entity.get_component<PhysicsComponent>();
 
-		this->events.broadcast(ChangeState{ entity, EntityState::Jumping });
-
-		const b2Vec2 impulse({ 0.f, physics.getJumpVelocity() * physics.getMass() });
-
-		physics.applyImpulse(impulse);
-
-		if (entity.has_component<ControllableComponent>())
+		if (!physics.isMidAir())
 		{
-			this->events.broadcast(EmitSound{ SoundBuffersID::Jump, false });
+			this->events.broadcast(ChangeState{ entity, EntityState::Jumping });
+
+			const b2Vec2 impulse({ 0.f, physics.getJumpVelocity() * physics.getMass() });
+
+			physics.applyImpulse(impulse);
+
+			if (entity.has_component<ControllableComponent>())
+			{
+				this->events.broadcast(EmitSound{ SoundBuffersID::Jump, false });
+			}
 		}
 	}
 }
@@ -178,6 +182,14 @@ void PhysicsSystem::setFriction(Entity entity, ObjectType fixtureType, float fri
 	if (entity.has_component<PhysicsComponent>())
 	{
 		entity.get_component<PhysicsComponent>().setFriction(fixtureType, friction);
+	}
+}
+
+void PhysicsSystem::setMidAirStatus(Entity entity, bool midAirStatus)
+{
+	if (entity.has_component<PhysicsComponent>())
+	{
+		entity.get_component<PhysicsComponent>().setMidAirStatus(midAirStatus);
 	}
 }
 

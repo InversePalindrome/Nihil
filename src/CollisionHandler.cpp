@@ -237,9 +237,9 @@ std::optional<CollisionHandler::OrderedCollision> CollisionHandler::getOrderedCo
 
 void CollisionHandler::updatePlayerFriction(Entity player, b2Contact* contact)
 {
-	if (player.has_component<ControllableComponent>())
+	if (player.has_component<PhysicsComponent>())
 	{
-		if (player.get_component<ControllableComponent>().isMidAir())
+		if (player.get_component<PhysicsComponent>().isMidAir())
 		{
 			contact->SetFriction(0.f);
 		}

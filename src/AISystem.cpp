@@ -117,7 +117,7 @@ void AISystem::chaseTarget(PatrolComponent& patrol, const sf::Vector2f& AIPositi
 
 	for (std::size_t i = 0u; i < waypoints.size(); ++i)
 	{
-		const auto& distance = MathUtils::distance(AIPosition, waypoints[i].point);
+		const auto& distance = Utility::distance(AIPosition, waypoints[i].point);
 		
 			if (targetPosition.x - AIPosition.x < 0.f)
 			{
@@ -144,7 +144,7 @@ std::optional<Pathway> AISystem::getClosestPathway(const sf::Vector2f& position)
 {
 	auto closestPathway = std::min_element(std::cbegin(this->pathways), std::cend(this->pathways), [&position](const auto& pathway1, const auto& pathway2) 
 	{
-		return MathUtils::distance(pathway1.second.getCurrentWaypoint().point, position) < MathUtils::distance(pathway2.second.getCurrentWaypoint().point, position);
+		return Utility::distance(pathway1.second.getCurrentWaypoint().point, position) < Utility::distance(pathway2.second.getCurrentWaypoint().point, position);
 	});
 
 	if (closestPathway != std::cend(this->pathways))
@@ -168,11 +168,11 @@ sf::Vector2f AISystem::getTargetPosition() const
 
 bool AISystem::isWithinRange(const sf::Vector2f& AIPosition, const sf::Vector2f& targetPosition, float visionRange)
 {
-	return MathUtils::distance(AIPosition, targetPosition) <= visionRange;
+	return Utility::distance(AIPosition, targetPosition) <= visionRange;
 }
 
 bool AISystem::isWithinRange(const std::pair<float, float>& patrolRange, const sf::Vector2f& AIPosition, const sf::Vector2f& targetPosition, float visionRange) const
 {
-	return MathUtils::distance(AIPosition, targetPosition) <= visionRange && 
+	return Utility::distance(AIPosition, targetPosition) <= visionRange && 
 		targetPosition.x > patrolRange.first && targetPosition.x < patrolRange.second;
 }

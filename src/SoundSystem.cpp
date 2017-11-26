@@ -75,6 +75,6 @@ void SoundSystem::updateListenerPosition(Entity entity)
 	{
 		const auto& position = entity.get_component<PositionComponent>().getPosition();
 
-		this->soundManager.setListenerPosition(sf::Vector3f(position.x, 0.f, position.y));
+		this->soundManager.setListenerPosition({ position.x, 0.f, position.y });
     }
 }

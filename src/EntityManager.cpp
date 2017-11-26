@@ -144,4 +144,6 @@ void EntityManager::saveEntities(const std::string& fileName)
 void EntityManager::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(*dynamic_cast<RenderSystem*>(this->systems.at(typeid(RenderSystem).name()).get()));
+
+	dynamic_cast<AnimatorSystem*>(this->systems.at(typeid(AnimatorSystem).name()).get())->animate(target);
 }

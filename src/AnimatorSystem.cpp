@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #include "AnimatorSystem.hpp"
 #include "SpriteComponent.hpp"
+#include "ViewUtility.hpp"
 #include "AnimationComponent.hpp"
 
 
@@ -19,12 +20,22 @@ AnimatorSystem::AnimatorSystem(Entities& entities, Events& events) :
 
 void AnimatorSystem::update(float deltaTime)
 {
-	this->entities.for_each<AnimationComponent, SpriteComponent>(
-    [deltaTime](auto entity, auto& animation, auto& sprite)
+	this->entities.for_each<AnimationComponent>(
+    [deltaTime](auto entity, auto& animation)
 	{
-		if (animation.isPlayingAnimation())
+		animation.update(deltaTime);
+	});
+}
+
+
+void AnimatorSystem::animate(sf::RenderTarget& target)
+{
+	this->entities.for_each<AnimationComponent, SpriteComponent>(
+		[&target](auto entity, auto& animation, auto& sprite)
+	{
+		if (Utility::isInsideView(target.getView(), sprite.getPosition(), sprite.getGlobalBounds()) && animation.isPlayingAnimation())
 		{
-			animation.animate(sprite.getSprite(), deltaTime);
+			animation.animate(sprite.getSprite());
 		}
 	});
 }
@@ -34,7 +45,7 @@ void AnimatorSystem::changeAnimationState(Entity entity, EntityState state)
 	if (entity.has_component<AnimationComponent>())
 	{
 		auto& animation = entity.get_component<AnimationComponent>();
-
+		
 		const auto& currentAnimation = animation.getCurrentAnimation();
 
 		if (currentAnimation.has_value() && animation.hasAnimation({ state, currentAnimation.value().second }) &&

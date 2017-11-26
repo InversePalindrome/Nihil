@@ -143,7 +143,7 @@ void CombatSystem::shootBomb(const PhysicsComponent& shooterPhysics, BombCompone
 	const auto xDistance = projectilePhysics.getPosition().x - UnitConverter::pixelsToMeters(targetPosition.x);
 	const float angle = 45.f;
 
-	const auto velocity = MathUtils::calculateRequiredVelocity(9.8f, std::abs(xDistance), angle, std::abs(projectilePhysics.getPosition().y));
+	const auto velocity = Utility::calculateRequiredVelocity(9.8f, std::abs(xDistance), angle, std::abs(projectilePhysics.getPosition().y));
 
 	if (!std::isnan(velocity))
 	{
@@ -219,7 +219,7 @@ void CombatSystem::applyBlastImpact(Entity explosion, Entity victim)
 
 			const auto& blastDistance = victimPhysics.getPosition() - explosion.get_component<PhysicsComponent>().getPosition();
 
-			victimPhysics.applyImpulse({ MathUtils::sign(blastDistance.x) * bombKnockback, 0.f });
+			victimPhysics.applyImpulse({ Utility::sign(blastDistance.x) * bombKnockback, 0.f });
 
 			this->handleCombat(*foundBomb, victim);
 		}

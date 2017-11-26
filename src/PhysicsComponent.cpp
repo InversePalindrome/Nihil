@@ -22,7 +22,8 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2Bod
 	maxVelocity(maxVelocity),
 	jumpVelocity(jumpVelocity),
 	accelerationRate(accelerationRate),
-	direction(Direction::Right)
+	direction(Direction::Right),
+	midAirStatus(false)
 {
 	b2BodyDef bodyDefinition;
 	bodyDefinition.type = bodyType;
@@ -236,6 +237,11 @@ void PhysicsComponent::setFriction(ObjectType fixtureObject, float friction)
 	}
 }
 
+void PhysicsComponent::setMidAirStatus(bool midAirStatus)
+{
+	this->midAirStatus = midAirStatus;
+}
+
 bool PhysicsComponent::isColliding(ObjectType fixtureObject, ObjectType collidableObject) const
 {
 	for (const auto* edge = this->body->GetContactList(); edge; edge = edge->next)
@@ -254,6 +260,11 @@ bool PhysicsComponent::isColliding(ObjectType fixtureObject, ObjectType collidab
 	}
 
 	return false;
+}
+
+bool PhysicsComponent::isMidAir() const
+{
+	return this->midAirStatus;
 }
 
 void PhysicsComponent::applyForce(const b2Vec2& force)

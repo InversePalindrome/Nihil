@@ -110,12 +110,12 @@ ItemsGraphics::ItemsGraphics(ResourceManager& resourceManager, const std::string
 	animationFile = iAnimationFile;
 
 	sprite.setTexture(resourceManager.getTexture(static_cast<TexturesID>(textureID)));
-	sprite.setScale(sf::Vector2f(scale, scale));
+	sprite.setScale(scale, scale);
 	sprite.setPosition(xPosition, yPosition);
 
 	Parsers::parseStyle(resourceManager, "ItemStyle.txt", info);
 
-	info.setPosition(sf::Vector2f(xPosition, yPosition + textOffset));
+	info.setPosition( xPosition, yPosition + textOffset );
 	info.setString(std::to_string(quantity) + " / " + std::to_string(maxQuantity));
 }
 

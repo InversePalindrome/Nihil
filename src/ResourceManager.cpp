@@ -13,11 +13,6 @@ InversePalindrome.com
 #include <fstream>
 
 
-ResourceManager::ResourceManager() :
-	ResourceManager("")
-{	
-}
-
 ResourceManager::ResourceManager(const std::string& resourcesFilePath) 
 {
 	resourceFactory.emplace("Textures", [this]
@@ -49,7 +44,7 @@ void ResourceManager::loadResources(const std::string& resourcesFilePath)
 
 	while (inFile >> resourceType >> resourceID >> fileName)
 	{
-		this->resourceFactory.at(resourceType)(resourceID, Path::resources / resourceType + '/' + fileName);
+		this->resourceFactory[resourceType](resourceID, Path::resources / resourceType + '/' + fileName);
 	}
 }
 

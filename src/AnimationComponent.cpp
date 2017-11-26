@@ -101,17 +101,28 @@ std::optional<std::pair<EntityState, Direction>> AnimationComponent::getCurrentA
 	}
 }
 
-void AnimationComponent::animate(sf::Sprite& sprite, float deltaTime)
+
+void AnimationComponent::update(float deltaTime)
 {
 	if (this->hasMultipleAnimations)
 	{
-		this->stateAnimator.animate(sprite);
 		this->stateAnimator.update(sf::seconds(deltaTime));
 	}
 	else
 	{
-		this->singleAnimator.animate(sprite);
 		this->singleAnimator.update(sf::seconds(deltaTime));
+	}
+}
+
+void AnimationComponent::animate(sf::Sprite& sprite)
+{
+	if (this->hasMultipleAnimations)
+	{
+		this->stateAnimator.animate(sprite);
+	}
+	else
+	{
+		this->singleAnimator.animate(sprite);
 	}
 }
 

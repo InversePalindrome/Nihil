@@ -40,7 +40,6 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 
 	powerUpDisplay.setPosition(1050.f, 50.f);
 	achievementDisplay.setPosition(740.f, 60.f);
-	itemsDisplay.setPosition(500.f, 160.f);
 
 	entityManager.getEvents().subscribe<CrossedCheckpoint>([this](const auto& event) { setCheckpoint(event.position);  });
 	entityManager.getEvents().subscribe<SetPosition>([this](const auto& event) { setPosition(event.entity, event.position); });

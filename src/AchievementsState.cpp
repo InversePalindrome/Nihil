@@ -43,14 +43,14 @@ AchievementsState::AchievementsState(StateMachine& stateMachine, StateData& stat
 	title.setOrigin(title.getGlobalBounds().width / 2.f, title.getGlobalBounds().height / 2.f);
 	title.setPosition(stateData.window.getDefaultView().getCenter().x - 14.f, 299.f);
 
-	backButton->SetPosition(sf::Vector2f(12.f, 25.f));
+	backButton->SetPosition({ 12.f, 25.f });
 	backButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { transitionToMenu(); });
 
 	auto scale = sfg::Scale::Create(sfg::Scale::Orientation::VERTICAL);
 	auto adjustment = sfg::Adjustment::Create(0.f, 0.f, 100.f, 1.f, 10.f, 10.f);
 
 	scrolledWindow->SetPosition({ 345.f, 450.f });
-	scrolledWindow->SetRequisition(sf::Vector2f(1350.f, 890.f));
+	scrolledWindow->SetRequisition({ 1350.f, 890.f });
 	scrolledWindow->SetScrollbarPolicy(sfg::ScrolledWindow::VERTICAL_ALWAYS | sfg::ScrolledWindow::HORIZONTAL_NEVER);
 	scrolledWindow->SetVerticalAdjustment(adjustment);
 

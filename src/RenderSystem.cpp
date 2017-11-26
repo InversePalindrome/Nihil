@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #include "RenderSystem.hpp"
 #include "UnitConverter.hpp"
+#include "ViewUtility.hpp"
 #include "SpriteComponent.hpp"
 #include "PositionComponent.hpp"
 
@@ -48,7 +49,7 @@ void RenderSystem::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 		this->entities.for_each<Type>([this, &target, states](auto entity, const auto& renderable) mutable
 		{
-			if (this->isInsideView(target.getView(), renderable.getPosition(), renderable.getGlobalBounds()))
+			if (Utility::isInsideView(target.getView(), renderable.getPosition(), renderable.getGlobalBounds()))
 			{
 				target.draw(renderable, states);
 			}
@@ -110,15 +111,4 @@ std::int32_t RenderSystem::getNewTransformationID() const
 	{
 		return 0;
 	}
-}
-
-bool RenderSystem::isInsideView(const sf::View& view, const sf::Vector2f& position, const sf::FloatRect& globalBounds) const
-{
-	const auto& left = view.getCenter().x - view.getSize().x / 2.f;
-	const auto& right = view.getCenter().x + view.getSize().x / 2.f;
-	const auto& top = view.getCenter().y - view.getSize().y / 2.f;
-	const auto& bottom = view.getCenter().y + view.getSize().y / 2.f;
-
-	return position.x + globalBounds.width / 2.f > left && position.x - globalBounds.width / 2.f < right
-		&& position.y + globalBounds.height / 2.f > top && position.y - globalBounds.height / 2.f < bottom;
 }

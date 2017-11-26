@@ -9,8 +9,7 @@ InversePalindrome.com
 
 
 ControllableComponent::ControllableComponent() :
-	Component("Controllable"),
-	midAirStatus(true)
+	Component("Controllable")
 {
 }
 
@@ -19,14 +18,4 @@ std::ostream& operator<<(std::ostream& os, const ControllableComponent& componen
 	os << component.getEntityID() << ' ' << component.getName();
 
 	return os;
-}
-
-void ControllableComponent::setMidAirStatus(bool midAirStatus)
-{
-	this->midAirStatus = midAirStatus;
-}
-
-bool ControllableComponent::isMidAir() const
-{
-	return this->midAirStatus;
 }

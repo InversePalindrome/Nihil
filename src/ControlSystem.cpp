@@ -12,8 +12,6 @@ ControlSystem::ControlSystem(Entities& entities, Events& events, InputHandler& i
 	System(entities, events),
     inputHandler(inputHandler)
 {
-	events.subscribe<SetMidAirStatus>([this](const auto& event) { setMidAirStatus(event.entity, event.midAirStatus); });
-
 	events.subscribe<entityplus::component_added<Entity, ControllableComponent>>([&events](const auto& event)
 	{
 		if (event.entity.has_component<HealthComponent>())
@@ -61,7 +59,7 @@ void ControlSystem::addControl(Entity entity)
 
 	this->inputHandler.addCallback(Action::Jump, [this, entity]() mutable
 	{
-		if (entity.sync() && !entity.get_component<ControllableComponent>().isMidAir())
+		if (entity.sync())
 		{
 			this->events.broadcast(Jumped{ entity });
 		}
@@ -86,12 +84,4 @@ void ControlSystem::update(float deltaTime)
 {
 	this->callbacks.update();
 	this->callbacks.clearCallbacks();
-}
-
-void ControlSystem::setMidAirStatus(Entity entity, bool midAirStatus)
-{
-	if (entity.has_component<ControllableComponent>())
-	{
-		entity.get_component<ControllableComponent>().setMidAirStatus(midAirStatus);
-	}
 }
