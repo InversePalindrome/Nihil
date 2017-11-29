@@ -12,18 +12,17 @@ InversePalindrome.com
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
 
-PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType bodyType, ObjectType objectType, std::int16_t collisionGroup,
+PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType bodyType, ObjectType objectType, 
 	const b2Vec2& maxVelocity, const b2Vec2& accelerationRate, float jumpVelocity)  :
 	Component("Physics"),
 	body(nullptr),
 	bodySize(bodySize),
 	objectType(objectType),
-	collisionGroup(collisionGroup),
 	maxVelocity(maxVelocity),
 	jumpVelocity(jumpVelocity),
 	accelerationRate(accelerationRate),
 	direction(Direction::Right),
-	midAirStatus(false)
+	midAirStatus(true)
 {
 	b2BodyDef bodyDefinition;
 	bodyDefinition.type = bodyType;
@@ -37,12 +36,14 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2Bod
 	fixtureDef.density = 1.f;
 	fixtureDef.friction = 0.3f;
 	fixtureDef.restitution = 0.f;
-	fixtureDef.filter.groupIndex = collisionGroup;
 
 	body = world.CreateBody(&bodyDefinition);
 
 	switch (objectType)
 	{
+	case ObjectType::Pickup:
+		fixtureDef.isSensor = true;
+		break;
 	case ObjectType::NormalPlatform:
 		body->SetGravityScale(0.f);
 		break;
@@ -84,7 +85,7 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2Bod
 std::ostream& operator<<(std::ostream& os, const PhysicsComponent& component)
 {
 	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.bodySize.x << ' ' << component.bodySize.y <<  ' ' << static_cast<std::size_t>(component.getType()) 
-		<< ' ' << static_cast<std::size_t>(component.objectType) << ' ' << component.collisionGroup << ' ' << component.maxVelocity.x << ' ' << component.maxVelocity.y << ' ' << component.accelerationRate.x
+		<< ' ' << static_cast<std::size_t>(component.objectType) << ' ' << component.maxVelocity.x << ' ' << component.maxVelocity.y << ' ' << component.accelerationRate.x
 		<< ' ' << component.accelerationRate.y << ' ' << component.jumpVelocity;
 
 	return os;
@@ -140,6 +141,33 @@ b2Vec2 PhysicsComponent::getMaxVelocity() const
 	return this->maxVelocity;
 }
 
+b2Vec2 PhysicsComponent::getRelativeVelocity() const
+{
+	b2Vec2 relativeVelocity = this->getVelocity();
+
+	for (const auto* edge = this->body->GetContactList(); edge; edge = edge->next)
+	{
+		if (edge->contact->IsTouching())
+		{
+			const auto* objectA = static_cast<CollisionData*>(edge->contact->GetFixtureA()->GetUserData());
+			const auto* objectB = static_cast<CollisionData*>(edge->contact->GetFixtureB()->GetUserData());
+
+			if (objectA->objectType == ObjectType::Feet)
+			{
+				relativeVelocity.x -= objectB->fixture->GetBody()->GetLinearVelocity().x;
+				relativeVelocity.y -= objectB->fixture->GetBody()->GetLinearVelocity().y;
+			}
+			else if(objectB->objectType == ObjectType::Feet)
+			{
+				relativeVelocity.x -= objectA->fixture->GetBody()->GetLinearVelocity().x;
+				relativeVelocity.y -= objectA->fixture->GetBody()->GetLinearVelocity().y;
+			}
+		}
+	}
+
+	return relativeVelocity;
+}
+
 b2Vec2 PhysicsComponent::getAccelerationRate() const
 {
 	return this->accelerationRate;
@@ -153,11 +181,6 @@ float PhysicsComponent::getJumpVelocity() const
 Direction PhysicsComponent::getDirection() const
 {
 	return this->direction;
-}
-
-std::int16_t PhysicsComponent::getCollisionGroup() const
-{
-	return this->collisionGroup;
 }
 
 float PhysicsComponent::getLinearDamping() const
@@ -203,20 +226,6 @@ void PhysicsComponent::setGravityScale(float gravityScale)
 void PhysicsComponent::setDirection(Direction direction)
 {
 	this->direction = direction;
-}
-
-void PhysicsComponent::setCollisionGroup(std::int16_t collisionGroup)
-{
-	this->collisionGroup = collisionGroup;
-
-	for (auto& fixture : this->fixtures)
-	{
-		auto filterData = fixture.second->GetFilterData();
-
-		filterData.groupIndex = collisionGroup;
-
-		fixture.second->SetFilterData(filterData);
-	}
 }
 
 void PhysicsComponent::setLinearDamping(float linearDamping)

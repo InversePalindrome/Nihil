@@ -60,11 +60,11 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["Physics"] = [this, &world](auto& entity, auto& line)
 	{
-		const auto& params = parse<float, float, std::size_t, std::size_t, std::int16_t, float, float, float, float, float>(line);
+		const auto& params = parse<float, float, std::size_t, std::size_t, float, float, float, float, float>(line);
 
 		entity.add_component<PhysicsComponent>(world, b2Vec2(std::get<0>(params), std::get<1>(params)),
-			static_cast<b2BodyType>(std::get<2>(params)), static_cast<ObjectType>(std::get<3>(params)), std::get<4>(params),
-			b2Vec2(std::get<5>(params), std::get<6>(params)), b2Vec2(std::get<7>(params), std::get<8>(params)), std::get<9>(params));
+			static_cast<b2BodyType>(std::get<2>(params)), static_cast<ObjectType>(std::get<3>(params)),
+			b2Vec2(std::get<4>(params), std::get<5>(params)), b2Vec2(std::get<6>(params), std::get<7>(params)), std::get<8>(params));
 	};
 
 	componentParsers["Patrol"] = [this](auto& entity, auto& line)
@@ -118,17 +118,17 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["Health"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component(std::make_from_tuple<HealthComponent>(parse<std::size_t>(line)));
+		entity.add_component(std::make_from_tuple<HealthComponent>(parse<std::int32_t>(line)));
 	};
 
 	componentParsers["MeleeA"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component(std::make_from_tuple<MeleeAttackComponent>(parse<std::size_t>(line)));
+		entity.add_component(std::make_from_tuple<MeleeAttackComponent>(parse<std::int32_t>(line)));
 	};
 
 	componentParsers["MeleeB"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component(std::make_from_tuple<MeleeAttackComponent>(parse<std::size_t, float>(line)));
+		entity.add_component(std::make_from_tuple<MeleeAttackComponent>(parse<std::int32_t, float>(line)));
 	};
 
 	componentParsers["Range"] = [this](auto& entity, auto& line)
@@ -138,14 +138,14 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["Bullet"] = [this](auto& entity, auto& line)
 	{
-		const auto& params = this->parse<std::size_t, std::size_t, float>(line);
+		const auto& params = this->parse<std::int32_t, std::size_t, float>(line);
 
 		entity.add_component<BulletComponent>(std::get<0>(params), static_cast<SoundBuffersID>(std::get<1>(params)), std::get<2>(params));
 	};
 
 	componentParsers["Bomb"] = [this](auto& entity, auto& line)
 	{
-		const auto& params = this->parse<std::size_t, std::size_t, float, float, std::string>(line);
+		const auto& params = this->parse<std::int32_t, std::size_t, float, float, std::string>(line);
 
 		entity.add_component<BombComponent>(std::get<0>(params), static_cast<SoundBuffersID>(std::get<1>(params)), std::get<2>(params), std::get<3>(params), std::get<4>(params));
 	};
@@ -283,12 +283,11 @@ void ComponentParser::parseBlueprint(const std::string& fileName)
 
 		if (entity.has_component<PositionComponent>())
 		{
-			entity.get_component<PositionComponent>().setPosition(sf::Vector2f(xPosition, yPosition));
+			entity.get_component<PositionComponent>().setPosition({ xPosition, yPosition });
 		}
 		if (entity.has_component<PhysicsComponent>())
 		{
-			entity.get_component<PhysicsComponent>().setPosition(
-				b2Vec2(UnitConverter::pixelsToMeters(xPosition), UnitConverter::pixelsToMeters(-yPosition)));
+			entity.get_component<PhysicsComponent>().setPosition({ UnitConverter::pixelsToMeters(xPosition), UnitConverter::pixelsToMeters(-yPosition) });
 		}
 	}
 }

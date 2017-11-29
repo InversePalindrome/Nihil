@@ -8,7 +8,7 @@ InversePalindrome.com
 #include "BombComponent.hpp"
 
 
-BombComponent::BombComponent(std::size_t damagePoints, SoundBuffersID soundID, float explosionTime, float explosionKnockback, const std::string& explosionID) :
+BombComponent::BombComponent(std::int32_t damagePoints, SoundBuffersID soundID, float explosionTime, float explosionKnockback, const std::string& explosionID) :
 	Component("Bomb"),
 	Projectile(damagePoints, soundID),
 	explosionTime(explosionTime),

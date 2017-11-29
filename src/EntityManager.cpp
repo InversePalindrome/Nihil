@@ -81,8 +81,7 @@ Entity EntityManager::createEntity(const std::string& fileName, const sf::Vector
 	}
 	if (entity.has_component<PhysicsComponent>())
 	{
-		entity.get_component<PhysicsComponent>().setPosition(
-			b2Vec2(UnitConverter::pixelsToMeters(position.x), UnitConverter::pixelsToMeters(-position.y)));
+		entity.get_component<PhysicsComponent>().setPosition({ UnitConverter::pixelsToMeters(position.x), UnitConverter::pixelsToMeters(-position.y) });
 	}
 
 	return entity;

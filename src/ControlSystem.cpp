@@ -12,19 +12,22 @@ ControlSystem::ControlSystem(Entities& entities, Events& events, InputHandler& i
 	System(entities, events),
     inputHandler(inputHandler)
 {
-	events.subscribe<entityplus::component_added<Entity, ControllableComponent>>([&events](const auto& event)
+	events.subscribe<entityplus::component_added<Entity, ControllableComponent>>([this, &events](const auto& event)
 	{
 		if (event.entity.has_component<HealthComponent>())
 		{
 			events.broadcast(DisplayHealthBar{ event.entity.get_component<HealthComponent>() });
 		}
+
+		addControl(event.entity);
 	});
 }
 
 void ControlSystem::addControl(Entity entity)
 {
+	this->player = entity;
 	this->inputHandler.clearCallbacks();
-
+	
 	this->inputHandler.addCallback(Action::MoveLeft, [this, entity]() mutable
 	{
 		if (entity.sync())

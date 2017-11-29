@@ -38,7 +38,7 @@ void CombatSystem::update(float deltaTime)
 
 void CombatSystem::handleCombat(Entity attacker, Entity victim)
 {
-	std::size_t damagePoints = 0u;
+	std::int32_t damagePoints = 0;
 
 	if (attacker.has_component<MeleeAttackComponent>())
 	{
@@ -61,7 +61,7 @@ void CombatSystem::handleCombat(Entity attacker, Entity victim)
 	{
 		auto& health = victim.get_component<HealthComponent>();
 
-		if (health.getHitpoints() > 0u)
+		if (health.getHitpoints() > 0)
 		{
 			health.setHitpoints(health.getHitpoints() - damagePoints);
 		}
@@ -69,7 +69,7 @@ void CombatSystem::handleCombat(Entity attacker, Entity victim)
 		{
 			this->events.broadcast(DisplayHealthBar{ health });
 		}
-		if (health.getHitpoints() == 0u)
+		if (health.getHitpoints() <= 0)
 		{
 			if (victim.has_component<DropComponent>())
 			{

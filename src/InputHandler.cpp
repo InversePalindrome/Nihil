@@ -46,6 +46,19 @@ void InputHandler::pushEvent(const sf::Event& event)
 	this->keyBindings.pushEvent(event);
 }
 
+bool InputHandler::isActive() const
+{
+	for (std::size_t i = 0u; i < static_cast<std::size_t>(Action::Size); ++i)
+	{
+		if (this->isActive(static_cast<Action>(i)))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 bool InputHandler::isActive(Action action) const
 {
 	return this->keyBindings.isActive(action);

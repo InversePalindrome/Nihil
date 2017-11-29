@@ -122,51 +122,54 @@ void ItemsSystem::update(float deltaTime)
 
 void ItemsSystem::handleItemPickup(Entity collector, Entity item)
 {
-	if (collector.has_component<InventoryComponent>() && item.has_component<PickupComponent>())
+	if (collector.has_component<InventoryComponent>())
 	{
 		auto& inventory = collector.get_component<InventoryComponent>();
-		const auto& pickup = item.get_component<PickupComponent>();
 
-		if (inventory.hasItem(pickup.getItem()))
+		if (item.has_component<PickupComponent>())
 		{
-			inventory[pickup.getItem()]++;
-		}
-		else
-		{
-			inventory.addItem(pickup.getItem(), 1u);
-		}
+			const auto& pickup = item.get_component<PickupComponent>();
 
-		this->events.broadcast(EmitSound{ pickup.getSoundID(), false });
-
-		if (collector.has_component<ControllableComponent>() && pickup.getItem() == Item::Coin)
-		{
-			this->events.broadcast(DisplayCoins{});
-			this->events.broadcast(UpdateAchievement{ Achievement::Collector });
-		}
-	}
-	else if (collector.has_component<InventoryComponent>() && collector.has_component<PhysicsComponent>() && item.has_component<PowerUpComponent>())
-	{
-		auto& inventory = collector.get_component<InventoryComponent>();
-		auto& powerUp = item.get_component<PowerUpComponent>();
-		
-		if (this->powerUpEffects.count(powerUp.getItem()))
-		{
-			if (!inventory.hasItem(powerUp.getItem()))
+			if (inventory.hasItem(pickup.getItem()))
 			{
-				this->powerUpEffects[powerUp.getItem()](collector, powerUp);
-
-				inventory.addItem(powerUp.getItem(), 1);
+				inventory[pickup.getItem()]++;
+			}
+			else
+			{
+				inventory.addItem(pickup.getItem(), 1u);
 			}
 
-			this->events.broadcast(EmitSound{ powerUp.getSoundID(), false });
-		}
-	}
-	else if (collector.has_component<InventoryComponent>() && item.has_component<KeyComponent>())
-	{
-		this->handleKeyPickup(item.get_component<KeyComponent>());
-	}
+			this->events.broadcast(EmitSound{ pickup.getSoundID(), false });
 
-	this->events.broadcast(DestroyEntity{ item });
+			if (collector.has_component<ControllableComponent>() && pickup.getItem() == Item::Coin)
+			{
+				this->events.broadcast(DisplayCoins{});
+				this->events.broadcast(UpdateAchievement{ Achievement::Collector });
+			}
+		}
+		else if (collector.has_component<PhysicsComponent>() && item.has_component<PowerUpComponent>())
+		{
+			auto& powerUp = item.get_component<PowerUpComponent>();
+
+			if (this->powerUpEffects.count(powerUp.getItem()))
+			{
+				if (!inventory.hasItem(powerUp.getItem()))
+				{
+					this->powerUpEffects[powerUp.getItem()](collector, powerUp);
+
+					inventory.addItem(powerUp.getItem(), 1);
+				}
+
+				this->events.broadcast(EmitSound{ powerUp.getSoundID(), false });
+			}
+		}
+		else if (item.has_component<KeyComponent>())
+		{
+			this->handleKeyPickup(item.get_component<KeyComponent>());
+		}
+
+		this->events.broadcast(DestroyEntity{ item });
+	}
 }
 
 void ItemsSystem::handleItemDrop(Entity dropper)

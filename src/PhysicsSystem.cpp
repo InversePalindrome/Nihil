@@ -8,6 +8,7 @@ InversePalindrome.com
 #include "PhysicsSystem.hpp"
 #include "PhysicsComponent.hpp"
 #include "UnitConverter.hpp"
+#include "FrictionUtility.hpp"
 
 
 PhysicsSystem::PhysicsSystem(Entities& entities, Events& events, b2World& world, CollisionsData& collisionsData) :
@@ -53,10 +54,12 @@ void PhysicsSystem::moveEntity(Entity entity, Direction direction)
 	case Direction::Right:
 		newVelocity.x = b2Min(currentVelocity.x + physics.getAccelerationRate().x, physics.getMaxVelocity().x);
 		deltaVelocity.x = newVelocity.x - currentVelocity.x;
+		this->events.broadcast(ChangeState{ entity , EntityState::Walking });
 		break;
 	case Direction::Left:
 		newVelocity.x = b2Max(currentVelocity.x - physics.getAccelerationRate().x, -physics.getMaxVelocity().x);
 		deltaVelocity.x = newVelocity.x - currentVelocity.x;
+		this->events.broadcast(ChangeState{ entity , EntityState::Walking });
 		break;
 	case Direction::Up:
 		newVelocity.y = b2Min(currentVelocity.y + physics.getAccelerationRate().y, physics.getMaxVelocity().y);
@@ -225,19 +228,16 @@ void PhysicsSystem::checkPhysicalStatus(Entity entity, PhysicsComponent& physics
 
 		if (state.getState() != EntityState::Swimming)
 		{
-			if (physics.getVelocity() == b2Vec2(0.f, 0.f))
+			if (physics.getRelativeVelocity() == b2Vec2(0.f, 0.f))
 			{
 				this->events.broadcast(ChangeState{ entity, EntityState::Idle });
-			}
-			else
-			{
-				this->events.broadcast(ChangeState{ entity , EntityState::Walking });
 			}
 		}
 	}
 	  
-	if (physics.isColliding(ObjectType::Feet, ObjectType::Tile))
+	if (physics.isColliding(ObjectType::Feet, ObjectType::Block))
 	{
+		Utility::setFriction(entity, 0.3f); 
 		this->events.broadcast(SetMidAirStatus{ entity, false });
 	}
 

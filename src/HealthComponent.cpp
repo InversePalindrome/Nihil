@@ -8,7 +8,7 @@ InversePalindrome.com
 #include "HealthComponent.hpp"
 
 
-HealthComponent::HealthComponent(std::size_t hitpoints) :
+HealthComponent::HealthComponent(std::int32_t hitpoints) :
 	Component("Health"),
 	hitpoints(hitpoints)
 {
@@ -21,12 +21,12 @@ std::ostream& operator<<(std::ostream& os, const HealthComponent& component)
 	return os;
 }
 
-std::size_t HealthComponent::getHitpoints() const
+std::int32_t HealthComponent::getHitpoints() const
 {
 	return this->hitpoints;
 }
 
-void HealthComponent::setHitpoints(std::size_t hitpoints)
+void HealthComponent::setHitpoints(std::int32_t hitpoints)
 {
 	this->hitpoints = hitpoints;
 }

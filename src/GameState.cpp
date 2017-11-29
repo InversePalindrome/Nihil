@@ -29,6 +29,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	entityManager.copyBlueprint("Player.txt", stateData.games.front().getGameName() + "-Player.txt");
 
 	world.SetContactListener(&collisionHandler);
+	world.SetContactFilter(&collisionFilter);
 	
 	healthBar.setPosition(100.f, 70.f);
 
@@ -85,11 +86,6 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 		 saveData("SavedGames.txt");
 	});
 
-	entityManager.getEvents().subscribe<entityplus::component_added<Entity, ControllableComponent>>([this](auto& event)
-	{
-		entityManager.getSystem<ControlSystem>()->addControl(event.entity);
-	});
-
     entityManager.getEvents().subscribe<entityplus::component_added<Entity, InventoryComponent>>([this, &stateData](auto& event)
 	{
 		event.component.setItems(stateData.games.front().getItems());
@@ -99,6 +95,11 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 			itemsDisplay[item.first].quantity = item.second;
 			itemsDisplay[item.first].info.setString(std::to_string(item.second) + " / " + std::to_string(itemsDisplay[item.first].maxQuantity));
 		}
+	});
+
+    entityManager.getEvents().subscribe<entityplus::component_added<Entity, ControllableComponent>>([this](auto& event)
+	{
+		player = event.entity;
 	});
 
 	changeLevel(stateData.games.front().getCurrentLevel(), stateData.games.front().getSpawnpoint());
@@ -177,10 +178,10 @@ void GameState::showWidgets(bool showStatus)
 
 void GameState::updateCamera()
 {
-	this->entityManager.getEntities().for_each<ControllableComponent, PositionComponent>([this](auto entity, const auto& controllable, const auto& position)
+	if (this->player.sync() && this->player.has_component<PhysicsComponent>())
 	{
-		const auto& centerPosition = position.getPosition();
-		
+		const auto& centerPosition = this->player.get_component<PositionComponent>().getPosition();
+
 		switch (this->stateData.games.front().getCurrenDirectionType())
 		{
 		case DirectionType::Horizontal:
@@ -216,7 +217,7 @@ void GameState::updateCamera()
 		}
 		break;
 		}
-	});
+	}
 }
 
 void GameState::updateAchievements(Achievement achievement)

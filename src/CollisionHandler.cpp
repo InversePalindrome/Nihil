@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #include "CollisionHandler.hpp"
+#include "FrictionUtility.hpp"
 
 
 CollisionHandler::CollisionHandler(Events& events) :
@@ -49,7 +50,7 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 		this->events.broadcast(SetPosition{ orderedCollision->first.get().entity,
 		{orderedCollision->second.get().properties["xPosition"].getFloatValue(), orderedCollision.value().second.get().properties["yPosition"].getFloatValue()} });
 	}
-	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Body, ObjectType::Pickup))
+	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Pickup))
 	{
 		orderedCollision->first.get().entity.sync();
 		orderedCollision->second.get().entity.sync();
@@ -60,9 +61,9 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 	{
 		orderedCollision->first.get().entity.sync();
 
-		this->events.broadcast(ApplyImpulse{ orderedCollision->first.get().entity, b2Vec2(0.f, orderedCollision.value().second.get().properties["Impulse"].getFloatValue())});
+		this->events.broadcast(ApplyImpulse{ orderedCollision->first.get().entity, { 0.f, orderedCollision.value().second.get().properties["Impulse"].getFloatValue() } });
 	}
-	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Enemy, ObjectType::Waypoint))
+	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Feet, ObjectType::Waypoint))
 	{
 		orderedCollision->first.get().entity.sync();
 
@@ -115,12 +116,7 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 		this->events.broadcast(SetMidAirStatus{ orderedCollision->first.get().entity, false });
 		this->events.broadcast(SetFriction{ orderedCollision->first.get().entity, ObjectType::Player, 0.f });
 
-		contact->SetFriction(0.f);
-
-		for (const auto* edge = orderedCollision->first.get().fixture->GetBody()->GetContactList(); edge; edge = edge->next)
-		{
-			edge->contact->ResetFriction();
-		}
+		Utility::setFriction(&orderedCollision->first.get(), contact, 0.f);
 	}
 	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Character))
 	{
@@ -141,7 +137,7 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 	{
 		collider->get().entity.sync();
 
-		this->updatePlayerFriction(collider->get().entity, contact);
+		Utility::setFriction(&collider->get(), contact, 0.f);
 	}
 	if (const auto& collider = this->getCollider(objectA, objectB, ObjectType::Bullet))
 	{
@@ -165,7 +161,7 @@ void CollisionHandler::EndContact(b2Contact* contact)
 	if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Character))
 	{
 		orderedCollision->second.get().entity.sync();
-
+		
 		this->events.broadcast(DisplayConversation{ orderedCollision->second.get().entity, false });
 	}
 	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Feet, ObjectType::Block))
@@ -232,16 +228,5 @@ std::optional<CollisionHandler::OrderedCollision> CollisionHandler::getOrderedCo
 	else
 	{
 		return {};
-	}
-}
-
-void CollisionHandler::updatePlayerFriction(Entity player, b2Contact* contact)
-{
-	if (player.has_component<PhysicsComponent>())
-	{
-		if (player.get_component<PhysicsComponent>().isMidAir())
-		{
-			contact->SetFriction(0.f);
-		}
 	}
 }

@@ -26,8 +26,9 @@ AutomatorSystem::AutomatorSystem(Entities& entities, Events& events) :
 
 void AutomatorSystem::update(float deltaTime)
 {
-	this->entities.for_each<AutomatedComponent>([this](auto entity, auto& automated)
+	this->entities.for_each<AutomatedComponent>([this, deltaTime](auto entity, auto& automated)
 	{
+		automated.update(deltaTime);
 		automated.playCurrentTask();
 
 		if (automated.isActive() && automated.hasTasks())

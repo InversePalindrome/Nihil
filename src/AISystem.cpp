@@ -15,6 +15,11 @@ AISystem::AISystem(Entities& entities, Events& events, Pathways& pathways) :
 	System(entities, events),
 	pathways(pathways)
 {
+	events.subscribe<entityplus::component_added<Entity, ControllableComponent>>([this](auto& event)
+	{
+		targetEntity = event.entity;
+	});
+
 	events.subscribe<entityplus::component_added<Entity, PatrolComponent>>([this](auto& event)
 	{ 
 		callbacks.addCallback([this, event]()
@@ -25,40 +30,46 @@ AISystem::AISystem(Entities& entities, Events& events, Pathways& pathways) :
 
 	events.subscribe<CrossedWaypoint>([this](const auto& event)
 	{
-		if (event.entity.has_component<PatrolComponent>() && (!event.entity.has_component<ChaseComponent>() || !isWithinRange(event.entity.get_component<PatrolComponent>().getRange(),
-			event.entity.get_component<PositionComponent>().getPosition(), getTargetPosition(), event.entity.get_component<ChaseComponent>().getVisionRange())))
+		if (const auto& targetPosition = getTargetPosition())
 		{
-			changeWaypoint(event.entity);
+			if (event.entity.has_component<PatrolComponent>() && (!event.entity.has_component<ChaseComponent>() || !isWithinRange(event.entity.get_component<PatrolComponent>().getRange(),
+				event.entity.get_component<PositionComponent>().getPosition(), targetPosition.value(), event.entity.get_component<ChaseComponent>().getVisionRange())))
+			{
+				changeWaypoint(event.entity);
+			}
 		}
 	});
 }
 
 void AISystem::update(float deltaTime)
 {
-	this->entities.for_each<AI, PatrolComponent, PositionComponent>([this](auto entity, auto& patrol, auto& position)
+	if (const auto& targetPosition = this->getTargetPosition())
 	{
-		if (patrol.hasWaypoints())
+		this->entities.for_each<AI, PatrolComponent, PositionComponent>([this, targetPosition](auto entity, auto& patrol, auto& position)
 		{
-			if (entity.has_component<ChaseComponent>() && this->isWithinRange(patrol.getRange(), position.getPosition(), this->getTargetPosition(), entity.get_component<ChaseComponent>().getVisionRange()))
+			if (patrol.hasWaypoints())
 			{
-				this->chaseTarget(patrol, position.getPosition(), this->getTargetPosition());
+				if (entity.has_component<ChaseComponent>() && this->isWithinRange(patrol.getRange(), position.getPosition(), targetPosition.value(), entity.get_component<ChaseComponent>().getVisionRange()))
+				{
+					this->chaseTarget(patrol, position.getPosition(), targetPosition.value());
+				}
+
+				this->updateMovement(entity, patrol, position.getPosition());
 			}
+		});
 
-			this->updateMovement(entity, patrol, position.getPosition());
-		}
-	});
-
-	this->entities.for_each<AI, RangeAttackComponent, ParentComponent, PositionComponent, TimerComponent>([this](auto entity, auto& rangeAttack, auto& parent, auto& position, auto& timer)
-	{
-		if (timer.hasTimer("Reload") && timer.hasTimerExpired("Reload") && ((entity.has_component<PatrolComponent>() && 
-			this->isWithinRange(entity.get_component<PatrolComponent>().getRange(), position.getPosition(), this->getTargetPosition(), rangeAttack.getAttackRange())) ||
-			this->isWithinRange(position.getPosition(), this->getTargetPosition(), rangeAttack.getAttackRange())))
+		this->entities.for_each<AI, RangeAttackComponent, ParentComponent, PositionComponent, TimerComponent>([this, targetPosition](auto entity, auto& rangeAttack, auto& parent, auto& position, auto& timer)
 		{
-			this->events.broadcast(ShootProjectile{ entity, rangeAttack.getProjectileID(), this->getTargetPosition() });
+			if (timer.hasTimer("Reload") && timer.hasTimerExpired("Reload") && this->isFacingTarget(entity) && ((entity.has_component<PatrolComponent>() &&
+				this->isWithinRange(entity.get_component<PatrolComponent>().getRange(), position.getPosition(), targetPosition.value(), rangeAttack.getAttackRange())) ||
+				this->isWithinRange(position.getPosition(), targetPosition.value(), rangeAttack.getAttackRange())))
+			{
+				this->events.broadcast(ShootProjectile{ entity, rangeAttack.getProjectileID(), targetPosition.value() });
 
-			timer.restartTimer("Reload");
-		}
-	});
+				timer.restartTimer("Reload");
+			}
+		});
+	}
 	
 	this->callbacks.update();
 	this->callbacks.clearCallbacks();
@@ -157,13 +168,16 @@ std::optional<Pathway> AISystem::getClosestPathway(const sf::Vector2f& position)
 	}
 }
 
-sf::Vector2f AISystem::getTargetPosition() const
+std::optional<sf::Vector2f> AISystem::getTargetPosition()
 {
-	sf::Vector2f targetPosition;
-
-	this->entities.for_each<ControllableComponent, PositionComponent>([&targetPosition](auto entity, auto& controllable, auto& position) { targetPosition = position.getPosition(); });
-
-	return targetPosition;
+	if (this->targetEntity.sync() && targetEntity.has_component<PositionComponent>())
+	{
+		return this->targetEntity.get_component<PositionComponent>().getPosition();
+	}
+	else
+	{
+		return {};
+	}
 }
 
 bool AISystem::isWithinRange(const sf::Vector2f& AIPosition, const sf::Vector2f& targetPosition, float visionRange)
@@ -175,4 +189,25 @@ bool AISystem::isWithinRange(const std::pair<float, float>& patrolRange, const s
 {
 	return Utility::distance(AIPosition, targetPosition) <= visionRange && 
 		targetPosition.x > patrolRange.first && targetPosition.x < patrolRange.second;
+}
+
+bool AISystem::isFacingTarget(Entity entity)
+{
+	if (this->targetEntity.sync() && this->targetEntity.has_component<PositionComponent>() && this->targetEntity.has_component<PhysicsComponent>() &&
+		entity.has_component<PositionComponent>() && entity.has_component<PhysicsComponent>())
+	{
+		const auto& targetPosition = this->targetEntity.get_component<PositionComponent>().getPosition();
+		const auto& targetSize = this->targetEntity.get_component<PhysicsComponent>().getBodySize();
+
+		const auto& entityPosition = entity.get_component<PositionComponent>().getPosition();
+
+		auto entityDirection = entity.get_component<PhysicsComponent>().getDirection();
+
+		return (std::abs(entityPosition.y - targetPosition.y) <= UnitConverter::metersToPixels(targetSize.y)) && (entityDirection == Direction::Right && targetPosition.x > entityPosition.x) 
+			|| (entityDirection == Direction::Left && targetPosition.x < entityPosition.x);
+	}
+	else
+	{
+		return false;
+	}
 }

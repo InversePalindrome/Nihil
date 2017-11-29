@@ -8,14 +8,14 @@ InversePalindrome.com
 #include "MeleeAttackComponent.hpp"
 
 
-MeleeAttackComponent::MeleeAttackComponent(std::size_t damagePoints) :
+MeleeAttackComponent::MeleeAttackComponent(std::int32_t damagePoints) :
 	Component("MeleeA"),
 	damagePoints(damagePoints),
 	knockback(0.f)
 {
 }
 
-MeleeAttackComponent::MeleeAttackComponent(std::size_t damagePoints, float knockback) :
+MeleeAttackComponent::MeleeAttackComponent(std::int32_t damagePoints, float knockback) :
 	Component("MeleeB"),
 	damagePoints(damagePoints),
 	knockback(knockback)
@@ -29,7 +29,7 @@ std::ostream& operator<<(std::ostream& os, const MeleeAttackComponent& component
 	return os;
 }
 
-std::size_t MeleeAttackComponent::getDamagePoints() const
+std::int32_t MeleeAttackComponent::getDamagePoints() const
 {
 	return this->damagePoints;
 }
@@ -39,7 +39,7 @@ float MeleeAttackComponent::getKnockback() const
 	return this->knockback;
 }
 
-void MeleeAttackComponent::setDamagePoints(std::size_t damagePoints)
+void MeleeAttackComponent::setDamagePoints(std::int32_t damagePoints)
 {
 	this->damagePoints = damagePoints;
 }

@@ -8,7 +8,7 @@ InversePalindrome.com
 #include "BulletComponent.hpp"
 
 
-BulletComponent::BulletComponent(std::size_t damagePoints, SoundBuffersID soundID, float force) :
+BulletComponent::BulletComponent(std::int32_t damagePoints, SoundBuffersID soundID, float force) :
 	Component("Bullet"),
 	Projectile(damagePoints, soundID),
 	force(force)
