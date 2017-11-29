@@ -16,7 +16,7 @@ class BulletComponent : public Component, public Projectile
 	friend std::ostream& operator<<(std::ostream& os, const BulletComponent& component);
 
 public:
-	BulletComponent(std::size_t damagePoints, SoundBuffersID soundID, float force);
+	BulletComponent(std::int32_t damagePoints, SoundBuffersID soundID, float force);
 
 	float getForce() const;
 

@@ -13,15 +13,15 @@ InversePalindrome.com
 class Projectile 
 {
 public:
-	Projectile(std::size_t damagePoints, SoundBuffersID soundID);
+	Projectile(std::int32_t damagePoints, SoundBuffersID soundID);
 
-	std::size_t getDamagePoints() const;
+	std::int32_t getDamagePoints() const;
 	SoundBuffersID getSoundID() const;
 
-	void setDamagePoints(std::size_t damagePoints);
+	void setDamagePoints(std::int32_t damagePoints);
 	void setSoundID(SoundBuffersID soundID);
 
 private:
-	std::size_t damagePoints;
+	std::int32_t damagePoints;
 	SoundBuffersID soundID;
 };

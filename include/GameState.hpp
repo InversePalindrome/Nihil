@@ -11,6 +11,7 @@ InversePalindrome.com
 #include "Map.hpp"
 #include "CollisionData.hpp"
 #include "CollisionHandler.hpp"
+#include "CollisionFilter.hpp"
 #include "Callbacks.hpp"
 #include "EntityManager.hpp"
 #include "HealthBar.hpp"
@@ -45,11 +46,13 @@ private:
 	CollisionsData collisionsData;
 
 	Map map;
+	Entity player;
 	sf::View camera;
 	Callbacks callbacks;
     Pathways pathways;
 
 	CollisionHandler collisionHandler;
+	CollisionFilter collisionFilter;
 
 	HealthBar healthBar;
 	CoinDisplay coinDisplay;

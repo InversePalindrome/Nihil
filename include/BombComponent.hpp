@@ -16,7 +16,7 @@ class BombComponent : public Component, public Projectile
 	friend std::ostream& operator<<(std::ostream& os, const BombComponent& component);
 
 public:
-	BombComponent(std::size_t damagePoints, SoundBuffersID soundID, float explosionTime, float explosionKnockback, const std::string& explosionID);
+	BombComponent(std::int32_t damagePoints, SoundBuffersID soundID, float explosionTime, float explosionKnockback, const std::string& explosionID);
 
 	float getExplosionTime() const;
 	float getExplosionKnockback() const;

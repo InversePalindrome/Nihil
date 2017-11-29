@@ -25,7 +25,7 @@ class PhysicsComponent : public Component
 	friend std::ostream& operator<<(std::ostream& os, const PhysicsComponent& component);
 
 public:
-	PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType physicalType, ObjectType objectType, std::int16_t collisionGroup,
+	PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2BodyType physicalType, ObjectType objectType, 
 		const b2Vec2& maxVelocity, const b2Vec2& accelerationRate, float jumpVelocity);
 
 	b2Body* getBody();
@@ -40,10 +40,10 @@ public:
 
 	float getMass() const;
 	b2Vec2 getMaxVelocity() const;
+	b2Vec2 getRelativeVelocity() const;
 	b2Vec2 getAccelerationRate() const;
 	float getJumpVelocity() const;
 	Direction getDirection() const;
-	std::int16_t getCollisionGroup() const;
 	float getLinearDamping() const;
 
 	void setPosition(const b2Vec2& position);
@@ -54,7 +54,6 @@ public:
 	void setJumpVelocity(float jumpVelocity);
 	void setGravityScale(float gravityScale);
 	void setDirection(Direction direction);
-	void setCollisionGroup(std::int16_t collisionGroup);
 	void setLinearDamping(float linearDamping);
 	void setFriction(ObjectType fixtureObject, float friction);
 	void setMidAirStatus(bool midAirStatus);
@@ -70,7 +69,6 @@ private:
 	std::unordered_map<ObjectType, b2Fixture*> fixtures;
 	b2Vec2 bodySize;
 	ObjectType objectType;
-	std::int16_t collisionGroup;
 
 	b2Vec2 maxVelocity;
 	b2Vec2 accelerationRate;

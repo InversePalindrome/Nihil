@@ -24,7 +24,7 @@ enum class TexturesID
 	SplashScreen, StartBackground, Particles, Character, Mushroom, RedMonster, MenuBackground,                 
     City, Desert, MushroomLand, PinkTown, FlowerLand, DarkTown, Coin, Heart, Laser, Gems, MistZone,
 	Bombs, PowerUps, Keys, DialogBox, Panels, RectangularBoxes, Jungle, Moon, PinkRocks, Plain, SkyZone,
-	IceZone, Tileset, Bubble, Platforms, Skeleton, Goblin, Wizard
+	IceZone, Tileset, Bubble, Platforms, Skeleton, Goblin, Wizard, GreenMonster, PurpleMonster
 };
 enum class ImagesID { RedMonster };
 enum class FontsID { BITWONDER, CODE, Roboto, Changa };

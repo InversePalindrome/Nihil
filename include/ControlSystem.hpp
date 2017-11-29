@@ -24,4 +24,5 @@ public:
 private:
 	Callbacks callbacks;
 	InputHandler& inputHandler;
+	Entity player;
 };

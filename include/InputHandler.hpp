@@ -29,6 +29,7 @@ public:
 
 	void pushEvent(const sf::Event& event);
 
+	bool isActive() const;
 	bool isActive(Action action) const;
 
 	void addCallback(Action action, const std::function<void()>& callback);

@@ -26,6 +26,7 @@ public:
 private:
 	Pathways& pathways;
 	Callbacks callbacks;
+	Entity targetEntity;
 
 	void updateMovement(Entity entity, PatrolComponent& patrol, const sf::Vector2f& position);
 
@@ -35,9 +36,10 @@ private:
 	void chaseTarget(PatrolComponent& patrol, const sf::Vector2f& AIPosition, const sf::Vector2f& targetPosition);
 
 	std::optional<Pathway> getClosestPathway(const sf::Vector2f& position);
-	sf::Vector2f getTargetPosition() const;
+	std::optional<sf::Vector2f> getTargetPosition();
 
 	bool isWithinRange(const sf::Vector2f& AIPosition, const sf::Vector2f& targetPosition, float visionRange);
 	bool isWithinRange(const std::pair<float, float>& patrolRange, const sf::Vector2f& AIPosition, const sf::Vector2f& targetPosition,
 		float visionRange) const;
+	bool isFacingTarget(Entity entity);
 };

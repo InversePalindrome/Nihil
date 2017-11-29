@@ -38,6 +38,4 @@ private:
 	
 	std::optional<OrderedCollision> getOrderedCollision(CollisionData* objectA, CollisionData* objectB,
 		ObjectType type1, ObjectType type2);
-
-	void updatePlayerFriction(Entity player, b2Contact* contact);
 };

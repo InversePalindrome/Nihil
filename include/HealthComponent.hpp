@@ -9,7 +9,7 @@ InversePalindrome.com
 
 #include "Component.hpp"
 
-#include <cstddef>
+#include <cstdint>
 
 
 class HealthComponent : public Component
@@ -17,14 +17,14 @@ class HealthComponent : public Component
 	friend std::ostream& operator<<(std::ostream& os, const HealthComponent& component);
 
 public:
-	HealthComponent(std::size_t hitpoints);
+	HealthComponent(std::int32_t hitpoints);
 
-	std::size_t getHitpoints() const;
+	std::int32_t getHitpoints() const;
 
-	void setHitpoints(std::size_t hitpoints);
+	void setHitpoints(std::int32_t hitpoints);
 
 private:
-	std::size_t hitpoints;
+	std::int32_t hitpoints;
 };
 
 std::ostream& operator<<(std::ostream& os, const HealthComponent& component);

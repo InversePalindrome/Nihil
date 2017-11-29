@@ -9,8 +9,6 @@ InversePalindrome.com
 
 #include "Component.hpp"
 
-#include <Thor/Time/Timer.hpp>
-
 #include <vector>
 #include <string>
 
@@ -22,6 +20,8 @@ class AutomatedComponent : public Component
 
 public:
 	AutomatedComponent(const std::string& fileName);
+
+	void update(float deltaTime);
 
 	Task getCurrentTask() const;
 
@@ -39,7 +39,8 @@ public:
 private:
 	std::string fileName;
 	std::vector<Task> tasks;
-	thor::Timer timer;
+	bool isPlayingTask;
+	float elapsedTime;
 	std::size_t currentTask;
 
 	bool activeStatus;

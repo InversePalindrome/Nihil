@@ -9,7 +9,7 @@ InversePalindrome.com
 
 #include "Component.hpp"
 
-#include <cstddef>
+#include <cstdint>
 
 
 class MeleeAttackComponent : public Component
@@ -17,17 +17,17 @@ class MeleeAttackComponent : public Component
 	friend std::ostream& operator<<(std::ostream& os, const MeleeAttackComponent& component);
 
 public:
-	MeleeAttackComponent(std::size_t damagePoints);
-	MeleeAttackComponent(std::size_t damagePoints, float knockback);
+	MeleeAttackComponent(std::int32_t damagePoints);
+	MeleeAttackComponent(std::int32_t damagePoints, float knockback);
 
-	std::size_t getDamagePoints() const;
+	std::int32_t getDamagePoints() const;
 	float getKnockback() const;
 
-	void setDamagePoints(std::size_t damagePoints);
+	void setDamagePoints(std::int32_t damagePoints);
 	void setKnockback(float knockback);
 
 private:
-	std::size_t damagePoints;
+	std::int32_t damagePoints;
 	float knockback;
 };
 
