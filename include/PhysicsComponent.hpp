@@ -37,6 +37,7 @@ public:
 	b2Vec2 getBodySize() const;
 	b2Vec2 getVelocity() const;
 	b2BodyType getType() const;
+	void* getUserData(ObjectType fixtureObject) const;
 
 	float getMass() const;
 	b2Vec2 getMaxVelocity() const;
@@ -48,6 +49,7 @@ public:
 
 	void setPosition(const b2Vec2& position);
 	void setVelocity(const b2Vec2& velocity);
+	void setUserData(void* userData);
 	void setType(b2BodyType type);
 	void setMaxVelocity(const b2Vec2& maxVelocity);
 	void setAccelerationRate(const b2Vec2& accelerationRate);
@@ -59,6 +61,7 @@ public:
 	void setMidAirStatus(bool midAirStatus);
 
 	bool isColliding(ObjectType fixtureObject, ObjectType collidableObject) const;
+	bool isIntersecting(const b2Vec2& point) const;
 	bool isMidAir() const;
 
 	void applyForce(const b2Vec2& force);

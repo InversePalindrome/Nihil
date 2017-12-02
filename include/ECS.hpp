@@ -75,17 +75,17 @@ struct ApplyForce;
 struct ApplyImpulse;
 struct ApplyBlastImpact;
 struct ApplyKnockback;
+struct SetUserData;
 struct SetGravityScale;
 struct SetLinearDamping;
 struct SetVelocity;
 struct SetPosition;
 struct SetMidAirStatus;
 struct SetFriction;
-struct SetAutomatedStatus;
 struct AddUnderWaterTimer;
 struct RemoveUnderWaterTimer;
 struct PropelFromWater;
-
+struct AddedUserData;
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
 	HealthComponent, MeleeAttackComponent, RangeAttackComponent, BulletComponent, BombComponent, SpriteComponent, TextComponent, 
@@ -99,8 +99,8 @@ using Entities = entityplus::entity_manager<Components, Tags>;
 using Events = entityplus::event_manager<Components, Tags, CreateEntity, DestroyBody, UpdateAchievement, UpdateConversation, DirectionChanged, Jumped,
 	StopMovement, CombatOcurred, ChangeState,StateChanged, ChangeLevel, DestroyEntity, EmitSound, PickedUpItem, DroppedItem, DisplayHealthBar, DisplayCoins,
 	DisplayPowerUp, DisplayConversation, HidePowerUp, CrossedCheckpoint, CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform,
-	ApplyForce, ApplyImpulse, ApplyBlastImpact, ApplyKnockback, SetGravityScale, SetLinearDamping, SetVelocity, SetPosition, SetMidAirStatus, SetFriction, 
-	SetAutomatedStatus, AddUnderWaterTimer, RemoveUnderWaterTimer, PropelFromWater>;
+	ApplyForce, ApplyImpulse, ApplyBlastImpact, ApplyKnockback, SetUserData, SetGravityScale, SetLinearDamping, SetVelocity, SetPosition, SetMidAirStatus,
+	SetFriction, AddUnderWaterTimer, RemoveUnderWaterTimer, PropelFromWater, AddedUserData>;
 
 using Entity = Entities::entity_t;
 
@@ -281,6 +281,11 @@ struct ApplyKnockback
 	Entity victim;
 };
 
+struct SetUserData
+{
+	Entity entity;
+};
+
 struct SetGravityScale
 {
 	Entity entity;
@@ -318,12 +323,6 @@ struct SetFriction
 	float friction;
 };
 
-struct SetAutomatedStatus
-{
-	Entity entity;
-	bool activeStatus;
-};
-
 struct AddUnderWaterTimer
 {
 	Entity entity;
@@ -335,6 +334,11 @@ struct RemoveUnderWaterTimer
 };
 
 struct PropelFromWater
+{
+	Entity entity;
+};
+
+struct AddedUserData
 {
 	Entity entity;
 };

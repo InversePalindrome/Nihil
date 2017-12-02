@@ -9,7 +9,6 @@ InversePalindrome.com
 
 #include "System.hpp"
 #include "Pathway.hpp"
-#include "Callbacks.hpp"
 
 #include <SFML/System/Vector2.hpp>
 
@@ -25,7 +24,6 @@ public:
 
 private:
 	Pathways& pathways;
-	Callbacks callbacks;
 	Entity targetEntity;
 
 	void updateMovement(Entity entity, PatrolComponent& patrol, const sf::Vector2f& position);
@@ -35,7 +33,7 @@ private:
 	void changeWaypoint(Entity entity);
 	void chaseTarget(PatrolComponent& patrol, const sf::Vector2f& AIPosition, const sf::Vector2f& targetPosition);
 
-	std::optional<Pathway> getClosestPathway(const sf::Vector2f& position);
+	std::optional<Pathway> getPathway(Entity entity);
 	std::optional<sf::Vector2f> getTargetPosition();
 
 	bool isWithinRange(const sf::Vector2f& AIPosition, const sf::Vector2f& targetPosition, float visionRange);

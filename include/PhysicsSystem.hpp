@@ -9,6 +9,7 @@ InversePalindrome.com
 
 #include "System.hpp"
 #include "Direction.hpp"
+#include "Callbacks.hpp"
 #include "CollisionData.hpp"
 
 #include <Box2D/Dynamics/b2World.h>
@@ -20,6 +21,8 @@ public:
 	PhysicsSystem(Entities& entities, Events& events, b2World& world, CollisionsData& collisionsData);
 
 	virtual void update(float deltaTime) override;
+
+	void setEntitiesProperties(const EntityProperties& entitiesProperties);
 
 private:
 	b2World& world;
@@ -42,7 +45,10 @@ private:
 	void convertPositionCoordinates(const PhysicsComponent& physics, PositionComponent& position);
 	void checkPhysicalStatus(Entity entity, PhysicsComponent& physics);
 
-	void setInitialData(Entity entity, PhysicsComponent& physics);
+	void setUserData(Entity entity);
 
 	CollisionsData& collisionsData;
+	EntityProperties entitiesProperties;
+	
+	Callbacks callbacks;
 };

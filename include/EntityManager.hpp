@@ -54,6 +54,8 @@ public:
 	void parseEntities(const std::string& fileName);
 	void parseBlueprint(const std::string& fileName);
 
+	void loadEntityProperties();
+
 	void copyBlueprint(const std::string& fileName, const std::string& copiedFileName);
 
 	void destroyEntity(Entity entity);

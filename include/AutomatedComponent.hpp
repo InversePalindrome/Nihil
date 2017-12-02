@@ -8,6 +8,9 @@ InversePalindrome.com
 #pragma once
 
 #include "Component.hpp"
+#include "Direction.hpp"
+
+#include <Box2D/Common/b2Math.h>
 
 #include <vector>
 #include <string>
@@ -16,34 +19,23 @@ InversePalindrome.com
 class AutomatedComponent : public Component
 {
 	friend std::ostream& operator<<(std::ostream& os, const AutomatedComponent& component);
-	using Task = std::pair<std::string, float>;
+	using Task = std::pair<Direction, b2Vec2>;
 
 public:
-	AutomatedComponent(const std::string& fileName);
+	AutomatedComponent();
 
-	void update(float deltaTime);
-
-	Task getCurrentTask() const;
+	void loadTasks(const std::string& fileName);
 
 	void pushNextTask();
 
-	void playCurrentTask();
-	void stopCurrentTask();
-
-	void setActiveStatus(bool activeStatus);
+	Task getCurrentTask() const;
 
 	bool hasTasks() const;
-	bool hasCurrentTaskExpired() const;
-	bool isActive() const;
 
 private:
-	std::string fileName;
 	std::vector<Task> tasks;
-	bool isPlayingTask;
-	float elapsedTime;
-	std::size_t currentTask;
 
-	bool activeStatus;
+	std::size_t taskIndex;
 };
 
 std::ostream& operator<<(std::ostream& os, const AutomatedComponent& component);

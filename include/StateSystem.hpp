@@ -20,4 +20,5 @@ public:
 
 private:
 	void changeState(Entity entity, EntityState state);
+	void changeStateOnDirection(Entity entity, Direction direction);
 };

@@ -21,9 +21,11 @@ public:
 	virtual void update(float deltaTime) override;
 
 private:
-	std::unordered_map<std::string, std::function<void(Entity)>> registeredTasks;
+	std::unordered_map<Direction, std::function<void(Entity)>> registeredTasks;
+
+	void addTasks(Entity entity);
 
 	void sendTask(Entity entity, AutomatedComponent& automated);
 
-	void setActiveStatus(Entity entity, bool activeStatus);
+	bool hasCompletedTask(Entity entity, const b2Vec2& target) const;
 };
