@@ -22,6 +22,11 @@ ComponentSerializer::ComponentSerializer(Entities& entities) :
 {
 }
 
+EntityProperties& ComponentSerializer::getProperties()
+{
+	return this->properties;
+}
+
 void ComponentSerializer::serialize(const std::string& fileName)
 {
 	std::multimap<std::int32_t, std::string> entities;
@@ -71,12 +76,23 @@ void ComponentSerializer::serialize(const std::string& fileName)
 	}
 }
 
-void ComponentSerializer::saveBlueprint(const std::string& fileName, const std::vector<std::tuple<std::int32_t, std::string, sf::Vector2f>>& entitiesFile)
+void ComponentSerializer::saveBlueprint(const std::string& fileName, const std::vector<std::tuple<std::int32_t, std::string, sf::Vector2f>>& entitiesData)
 {
 	std::ofstream outFile(Path::blueprints / fileName);
 	
-	for (const auto& entityFile : entitiesFile)
+	for (const auto& entityData : entitiesData)
 	{
-		outFile << std::get<0>(entityFile) << ' ' << std::get<1>(entityFile) << ' ' << std::get<2>(entityFile).x << ' ' << std::get<2>(entityFile).y  << '\n';
+		outFile << std::get<0>(entityData) << ' ' << std::get<1>(entityData) << ' ' << std::get<2>(entityData).x << ' ' << std::get<2>(entityData).y  << '\n';
 	}
+}
+
+
+void ComponentSerializer::setProperties(EntityProperties properties)
+{
+	this->properties = properties;
+}
+
+void ComponentSerializer::clearProperties()
+{
+	this->properties.clear();
 }

@@ -19,6 +19,11 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 	auto* objectA = static_cast<CollisionData*>(contact->GetFixtureA()->GetUserData());
 	auto* objectB = static_cast<CollisionData*>(contact->GetFixtureB()->GetUserData());
 
+	if (!objectA || !objectB)
+	{
+		return;
+	}
+
 	if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Feet, ObjectType::Border))
 	{
 		orderedCollision->first.get().entity.sync();
@@ -124,14 +129,6 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 
 		this->events.broadcast(DisplayConversation{ orderedCollision->second.get().entity, true });
 	}
-	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Feet, ObjectType::ActivationPlatform))
-	{
-		orderedCollision->first.get().entity.sync();
-		orderedCollision->second.get().entity.sync();
-
-		this->events.broadcast(SetMidAirStatus{ orderedCollision->first.get().entity, false });
-		this->events.broadcast(SetAutomatedStatus{ orderedCollision->second.get().entity, true });
-	}
 
 	if (const auto& collider = this->getCollider(objectA, objectB, ObjectType::Player))
 	{
@@ -157,6 +154,11 @@ void CollisionHandler::EndContact(b2Contact* contact)
 {
 	auto* objectA = static_cast<CollisionData*>(contact->GetFixtureA()->GetUserData());
 	auto* objectB = static_cast<CollisionData*>(contact->GetFixtureB()->GetUserData());
+
+	if (!objectA || !objectB)
+	{
+		return;
+	}
 	
 	if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Character))
 	{
@@ -182,7 +184,6 @@ void CollisionHandler::EndContact(b2Contact* contact)
 		orderedCollision->first.get().entity.sync();
 		
 		this->events.broadcast(RemoveUnderWaterTimer{ orderedCollision->first.get().entity });
-		this->events.broadcast(ChangeState{ orderedCollision->first.get().entity, EntityState::Idle });
 		this->events.broadcast(SetGravityScale{ orderedCollision->first.get().entity, 1.f });
 		this->events.broadcast(SetLinearDamping{ orderedCollision->first.get().entity, 0.f });
 		this->events.broadcast(PropelFromWater{ orderedCollision->first.get().entity });

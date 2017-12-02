@@ -87,28 +87,43 @@ void Map::addImage(tmx::ImageLayer* imageLayer)
 
 void Map::addObjects(tmx::ObjectGroup* objectLayer)
 {
-	std::vector<std::tuple<std::int32_t, std::string, sf::Vector2f>> staticObjectFiles;
-	std::vector<std::tuple<std::int32_t, std::string, sf::Vector2f>> entityFiles;
+	std::vector<std::tuple<std::int32_t, std::string, sf::Vector2f>> objectsData;
+	std::vector<std::tuple<std::int32_t, std::string, sf::Vector2f>> entitiesData;
 
 	std::int32_t entityID = 0;
+
+	EntityProperties entityProperties;
 
 	for (auto& object : objectLayer->getObjects())
 	{
 		const auto& AABB = object.getAABB();
 		
-		if (object.getType() == "Entity")
+		if (object.getType() == "Object" || object.getType() == "Entity")
 		{
 			++entityID;
 
+			Properties properties;
+
 			for (const auto& property : object.getProperties())
 			{
-				if (property.getName() == "ObjectFile")
+				properties.emplace(property.getName(), property);
+			}
+
+			if (properties.count("File"))
+			{
+				if (object.getType() == "Entity")
 				{
-					staticObjectFiles.push_back(std::make_tuple(entityID, property.getStringValue(), sf::Vector2f(object.getPosition().x + AABB.width / 2.f, object.getPosition().y + AABB.height / 2.f )));
+					entityProperties.emplace(-entityID, properties);
+
+					entitiesData.push_back(std::make_tuple(-entityID, properties["File"].getStringValue(),
+						sf::Vector2f(object.getPosition().x + AABB.width / 2.f, object.getPosition().y + AABB.height / 2.f)));
 				}
-				else if (property.getName() == "EntityFile")
+				else if (object.getType() == "Object")
 				{
-					entityFiles.push_back(std::make_tuple(-entityID, property.getStringValue(), sf::Vector2f(object.getPosition().x + AABB.width / 2.f, object.getPosition().y + AABB.height / 2.f )));
+					entityProperties.emplace(entityID, properties);
+
+					objectsData.push_back(std::make_tuple(entityID, properties["File"].getStringValue(),
+						sf::Vector2f(object.getPosition().x + AABB.width / 2.f, object.getPosition().y + AABB.height / 2.f)));
 				}
 			}
 		}
@@ -174,7 +189,7 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 			auto* staticObject = this->world.CreateBody(&bodyDefinition);
 			auto* fixture = staticObject->CreateFixture(&fixtureDef);
 
-			std::unordered_map<std::string, tmx::Property> properties;
+			Properties properties;
 			
 ;			for (const auto& property : object.getProperties())
 			{
@@ -200,13 +215,19 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 				}
 			}
 
-      	   this->collisionsData.push_back(CollisionData(fixture, static_cast<ObjectType>(properties["ID"].getIntValue()), properties));
-           this->collisionsData.back().fixture->SetUserData(&this->collisionsData.back());
+           if (properties.count("ID"))
+           {
+	          this->collisionsData.push_back(CollisionData(fixture, static_cast<ObjectType>(properties["ID"].getIntValue()), properties));
+	          this->collisionsData.back().fixture->SetUserData(&this->collisionsData.back());
+           }
 		}
 	}
 	
-	this->componentSerializer.saveBlueprint("Objects-" + game.getCurrentLevel() + ".txt", staticObjectFiles);
-	this->componentSerializer.saveBlueprint("Entities-" + game.getCurrentLevel() + ".txt", entityFiles);
+	this->componentSerializer.clearProperties();
+	this->componentSerializer.setProperties(entityProperties);
+
+	this->componentSerializer.saveBlueprint("Objects-" + game.getCurrentLevel() + ".txt", objectsData);
+	this->componentSerializer.saveBlueprint("Entities-" + game.getCurrentLevel() + ".txt", entitiesData);
 }
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const

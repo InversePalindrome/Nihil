@@ -115,11 +115,6 @@ void GameState::handleEvent(const sf::Event& event)
 		this->stateData.soundManager.stopAllSounds();
 		this->stateData.soundManager.stopAllMusic();
 
-		this->entityManager.getEntities().for_each<AutomatedComponent>([](auto entity, auto& automated)
-		{
-			automated.stopCurrentTask();
-		});
-
 		this->stateMachine.pushState(StateID::Pause);
 	}
 	else if (this->stateData.inputHandler.isActive(Action::Inventory))
@@ -321,6 +316,7 @@ void GameState::changeLevel(const std::string& level, const sf::Vector2f& spawnp
 	}
 
 	this->entityManager.parseBlueprint("Entities-" + level + ".txt");
+	this->entityManager.loadEntityProperties();
 
 	this->stateData.soundManager.stopAllSounds();
 	this->stateData.soundManager.stopAllMusic();
@@ -335,6 +331,11 @@ void GameState::changeLevel(const std::string& level, const sf::Vector2f& spawnp
 		this->setPosition(player, spawnpoint);
 		
 		game.setPlayer(player);
+	});
+
+	this->entityManager.getEntities().for_each<PhysicsComponent>([this](auto entity, auto& physics)
+	{
+		this->entityManager.getEvents().broadcast(SetUserData{ entity });
 	});
 
 	this->world.SetGravity(game.getCurrentGravity());
@@ -424,6 +425,8 @@ void GameState::removeUnderWaterTimer(Entity entity)
 	{
 		this->callbacks.disconnectCallbackTimers();
 		this->underWaterDisplay.setNumberOfBubbles(0u);
+
+		this->entityManager.getEvents().broadcast(ChangeState{ entity, EntityState::Idle });
 	}
 }
 

@@ -16,7 +16,15 @@ PhysicsSystem::PhysicsSystem(Entities& entities, Events& events, b2World& world,
 	world(world),
 	collisionsData(collisionsData)
 {
-	events.subscribe<entityplus::component_added<Entity, PhysicsComponent>>([this](const auto& event) { setInitialData(event.entity, event.component); });
+	events.subscribe<entityplus::component_added<Entity, PhysicsComponent>>([this, &events](const auto& event)
+	{ 
+		callbacks.addCallback([&events, event]()
+		{
+			events.broadcast(SetUserData{ event.entity });
+		});
+	});
+
+	events.subscribe<SetUserData>([this](const auto& event) { setUserData(event.entity); });
 	events.subscribe<DirectionChanged>([this](const auto& event) { moveEntity(event.entity, event.direction); });
 	events.subscribe<Jumped>([this](const auto& event) { makeJump(event.entity); });
 	events.subscribe<PropelFromWater>([this](const auto& event) { propelFromWater(event.entity); });
@@ -38,6 +46,14 @@ void PhysicsSystem::update(float deltaTime)
 		this->convertPositionCoordinates(physics, position);
 		this->checkPhysicalStatus(entity, physics);
 	});
+
+	callbacks.update();
+	callbacks.clearCallbacks();
+}
+
+void PhysicsSystem::setEntitiesProperties(const EntityProperties& entitiesProperties)
+{
+	this->entitiesProperties = entitiesProperties;
 }
 
 void PhysicsSystem::moveEntity(Entity entity, Direction direction)
@@ -54,12 +70,10 @@ void PhysicsSystem::moveEntity(Entity entity, Direction direction)
 	case Direction::Right:
 		newVelocity.x = b2Min(currentVelocity.x + physics.getAccelerationRate().x, physics.getMaxVelocity().x);
 		deltaVelocity.x = newVelocity.x - currentVelocity.x;
-		this->events.broadcast(ChangeState{ entity , EntityState::Walking });
 		break;
 	case Direction::Left:
 		newVelocity.x = b2Max(currentVelocity.x - physics.getAccelerationRate().x, -physics.getMaxVelocity().x);
 		deltaVelocity.x = newVelocity.x - currentVelocity.x;
-		this->events.broadcast(ChangeState{ entity , EntityState::Walking });
 		break;
 	case Direction::Up:
 		newVelocity.y = b2Min(currentVelocity.y + physics.getAccelerationRate().y, physics.getMaxVelocity().y);
@@ -249,24 +263,28 @@ void PhysicsSystem::checkPhysicalStatus(Entity entity, PhysicsComponent& physics
 	}
 }
 
-void PhysicsSystem::setInitialData(Entity entity, PhysicsComponent& physics)
+void PhysicsSystem::setUserData(Entity entity)
 {
-	if (entity.has_component<PositionComponent>())
+	if (entity.sync() && entity.has_component<PhysicsComponent>())
 	{
-		const auto& position = entity.get_component<PositionComponent>().getPosition();
-
-		physics.setPosition({ UnitConverter::pixelsToMeters(position.x), UnitConverter::pixelsToMeters(-position.y) });
+		auto& physics = entity.get_component<PhysicsComponent>();
 
 		auto& fixtures = physics.getFixtures();
 
 		for (auto& fixture : fixtures)
 		{
-			this->collisionsData.push_back(CollisionData(entity, fixture.second, fixture.first));
+			if (this->entitiesProperties.count(physics.getEntityID()))
+			{
+				this->collisionsData.push_back(CollisionData(entity, fixture.second, fixture.first, this->entitiesProperties[physics.getEntityID()]));
+			}
+			else
+			{
+				this->collisionsData.push_back(CollisionData(entity, fixture.second, fixture.first));
+			}
+
 			fixture.second->SetUserData(&this->collisionsData.back());
 		}
-	}
-	if (physics.getObjectType() == ObjectType::ActivationPlatform)
-	{
-		this->events.broadcast(SetAutomatedStatus{ entity, false });
+
+		this->events.broadcast(AddedUserData{ entity });
 	}
 }

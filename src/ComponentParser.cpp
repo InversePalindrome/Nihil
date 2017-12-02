@@ -43,7 +43,7 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 		entity.add_component(std::make_from_tuple<TimerComponent>(parse<std::string>(line)));
 	};
 
-	componentParsers["PositionA"] = [this](auto& entity, auto& line) 
+	componentParsers["PositionA"] = [this](auto& entity, auto& line)
 	{
 		entity.add_component(std::make_from_tuple<PositionComponent>(parse<float, float>(line)));
 	};
@@ -163,10 +163,10 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 	componentParsers["Particle"] = [this, &resourceManager](auto& entity, auto& line)
 	{
 		const auto& params = parse<float, float, std::string, std::string>(line);
-		
+
 		entity.add_component<ParticleComponent>(resourceManager, sf::Vector2f(std::get<0>(params), std::get<1>(params)), std::get<2>(params), std::get<3>(params));
 	};
-	
+
 	componentParsers["ParentA"] = [this](auto& entity, auto& line)
 	{
 		entity.add_component<ParentComponent>();
@@ -189,7 +189,7 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 
 	componentParsers["Automated"] = [this](auto& entity, auto& line)
 	{
-		entity.add_component(std::make_from_tuple<AutomatedComponent>(parse<std::string>(line)));
+		entity.add_component<AutomatedComponent>();
 	};
 
 	componentParsers["Pickup"] = [this](auto& entity, auto& line)
@@ -219,8 +219,8 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 	componentParsers["Lock"] = [this](auto& entity, auto& line)
 	{
 		entity.add_component(std::make_from_tuple<LockComponent>(parse<std::size_t, std::string>(line)));
-	}; 
-	
+	};
+
 	componentParsers["Key"] = [this](auto& entity, auto& line)
 	{
 		entity.add_component(std::make_from_tuple<KeyComponent>(parse<std::size_t>(line)));

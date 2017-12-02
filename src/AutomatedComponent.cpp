@@ -7,97 +7,52 @@ InversePalindrome.com
 
 #include "AutomatedComponent.hpp"
 #include "FilePaths.hpp"
+#include "UnitConverter.hpp"
 
 #include <fstream>
-#include <sstream>
 #include <algorithm>
 
 
-AutomatedComponent::AutomatedComponent(const std::string& fileName) :
+AutomatedComponent::AutomatedComponent() :
 	Component("Automated"),
-	fileName(fileName),
-	currentTask(0u),
-	activeStatus(true),
-	isPlayingTask(true),
-	elapsedTime(0.f)
+	taskIndex(0u)
 {
-	std::ifstream inFile(Path::miscellaneous / fileName);
-	std::string line;
-
-	while (std::getline(inFile, line))
-	{
-		std::istringstream iStream(line);
-
-		std::string function;
-		float time = 0.f;
-
-		iStream >> function >> time;
-
-		tasks.push_back({ function, time });
-	}
-
-	if (!tasks.empty())
-	{
-		elapsedTime = tasks.front().second;
-	}
 }
 
 std::ostream& operator<<(std::ostream& os, const AutomatedComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.fileName;
+	os << component.getEntityID() << ' ' << component.getName();
 
 	return os;
 }
 
-void AutomatedComponent::update(float deltaTime)
+void AutomatedComponent::loadTasks(const std::string& fileName)
 {
-	if (this->isPlayingTask)
+	std::ifstream inFile(Path::miscellaneous / fileName);
+
+	std::size_t direction = 0u;
+	float xDestination = 0.f, yDestination = 0.f;
+
+	while (inFile >> direction >> xDestination >> yDestination)
 	{
-		this->elapsedTime -= deltaTime;
+		this->tasks.push_back({ static_cast<Direction>(direction),{ UnitConverter::pixelsToMeters(xDestination), UnitConverter::pixelsToMeters(-yDestination) } });
+	}
+}
+
+void AutomatedComponent::pushNextTask()
+{
+	if (++this->taskIndex == this->tasks.size())
+	{
+		this->taskIndex = 0u;
 	}
 }
 
 AutomatedComponent::Task AutomatedComponent::getCurrentTask() const
 {
-	return this->tasks.front();
-}
-
-void AutomatedComponent::pushNextTask()
-{
-	if (this->tasks.size() > 1u)
-	{
-		std::rotate(std::rbegin(this->tasks), std::rbegin(this->tasks) + 1u, std::rend(this->tasks));
-
-		this->elapsedTime = this->tasks.front().second;
-	}
-}
-
-void AutomatedComponent::playCurrentTask()
-{
-	this->isPlayingTask = true;
-}
-
-void AutomatedComponent::stopCurrentTask()
-{
-	this->isPlayingTask = false;
-}
-
-void AutomatedComponent::setActiveStatus(bool activeStatus)
-{
-	this->activeStatus = activeStatus;
+	return this->tasks[this->taskIndex];
 }
 
 bool AutomatedComponent::hasTasks() const
 {
 	return !this->tasks.empty();
-}
-
-bool AutomatedComponent::hasCurrentTaskExpired() const
-{
-	return this->elapsedTime <= 0.f || !this->isPlayingTask;
-}
-
-bool AutomatedComponent::isActive() const
-{
-	return this->activeStatus;
 }

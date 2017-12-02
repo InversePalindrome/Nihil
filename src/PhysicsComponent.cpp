@@ -44,7 +44,7 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2Bod
 	case ObjectType::Pickup:
 		fixtureDef.isSensor = true;
 		break;
-	case ObjectType::NormalPlatform:
+	case ObjectType::Platform:
 		body->SetGravityScale(0.f);
 		break;
 	case ObjectType::Bullet:
@@ -131,6 +131,21 @@ b2BodyType PhysicsComponent::getType() const
 	return this->body->GetType();
 }
 
+void* PhysicsComponent::getUserData(ObjectType fixtureObject) const
+{
+	for (const auto* fixture = this->body->GetFixtureList(); fixture; fixture = fixture->GetNext())
+	{
+		const auto* userData = static_cast<CollisionData*>(fixture->GetUserData());
+
+		if (userData->objectType == fixtureObject)
+		{
+			return fixture->GetUserData();
+		}
+	}
+
+	return nullptr;
+}
+
 float PhysicsComponent::getMass() const
 {
 	return this->body->GetMass();
@@ -151,6 +166,11 @@ b2Vec2 PhysicsComponent::getRelativeVelocity() const
 		{
 			const auto* objectA = static_cast<CollisionData*>(edge->contact->GetFixtureA()->GetUserData());
 			const auto* objectB = static_cast<CollisionData*>(edge->contact->GetFixtureB()->GetUserData());
+
+			if (!objectA || !objectB)
+			{
+				return relativeVelocity;
+			}
 
 			if (objectA->objectType == ObjectType::Feet)
 			{
@@ -196,6 +216,16 @@ void PhysicsComponent::setPosition(const b2Vec2& position)
 void PhysicsComponent::setVelocity(const b2Vec2& velocity)
 {
 	this->body->SetLinearVelocity(velocity);
+}
+
+void PhysicsComponent::setUserData(void* userData)
+{
+	this->body->SetUserData(userData);
+
+	for (auto* fixture = this->body->GetFixtureList(); fixture; fixture = fixture->GetNext())
+	{
+		fixture->SetUserData(userData);
+	}
 }
 
 void PhysicsComponent::setType(b2BodyType type)
@@ -260,11 +290,29 @@ bool PhysicsComponent::isColliding(ObjectType fixtureObject, ObjectType collidab
 			const auto* objectA = static_cast<CollisionData*>(edge->contact->GetFixtureA()->GetUserData());
 			const auto* objectB = static_cast<CollisionData*>(edge->contact->GetFixtureB()->GetUserData());
 
+			if (!objectA || !objectB)
+			{
+				return false;
+			}
+
 			if ((objectA->objectType & fixtureObject && objectB->objectType & collidableObject) ||
 				(objectA->objectType & collidableObject && objectB->objectType & fixtureObject))
 			{
 				return true;
 			}
+		}
+	}
+
+	return false;
+}
+
+bool PhysicsComponent::isIntersecting(const b2Vec2& point) const
+{
+	for (const auto* fixture = this->body->GetFixtureList(); fixture; fixture = fixture->GetNext())
+	{
+		if (fixture->TestPoint(point))
+		{
+			return true;
 		}
 	}
 

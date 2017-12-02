@@ -97,6 +97,13 @@ void EntityManager::parseBlueprint(const std::string& fileName)
 	this->componentParser.parseBlueprint(fileName);
 }
 
+
+void EntityManager::loadEntityProperties()
+{
+	dynamic_cast<PhysicsSystem*>(systems[typeid(PhysicsSystem).name()].get())
+		->setEntitiesProperties(this->componentSerializer.getProperties());
+}
+
 void EntityManager::copyBlueprint(const std::string& fileName, const std::string& copiedFileName)
 {
 	this->componentParser.copyBlueprint(fileName, copiedFileName);

@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #include "AISystem.hpp"
 #include "MathUtility.hpp"
+#include "CollisionData.hpp"
 
 #include <limits>
 
@@ -20,13 +21,7 @@ AISystem::AISystem(Entities& entities, Events& events, Pathways& pathways) :
 		targetEntity = event.entity;
 	});
 
-	events.subscribe<entityplus::component_added<Entity, PatrolComponent>>([this](auto& event)
-	{ 
-		callbacks.addCallback([this, event]()
-		{
-			addPathway(event.entity);
-		});
-	});
+	events.subscribe<AddedUserData>([this](auto& event){ addPathway(event.entity); });
 
 	events.subscribe<CrossedWaypoint>([this](const auto& event)
 	{
@@ -70,9 +65,6 @@ void AISystem::update(float deltaTime)
 			}
 		});
 	}
-	
-	this->callbacks.update();
-	this->callbacks.clearCallbacks();
 }
 
 void AISystem::updateMovement(Entity entity, PatrolComponent& patrol, const sf::Vector2f& position)
@@ -96,17 +88,15 @@ void AISystem::updateMovement(Entity entity, PatrolComponent& patrol, const sf::
 
 void AISystem::addPathway(Entity entity)
 {
-	entity.sync();
-
-	if (!entity.has_component<PositionComponent>() || !entity.has_component<PatrolComponent>())
+	if (!entity.has_component<PatrolComponent>())
 	{
 		return;
 	}
 
-	if (auto pathway = this->getClosestPathway(entity.get_component<PositionComponent>().getPosition()))
+	if (auto pathway = this->getPathway(entity))
 	{
 		pathway.value().sortWaypoints();
-		
+
 		entity.get_component<PatrolComponent>().setPathway(pathway.value());
 	}
 }
@@ -151,21 +141,22 @@ void AISystem::chaseTarget(PatrolComponent& patrol, const sf::Vector2f& AIPositi
 	patrol.setCurrentWaypointIndex(waypointIndex);
 }
 
-std::optional<Pathway> AISystem::getClosestPathway(const sf::Vector2f& position)
+std::optional<Pathway> AISystem::getPathway(Entity entity)
 {
-	auto closestPathway = std::min_element(std::cbegin(this->pathways), std::cend(this->pathways), [&position](const auto& pathway1, const auto& pathway2) 
+	if (entity.has_component<PhysicsComponent>())
 	{
-		return Utility::distance(pathway1.second.getCurrentWaypoint().point, position) < Utility::distance(pathway2.second.getCurrentWaypoint().point, position);
-	});
+		auto pathwayID = static_cast<CollisionData*>(entity.get_component<PhysicsComponent>().getUserData(ObjectType::Enemy))->properties["PathwayID"].getIntValue();
 
-	if (closestPathway != std::cend(this->pathways))
-	{
-		return closestPathway->second;
+		for (const auto& pathway : this->pathways)
+		{
+			if (pathway.first == pathwayID)
+			{
+				return pathway.second;
+			}
+		}
 	}
-	else
-	{
-		return {};
-	}
+
+	return {};
 }
 
 std::optional<sf::Vector2f> AISystem::getTargetPosition()

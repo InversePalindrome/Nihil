@@ -33,7 +33,7 @@ bool CollisionFilter::ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB)
 	auto* objectA = static_cast<CollisionData*>(fixtureA->GetUserData());
 	auto* objectB = static_cast<CollisionData*>(fixtureB->GetUserData());
 
-	if (collisions.count({ objectA->objectType, objectB->objectType }))
+	if (objectA && objectB && collisions.count({ objectA->objectType, objectB->objectType }))
 	{
 		return false;
 	}
