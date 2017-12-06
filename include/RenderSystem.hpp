@@ -15,8 +15,6 @@ InversePalindrome.com
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 
-#include <set>
-
 
 class RenderSystem : public System, public sf::Drawable
 {
@@ -30,11 +28,5 @@ public:
 private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
-	void setParentTransforms(Entity entity, ChildComponent& child);
-
-	void addNewTransform(ChildComponent& child, ParentComponent& parent);
-
-	std::int32_t getNewTransformationID() const;
-
-	std::set<std::int32_t> transformationIDs;
+	void setParentTransforms(Entity childEntity, Entity parentEntity);
 };

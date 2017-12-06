@@ -18,8 +18,6 @@ InversePalindrome.com
 #include <unordered_map>
 
 
-using SoundID = std::int32_t;
-
 class SoundManager
 {
 	using SoundPtr = std::unique_ptr<sf::Sound>;
@@ -30,37 +28,34 @@ public:
 	SoundManager(const SoundManager& soundManager) = delete;
 	SoundManager& operator=(const SoundManager& soundManager) = delete;
 
-	SoundID getCurrentSoundID() const;
 	const AudioProperties& getSoundProperties() const;
 	const AudioProperties& getMusicProperties() const;
 
 	void update();
 
 	void playSound(SoundBuffersID soundBufferID, bool loop);
-	void stopSound(SoundID soundID);
+	void stopSound(SoundBuffersID soundID);
 	void stopAllSounds();
 
 	void playMusic(const std::string& name, bool loop);
 	void stopMusic(const std::string& name);
 	void stopAllMusic();
 
-	void setSoundPosition(SoundID soundID, const sf::Vector3f& position);
+	void setSoundPosition(SoundBuffersID soundID, const sf::Vector3f& position);
 
 	void setListenerPosition(const sf::Vector3f& position);
 	void setListenerDirection(const sf::Vector3f& direction);
 
 	void setSoundVolume(float volume);
 	void setMusicVolume(float volume);
-	
+
 private:
 	AudioProperties soundProperties;
 	AudioProperties musicProperties;
 
 	ResourceManager& resourceManager;
 
-	SoundID currentSoundID;
-
-	std::unordered_map<SoundID, SoundPtr> sounds;
+	std::unordered_multimap<SoundBuffersID, SoundPtr> sounds;
 	std::unordered_map<std::string, MusicPtr> music;
 
 	void applySoundProperties(SoundPtr& sound, bool loop);

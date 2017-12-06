@@ -15,12 +15,6 @@ InversePalindrome.com
 #include <Box2D/Common/b2Math.h>
 #include <SFML/System/Vector2.hpp>
 
-#include <boost/multi_index_container.hpp>
-#include <boost/multi_index/member.hpp>
-#include <boost/multi_index/random_access_index.hpp>
-#include <boost/multi_index/hashed_index.hpp>
-#include <boost/dynamic_bitset/dynamic_bitset.hpp>
-
 #include <cstddef>
 #include <string>
 #include <ostream>
@@ -28,10 +22,8 @@ InversePalindrome.com
 #include <unordered_map>
 
 
-struct LevelData
+struct Level
 {
-	std::string name;
-
 	DirectionType directionType;
 	b2Vec2 gravity;
 	bool isLoaded;
@@ -42,9 +34,7 @@ class Game
 {
 	friend std::ostream& operator<<(std::ostream& os, const Game& game);
 
-	using LoadedLevels = boost::multi_index_container<LevelData,
-		boost::multi_index::indexed_by<boost::multi_index::random_access<>,
-		boost::multi_index::hashed_unique<boost::multi_index::member<LevelData, std::string, &LevelData::name>>>>;
+	using Levels = std::unordered_map<std::string, Level>;
 
 public:
 	Game();
@@ -58,7 +48,7 @@ public:
 	sf::Vector2f getSpawnpoint() const;
 	std::string getLevelMusic() const;
 
-	LoadedLevels& getLevels();
+	Levels& getLevels();
 	Items& getItems();
 	Achievements& getAchievements();
 
@@ -76,26 +66,10 @@ private:
 	Achievements achievements;
 	sf::Vector2f spawnpoint;
 
-	LoadedLevels levels;
+    Levels levels;
 
 	void loadLevels();
 	void loadAchievements();
-
-	template<typename T>
-	void loadDataBitsets(T& dataset, const boost::dynamic_bitset<std::size_t>& bitset);
 };
 
 std::ostream& operator<<(std::ostream& os, const Game& game);
-
-template<typename T>
-void Game::loadDataBitsets(T& dataset, const boost::dynamic_bitset<std::size_t>& bitset)
-{
-	std::size_t i = bitset.size() - 1u;
-
-	for (auto data = std::begin(dataset); data != std::end(dataset); ++data)
-	{
-		dataset.modify(data, [&bitset, i](auto& iData) { iData.isLoaded = bitset[i]; });
-
-		--i;
-	}
-}

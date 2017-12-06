@@ -31,9 +31,7 @@ public:
 
 	void saveBlueprint(const std::string& fileName, const std::vector<std::tuple<std::int32_t, std::string, sf::Vector2f>>& entitiesData);
 
-	void setProperties(EntityProperties properties);
-
-	void clearProperties();
+	void setProperties(const EntityProperties& properties);
 
 private:
 	Entities& entities;

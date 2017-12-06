@@ -33,19 +33,19 @@ private:
 
 	void propelFromWater(Entity entity);
 
+	void setUserData(Entity entity);
 	void setGravityScale(Entity entity, float gravityScale);
 	void setLinearDamping(Entity entity, float linearDamping);
 	void setVelocity(Entity entity, Direction direction);
 	void setFriction(Entity entity, ObjectType fixtureType, float friction);
 	void setMidAirStatus(Entity entity, bool midAirStatus);
+	void setUnderWaterStatus(Entity entity, bool underWaterStatus);
 
 	void applyImpulse(Entity entity, const b2Vec2& impulse);
 	void applyForce(Entity entity, const b2Vec2& force);
 
 	void convertPositionCoordinates(const PhysicsComponent& physics, PositionComponent& position);
 	void checkPhysicalStatus(Entity entity, PhysicsComponent& physics);
-
-	void setUserData(Entity entity);
 
 	CollisionsData& collisionsData;
 	EntityProperties entitiesProperties;

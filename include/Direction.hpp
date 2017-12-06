@@ -7,6 +7,14 @@ InversePalindrome.com
 
 #pragma once
 
+#include <cstddef>
 
-enum class Direction { Right, Left, Up, Down, RightUp, RightDown, LeftUp, LeftDown, Size };
-enum class DirectionType { Horizontal, Vertical };
+
+enum class Direction : std::size_t
+{ 
+	Right, Left, Up, Down, RightUp, RightDown, LeftUp, LeftDown, Size 
+};
+enum class DirectionType : std::size_t
+{
+	Horizontal, Vertical
+};

@@ -19,16 +19,25 @@ InversePalindrome.com
 #include <unordered_map>
 
  
-enum class TexturesID
+enum class TexturesID : std::size_t
 {
 	SplashScreen, StartBackground, Particles, Character, Mushroom, RedMonster, MenuBackground,                 
     City, Desert, MushroomLand, PinkTown, FlowerLand, DarkTown, Coin, Heart, Laser, Gems, MistZone,
 	Bombs, PowerUps, Keys, DialogBox, Panels, RectangularBoxes, Jungle, Moon, PinkRocks, Plain, SkyZone,
-	IceZone, Tileset, Bubble, Platforms, Skeleton, Goblin, Wizard, GreenMonster, PurpleMonster
+	IceZone, Tileset, Bubble, Platforms, Skeleton, Goblin, Wizard, GreenMonster, PurpleMonster, Cannons
 };
-enum class ImagesID { RedMonster };
-enum class FontsID { BITWONDER, CODE, Roboto, Changa };
-enum class SoundBuffersID { Jump, Footsteps, Coin, Laser, SmallExplosion, Gem, Achievement, Swimming };
+enum class ImagesID : std::size_t
+{ 
+	RedMonster
+};
+enum class FontsID : std::size_t
+{ 
+	BITWONDER, CODE, Roboto, Changa
+};
+enum class SoundBuffersID : std::size_t
+{ 
+	Jump, Footsteps, Coin, Laser, SmallExplosion, Gem, Achievement, Swimming, Trampoline 
+};
 
 class ResourceManager
 {

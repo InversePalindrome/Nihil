@@ -20,11 +20,10 @@ public:
 
 private:
 	SoundManager& soundManager;
+	Entity listenerEntity;
 
-	void changeSound(Entity entity, EntityState state);
+	void playSound(SoundBuffersID soundBufferID, bool loop);
+	void stopSound(SoundBuffersID soundID);
 
-	void emitSound(Entity entity, SoundBuffersID soundBufferID, bool loop);
-	void stopSound(Entity entity);
-
-	void updateListenerPosition(Entity entity);
+	void updateListenerPosition();
 };

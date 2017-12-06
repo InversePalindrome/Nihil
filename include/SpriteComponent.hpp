@@ -36,6 +36,7 @@ public:
 private:
 	TexturesID textureID;
 	sf::Sprite sprite;
+	std::string fileName;
 
 	ResourceManager* resourceManager;
 

@@ -42,7 +42,8 @@ private:
 
 	Entity createEntity();
 
-	template <typename T> std::tuple<T> parse(std::istream& iStream);
+	template <typename T> 
+	std::tuple<T> parse(std::istream& iStream);
 
 	template <typename T, typename Arg, typename... Args>
 	std::tuple<T, Arg, Args...> parse(std::istream& iStream);
@@ -77,7 +78,6 @@ std::tuple<T, Arg, Args...> ComponentParser::parse(std::istream& iStream)
 
 template <typename... Args>
 std::tuple<Args...> ComponentParser::parse(const std::string& line)
-
 {
 	std::istringstream iStream(line);
 

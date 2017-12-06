@@ -19,7 +19,6 @@ InversePalindrome.com
 #include "BulletComponent.hpp"
 #include "BombComponent.hpp"
 #include "AnimationComponent.hpp"
-#include "SoundComponent.hpp"
 #include "ParticleComponent.hpp"
 #include "ParentComponent.hpp"
 #include "ChildComponent.hpp"
@@ -44,6 +43,7 @@ InversePalindrome.com
 
 
 struct AI;
+struct Turret;
 
 struct CreateEntity;
 struct DestroyBody;
@@ -52,12 +52,13 @@ struct UpdateConversation;
 struct DirectionChanged;
 struct Jumped;
 struct StopMovement;
+struct StopSound;
 struct CombatOcurred;
 struct ChangeState;
 struct StateChanged;
 struct ChangeLevel;
 struct DestroyEntity;
-struct EmitSound;
+struct PlaySound;
 struct PickedUpItem;
 struct DroppedItem;
 struct DisplayHealthBar;
@@ -80,7 +81,9 @@ struct SetGravityScale;
 struct SetLinearDamping;
 struct SetVelocity;
 struct SetPosition;
+struct SetAngle;
 struct SetMidAirStatus;
+struct SetUnderWaterStatus;
 struct SetFriction;
 struct AddUnderWaterTimer;
 struct RemoveUnderWaterTimer;
@@ -89,25 +92,25 @@ struct AddedUserData;
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
 	HealthComponent, MeleeAttackComponent, RangeAttackComponent, BulletComponent, BombComponent, SpriteComponent, TextComponent, 
-	AnimationComponent, SoundComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent,
-	ChaseComponent, PickupComponent, PowerUpComponent, DropComponent, InventoryComponent, LockComponent, KeyComponent, DialogComponent>;
+	AnimationComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, ChaseComponent,
+	PickupComponent, PowerUpComponent, DropComponent, InventoryComponent, LockComponent, KeyComponent, DialogComponent>;
 
-using Tags = entityplus::tag_list<AI>;
+using Tags = entityplus::tag_list<AI, Turret>;
 
 using Entities = entityplus::entity_manager<Components, Tags>;
 
 using Events = entityplus::event_manager<Components, Tags, CreateEntity, DestroyBody, UpdateAchievement, UpdateConversation, DirectionChanged, Jumped,
-	StopMovement, CombatOcurred, ChangeState,StateChanged, ChangeLevel, DestroyEntity, EmitSound, PickedUpItem, DroppedItem, DisplayHealthBar, DisplayCoins,
-	DisplayPowerUp, DisplayConversation, HidePowerUp, CrossedCheckpoint, CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform,
-	ApplyForce, ApplyImpulse, ApplyBlastImpact, ApplyKnockback, SetUserData, SetGravityScale, SetLinearDamping, SetVelocity, SetPosition, SetMidAirStatus,
-	SetFriction, AddUnderWaterTimer, RemoveUnderWaterTimer, PropelFromWater, AddedUserData>;
+	StopMovement, StopSound, CombatOcurred, ChangeState,StateChanged, ChangeLevel, DestroyEntity, PlaySound, PickedUpItem, DroppedItem, DisplayHealthBar,
+	DisplayCoins, DisplayPowerUp, DisplayConversation, HidePowerUp, CrossedCheckpoint, CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform,
+	ApplyForce, ApplyImpulse, ApplyBlastImpact, ApplyKnockback, SetUserData, SetGravityScale, SetLinearDamping, SetVelocity, SetPosition, SetAngle, SetMidAirStatus,
+	SetUnderWaterStatus, SetFriction, AddUnderWaterTimer, RemoveUnderWaterTimer, PropelFromWater, AddedUserData>;
 
 using Entity = Entities::entity_t;
 
 using ComponentList = brigand::list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
 	HealthComponent, MeleeAttackComponent, RangeAttackComponent, BulletComponent, BombComponent, SpriteComponent, TextComponent, 
-	AnimationComponent, SoundComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent,
-	ChaseComponent, PickupComponent, PowerUpComponent, DropComponent, InventoryComponent, LockComponent, KeyComponent, DialogComponent>;
+	AnimationComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, ChaseComponent, 
+	PickupComponent, PowerUpComponent, DropComponent, InventoryComponent, LockComponent, KeyComponent, DialogComponent>;
 
 
 struct CreateEntity
@@ -147,6 +150,11 @@ struct StopMovement
 	Entity entity;
 };
 
+struct StopSound
+{
+	SoundBuffersID soundID;
+};
+
 struct CombatOcurred
 {
 	Entity attacker;
@@ -176,7 +184,7 @@ struct DestroyEntity
 	Entity entity;
 };
 
-struct EmitSound
+struct PlaySound
 {
 	SoundBuffersID soundBuffer;
 	bool loop;
@@ -253,8 +261,7 @@ struct BombExploded
 struct CreateTransform
 {
 	Entity childEntity;
-	ChildComponent& child;
-	ParentComponent& parent;
+	Entity parentEntity;
 };
 
 struct ApplyForce
@@ -310,10 +317,22 @@ struct SetPosition
 	sf::Vector2f position;
 };
 
+struct SetAngle
+{
+	Entity entity;
+	float angle;
+};
+
 struct SetMidAirStatus
 {
 	Entity entity;
 	bool midAirStatus;
+};
+
+struct SetUnderWaterStatus
+{
+	Entity entity;
+	bool underWaterStatus;
 };
 
 struct SetFriction

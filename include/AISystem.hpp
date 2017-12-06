@@ -28,7 +28,7 @@ private:
 
 	void updateMovement(Entity entity, PatrolComponent& patrol, const sf::Vector2f& position);
 
-	void addPathway(Entity entity);
+	void addProperties(Entity entity);
 
 	void changeWaypoint(Entity entity);
 	void chaseTarget(PatrolComponent& patrol, const sf::Vector2f& AIPosition, const sf::Vector2f& targetPosition);
@@ -36,8 +36,6 @@ private:
 	std::optional<Pathway> getPathway(Entity entity);
 	std::optional<sf::Vector2f> getTargetPosition();
 
-	bool isWithinRange(const sf::Vector2f& AIPosition, const sf::Vector2f& targetPosition, float visionRange);
-	bool isWithinRange(const std::pair<float, float>& patrolRange, const sf::Vector2f& AIPosition, const sf::Vector2f& targetPosition,
-		float visionRange) const;
+	bool isWithinRange(Entity AI, const sf::Vector2f& AIPosition, const sf::Vector2f& targetPosition, float visionRange);
 	bool isFacingTarget(Entity entity);
 };

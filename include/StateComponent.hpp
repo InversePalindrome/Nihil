@@ -10,7 +10,10 @@ InversePalindrome.com
 #include "Component.hpp"
 
 
-enum class EntityState { Idle, Walking, Jumping, Attacking, Swimming };
+enum class EntityState : std::size_t
+{ 
+	Idle, Walking, Jumping, Attacking
+};
 
 class StateComponent : public Component
 {

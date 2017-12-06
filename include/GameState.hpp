@@ -73,13 +73,12 @@ private:
 	void changeLevel(const std::string& level, const sf::Vector2f& spawnpoint);
 
 	void setCheckpoint(const sf::Vector2f& position);
-	void setPosition(Entity entity, const sf::Vector2f& position);
 
 	void destroyEntity(Entity entity);
 	void destroyBody(PhysicsComponent& physics);
 
 	void manageUnderWaterTimer(Entity entity);
-	void addUnderWaterTimer(Entity entity, std::size_t numberOfBubbles, float timePerBubble, bool forceCallback);
+	void addUnderWaterTimer(Entity entity, std::size_t numberOfBubbles, float timePerBubble);
 	void removeUnderWaterTimer(Entity entity);
 
 	void saveData(const std::string& fileName);

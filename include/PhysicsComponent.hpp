@@ -34,6 +34,7 @@ public:
 	b2ContactEdge* getContactList();
 
 	b2Vec2 getPosition() const;
+	float getAngle() const;
 	b2Vec2 getBodySize() const;
 	b2Vec2 getVelocity() const;
 	b2BodyType getType() const;
@@ -48,6 +49,7 @@ public:
 	float getLinearDamping() const;
 
 	void setPosition(const b2Vec2& position);
+	void setAngle(float angle);
 	void setVelocity(const b2Vec2& velocity);
 	void setUserData(void* userData);
 	void setType(b2BodyType type);
@@ -59,10 +61,12 @@ public:
 	void setLinearDamping(float linearDamping);
 	void setFriction(ObjectType fixtureObject, float friction);
 	void setMidAirStatus(bool midAirStatus);
+	void setUnderWaterStatus(bool underWaterStatus);
 
 	bool isColliding(ObjectType fixtureObject, ObjectType collidableObject) const;
 	bool isIntersecting(const b2Vec2& point) const;
 	bool isMidAir() const;
+	bool isUnderWater() const;;
 
 	void applyForce(const b2Vec2& force);
 	void applyImpulse(const b2Vec2& impulse);
@@ -79,6 +83,7 @@ private:
 	Direction direction;
 
 	bool midAirStatus;
+	bool underWaterStatus;
 };
 
 std::ostream& operator<<(std::ostream& os, const PhysicsComponent& component);
