@@ -22,7 +22,8 @@ PhysicsComponent::PhysicsComponent(b2World& world, const b2Vec2& bodySize, b2Bod
 	jumpVelocity(jumpVelocity),
 	accelerationRate(accelerationRate),
 	direction(Direction::Right),
-	midAirStatus(true)
+	midAirStatus(true),
+	underWaterStatus(false)
 {
 	b2BodyDef bodyDefinition;
 	bodyDefinition.type = bodyType;
@@ -114,6 +115,11 @@ b2ContactEdge* PhysicsComponent::getContactList()
 b2Vec2 PhysicsComponent::getPosition() const
 {
 	return this->body->GetPosition();
+}
+
+float PhysicsComponent::getAngle() const
+{
+	return this->body->GetAngle();
 }
 
 b2Vec2 PhysicsComponent::getBodySize() const
@@ -213,6 +219,11 @@ void PhysicsComponent::setPosition(const b2Vec2& position)
 	this->body->SetTransform(position, this->body->GetAngle());
 }
 
+void PhysicsComponent::setAngle(float angle)
+{
+	this->body->SetTransform(this->body->GetPosition(), angle);
+}
+
 void PhysicsComponent::setVelocity(const b2Vec2& velocity)
 {
 	this->body->SetLinearVelocity(velocity);
@@ -281,6 +292,11 @@ void PhysicsComponent::setMidAirStatus(bool midAirStatus)
 	this->midAirStatus = midAirStatus;
 }
 
+void PhysicsComponent::setUnderWaterStatus(bool underWaterStatus)
+{
+	this->underWaterStatus = underWaterStatus;
+}
+
 bool PhysicsComponent::isColliding(ObjectType fixtureObject, ObjectType collidableObject) const
 {
 	for (const auto* edge = this->body->GetContactList(); edge; edge = edge->next)
@@ -322,6 +338,11 @@ bool PhysicsComponent::isIntersecting(const b2Vec2& point) const
 bool PhysicsComponent::isMidAir() const
 {
 	return this->midAirStatus;
+}
+
+bool PhysicsComponent::isUnderWater() const
+{
+	return this->underWaterStatus;
 }
 
 void PhysicsComponent::applyForce(const b2Vec2& force)

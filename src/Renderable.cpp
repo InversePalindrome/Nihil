@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #include "Renderable.hpp"
 
+
 Renderable::Renderable() :
 	visibilityStatus(true)
 {

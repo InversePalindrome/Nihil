@@ -109,7 +109,7 @@ ItemsGraphics::ItemsGraphics(ResourceManager& resourceManager, const std::string
 
 	animationFile = iAnimationFile;
 
-	sprite.setTexture(resourceManager.getTexture(static_cast<TexturesID>(textureID)));
+	sprite.setTexture(resourceManager.getTexture(TexturesID{ textureID }));
 	sprite.setScale(scale, scale);
 	sprite.setPosition(xPosition, yPosition);
 

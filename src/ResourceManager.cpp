@@ -17,19 +17,19 @@ ResourceManager::ResourceManager(const std::string& resourcesFilePath)
 {
 	resourceFactory.emplace("Textures", [this]
 	(std::size_t ID, const std::string& resourceFilePath)
-	{ textures.acquire(static_cast<TexturesID>(ID), thor::Resources::fromFile<sf::Texture>(resourceFilePath)); });
+	{ textures.acquire(TexturesID{ID}, thor::Resources::fromFile<sf::Texture>(resourceFilePath)); });
 
 	resourceFactory.emplace("Images", [this]
 	(std::size_t ID, const std::string& resourceFilePath)
-	{ images.acquire(static_cast<ImagesID>(ID), thor::Resources::fromFile<sf::Image>(resourceFilePath)); });
+	{ images.acquire(ImagesID{ ID }, thor::Resources::fromFile<sf::Image>(resourceFilePath)); });
 
 	resourceFactory.emplace("Fonts", [this]
 	(std::size_t ID, const std::string& resourceFilePath)
-	{ fonts.acquire(static_cast<FontsID>(ID), thor::Resources::fromFile<sf::Font>(resourceFilePath)); });
+	{ fonts.acquire(FontsID{ ID }, thor::Resources::fromFile<sf::Font>(resourceFilePath)); });
 
 	resourceFactory.emplace("Sounds", [this]
 	(std::size_t ID, const std::string& resourceFilePath)
-	{ sounds.acquire(static_cast<SoundBuffersID>(ID), thor::Resources::fromFile<sf::SoundBuffer>(resourceFilePath)); });
+	{ sounds.acquire(SoundBuffersID{ ID }, thor::Resources::fromFile<sf::SoundBuffer>(resourceFilePath)); });
 
 	loadResources(resourcesFilePath);
 }

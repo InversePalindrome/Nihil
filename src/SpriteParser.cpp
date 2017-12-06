@@ -31,7 +31,7 @@ void Parsers::parseSprite(ResourceManager& resourceManager, const std::string& f
 
 			iStream >> textureID;
 
-			sprite.setTexture(resourceManager.getTexture(static_cast<TexturesID>(textureID)));
+			sprite.setTexture(resourceManager.getTexture(TexturesID{ textureID }));
 		}
 		else if (category == "SubRect")
 		{

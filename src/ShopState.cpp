@@ -47,7 +47,7 @@ ShopState::ShopState(StateMachine& stateMachine, StateData& stateData) :
 	title.setOrigin(title.getLocalBounds().width / 2.f, title.getLocalBounds().height / 2.f);
 	title.setPosition(stateData.window.getDefaultView().getCenter().x, 242.f);
 
-	backButton->SetPosition(sf::Vector2f(12.f, 25.f));
+	backButton->SetPosition({ 12.f, 25.f });
 	backButton->GetSignal(sfg::Widget::OnLeftClick).Connect([this] { transitionToMenu(); });
 
 	if (!stateData.games.empty())
@@ -106,7 +106,7 @@ void ShopState::loadShopData(const std::string& fileName)
 
 		iStream >> categoryID >> itemID >> imageID >> price >> row >> column;
 
-		auto image = sfg::Image::Create(this->stateData.resourceManager.getImage(static_cast<ImagesID>(imageID)));
+		auto image = sfg::Image::Create(this->stateData.resourceManager.getImage(ImagesID{ imageID }));
 		auto item = static_cast<Item>(itemID);
 		auto category = static_cast<ItemCategory>(categoryID);
 		

@@ -8,6 +8,7 @@ InversePalindrome.com
 #include "RenderSystem.hpp"
 #include "UnitConverter.hpp"
 #include "ViewUtility.hpp"
+#include "EntityUtility.hpp"
 #include "SpriteComponent.hpp"
 #include "PositionComponent.hpp"
 
@@ -19,11 +20,9 @@ InversePalindrome.com
 RenderSystem::RenderSystem(Entities& entities, Events& events) :
 	System(entities, events)
 {
-	events.subscribe<entityplus::component_added<Entity, ChildComponent>>([this](const auto& event) { setParentTransforms(event.entity, event.component); });
 	events.subscribe<CreateTransform>([this](const auto& event) 
 	{
-		addNewTransform(event.child, event.parent);
-		setParentTransforms(event.childEntity, event.child);
+		setParentTransforms(event.childEntity, event.parentEntity);
 	});
 }
 
@@ -57,58 +56,19 @@ void RenderSystem::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	});
 }
 
-void RenderSystem::setParentTransforms(Entity childEntity, ChildComponent& child)
+void RenderSystem::setParentTransforms(Entity childEntity, Entity parentEntity)
 {
-	auto& parents = entities.get_entities<ParentComponent>();
-	
-	auto foundEntity = std::find_if(std::begin(parents), std::end(parents), [&child](auto& parentEntity)
-	{ 
-		return child.getParentID() != -1 && child.getParentID() == parentEntity.get_component<ParentComponent>().getChildID();
-	});
-	
-	if (foundEntity != std::end(parents))
+	if (childEntity.has_component<ChildComponent>() && parentEntity.has_component<ParentComponent>() 
+		&& parentEntity.has_component<SpriteComponent>() && parentEntity.has_component<PositionComponent>())
 	{
-		child.setTransform(foundEntity->get_component<SpriteComponent>().getTransform());
-		this->transformationIDs.emplace(child.getParentID());
+		auto& child = childEntity.get_component<ChildComponent>();
+		auto& parent = parentEntity.get_component<ParentComponent>();
 
-		if (foundEntity->has_component<PositionComponent>())
-		{
-			const auto& parentPosition = foundEntity->get_component<PositionComponent>().getPosition();
+		child.setParentID(parent.getEntityID());
+		parent.setChildID(child.getEntityID());
 
-			if (childEntity.has_component<PositionComponent>())
-			{
-				childEntity.get_component<PositionComponent>().setPosition(foundEntity->get_component<PositionComponent>().getPosition());
-			}
-			if (childEntity.has_component<PhysicsComponent>())
-			{
-				childEntity.get_component<PhysicsComponent>().setPosition(
-					b2Vec2(UnitConverter::pixelsToMeters(parentPosition.x + 0.1f), UnitConverter::pixelsToMeters(-parentPosition.y)));
-			}
-		}
-	}
-}
+		child.setTransform(parentEntity.get_component<SpriteComponent>().getTransform());
 
-void RenderSystem::addNewTransform(ChildComponent& child, ParentComponent& parent)
-{
-	if (parent.getChildID() < 0)
-	{
-		parent.setChildID(this->getNewTransformationID());
-		child.setParentID(this->getNewTransformationID());
-	}
-	else
-	{
-		child.setParentID(parent.getChildID());
-	}
-}
-
-std::int32_t RenderSystem::getNewTransformationID() const
-{
-	if (!this->transformationIDs.empty())
-	{
-		return *(std::rbegin(this->transformationIDs)) + 1;
-	}
-	else
-	{
-		return 0;
+		Utility::setPosition(childEntity, parentEntity.get_component<PositionComponent>().getPosition());
 	}
 }

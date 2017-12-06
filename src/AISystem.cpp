@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #include "AISystem.hpp"
 #include "MathUtility.hpp"
+#include "EntityUtility.hpp"
 #include "CollisionData.hpp"
 
 #include <limits>
@@ -16,24 +17,13 @@ AISystem::AISystem(Entities& entities, Events& events, Pathways& pathways) :
 	System(entities, events),
 	pathways(pathways)
 {
-	events.subscribe<entityplus::component_added<Entity, ControllableComponent>>([this](auto& event)
+	events.subscribe<entityplus::component_added<Entity, ControllableComponent>>([this](const auto& event)
 	{
 		targetEntity = event.entity;
 	});
 
-	events.subscribe<AddedUserData>([this](auto& event){ addPathway(event.entity); });
-
-	events.subscribe<CrossedWaypoint>([this](const auto& event)
-	{
-		if (const auto& targetPosition = getTargetPosition())
-		{
-			if (event.entity.has_component<PatrolComponent>() && (!event.entity.has_component<ChaseComponent>() || !isWithinRange(event.entity.get_component<PatrolComponent>().getRange(),
-				event.entity.get_component<PositionComponent>().getPosition(), targetPosition.value(), event.entity.get_component<ChaseComponent>().getVisionRange())))
-			{
-				changeWaypoint(event.entity);
-			}
-		}
-	});
+	events.subscribe<AddedUserData>([this](auto& event){ addProperties(event.entity); });
+	events.subscribe<CrossedWaypoint>([this](const auto& event) { changeWaypoint(event.entity); });
 }
 
 void AISystem::update(float deltaTime)
@@ -44,7 +34,7 @@ void AISystem::update(float deltaTime)
 		{
 			if (patrol.hasWaypoints())
 			{
-				if (entity.has_component<ChaseComponent>() && this->isWithinRange(patrol.getRange(), position.getPosition(), targetPosition.value(), entity.get_component<ChaseComponent>().getVisionRange()))
+				if (entity.has_component<ChaseComponent>() && this->isWithinRange(entity, position.getPosition(), targetPosition.value(), entity.get_component<ChaseComponent>().getVisionRange()))
 				{
 					this->chaseTarget(patrol, position.getPosition(), targetPosition.value());
 				}
@@ -53,14 +43,13 @@ void AISystem::update(float deltaTime)
 			}
 		});
 
-		this->entities.for_each<AI, RangeAttackComponent, ParentComponent, PositionComponent, TimerComponent>([this, targetPosition](auto entity, auto& rangeAttack, auto& parent, auto& position, auto& timer)
+		this->entities.for_each<AI, RangeAttackComponent, PositionComponent, TimerComponent>([this, targetPosition](auto entity, auto& rangeAttack, auto& position, auto& timer)
 		{
-			if (timer.hasTimer("Reload") && timer.hasTimerExpired("Reload") && this->isFacingTarget(entity) && ((entity.has_component<PatrolComponent>() &&
-				this->isWithinRange(entity.get_component<PatrolComponent>().getRange(), position.getPosition(), targetPosition.value(), rangeAttack.getAttackRange())) ||
-				this->isWithinRange(position.getPosition(), targetPosition.value(), rangeAttack.getAttackRange())))
+			if (timer.hasTimer("Reload") && timer.hasTimerExpired("Reload") && this->isFacingTarget(entity) &&
+				this->isWithinRange(entity, position.getPosition(), targetPosition.value(), rangeAttack.getAttackRange()))
 			{
 				this->events.broadcast(ShootProjectile{ entity, rangeAttack.getProjectileID(), targetPosition.value() });
-
+			
 				timer.restartTimer("Reload");
 			}
 		});
@@ -86,18 +75,29 @@ void AISystem::updateMovement(Entity entity, PatrolComponent& patrol, const sf::
 	}
 }
 
-void AISystem::addPathway(Entity entity)
+void AISystem::addProperties(Entity entity)
 {
-	if (!entity.has_component<PatrolComponent>())
+	if (entity.has_tag<Turret>() && entity.has_component<PhysicsComponent>())
 	{
-		return;
+		auto& physics = entity.get_component<PhysicsComponent>();
+
+		auto direction = static_cast<Direction>(static_cast<CollisionData*>(physics.getUserData(ObjectType::Tile))->properties["Direction"].getIntValue());
+
+		physics.setDirection(direction);
+
+		auto angle = static_cast<CollisionData*>(physics.getUserData(ObjectType::Tile))->properties["Angle"].getFloatValue();
+
+		Utility::setAngle(entity, angle);
 	}
 
-	if (auto pathway = this->getPathway(entity))
+	if (entity.has_component<PatrolComponent>())
 	{
-		pathway.value().sortWaypoints();
+		if (auto pathway = this->getPathway(entity))
+		{
+			pathway.value().sortWaypoints();
 
-		entity.get_component<PatrolComponent>().setPathway(pathway.value());
+			entity.get_component<PatrolComponent>().setPathway(pathway.value());
+		}
 	}
 }
 
@@ -165,40 +165,38 @@ std::optional<sf::Vector2f> AISystem::getTargetPosition()
 	{
 		return this->targetEntity.get_component<PositionComponent>().getPosition();
 	}
-	else
+
+	return {};
+}
+
+bool AISystem::isWithinRange(Entity AI, const sf::Vector2f& AIPosition, const sf::Vector2f& targetPosition, float visionRange)
+{
+	bool isWithingPatrolRange = true;
+
+	if (AI.has_component<PatrolComponent>())
 	{
-		return {};
+		const auto& [initialPosition, finalPosition] = AI.get_component<PatrolComponent>().getRange();
+
+		if (targetPosition.x < initialPosition || targetPosition.x > finalPosition)
+		{
+			isWithingPatrolRange = false;
+		}
 	}
-}
 
-bool AISystem::isWithinRange(const sf::Vector2f& AIPosition, const sf::Vector2f& targetPosition, float visionRange)
-{
-	return Utility::distance(AIPosition, targetPosition) <= visionRange;
-}
-
-bool AISystem::isWithinRange(const std::pair<float, float>& patrolRange, const sf::Vector2f& AIPosition, const sf::Vector2f& targetPosition, float visionRange) const
-{
-	return Utility::distance(AIPosition, targetPosition) <= visionRange && 
-		targetPosition.x > patrolRange.first && targetPosition.x < patrolRange.second;
+	return Utility::distance(AIPosition, targetPosition) <= visionRange && isWithingPatrolRange;
 }
 
 bool AISystem::isFacingTarget(Entity entity)
 {
-	if (this->targetEntity.sync() && this->targetEntity.has_component<PositionComponent>() && this->targetEntity.has_component<PhysicsComponent>() &&
-		entity.has_component<PositionComponent>() && entity.has_component<PhysicsComponent>())
+	if (this->targetEntity.sync() && this->targetEntity.has_component<PositionComponent>() && entity.has_component<PositionComponent>()  && entity.has_component<PhysicsComponent>())
 	{
+		auto entityDirection = entity.get_component<PhysicsComponent>().getDirection();
 		const auto& targetPosition = this->targetEntity.get_component<PositionComponent>().getPosition();
-		const auto& targetSize = this->targetEntity.get_component<PhysicsComponent>().getBodySize();
-
 		const auto& entityPosition = entity.get_component<PositionComponent>().getPosition();
 
-		auto entityDirection = entity.get_component<PhysicsComponent>().getDirection();
-
-		return (std::abs(entityPosition.y - targetPosition.y) <= UnitConverter::metersToPixels(targetSize.y)) && (entityDirection == Direction::Right && targetPosition.x > entityPosition.x) 
-			|| (entityDirection == Direction::Left && targetPosition.x < entityPosition.x);
+		return   (entityDirection == Direction::Right && targetPosition.x > entityPosition.x) 
+			  || (entityDirection == Direction::Left && targetPosition.x < entityPosition.x);
 	}
-	else
-	{
-		return false;
-	}
+	
+	return false;
 }

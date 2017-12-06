@@ -37,7 +37,7 @@ void Parsers::parseParticleSystem(ResourceManager& resourceManager, const std::s
 
 			iStream >> textureID;
 
-			particleSystem.setTexture(resourceManager.getTexture(static_cast<TexturesID>(textureID)));
+			particleSystem.setTexture(resourceManager.getTexture(TexturesID{ textureID }));
 		}
 		else if (category == "SubRect")
 		{

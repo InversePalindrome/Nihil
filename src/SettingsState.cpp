@@ -76,8 +76,8 @@ SettingsState::SettingsState(StateMachine& stateMachine, StateData& stateData) :
 
 	moveLeftButton->SetId("0");
 	moveRightButton->SetId("1");
-	moveUpButton->SetId("2");
-	moveDownButton->SetId("3");
+	moveDownButton->SetId("2");
+	moveUpButton->SetId("3");
 	jumpButton->SetId("4");
 	shootButton->SetId("5");
 
@@ -148,10 +148,12 @@ void SettingsState::changeKeyBinding(sf::Keyboard::Key key)
 {
 	for (const auto& keyButton : this->keyButtons->GetMembers())
 	{
-		if (keyButton._Get()->IsActive())
+		if (auto button = keyButton.lock())
 		{
-			this->stateData.inputHandler.changeKey(static_cast<Action>
-				(std::stoull(keyButton._Get()->GetId())), key);
+			if (button->IsActive())
+			{
+				this->stateData.inputHandler.changeKey(static_cast<Action>(std::stoull(button->GetId())), key);
+			}
 		}
 	}
 }

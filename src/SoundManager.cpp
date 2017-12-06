@@ -16,14 +16,8 @@ InversePalindrome.com
 SoundManager::SoundManager(ResourceManager& resourceManager) :
 	soundProperties("SoundData.txt"),
 	musicProperties("MusicData.txt"),
-	currentSoundID(0u),
 	resourceManager(resourceManager)
 {
-}
-
-SoundID SoundManager::getCurrentSoundID() const
-{
-	return this->currentSoundID;
 }
 
 const AudioProperties& SoundManager::getSoundProperties() const
@@ -38,8 +32,8 @@ const AudioProperties& SoundManager::getMusicProperties() const
 
 void SoundManager::update()
 {
-	this->removeStoppedSounds<decltype(this->sounds)>(this->sounds);
-	this->removeStoppedSounds<decltype(this->music)>(this->music);
+	this->removeStoppedSounds(this->sounds);
+	this->removeStoppedSounds(this->music);
 }
 
 void SoundManager::playSound(SoundBuffersID soundBuffersID, bool loop)
@@ -48,13 +42,11 @@ void SoundManager::playSound(SoundBuffersID soundBuffersID, bool loop)
 
 	this->applySoundProperties(sound, loop);
 
-	this->sounds.emplace(this->currentSoundID, std::move(sound));
-	this->sounds.at(this->currentSoundID)->play();
-
-	++this->currentSoundID;
+	this->sounds.emplace(soundBuffersID, std::move(sound));
+	this->sounds.find(soundBuffersID)->second->play();
 }
 
-void SoundManager::stopSound(SoundID soundID)
+void SoundManager::stopSound(SoundBuffersID soundID)
 {
 	auto sound = this->sounds.find(soundID);
 
@@ -105,7 +97,7 @@ void SoundManager::stopAllMusic()
 	}
 }
 
-void SoundManager::setSoundPosition(SoundID soundID, const sf::Vector3f& position)
+void SoundManager::setSoundPosition(SoundBuffersID soundID, const sf::Vector3f& position)
 {
 	auto sound = this->sounds.find(soundID);
 

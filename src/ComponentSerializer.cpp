@@ -87,12 +87,7 @@ void ComponentSerializer::saveBlueprint(const std::string& fileName, const std::
 }
 
 
-void ComponentSerializer::setProperties(EntityProperties properties)
+void ComponentSerializer::setProperties(const EntityProperties& properties)
 {
 	this->properties = properties;
-}
-
-void ComponentSerializer::clearProperties()
-{
-	this->properties.clear();
 }

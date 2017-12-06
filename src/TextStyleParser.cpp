@@ -31,7 +31,7 @@ void Parsers::parseStyle(ResourceManager& resourceManager, const std::string& fi
 
 			iStream >> fontID;
 
-			text.setFont(resourceManager.getFont(static_cast<FontsID>(fontID)));
+			text.setFont(resourceManager.getFont(FontsID{ fontID }));
 		}
 		else if (category == "CharacterSize")
 		{

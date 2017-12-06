@@ -166,32 +166,33 @@ void HubState::addGame()
 
 void HubState::deleteGame()
 {
-	for (auto& gameButton = std::begin(this->selectionButtons->GetMembers()); gameButton != std::end(this->selectionButtons->GetMembers());)
+
+	for (auto& button = std::begin(this->selectionButtons->GetMembers()); button != std::end(this->selectionButtons->GetMembers());)
 	{
-		if (gameButton->_Get()->IsActive())
+		if(auto gameButton = button->lock())
 		{
-			if (!this->stateData.games.empty())
+			if (gameButton->IsActive())
 			{
-				auto gameIter = std::find_if(std::begin(this->stateData.games), std::end(this->stateData.games), [gameButton](const auto& game) { return game.getGameName() == gameButton->_Get()->GetLabel(); });
+				auto gameIter = std::find_if(std::begin(this->stateData.games), std::end(this->stateData.games), [gameButton](const auto& game) { return game.getGameName() == gameButton->GetLabel(); });
 
 				if (gameIter != std::end(this->stateData.games))
 				{
 					for (const auto& level : gameIter->getLevels())
 					{
-						std::remove(std::string(Path::games / gameButton->_Get()->GetLabel() + '-' + level.name + ".txt").c_str());
-						std::remove(std::string(Path::blueprints / gameButton->_Get()->GetLabel() + "-Player.txt").c_str());
+						std::remove(std::string(Path::games / gameButton->GetLabel() + '-' + level.first + ".txt").c_str());
+						std::remove(std::string(Path::blueprints / gameButton->GetLabel() + "-Player.txt").c_str());
 					}
 
 					this->stateData.games.erase(gameIter);
 
-					gameButton->_Get()->Show(false);
-					gameButton = this->selectionButtons->GetMembers().erase(gameButton);
+					gameButton->Show(false);
+					button = this->selectionButtons->GetMembers().erase(button);
 				}
 			}
-		}
-		else
-		{
-			++gameButton;
+			else
+			{
+				++button;
+			}
 		}
 	}
 
@@ -219,22 +220,25 @@ void HubState::transitionToMenu()
 
 void HubState::transitionToPlay()
 {
-	for (auto& gameButton : this->selectionButtons->GetMembers())
+	for (const auto& button : this->selectionButtons->GetMembers())
 	{
-		if (gameButton._Get()->IsActive())
+		if (auto gameButton = button.lock())
 		{
-			auto gameIter = std::find_if(std::begin(this->stateData.games), std::end(this->stateData.games), [gameButton](const auto& game) { return game.getGameName() == gameButton._Get()->GetLabel(); });
-
-			if (!this->stateData.games.empty() && gameIter != std::end(this->stateData.games))
+			if (gameButton->IsActive())
 			{
-				std::iter_swap(gameIter, std::begin(this->stateData.games));
-			
-				this->stateData.soundManager.stopAllMusic();
+				auto gameIter = std::find_if(std::begin(this->stateData.games), std::end(this->stateData.games), [gameButton](const auto& game) { return game.getGameName() == gameButton->GetLabel(); });
 
-				this->stateMachine.clearStates();
-				this->stateMachine.pushState(StateID::Game);
+				if (!this->stateData.games.empty() && gameIter != std::end(this->stateData.games))
+				{
+					std::iter_swap(gameIter, std::begin(this->stateData.games));
 
-				break;
+					this->stateData.soundManager.stopAllMusic();
+
+					this->stateMachine.clearStates();
+					this->stateMachine.pushState(StateID::Game);
+
+					break;
+				}
 			}
 		}
 	}

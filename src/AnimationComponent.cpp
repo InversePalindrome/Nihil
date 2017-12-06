@@ -50,7 +50,7 @@ void AnimationComponent::setAnimations(bool hasMultipleAnimations, const std::st
 
 				iStream >> state >> direction >> duration;
 
-				this->animations.emplace(std::make_pair(static_cast<EntityState>(state), static_cast<Direction>(direction)), std::make_pair(thor::FrameAnimation(), duration));
+				this->animations.emplace(std::make_pair(static_cast<EntityState>(state), Direction{ direction }), std::make_pair(thor::FrameAnimation(), duration));
 			}
 			else if (category == "Frame")
 			{

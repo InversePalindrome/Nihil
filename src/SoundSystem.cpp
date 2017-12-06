@@ -12,68 +12,32 @@ SoundSystem::SoundSystem(Entities& entities, Events& events, SoundManager& sound
 	System(entities, events),
 	soundManager(soundManager)
 {
-	events.subscribe<StateChanged>([this](const auto& event) { changeSound(event.entity, event.state); });
-	events.subscribe<EmitSound>([&soundManager](const auto& event) { soundManager.playSound(event.soundBuffer, event.loop); });
-	events.subscribe<DestroyEntity>([this](const auto& event) { stopSound(event.entity); });
+	events.subscribe<PlaySound>([&soundManager](const auto& event) { soundManager.playSound(event.soundBuffer, event.loop); });
+	events.subscribe<entityplus::component_added<Entity, ControllableComponent>>([this](const auto& event)
+	{
+		listenerEntity = event.entity;
+	});
 }
 
 void SoundSystem::update(float deltaTime)
 {
-	this->entities.for_each<SoundComponent, PositionComponent>(
-		[this](auto entity, const auto& sound, const auto& position)
-	{
-		this->soundManager.setSoundPosition(sound.getSoundID(), { position.getPosition().x, position.getPosition().y, 0.f });
-
-		this->updateListenerPosition(entity);
-	});
 }
 
-void SoundSystem::changeSound(Entity entity, EntityState state)
+void SoundSystem::playSound(SoundBuffersID soundID, bool loop)
 {
-	if (entity.has_component<SoundComponent>())
-	{
-		switch (state)
-		{
-		case EntityState::Idle:
-			this->stopSound(entity);
-			break;
-		case EntityState::Walking:
-			this->stopSound(entity);
-			this->emitSound(entity, SoundBuffersID::Footsteps, true);
-			break;
-		case EntityState::Swimming:
-			this->stopSound(entity);
-			this->emitSound(entity, SoundBuffersID::Swimming, true);
-			break;
-		}
-	}
+	this->soundManager.playSound(soundID, loop);
 }
 
-void SoundSystem::emitSound(Entity entity, SoundBuffersID soundBufferID, bool loop)
+void SoundSystem::stopSound(SoundBuffersID soundID)
 {
-	if (entity.has_component<SoundComponent>())
-	{
-		auto& sound = entity.get_component<SoundComponent>();
-
-		sound.setSoundID(this->soundManager.getCurrentSoundID());
-
-		this->soundManager.playSound(soundBufferID, loop);
-	}
+	this->soundManager.stopSound(soundID);
 }
 
-void SoundSystem::stopSound(Entity entity)
+void SoundSystem::updateListenerPosition()
 {
-	if (entity.has_component<SoundComponent>())
+	if (this->listenerEntity.sync() && this->listenerEntity.has_component<PositionComponent>())
 	{
-		this->soundManager.stopSound(entity.get_component<SoundComponent>().getSoundID());
-	}
-}
-
-void SoundSystem::updateListenerPosition(Entity entity)
-{
-	if (entity.has_component<ControllableComponent>())
-	{
-		const auto& position = entity.get_component<PositionComponent>().getPosition();
+		const auto& position = this->listenerEntity.get_component<PositionComponent>().getPosition();
 
 		this->soundManager.setListenerPosition({ position.x, 0.f, position.y });
     }

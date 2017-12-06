@@ -27,10 +27,10 @@ Game::Game()
 
 Game::Game(const std::string& data) 
 {
+	loadLevels();
+
 	std::istringstream iStream(data);
 	std::string line;
-
-	std::string levelBits;
 
 	while (std::getline(iStream, line))
 	{
@@ -52,9 +52,14 @@ Game::Game(const std::string& data)
 		{
 			inLine >> spawnpoint.x >> spawnpoint.y;
 		}
-		else if (category == "Levels")
+		else if (category == "Level")
 		{
-			inLine >> levelBits;
+			std::string levelName;
+			bool isLoaded;
+
+			inLine >> levelName >> isLoaded;
+
+			levels[levelName].isLoaded = isLoaded;
 		}
 		else if (category == "Item")
 		{
@@ -62,7 +67,7 @@ Game::Game(const std::string& data)
 
 			inLine >> item >> quantity;
 
-			this->items.emplace(static_cast<Item>(item), quantity);
+		    items.emplace(static_cast<Item>(item), quantity);
 		}
 		else if (category == "Achievement")
 		{
@@ -70,24 +75,15 @@ Game::Game(const std::string& data)
 
 			inLine >> achievementID >> currentQuantity >> maxQuantity;
 
-			this->achievements.emplace(static_cast<Achievement>(achievementID), std::make_pair(currentQuantity, maxQuantity));
+			achievements.emplace(static_cast<Achievement>(achievementID), std::make_pair(currentQuantity, maxQuantity));
 		}
 	}
-
-	loadLevels();
-
-    const auto& levelsBitset = boost::dynamic_bitset<std::size_t>(levelBits);
-
-	loadDataBitsets<LoadedLevels>(levels, levelsBitset);
 }
 
 std::optional<Entity> Game::getPlayer()
 {
-	if (this->player.get_status() != entityplus::entity_status::DELETED || 
-		this->player.get_status() != entityplus::entity_status::UNINITIALIZED)
+	if (this->player.sync())
 	{
-		this->player.sync();
-
 		return this->player;
 	}
 	else
@@ -108,7 +104,7 @@ std::string Game::getCurrentLevel() const
 
 DirectionType Game::getCurrenDirectionType() const
 {
-	return this->levels.get<1>().find(this->currentLevel)->directionType;
+	return this->levels.at(this->currentLevel).directionType;
 }
 
 sf::Vector2f Game::getSpawnpoint() const
@@ -118,10 +114,10 @@ sf::Vector2f Game::getSpawnpoint() const
 
 std::string Game::getLevelMusic() const
 {
-	return this->levels.get<1>().find(this->currentLevel)->musicFile;
+	return this->levels.at(this->currentLevel).musicFile;
 }
 
-Game::LoadedLevels& Game::getLevels()
+Game::Levels& Game::getLevels()
 {
 	return this->levels;
 }
@@ -138,7 +134,7 @@ Achievements& Game::getAchievements()
 
 b2Vec2 Game::getCurrentGravity() const
 {
-	return this->levels.get<1>().find(this->currentLevel)->gravity;
+	return this->levels.at(this->currentLevel).gravity;
 }
 
 void Game::setPlayer(Entity player)
@@ -167,14 +163,10 @@ std::ostream& operator<<(std::ostream& os, const Game& game)
 	os << "CurrentLevel " << game.currentLevel << '\n';
 	os << "Spawnpoint " << game.spawnpoint.x << ' ' << game.spawnpoint.y << '\n';
 
-	os << "Levels ";
-
 	for (const auto& level : game.levels)
 	{
-		os << level.isLoaded;
+		os << "Level " << level.first << ' ' << level.second.isLoaded << '\n';
 	}
-	
-	os << '\n';
 
 	for (const auto& item : game.items)
 	{
@@ -183,7 +175,7 @@ std::ostream& operator<<(std::ostream& os, const Game& game)
 
 	for (const auto& achievement : game.achievements)
 	{
-		os << "Achievement" << ' ' << static_cast<std::size_t>(achievement.first) << ' ' <<
+		os << "Achievement " << static_cast<std::size_t>(achievement.first) << ' ' <<
 			achievement.second.first << ' ' << achievement.second.second << '\n';
 	}
 
@@ -205,7 +197,7 @@ void Game::loadLevels()
 
 		iStream >> levelName >> directionType >> xGravity >> yGravity >> xSpawnpoint >> ySpawnpoint >> musicFile;
 
-		this->levels.get<1>().insert({ levelName, static_cast<DirectionType>(directionType), { xGravity, yGravity }, false, musicFile });
+		this->levels.emplace(levelName, Level{ static_cast<DirectionType>(directionType), { xGravity, yGravity }, false, musicFile });
 	}
 }
 

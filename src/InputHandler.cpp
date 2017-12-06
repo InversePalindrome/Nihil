@@ -22,7 +22,7 @@ InputHandler::InputHandler()
 		keyBindings[static_cast<Action>(actionID)] = 
 			thor::Action(static_cast<sf::Keyboard::Key>(keyID), static_cast<thor::Action::ActionType>(actionType));
 
-		keyCodes[static_cast<Action>(actionID)] = { keyID, actionType };
+		keyCodes[Action{ actionID }] = { keyID, actionType };
 	}
 }
 
@@ -50,7 +50,7 @@ bool InputHandler::isActive() const
 {
 	for (std::size_t i = 0u; i < static_cast<std::size_t>(Action::Size); ++i)
 	{
-		if (this->isActive(static_cast<Action>(i)))
+		if (this->isActive(Action{ i }))
 		{
 			return true;
 		}
@@ -94,9 +94,9 @@ void InputHandler::saveData()
 {
 	std::ofstream outFile(Path::miscellaneous / "InputKeys.txt");
 
-	for (const auto& keyCode : this->keyCodes)
+	for (const auto& [actionID, keyInfo] : this->keyCodes)
 	{
-		outFile << static_cast<std::size_t>(keyCode.first) << ' ' 
-			<< keyCode.second.first << ' ' << keyCode.second.second << '\n';
+		outFile << static_cast<std::size_t>(actionID) << ' ' 
+			<< keyInfo.first << ' ' << keyInfo.second << '\n';
 	}
 }

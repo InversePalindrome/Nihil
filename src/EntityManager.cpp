@@ -18,6 +18,7 @@ InversePalindrome.com
 #include "AutomatorSystem.hpp"
 #include "ItemsSystem.hpp"
 #include "UnitConverter.hpp"
+#include "EntityUtility.hpp"
 
 #include <fstream>
 
@@ -75,14 +76,7 @@ Entity EntityManager::createEntity(const std::string& fileName, const sf::Vector
 {
 	auto entity = this->createEntity(fileName);
 	
-	if (entity.has_component<PositionComponent>())
-	{
-		entity.get_component<PositionComponent>().setPosition(position);
-	}
-	if (entity.has_component<PhysicsComponent>())
-	{
-		entity.get_component<PhysicsComponent>().setPosition({ UnitConverter::pixelsToMeters(position.x), UnitConverter::pixelsToMeters(-position.y) });
-	}
+	Utility::setPosition(entity, position);
 
 	return entity;
 }
@@ -96,7 +90,6 @@ void EntityManager::parseBlueprint(const std::string& fileName)
 {
 	this->componentParser.parseBlueprint(fileName);
 }
-
 
 void EntityManager::loadEntityProperties()
 {

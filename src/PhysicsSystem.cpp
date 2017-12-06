@@ -9,6 +9,7 @@ InversePalindrome.com
 #include "PhysicsComponent.hpp"
 #include "UnitConverter.hpp"
 #include "FrictionUtility.hpp"
+#include "EntityUtility.hpp"
 
 
 PhysicsSystem::PhysicsSystem(Entities& entities, Events& events, b2World& world, CollisionsData& collisionsData) :
@@ -16,8 +17,13 @@ PhysicsSystem::PhysicsSystem(Entities& entities, Events& events, b2World& world,
 	world(world),
 	collisionsData(collisionsData)
 {
-	events.subscribe<entityplus::component_added<Entity, PhysicsComponent>>([this, &events](const auto& event)
+	events.subscribe<entityplus::component_added<Entity, PhysicsComponent>>([this, &events](auto& event)
 	{ 
+		if (event.entity.has_component<PositionComponent>())
+		{
+			Utility::setPosition(event.entity, event.entity.get_component<PositionComponent>().getPosition());
+		}
+
 		callbacks.addCallback([&events, event]()
 		{
 			events.broadcast(SetUserData{ event.entity });
@@ -36,6 +42,7 @@ PhysicsSystem::PhysicsSystem(Entities& entities, Events& events, b2World& world,
 	events.subscribe<SetVelocity>([this](const auto& event) { setVelocity(event.entity, event.direction); });
 	events.subscribe<SetFriction>([this](const auto& event) { setFriction(event.entity, event.fixtureType, event.friction); });
 	events.subscribe<SetMidAirStatus>([this](const auto& event) { setMidAirStatus(event.entity, event.midAirStatus); });
+	events.subscribe<SetUnderWaterStatus>([this](const auto& event) { setUnderWaterStatus(event.entity, event.underWaterStatus); });
 }
 
 void PhysicsSystem::update(float deltaTime)
@@ -70,10 +77,12 @@ void PhysicsSystem::moveEntity(Entity entity, Direction direction)
 	case Direction::Right:
 		newVelocity.x = b2Min(currentVelocity.x + physics.getAccelerationRate().x, physics.getMaxVelocity().x);
 		deltaVelocity.x = newVelocity.x - currentVelocity.x;
+		this->events.broadcast(ChangeState{ entity, EntityState::Walking });
 		break;
 	case Direction::Left:
 		newVelocity.x = b2Max(currentVelocity.x - physics.getAccelerationRate().x, -physics.getMaxVelocity().x);
 		deltaVelocity.x = newVelocity.x - currentVelocity.x;
+		this->events.broadcast(ChangeState{ entity, EntityState::Walking });
 		break;
 	case Direction::Up:
 		newVelocity.y = b2Min(currentVelocity.y + physics.getAccelerationRate().y, physics.getMaxVelocity().y);
@@ -109,13 +118,11 @@ void PhysicsSystem::makeJump(Entity entity)
 		{
 			this->events.broadcast(ChangeState{ entity, EntityState::Jumping });
 
-			const b2Vec2 impulse({ 0.f, physics.getJumpVelocity() * physics.getMass() });
-
-			physics.applyImpulse(impulse);
+			physics.applyImpulse({ 0.f, physics.getJumpVelocity() * physics.getMass() });
 
 			if (entity.has_component<ControllableComponent>())
 			{
-				this->events.broadcast(EmitSound{ SoundBuffersID::Jump, false });
+				this->events.broadcast(PlaySound{ SoundBuffersID::Jump, false });
 			}
 		}
 	}
@@ -129,10 +136,36 @@ void PhysicsSystem::propelFromWater(Entity entity)
 		
 		if (physics.getDirection() == Direction::Up)
 		{
-			const float forcePerMassRatio = 400.f;
+			const auto forcePerMassRatio = 400.f;
 
 			physics.applyForce({0.f, physics.getMass() * forcePerMassRatio});
 		}
+	}
+}
+
+void PhysicsSystem::setUserData(Entity entity)
+{
+	if (entity.sync() && entity.has_component<PhysicsComponent>())
+	{
+		auto& physics = entity.get_component<PhysicsComponent>();
+
+		auto& fixtures = physics.getFixtures();
+
+		for (const auto& [fixtureType, fixture] : fixtures)
+		{
+			if (this->entitiesProperties.count(physics.getEntityID()))
+			{
+				this->collisionsData.push_back(CollisionData(entity, fixture, fixtureType, this->entitiesProperties[physics.getEntityID()]));
+			}
+			else
+			{
+				this->collisionsData.push_back(CollisionData(entity, fixture, fixtureType));
+			}
+
+			fixture->SetUserData(&this->collisionsData.back());
+		}
+
+		this->events.broadcast(AddedUserData{ entity });
 	}
 }
 
@@ -210,6 +243,14 @@ void PhysicsSystem::setMidAirStatus(Entity entity, bool midAirStatus)
 	}
 }
 
+void PhysicsSystem::setUnderWaterStatus(Entity entity, bool underWaterStatus)
+{
+	if (entity.has_component<PhysicsComponent>())
+	{
+		entity.get_component<PhysicsComponent>().setUnderWaterStatus(underWaterStatus);
+	}
+}
+
 void PhysicsSystem::applyImpulse(Entity entity, const b2Vec2& impulse)
 {
 	if (entity.has_component<PhysicsComponent>())
@@ -236,17 +277,9 @@ void PhysicsSystem::convertPositionCoordinates(const PhysicsComponent& physics, 
 
 void PhysicsSystem::checkPhysicalStatus(Entity entity, PhysicsComponent& physics)
 {
-	if (entity.has_component<StateComponent>())
+	if (physics.getRelativeVelocity() == b2Vec2(0.f, 0.f))
 	{
-		const auto& state = entity.get_component<StateComponent>();
-
-		if (state.getState() != EntityState::Swimming)
-		{
-			if (physics.getRelativeVelocity() == b2Vec2(0.f, 0.f))
-			{
-				this->events.broadcast(ChangeState{ entity, EntityState::Idle });
-			}
-		}
+		this->events.broadcast(ChangeState{ entity, EntityState::Idle });
 	}
 	  
 	if (physics.isColliding(ObjectType::Feet, ObjectType::Block))
@@ -257,34 +290,8 @@ void PhysicsSystem::checkPhysicalStatus(Entity entity, PhysicsComponent& physics
 
 	if (physics.isColliding(ObjectType::Head, ObjectType::Liquid))
 	{
-		this->events.broadcast(ChangeState{ entity , EntityState::Swimming });
 		this->events.broadcast(SetGravityScale{ entity, 0.f });
 		this->events.broadcast(SetLinearDamping{ entity, 1.f });
-	}
-}
-
-void PhysicsSystem::setUserData(Entity entity)
-{
-	if (entity.sync() && entity.has_component<PhysicsComponent>())
-	{
-		auto& physics = entity.get_component<PhysicsComponent>();
-
-		auto& fixtures = physics.getFixtures();
-
-		for (auto& fixture : fixtures)
-		{
-			if (this->entitiesProperties.count(physics.getEntityID()))
-			{
-				this->collisionsData.push_back(CollisionData(entity, fixture.second, fixture.first, this->entitiesProperties[physics.getEntityID()]));
-			}
-			else
-			{
-				this->collisionsData.push_back(CollisionData(entity, fixture.second, fixture.first));
-			}
-
-			fixture.second->SetUserData(&this->collisionsData.back());
-		}
-
-		this->events.broadcast(AddedUserData{ entity });
+		this->events.broadcast(SetUnderWaterStatus{ entity, true });
 	}
 }

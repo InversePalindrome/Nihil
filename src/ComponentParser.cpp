@@ -8,6 +8,7 @@ InversePalindrome.com
 #include "ComponentParser.hpp"
 #include "FilePaths.hpp"
 #include "UnitConverter.hpp"
+#include "EntityUtility.hpp"
 
 #include <boost/filesystem/operations.hpp>
 #include <brigand/algorithms/for_each.hpp>
@@ -26,6 +27,11 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 	componentParsers["AI"] = [this](auto& entity, auto& line)
 	{
 		entity.set_tag<AI>(true);
+	};
+
+	componentParsers["Turret"] = [this](auto& entity, auto& line)
+	{
+		entity.set_tag<Turret>(true);
 	};
 
 	componentParsers["Controllable"] = [this](auto& entity, auto& line)
@@ -81,7 +87,7 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 	{
 		const auto& params = parse<std::size_t, float, float>(line);
 
-		entity.add_component<SpriteComponent>(resourceManager, static_cast<TexturesID>(std::get<0>(params)),
+		entity.add_component<SpriteComponent>(resourceManager, TexturesID{ std::get<0>(params) },
 			sf::Vector2f(std::get<1>(params), std::get<2>(params)));
 	};
 
@@ -89,7 +95,7 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 	{
 		const auto& params = parse<std::size_t, std::size_t, std::size_t, std::size_t, std::size_t, float, float>(line);
 
-		entity.add_component<SpriteComponent>(resourceManager, static_cast<TexturesID>(std::get<0>(params)),
+		entity.add_component<SpriteComponent>(resourceManager, TexturesID{ std::get<0>(params) },
 			sf::IntRect(std::get<1>(params), std::get<2>(params), std::get<3>(params), std::get<4>(params)), sf::Vector2f(std::get<5>(params), std::get<6>(params)));
 	};
 
@@ -140,24 +146,19 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 	{
 		const auto& params = this->parse<std::int32_t, std::size_t, float>(line);
 
-		entity.add_component<BulletComponent>(std::get<0>(params), static_cast<SoundBuffersID>(std::get<1>(params)), std::get<2>(params));
+		entity.add_component<BulletComponent>(std::get<0>(params), SoundBuffersID{ std::get<1>(params) }, std::get<2>(params));
 	};
 
 	componentParsers["Bomb"] = [this](auto& entity, auto& line)
 	{
 		const auto& params = this->parse<std::int32_t, std::size_t, float, float, std::string>(line);
 
-		entity.add_component<BombComponent>(std::get<0>(params), static_cast<SoundBuffersID>(std::get<1>(params)), std::get<2>(params), std::get<3>(params), std::get<4>(params));
+		entity.add_component<BombComponent>(std::get<0>(params), SoundBuffersID{ std::get<1>(params) }, std::get<2>(params), std::get<3>(params), std::get<4>(params));
 	};
 
 	componentParsers["Animation"] = [this](auto& entity, auto& line)
 	{
 		entity.add_component(std::make_from_tuple<AnimationComponent>(parse<bool, std::string>(line)));
-	};
-
-	componentParsers["Sound"] = [this](auto& entity, auto& line)
-	{
-		entity.add_component<SoundComponent>();
 	};
 
 	componentParsers["Particle"] = [this, &resourceManager](auto& entity, auto& line)
@@ -196,14 +197,14 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 	{
 		const auto& params = this->parse<std::size_t, std::size_t>(line);
 
-		entity.add_component<PickupComponent>(static_cast<Item>(std::get<0>(params)), static_cast<SoundBuffersID>(std::get<1>(params)));
+		entity.add_component<PickupComponent>(static_cast<Item>(std::get<0>(params)), SoundBuffersID{ std::get<1>(params) });
 	};
 
 	componentParsers["PowerUp"] = [this](auto& entity, auto& line)
 	{
 		const auto& params = this->parse<std::size_t, std::size_t, float, float>(line);
 
-		entity.add_component<PowerUpComponent>(static_cast<Item>(std::get<0>(params)), static_cast<SoundBuffersID>(std::get<1>(params)), std::get<2>(params), std::get<3>(params));
+		entity.add_component<PowerUpComponent>(static_cast<Item>(std::get<0>(params)), SoundBuffersID{ std::get<1>(params)}, std::get<2>(params), std::get<3>(params));
 	};
 
 	componentParsers["Drop"] = [this](auto& entity, auto& line)
@@ -251,7 +252,10 @@ Entity ComponentParser::parseComponents(std::int32_t entityID, const std::string
 		
 		boost::remove_erase_if(line, boost::is_any_of(",()"));
 		
-		this->componentParsers[componentName](entity, line);
+		if (this->componentParsers.count(componentName))
+		{
+			this->componentParsers[componentName](entity, line);
+		}
 	}
 
 	this->setComponentsID(entity, entityID);
@@ -281,14 +285,7 @@ void ComponentParser::parseBlueprint(const std::string& fileName)
 		
 		auto entity = this->parseComponents(entityID, entityFile);
 
-		if (entity.has_component<PositionComponent>())
-		{
-			entity.get_component<PositionComponent>().setPosition({ xPosition, yPosition });
-		}
-		if (entity.has_component<PhysicsComponent>())
-		{
-			entity.get_component<PhysicsComponent>().setPosition({ UnitConverter::pixelsToMeters(xPosition), UnitConverter::pixelsToMeters(-yPosition) });
-		}
+		Utility::setPosition(entity, sf::Vector2f(xPosition, yPosition));
 	}
 }
 

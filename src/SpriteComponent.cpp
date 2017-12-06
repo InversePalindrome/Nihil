@@ -10,7 +10,7 @@ InversePalindrome.com
 
 
 SpriteComponent::SpriteComponent(ResourceManager& resourceManager, TexturesID textureID, const sf::Vector2f& scale) :
-	Component("SpriteA"),
+	Component("SpriteB"),
 	textureID(textureID),
 	sprite(resourceManager.getTexture(textureID)),
 	resourceManager(&resourceManager)
@@ -30,17 +30,29 @@ SpriteComponent::SpriteComponent(ResourceManager& resourceManager, TexturesID te
 }
 
 SpriteComponent::SpriteComponent(ResourceManager& resourceManager, const std::string& fileName) :
-	Component("SpriteA"),
-	resourceManager(&resourceManager)
+	Component("SpriteC"),
+	resourceManager(&resourceManager),
+	fileName(fileName)
 {
 	Parsers::parseSprite(resourceManager, fileName, sprite);
+
+	sprite.setOrigin(sprite.getLocalBounds().width / 2.f, sprite.getLocalBounds().height / 2.f);
 }
 
 std::ostream& operator<<(std::ostream& os, const SpriteComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName() << ' ' << static_cast<std::size_t>(component.getTextureID()) << ' ' << component.sprite.getTextureRect().left << 
-		' ' << component.sprite.getTextureRect().top <<  ' ' << component.sprite.getTextureRect().width <<  ' ' << component.sprite.getTextureRect().height <<
-		' ' << component.sprite.getScale().x << ' ' << component.sprite.getScale().y;
+	os << component.getEntityID() << ' ' << component.getName() << ' ';
+
+	if (component.getName() == "SpriteB")
+	{
+		os << static_cast<std::size_t>(component.getTextureID()) << ' ' << component.sprite.getTextureRect().left << ' ' << component.sprite.getTextureRect().top
+			<< ' ' << component.sprite.getTextureRect().width << ' ' << component.sprite.getTextureRect().height <<' ' << component.sprite.getScale().x << ' ' <<
+			component.sprite.getScale().y;
+	}
+	else if (component.getName() == "SpriteC")
+	{
+		os  << component.fileName;
+	}
 
 	return os;
 }

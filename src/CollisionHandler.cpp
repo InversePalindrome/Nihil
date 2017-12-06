@@ -59,7 +59,7 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 	{
 		orderedCollision->first.get().entity.sync();
 		orderedCollision->second.get().entity.sync();
-
+		
 		this->events.broadcast(PickedUpItem{ orderedCollision->first.get().entity, orderedCollision.value().second.get().entity });
 	}
 	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Movable, ObjectType::Trampoline))
@@ -184,6 +184,7 @@ void CollisionHandler::EndContact(b2Contact* contact)
 		orderedCollision->first.get().entity.sync();
 		
 		this->events.broadcast(RemoveUnderWaterTimer{ orderedCollision->first.get().entity });
+		this->events.broadcast(SetUnderWaterStatus{ orderedCollision->first.get().entity, false });
 		this->events.broadcast(SetGravityScale{ orderedCollision->first.get().entity, 1.f });
 		this->events.broadcast(SetLinearDamping{ orderedCollision->first.get().entity, 0.f });
 		this->events.broadcast(PropelFromWater{ orderedCollision->first.get().entity });

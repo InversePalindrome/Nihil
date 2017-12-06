@@ -98,16 +98,16 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 	{
 		const auto& AABB = object.getAABB();
 		
+		Properties properties;
+
+		for (const auto& property : object.getProperties())
+		{
+			properties.emplace(property.getName(), property);
+		}
+
 		if (object.getType() == "Object" || object.getType() == "Entity")
 		{
 			++entityID;
-
-			Properties properties;
-
-			for (const auto& property : object.getProperties())
-			{
-				properties.emplace(property.getName(), property);
-			}
 
 			if (properties.count("File"))
 			{
@@ -188,16 +188,12 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 
 			auto* staticObject = this->world.CreateBody(&bodyDefinition);
 			auto* fixture = staticObject->CreateFixture(&fixtureDef);
-
-			Properties properties;
 			
-;			for (const auto& property : object.getProperties())
+;			for (const auto& property : properties)
 			{
-	            properties.emplace(property.getName(), property);
-				
-				if(property.getName() == "PathwayData")
+				if(property.second.getName() == "PathwayData")
 				{
-					std::string pathwayData = property.getStringValue();
+					std::string pathwayData = property.second.getStringValue();
 					std::istringstream iStream(pathwayData);
 
 					std::size_t pathwayIndex = 0u;
@@ -222,8 +218,7 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
            }
 		}
 	}
-	
-	this->componentSerializer.clearProperties();
+
 	this->componentSerializer.setProperties(entityProperties);
 
 	this->componentSerializer.saveBlueprint("Objects-" + game.getCurrentLevel() + ".txt", objectsData);

@@ -35,7 +35,7 @@ void AutomatedComponent::loadTasks(const std::string& fileName)
 
 	while (inFile >> direction >> xDestination >> yDestination)
 	{
-		this->tasks.push_back({ static_cast<Direction>(direction),{ UnitConverter::pixelsToMeters(xDestination), UnitConverter::pixelsToMeters(-yDestination) } });
+		this->tasks.push_back({ Direction{direction}, { UnitConverter::pixelsToMeters(xDestination), UnitConverter::pixelsToMeters(-yDestination) } });
 	}
 }
 

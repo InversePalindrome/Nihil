@@ -16,7 +16,7 @@ AutomatorSystem::AutomatorSystem(Entities& entities, Events& events) :
 
 	for (std::size_t i = 0u; i < static_cast<std::size_t>(Direction::Size); ++i)
 	{
-		auto direction = static_cast<Direction>(i);
+		auto direction = Direction{ i };
 
 		registeredTasks[direction] = [&events, direction](auto entity) { events.broadcast(SetVelocity{ entity, direction }); };
 	}

@@ -10,6 +10,7 @@ InversePalindrome.com
 #include "StateMachine.hpp"
 #include "FilePaths.hpp"
 #include "UnitConverter.hpp"
+#include "EntityUtility.hpp"
 
 
 GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
@@ -43,16 +44,8 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	achievementDisplay.setPosition(740.f, 60.f);
 
 	entityManager.getEvents().subscribe<CrossedCheckpoint>([this](const auto& event) { setCheckpoint(event.position);  });
-	entityManager.getEvents().subscribe<SetPosition>([this](const auto& event) { setPosition(event.entity, event.position); });
 
 	entityManager.getEvents().subscribe<DestroyBody>([this](const auto& event) { destroyBody(event.physics); });
-	entityManager.getEvents().subscribe<DestroyEntity>([this](const auto& event)
-	{
-		callbacks.addCallback([this, event]()
-		{
-			destroyEntity(event.entity);
-		});
-	});
 
 	entityManager.getEvents().subscribe<DisplayHealthBar>([this](const auto& event) { updateHealthBar(event.health); });
 	entityManager.getEvents().subscribe<DisplayCoins>([this](const auto& event) { updateCoinDisplay(); });
@@ -68,11 +61,35 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	
 	entityManager.getEvents().subscribe<HidePowerUp>([this](const auto& event) { powerUpDisplay.removePowerUp(event.item); });
 
+	entityManager.getEvents().subscribe<SetPosition>([this](const auto& event)
+	{
+		callbacks.addCallback([event]()
+		{
+			Utility::setPosition(event.entity, event.position);
+		});
+	});
+
+	entityManager.getEvents().subscribe<SetAngle>([this](const auto& event)
+	{
+		callbacks.addCallback([event]()
+		{
+			Utility::setAngle(event.entity, event.angle);
+		});
+	});
+
 	entityManager.getEvents().subscribe<CreateEntity>([this](const auto& event) 
 	{ 
 		callbacks.addCallback([this, event]()
 		{
 			entityManager.createEntity(event.fileName, event.position);
+		});
+	});
+
+	entityManager.getEvents().subscribe<DestroyEntity>([this](const auto& event)
+	{
+		callbacks.addCallback([this, event]()
+		{
+			destroyEntity(event.entity);
 		});
 	});
 
@@ -90,10 +107,10 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	{
 		event.component.setItems(stateData.games.front().getItems());
 
-		for (const auto& item : stateData.games.front().getItems())
+		for (const auto& [item, quantity] : stateData.games.front().getItems())
 		{
-			itemsDisplay[item.first].quantity = item.second;
-			itemsDisplay[item.first].info.setString(std::to_string(item.second) + " / " + std::to_string(itemsDisplay[item.first].maxQuantity));
+			itemsDisplay[item].quantity = quantity;
+			itemsDisplay[item].info.setString(std::to_string(quantity) + " / " + std::to_string(itemsDisplay[item].maxQuantity));
 		}
 	});
 
@@ -225,7 +242,7 @@ void GameState::updateAchievements(Achievement achievement)
 	{
 		this->achievementDisplay.displayAchievement(achievement);
 
-		this->entityManager.getEvents().broadcast(EmitSound{ SoundBuffersID::Achievement });
+		this->entityManager.getEvents().broadcast(PlaySound{ SoundBuffersID::Achievement });
 	}
 }
 
@@ -241,12 +258,17 @@ void GameState::updateCoinDisplay()
 
 void GameState::updateItemsDisplay(Entity item)
 {
-	if (item.has_component<PickupComponent>() && this->itemsDisplay.hasItem(item.get_component<PickupComponent>().getItem()))
+	if (item.has_component<PickupComponent>())
 	{
-		auto& itemGraphic = this->itemsDisplay[item.get_component<PickupComponent>().getItem()];
+		const auto& pickup = item.get_component<PickupComponent>();
 
-		++itemGraphic.quantity;
-		itemGraphic.info.setString(std::to_string(itemGraphic.quantity) + " / " + std::to_string(itemGraphic.maxQuantity));
+		if (this->itemsDisplay.hasItem(pickup.getItem()))
+		{
+			auto& itemGraphic = this->itemsDisplay[pickup.getItem()];
+
+			++itemGraphic.quantity;
+			itemGraphic.info.setString(std::to_string(itemGraphic.quantity) + " / " + std::to_string(itemGraphic.maxQuantity));
+		}
 	}
 }
 
@@ -303,9 +325,9 @@ void GameState::changeLevel(const std::string& level, const sf::Vector2f& spawnp
 	
 	this->map.load(level + ".tmx");
 
-	if (!this->stateData.games.front().getLevels().get<1>().find(level)->isLoaded)
+	if (!this->stateData.games.front().getLevels()[level].isLoaded)
 	{
-		game.getLevels().get<1>().modify(game.getLevels().get<1>().find(level), [](auto& iLevel) { iLevel.isLoaded = true; });
+		game.getLevels()[level].isLoaded = true;
 
 		this->entityManager.parseBlueprint("Objects-" + level + ".txt");
 		this->entityManager.createEntity(game.getGameName() + "-Player.txt", game.getSpawnpoint());
@@ -328,7 +350,7 @@ void GameState::changeLevel(const std::string& level, const sf::Vector2f& spawnp
 	this->entityManager.getEntities().for_each<ControllableComponent, PositionComponent, PhysicsComponent>(
 		[this, spawnpoint, &game](auto player, const auto& control, const auto& position, const auto& physics)
 	{
-		this->setPosition(player, spawnpoint);
+		Utility::setPosition(player, spawnpoint);
 		
 		game.setPlayer(player);
 	});
@@ -344,23 +366,6 @@ void GameState::changeLevel(const std::string& level, const sf::Vector2f& spawnp
 void GameState::setCheckpoint(const sf::Vector2f& position)
 {
 	this->stateData.games.front().setSpawnpoint(position);
-}
-
-void GameState::setPosition(Entity entity, const sf::Vector2f& position)
-{
-	if (entity.has_component<PositionComponent>())
-	{
-		entity.get_component<PositionComponent>().setPosition(position);
-	}
-	if (entity.has_component<PhysicsComponent>())
-	{
-		this->callbacks.addCallback([entity, position]() mutable
-		{
-			entity.sync();
-
-			entity.get_component<PhysicsComponent>().setPosition({ UnitConverter::pixelsToMeters(position.x), UnitConverter::pixelsToMeters(-position.y) });
-		});
-	}
 }
 
 void GameState::destroyEntity(Entity entity)
@@ -383,40 +388,37 @@ void GameState::destroyBody(PhysicsComponent& physics)
 
 void GameState::manageUnderWaterTimer(Entity entity)
 {
-	if (entity.has_component<StateComponent>() && entity.get_component<StateComponent>().getState() != EntityState::Swimming)
+	if (entity.has_component<PhysicsComponent>() && !entity.get_component<PhysicsComponent>().isUnderWater())
 	{
 		const float timePerBubble = 1.5f;
 		std::size_t numberOfBubbles = 5u;
 
 		this->underWaterDisplay.setNumberOfBubbles(numberOfBubbles);
 
-		this->addUnderWaterTimer(entity, numberOfBubbles, timePerBubble, true);
+		this->addUnderWaterTimer(entity, numberOfBubbles, timePerBubble);
 	}
 }
 
-void GameState::addUnderWaterTimer(Entity entity, std::size_t numberOfBubbles, float timePerBubble, bool forceCallback)
+void GameState::addUnderWaterTimer(Entity entity, std::size_t numberOfBubbles, float timePerBubble)
 {
-	if (forceCallback || (entity.has_component<StateComponent>() && entity.get_component<StateComponent>().getState() == EntityState::Swimming))
+	this->callbacks.addCallbackTimer([this, entity, numberOfBubbles, timePerBubble]() mutable
 	{
-		this->callbacks.addCallbackTimer([this, entity, numberOfBubbles, timePerBubble]() mutable
+		if (entity.sync())
 		{
-			if (entity.sync())
+			--numberOfBubbles;
+
+			this->underWaterDisplay.setNumberOfBubbles(numberOfBubbles);
+
+			if (!numberOfBubbles)
 			{
-				--numberOfBubbles;
-
-				this->underWaterDisplay.setNumberOfBubbles(numberOfBubbles);
-
-				if (!numberOfBubbles && entity.has_component<StateComponent>() && entity.get_component<StateComponent>().getState() == EntityState::Swimming)
-				{
-					this->destroyEntity(entity);
-				}
-				else
-				{
-					this->addUnderWaterTimer(entity, numberOfBubbles, timePerBubble, false);
-				}
+				this->destroyEntity(entity);
 			}
-		}, timePerBubble);
-	}
+			else
+			{
+				this->addUnderWaterTimer(entity, numberOfBubbles, timePerBubble);
+			}
+		}
+	}, timePerBubble);
 }
 
 void GameState::removeUnderWaterTimer(Entity entity)
@@ -425,8 +427,6 @@ void GameState::removeUnderWaterTimer(Entity entity)
 	{
 		this->callbacks.disconnectCallbackTimers();
 		this->underWaterDisplay.setNumberOfBubbles(0u);
-
-		this->entityManager.getEvents().broadcast(ChangeState{ entity, EntityState::Idle });
 	}
 }
 

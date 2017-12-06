@@ -98,7 +98,7 @@ void CombatSystem::shootProjectile(Entity shooter, const std::string& projectile
 
 	if (shooter.has_component<ParentComponent>() && projectileEntity.has_component<ChildComponent>())
 	{
-		this->events.broadcast(CreateTransform{ projectileEntity, projectileEntity.get_component<ChildComponent>(), shooter.get_component<ParentComponent>() });
+		this->events.broadcast(CreateTransform{ projectileEntity, shooter });
 	}
 	if (shooter.has_component<PhysicsComponent>() && projectileEntity.has_component<PhysicsComponent>() && projectileEntity.has_component<SpriteComponent>())
 	{
@@ -133,7 +133,7 @@ void CombatSystem::shootBullet(const PhysicsComponent& shooterPhysics, BulletCom
 		break;
 	}
 
-	this->events.broadcast(EmitSound{ bulletComponent.getSoundID(), false });
+	this->events.broadcast(PlaySound{ bulletComponent.getSoundID(), false });
 }
 
 void CombatSystem::shootBomb(const PhysicsComponent& shooterPhysics, BombComponent& bombComponent, PhysicsComponent& projectilePhysics, SpriteComponent& spriteComponent, const sf::Vector2f& targetPosition)
@@ -186,13 +186,9 @@ void CombatSystem::addExplosion(Entity bomb)
 
 				this->componentParser.setComponentsID(explosion, -1);
 
-				if (explosion.has_component<ChildComponent>() && bomb.has_component<ParentComponent>())
-				{
-					this->events.broadcast(CreateTransform{ explosion, explosion.get_component<ChildComponent>(), bomb.get_component<ParentComponent>() });
-				}
-
+				this->events.broadcast(CreateTransform{ explosion, bomb });
 				this->events.broadcast(BombExploded{ bomb, explosion });
-				this->events.broadcast(EmitSound{ bombComponent.getSoundID(), false });
+				this->events.broadcast(PlaySound{ bombComponent.getSoundID(), false });
 			}
 		}, bomb.get_component<BombComponent>().getExplosionTime());
 	}

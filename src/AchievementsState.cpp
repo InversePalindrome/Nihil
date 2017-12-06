@@ -111,7 +111,7 @@ void AchievementsState::loadAchievements(const std::string& fileName)
 
 		auto achievement = static_cast<Achievement>(achievementID);
 
-		auto image = sfg::Image::Create(this->stateData.resourceManager.getImage(static_cast<ImagesID>(imageID)));
+		auto image = sfg::Image::Create(this->stateData.resourceManager.getImage(ImagesID{ imageID }));
 
 		auto info = sfg::Label::Create("\n\n" + achievementIDs[achievement] + "\n\n" + std::to_string(achievements.at(achievement).first)
 			+ " / " + std::to_string(achievements.at(achievement).second));

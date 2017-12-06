@@ -14,13 +14,13 @@ ItemsSystem::ItemsSystem(Entities& entities, Events& events) :
 {
 	powerUpEffects[Item::SpeedBoost] = [this, &events](auto collector, auto& powerUp)
 	{ 
-		const auto maxVelocity = collector.get_component<PhysicsComponent>().getMaxVelocity();
+		const auto& maxVelocity = collector.get_component<PhysicsComponent>().getMaxVelocity();
 		
 		collector.get_component<PhysicsComponent>().setMaxVelocity({ maxVelocity.x * (1.f + powerUp.getEffectBoost()), maxVelocity.y * (1.f + powerUp.getEffectBoost()) });
 
 		powerUpTimers.push_back(thor::CallbackTimer());
 
-		powerUpTimers.back().connect0([maxVelocity, collector, powerUp, &events]() mutable 
+		powerUpTimers.back().connect0([collector, powerUp, &maxVelocity, &events]() mutable 
 		{
 			if (collector.sync())
 			{
@@ -38,13 +38,13 @@ ItemsSystem::ItemsSystem(Entities& entities, Events& events) :
 
 	powerUpEffects[Item::JumpBoost] = [this, &events](auto collector, auto& powerUp)
 	{ 
-		const auto jumpVelocity = collector.get_component<PhysicsComponent>().getJumpVelocity();
+		const auto& jumpVelocity = collector.get_component<PhysicsComponent>().getJumpVelocity();
 
 		collector.get_component<PhysicsComponent>().setJumpVelocity(jumpVelocity * (1.f + powerUp.getEffectBoost()));
 
 		powerUpTimers.push_back(thor::CallbackTimer());
 
-		powerUpTimers.back().connect0([jumpVelocity, collector, powerUp, &events]() mutable
+		powerUpTimers.back().connect0([collector, powerUp, &jumpVelocity, &events]() mutable
 		{
 			if (collector.sync())
 			{
@@ -139,7 +139,7 @@ void ItemsSystem::handleItemPickup(Entity collector, Entity item)
 				inventory.addItem(pickup.getItem(), 1u);
 			}
 
-			this->events.broadcast(EmitSound{ pickup.getSoundID(), false });
+			this->events.broadcast(PlaySound{ pickup.getSoundID(), false });
 
 			if (collector.has_component<ControllableComponent>() && pickup.getItem() == Item::Coin)
 			{
@@ -160,7 +160,7 @@ void ItemsSystem::handleItemPickup(Entity collector, Entity item)
 					inventory.addItem(powerUp.getItem(), 1);
 				}
 
-				this->events.broadcast(EmitSound{ powerUp.getSoundID(), false });
+				this->events.broadcast(PlaySound{ powerUp.getSoundID(), false });
 			}
 		}
 		else if (item.has_component<KeyComponent>())

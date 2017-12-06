@@ -46,7 +46,7 @@ void ControlSystem::addControl(Entity entity)
 
 	this->inputHandler.addCallback(Action::MoveDown, [this, entity]() mutable
 	{
-		if (entity.sync() && entity.has_component<StateComponent>() && entity.get_component<StateComponent>().getState() == EntityState::Swimming)
+		if (entity.sync() && entity.has_component<PhysicsComponent>() && entity.get_component<PhysicsComponent>().isUnderWater())
 		{
 			this->events.broadcast(DirectionChanged{ entity, Direction::Down });
 		}
@@ -54,7 +54,7 @@ void ControlSystem::addControl(Entity entity)
 
 	this->inputHandler.addCallback(Action::MoveUp, [this, entity]() mutable
 	{
-		if (entity.sync() && entity.has_component<StateComponent>() && entity.get_component<StateComponent>().getState() == EntityState::Swimming)
+		if (entity.sync() && entity.has_component<PhysicsComponent>() && entity.get_component<PhysicsComponent>().isUnderWater())
 		{
 			this->events.broadcast(DirectionChanged{ entity, Direction::Up });
 		}
