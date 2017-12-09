@@ -9,11 +9,14 @@ InversePalindrome.com
 #include "FilePaths.hpp"
 
 
-void Parsers::parseFrameAnimations(const std::string& fileName, thor::FrameAnimation& animation, 
-	std::size_t& animationID, float& animationTime)
+Animations Parsers::parseAnimations(const std::string& fileName, Animator& animator)
 {
+	Animations animations;
+
 	std::ifstream inFile(Path::animations / fileName);
 	std::string line;
+
+	std::size_t stateID = 0u, direction = 0u;
 
 	while (std::getline(inFile, line))
 	{
@@ -25,7 +28,11 @@ void Parsers::parseFrameAnimations(const std::string& fileName, thor::FrameAnima
 
 		if (category == "Animation")
 		{
-			iStream >> animationID >> animationTime;
+			float duration = 0.f;
+
+			iStream >> stateID >> direction >> duration;
+
+			animations.emplace(std::make_pair(EntityState{ stateID }, Direction{ direction }), std::make_pair(thor::FrameAnimation(), duration));
 		}
 		else if (category == "Frame")
 		{
@@ -34,9 +41,16 @@ void Parsers::parseFrameAnimations(const std::string& fileName, thor::FrameAnima
 
 			iStream >> frameTime >> left >> top >> width >> length;
 
-			animation.addFrame(frameTime, { left, top, width, length });
+			animations.at({EntityState{ stateID }, Direction{ direction }}).first.addFrame(frameTime, { left, top, width, length });
 		}
 	}
+
+	for (const auto& [animationID, animationData] : animations)
+	{
+	    animator.addAnimation(animationID, animationData.first, sf::seconds(animationData.second));
+	}
+
+	return animations;
 }
 
 thor::ColorGradient Parsers::parseColors(const std::string& fileName)

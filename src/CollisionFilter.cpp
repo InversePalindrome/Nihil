@@ -12,7 +12,8 @@ InversePalindrome.com
 #include <fstream>
 
 
-CollisionFilter::CollisionFilter()
+CollisionFilter::CollisionFilter(Events& events) :
+	events(events)
 {
 	std::ifstream inFile(Path::miscellaneous / "Collisions.txt");
 
@@ -23,9 +24,11 @@ CollisionFilter::CollisionFilter()
 		auto objectA = static_cast<ObjectType>(objectANum);
 		auto objectB = static_cast<ObjectType>(objectBNum);
 
-		collisions.emplace(objectA, objectB);
-		collisions.emplace(objectB, objectA);
+		collisionTypes.emplace(objectA, objectB);
+		collisionTypes.emplace(objectB, objectA);
 	}
+
+	events.subscribe<ManageCollision>([this](const auto& event) { manageCollisionIDs(event.entityA, event.entityB, event.collisionStatus); });
 }
 
 bool CollisionFilter::ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB)
@@ -33,12 +36,46 @@ bool CollisionFilter::ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB)
 	auto* objectA = static_cast<CollisionData*>(fixtureA->GetUserData());
 	auto* objectB = static_cast<CollisionData*>(fixtureB->GetUserData());
 
-	if (objectA && objectB && collisions.count({ objectA->objectType, objectB->objectType }))
+	if (!objectA || !objectB)
 	{
 		return false;
 	}
-	else
+
+	if (objectA->isEntity && objectB->isEntity && objectA->entity.has_component<PositionComponent>() && objectB->entity.has_component<PositionComponent>())
 	{
-		return true;
+		auto entityAID = objectA->entity.get_component<PositionComponent>().getEntityID();
+		auto entityBID = objectB->entity.get_component<PositionComponent>().getEntityID();
+
+		if (this->collisionIDs.count({ entityAID, entityBID }))
+		{
+			return false;
+		}
+	}
+
+	if(this->collisionTypes.count({ objectA->objectType, objectB->objectType }))
+	{
+		return false;
+	}
+	
+	return true;
+}
+
+void CollisionFilter::manageCollisionIDs(Entity entityA, Entity entityB, bool collisionStatus)
+{
+	if (entityA.has_component<PositionComponent>() && entityB.has_component<PositionComponent>())
+	{
+		auto entityAID = entityA.get_component<PositionComponent>().getEntityID();
+		auto entityBID = entityB.get_component<PositionComponent>().getEntityID();
+
+		if (!collisionStatus)
+		{
+			this->collisionIDs.emplace(entityAID, entityBID);
+			this->collisionIDs.emplace(entityBID, entityAID);
+		}
+		else
+		{
+			this->collisionIDs.erase({ entityAID, entityBID });
+			this->collisionIDs.erase({ entityBID, entityAID });
+		}
 	}
 }

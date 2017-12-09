@@ -31,7 +31,7 @@ PhysicsSystem::PhysicsSystem(Entities& entities, Events& events, b2World& world,
 	});
 
 	events.subscribe<SetUserData>([this](const auto& event) { setUserData(event.entity); });
-	events.subscribe<DirectionChanged>([this](const auto& event) { moveEntity(event.entity, event.direction); });
+	events.subscribe<ChangeDirection>([this](const auto& event) { moveEntity(event.entity, event.direction); });
 	events.subscribe<Jumped>([this](const auto& event) { makeJump(event.entity); });
 	events.subscribe<PropelFromWater>([this](const auto& event) { propelFromWater(event.entity); });
 	events.subscribe<StopMovement>([this](const auto& event) { stopEntity(event.entity); });
@@ -97,7 +97,12 @@ void PhysicsSystem::moveEntity(Entity entity, Direction direction)
 	const b2Vec2 impulse({ deltaVelocity.x * physics.getMass(), deltaVelocity.y * physics.getMass() });
 
 	physics.applyImpulse(impulse);
-	physics.setDirection(direction);
+	
+	if (physics.getDirection() != direction)
+	{
+		physics.setDirection(direction);
+		this->events.broadcast(DirectionChanged{ entity, direction });
+	}
 }
 
 void PhysicsSystem::stopEntity(Entity entity)

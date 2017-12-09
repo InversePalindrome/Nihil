@@ -21,17 +21,16 @@ ItemsDisplay::ItemsDisplay(ResourceManager& resourceManager) :
 
 	for (auto& item : itemsData)
 	{
-		thor::FrameAnimation animation;
-		std::size_t animationID = 0u;
-		float animationTime = 0.f;
+		const auto& animations = Parsers::parseAnimations(item.second.animationFile, item.second.animator);
 
-		Parsers::parseFrameAnimations(item.second.animationFile, animation, animationID, animationTime);
-		item.second.animator.addAnimation(animationID, animation, sf::seconds(animationTime));
-		item.second.animator.playAnimation(animationID, true);
+		if (!animations.empty())
+		{
+			item.second.animator.playAnimation(animations.cbegin()->first, true);
+		}
 	}
 }
 
-ItemsGraphics& ItemsDisplay::operator[](Item item)
+ItemData& ItemsDisplay::operator[](Item item)
 {
 	return this->itemsData[item];
 }
@@ -40,12 +39,12 @@ void ItemsDisplay::update(float deltaTime)
 {
 	if (this->isVisible)
 	{
-		for (auto& item : this->itemsData)
+		for (auto& [itemID, itemData] : this->itemsData)
 		{
-			if (item.second.animator.isPlayingAnimation())
+			if (itemData.animator.isPlayingAnimation())
 			{
-				item.second.animator.update(sf::seconds(deltaTime));
-				item.second.animator.animate(item.second.sprite);
+				itemData.animator.update(sf::seconds(deltaTime));
+				itemData.animator.animate(itemData.sprite);
 			}
 		}
 	}
@@ -79,7 +78,7 @@ void ItemsDisplay::loadItems(ResourceManager& resourceManager, const std::string
 
 		iStream >> item;
 
-		this->itemsData.emplace(static_cast<Item>(item), ItemsGraphics(resourceManager, line));
+		this->itemsData.emplace(Item{ item }, ItemData(resourceManager, line));
 	}
 }
 
@@ -96,7 +95,7 @@ void ItemsDisplay::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	}
 }
 
-ItemsGraphics::ItemsGraphics(ResourceManager& resourceManager, const std::string& itemData) :
+ItemData::ItemData(ResourceManager& resourceManager, const std::string& itemData) :
 	quantity(0u)
 {
 	std::istringstream iStream(itemData);
@@ -119,7 +118,7 @@ ItemsGraphics::ItemsGraphics(ResourceManager& resourceManager, const std::string
 	info.setString(std::to_string(quantity) + " / " + std::to_string(maxQuantity));
 }
 
-void ItemsGraphics::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void ItemData::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	states.transform = this->getTransform();
 

@@ -62,11 +62,11 @@ void AISystem::updateMovement(Entity entity, PatrolComponent& patrol, const sf::
 
 	if (position.x > waypoint.point.x)
 	{
-		this->events.broadcast(DirectionChanged{ entity, Direction::Left });
+		this->events.broadcast(ChangeDirection{ entity, Direction::Left });
 	}
 	else
 	{
-		this->events.broadcast(DirectionChanged{ entity, Direction::Right });
+		this->events.broadcast(ChangeDirection{ entity, Direction::Right });
 	}
 
 	if (position.y > waypoint.point.y)
@@ -114,7 +114,7 @@ void AISystem::chaseTarget(PatrolComponent& patrol, const sf::Vector2f& AIPositi
 	const auto& waypoints = patrol.getPathway().getWaypoints();
 
 	std::size_t waypointIndex = 0u;
-	float minDistance = std::numeric_limits<float>().max();
+	auto minDistance = std::numeric_limits<float>().max();
 
 	for (std::size_t i = 0u; i < waypoints.size(); ++i)
 	{

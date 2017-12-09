@@ -31,11 +31,11 @@ void ComponentSerializer::serialize(const std::string& fileName)
 {
 	std::multimap<std::int32_t, std::string> entities;
 
-	brigand::for_each<ComponentList>([this, &entities](auto componentType) 
+	brigand::for_each<ComponentList>([this, &entities](auto componentType)
 	{
 		using Type = decltype(componentType)::type;
-		
-		this->entities.for_each<Type>([&entities](auto entity, auto& component) 
+
+		this->entities.for_each<Type>([&entities](auto entity, auto& component)
 		{
 			std::stringstream stream;
 
@@ -79,10 +79,10 @@ void ComponentSerializer::serialize(const std::string& fileName)
 void ComponentSerializer::saveBlueprint(const std::string& fileName, const std::vector<std::tuple<std::int32_t, std::string, sf::Vector2f>>& entitiesData)
 {
 	std::ofstream outFile(Path::blueprints / fileName);
-	
-	for (const auto& entityData : entitiesData)
+
+	for (const auto& [entityID, fileName, position] : entitiesData)
 	{
-		outFile << std::get<0>(entityData) << ' ' << std::get<1>(entityData) << ' ' << std::get<2>(entityData).x << ' ' << std::get<2>(entityData).y  << '\n';
+		outFile << entityID << ' ' << fileName << ' ' << position.x << ' ' << position.y << '\n';
 	}
 }
 

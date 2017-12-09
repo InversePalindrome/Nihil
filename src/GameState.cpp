@@ -20,6 +20,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	map(stateData.games.front(), world, entityManager.getComponentSerializer(), stateData.resourceManager, collisionsData, pathways),
 	camera(stateData.window.getDefaultView()),
 	collisionHandler(entityManager.getEvents()),
+	collisionFilter(entityManager.getEvents()),
 	healthBar(stateData.resourceManager),
 	coinDisplay(stateData.resourceManager),
 	itemsDisplay(stateData.resourceManager),
@@ -81,7 +82,7 @@ GameState::GameState(StateMachine& stateMachine, StateData& stateData) :
 	{ 
 		callbacks.addCallback([this, event]()
 		{
-			entityManager.createEntity(event.fileName, event.position);
+			entityManager.createEntity(event.entityType, event.fileName, event.position);
 		});
 	});
 
@@ -264,10 +265,10 @@ void GameState::updateItemsDisplay(Entity item)
 
 		if (this->itemsDisplay.hasItem(pickup.getItem()))
 		{
-			auto& itemGraphic = this->itemsDisplay[pickup.getItem()];
+			auto& itemData = this->itemsDisplay[pickup.getItem()];
 
-			++itemGraphic.quantity;
-			itemGraphic.info.setString(std::to_string(itemGraphic.quantity) + " / " + std::to_string(itemGraphic.maxQuantity));
+			++itemData.quantity;
+			itemData.info.setString(std::to_string(itemData.quantity) + " / " + std::to_string(itemData.maxQuantity));
 		}
 	}
 }
@@ -330,7 +331,7 @@ void GameState::changeLevel(const std::string& level, const sf::Vector2f& spawnp
 		game.getLevels()[level].isLoaded = true;
 
 		this->entityManager.parseBlueprint("Objects-" + level + ".txt");
-		this->entityManager.createEntity(game.getGameName() + "-Player.txt", game.getSpawnpoint());
+		this->entityManager.createEntity(1, game.getGameName() + "-Player.txt", game.getSpawnpoint());
 	}
 	else
 	{
@@ -370,14 +371,17 @@ void GameState::setCheckpoint(const sf::Vector2f& position)
 
 void GameState::destroyEntity(Entity entity)
 {
-	this->entityManager.destroyEntity(entity);
-
-	if (entity.has_component<ControllableComponent>())
+	if (entity.sync())
 	{
-		this->stateData.games.front().setPlayer(this->entityManager.createEntity(stateData.games.front().getGameName()
+		this->entityManager.destroyEntity(entity);
+
+		if (entity.has_component<ControllableComponent>())
+		{
+			this->stateData.games.front().setPlayer(this->entityManager.createEntity(1, stateData.games.front().getGameName()
 				+ "-Player.txt", stateData.games.front().getSpawnpoint()));
 
-		this->powerUpDisplay.clearPowerUps();
+			this->powerUpDisplay.clearPowerUps();
+		}
 	}
 }
 

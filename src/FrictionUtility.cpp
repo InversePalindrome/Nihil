@@ -21,7 +21,7 @@ void Utility::setFriction(Entity entity, float friction)
 	}
 }
 
-void Utility::setFriction(CollisionData* collisionData, b2Contact* contact, float friction)
+void Utility::setFriction(const CollisionData* collisionData, b2Contact* contact, float friction)
 {
 	if (collisionData->entity.has_component<PhysicsComponent>())
 	{

@@ -23,14 +23,14 @@ PowerUpDisplay::PowerUpDisplay(ResourceManager& resourceManager) :
 	{
 		std::istringstream iStream(line);
 
-		int itemID = 0, left = 0, top = 0, width = 0, height = 0;
+		std::size_t itemID = 0u;
+		int left = 0, top = 0, width = 0, height = 0;
 		std::string animationFile;
 		float scale = 0.f;
 
 		iStream >> itemID >> animationFile >> left >> top >> width >> height >> scale;
 
-		powerUpData.emplace(static_cast<Item>(itemID),
-			PowerUpGraphicsData(animationFile, { left, top, width, height }, scale));
+		powerUpData.emplace(Item{ itemID }, PowerUpGraphicsData(animationFile, { left, top, width, height }, scale));
 	}
 }
 
@@ -78,13 +78,12 @@ PowerUpGraphics::PowerUpGraphics(ResourceManager& resourceManager, Item item, co
 	sprite.setTextureRect(graphicData.textureRect);
 	sprite.setScale({ graphicData.scale, graphicData.scale });
 	
-	thor::FrameAnimation animation;
-	std::size_t animationID = 0u;
-	float animationTime = 0.f;
+	const auto& animations = Parsers::parseAnimations("CoinAnimations.txt", animator);
 
-	Parsers::parseFrameAnimations(graphicData.animationFile, animation, animationID, animationTime);
-	animator.addAnimation(animationID, animation, sf::seconds(animationTime));
-	animator.playAnimation(animationID, true);
+	if (!animations.empty())
+	{
+		animator.playAnimation(animations.cbegin()->first, true);
+	}
 }
 
 void PowerUpGraphics::draw(sf::RenderTarget& target, sf::RenderStates states) const

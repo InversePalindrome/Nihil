@@ -67,7 +67,7 @@ Game::Game(const std::string& data)
 
 			inLine >> item >> quantity;
 
-		    items.emplace(static_cast<Item>(item), quantity);
+			items.emplace(Item{ item }, quantity);
 		}
 		else if (category == "Achievement")
 		{
@@ -75,7 +75,7 @@ Game::Game(const std::string& data)
 
 			inLine >> achievementID >> currentQuantity >> maxQuantity;
 
-			achievements.emplace(static_cast<Achievement>(achievementID), std::make_pair(currentQuantity, maxQuantity));
+			achievements.emplace(Achievement{ achievementID }, std::make_pair(currentQuantity, maxQuantity));
 		}
 	}
 }
@@ -197,7 +197,7 @@ void Game::loadLevels()
 
 		iStream >> levelName >> directionType >> xGravity >> yGravity >> xSpawnpoint >> ySpawnpoint >> musicFile;
 
-		this->levels.emplace(levelName, Level{ static_cast<DirectionType>(directionType), { xGravity, yGravity }, false, musicFile });
+		this->levels.emplace(levelName, Level{ DirectionType{directionType}, { xGravity, yGravity }, false, musicFile });
 	}
 }
 
@@ -214,6 +214,6 @@ void Game::loadAchievements()
 
 		iStream >> achievementID >> maxQuantity;
 
-		this->achievements[static_cast<Achievement>(achievementID)] = { 0u, maxQuantity };
+		this->achievements[Achievement{ achievementID }] = { 0u, maxQuantity };
 	}
 }

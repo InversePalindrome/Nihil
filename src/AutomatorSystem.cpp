@@ -43,7 +43,7 @@ void AutomatorSystem::addTasks(Entity entity)
 	if (entity.has_component<AutomatedComponent>() && entity.has_component<PhysicsComponent>())
 	{
 		auto& automated = entity.get_component<AutomatedComponent>();
-		auto taskFile = static_cast<CollisionData*>(entity.get_component<PhysicsComponent>().getUserData(ObjectType::Platform))->properties["TaskFile"].getStringValue();
+	    auto taskFile = static_cast<CollisionData*>(entity.get_component<PhysicsComponent>().getUserData(ObjectType::Platform))->properties["TaskFile"].getStringValue();
 
 		entity.get_component<AutomatedComponent>().loadTasks(taskFile);
 	}

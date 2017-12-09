@@ -43,7 +43,6 @@ DialogComponent::DialogComponent(ResourceManager& resourceManager, float dialogu
 
 	text.move(textOffset);
 
-	setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f);
 	setOffset(positionOffset);
 }
 

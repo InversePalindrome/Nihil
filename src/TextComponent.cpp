@@ -15,8 +15,8 @@ TextComponent::TextComponent(ResourceManager& resourceManager, const std::string
 {
 	Parsers::parseStyle(resourceManager, fileName, text);
 
+	text.setOrigin(text.getLocalBounds().width / 2.f, text.getLocalBounds().height / 2.f);
 	text.setString(inputText);
-    text.setOrigin(text.getLocalBounds().width / 2.f, text.getLocalBounds().height / 2.f);
 }
 
 std::ostream& operator<<(std::ostream& os, const TextComponent& component)

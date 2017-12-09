@@ -67,14 +67,14 @@ void EntityManager::update(float deltaTime)
 	}
 }
 
-Entity EntityManager::createEntity(const std::string& fileName)
+Entity EntityManager::createEntity(std::int32_t entityType, const std::string& fileName)
 {
-	return this->componentParser.parseComponents(fileName);
+	return this->componentParser.parseEntity(entityType, fileName);
 }
 
-Entity EntityManager::createEntity(const std::string& fileName, const sf::Vector2f& position)
+Entity EntityManager::createEntity(std::int32_t entityType, const std::string& fileName, const sf::Vector2f& position)
 {
-	auto entity = this->createEntity(fileName);
+	auto entity = this->createEntity(entityType, fileName);
 	
 	Utility::setPosition(entity, position);
 

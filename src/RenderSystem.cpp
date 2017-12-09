@@ -22,7 +22,7 @@ RenderSystem::RenderSystem(Entities& entities, Events& events) :
 {
 	events.subscribe<CreateTransform>([this](const auto& event) 
 	{
-		setParentTransforms(event.childEntity, event.parentEntity);
+		setParentTransforms(event.childEntity, event.parentEntity, event.offset);
 	});
 }
 
@@ -56,7 +56,7 @@ void RenderSystem::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	});
 }
 
-void RenderSystem::setParentTransforms(Entity childEntity, Entity parentEntity)
+void RenderSystem::setParentTransforms(Entity childEntity, Entity parentEntity, const sf::Vector2f& offset)
 {
 	if (childEntity.has_component<ChildComponent>() && parentEntity.has_component<ParentComponent>() 
 		&& parentEntity.has_component<SpriteComponent>() && parentEntity.has_component<PositionComponent>())
@@ -69,6 +69,6 @@ void RenderSystem::setParentTransforms(Entity childEntity, Entity parentEntity)
 
 		child.setTransform(parentEntity.get_component<SpriteComponent>().getTransform());
 
-		Utility::setPosition(childEntity, parentEntity.get_component<PositionComponent>().getPosition());
+		Utility::setPosition(childEntity, parentEntity.get_component<PositionComponent>().getPosition() + offset);
 	}
 }

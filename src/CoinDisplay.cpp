@@ -23,15 +23,12 @@ CoinDisplay::CoinDisplay(ResourceManager& resourceManager) :
 	text.setOrigin(text.getLocalBounds().width / 2.f, text.getLocalBounds().height / 2.f);
 	text.setPosition(155.f, 27.f);
 
-	thor::FrameAnimation frameAnimation;
-	std::size_t animationID = 0u;
-	float animationTime = 0.f;
+	const auto& animations = Parsers::parseAnimations("CoinAnimations.txt", animator);
 
-	Parsers::parseFrameAnimations("CoinAnimations.txt", frameAnimation, animationID, animationTime);
-
-	animator.addAnimation("Animation", frameAnimation, sf::seconds(animationTime));
-
-	animator.playAnimation("Animation", true);
+	if (!animations.empty())
+	{
+		animator.playAnimation(animations.cbegin()->first, true);
+	}
 }
 
 void CoinDisplay::update(float deltaTime)

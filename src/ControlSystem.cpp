@@ -32,7 +32,7 @@ void ControlSystem::addControl(Entity entity)
 	{
 		if (entity.sync())
 		{
-			this->events.broadcast(DirectionChanged{ entity, Direction::Left });
+			this->events.broadcast(ChangeDirection{ entity, Direction::Left });
 		}
 	});
 
@@ -40,7 +40,7 @@ void ControlSystem::addControl(Entity entity)
 	{
 		if (entity.sync())
 		{
-			this->events.broadcast(DirectionChanged{ entity, Direction::Right });
+			this->events.broadcast(ChangeDirection{ entity, Direction::Right });
 		}
 	});
 
@@ -48,7 +48,7 @@ void ControlSystem::addControl(Entity entity)
 	{
 		if (entity.sync() && entity.has_component<PhysicsComponent>() && entity.get_component<PhysicsComponent>().isUnderWater())
 		{
-			this->events.broadcast(DirectionChanged{ entity, Direction::Down });
+			this->events.broadcast(ChangeDirection{ entity, Direction::Down });
 		}
 	});
 
@@ -56,7 +56,7 @@ void ControlSystem::addControl(Entity entity)
 	{
 		if (entity.sync() && entity.has_component<PhysicsComponent>() && entity.get_component<PhysicsComponent>().isUnderWater())
 		{
-			this->events.broadcast(DirectionChanged{ entity, Direction::Up });
+			this->events.broadcast(ChangeDirection{ entity, Direction::Up });
 		}
 	});
 
@@ -75,7 +75,7 @@ void ControlSystem::addControl(Entity entity)
 		{
 			this->callbacks.addCallback([this, entity]()
 			{
-				this->events.broadcast(ShootProjectile{ entity, entity.get_component<RangeAttackComponent>().getProjectileID(),{ 0.f, 0.f } });
+				this->events.broadcast(ShootProjectile{ entity, entity.get_component<RangeAttackComponent>().getProjectileID(), { 0.f, 0.f } });
 			});
 
 			entity.get_component<TimerComponent>().restartTimer("Reload");

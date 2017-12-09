@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #include "ShopState.hpp"
 #include "StateMachine.hpp"
+#include "Game.hpp"
 #include "GUIParser.hpp"
 #include "FilePaths.hpp"
 #include "SpriteParser.hpp"
@@ -107,21 +108,21 @@ void ShopState::loadShopData(const std::string& fileName)
 		iStream >> categoryID >> itemID >> imageID >> price >> row >> column;
 
 		auto image = sfg::Image::Create(this->stateData.resourceManager.getImage(ImagesID{ imageID }));
-		auto item = static_cast<Item>(itemID);
-		auto category = static_cast<ItemCategory>(categoryID);
+		auto item = Item{ itemID };
+		auto category = ItemCategory{ categoryID };
 		
 		itemCategories[category]->Attach(image, { column + 1, row * 2, columnSpan, rowSpan },
 			0u, 0u, { xPadding, yPadding });
 
-		ShopGraphics data(category, price);
+		ShopData data(category, price);
 
-		this->shopGraphics.emplace(item, data);
+		this->shopData.emplace(item, data);
 
-		itemCategories[category]->Attach(this->shopGraphics[item].itemButton, { column + 1, row * 2 + 1, columnSpan, rowSpan },
+		itemCategories[category]->Attach(this->shopData[item].itemButton, { column + 1, row * 2 + 1, columnSpan, rowSpan },
 			0u, 0u, { xPadding, yPadding });
 
 		this->loadButtonFunctions(item, category, static_cast<bool>(inventory.count(item)),
-			price, this->shopGraphics[item].itemButton);
+			price, this->shopData[item].itemButton);
 
 		switch (category)
 		{
@@ -131,7 +132,7 @@ void ShopState::loadShopData(const std::string& fileName)
 
 			iStream >> spriteFile >> animationsFile;
 
-			this->shopData.emplace(item, CharacterData(spriteFile, animationsFile));
+			this->itemData.emplace(item, CharacterData(spriteFile, animationsFile));
 		}
 			break;
 		case ItemCategory::Weapons:
@@ -141,7 +142,7 @@ void ShopState::loadShopData(const std::string& fileName)
 
 			iStream >> weaponID >> reloadTime;
 			
-			this->shopData.emplace(item, WeaponData(weaponID, reloadTime));
+			this->itemData.emplace(item, WeaponData(weaponID, reloadTime));
 		}
 			break;
 		}
@@ -188,10 +189,10 @@ void ShopState::loadButtonFunctions(Item item, ItemCategory itemCategory, bool h
 					auto& sprite = player->get_component<SpriteComponent>();
 					auto& animation = player->get_component<AnimationComponent>();
 
-					const auto& characterInfo = std::any_cast<CharacterData>(this->shopData[item]);
+					const auto& characterInfo = std::any_cast<CharacterData>(this->itemData[item]);
 
 					sprite.setSprite(characterInfo.spriteFile);
-					animation.setAnimations(true, characterInfo.animationsFile);
+					animation.setAnimations(characterInfo.animationsFile);
 				}
 			}
 			break;
@@ -201,7 +202,7 @@ void ShopState::loadButtonFunctions(Item item, ItemCategory itemCategory, bool h
 				if (player->has_component<RangeAttackComponent>())
 				{
 					auto& range = player->get_component<RangeAttackComponent>();
-					const auto& weaponInfo = std::any_cast<WeaponData>(this->shopData[item]);
+					const auto& weaponInfo = std::any_cast<WeaponData>(this->itemData[item]);
 
 					range.setProjectileID(weaponInfo.weaponID);
 					range.setReloadTime(weaponInfo.reloadTime);
@@ -230,7 +231,7 @@ void ShopState::loadButtonFunctions(Item item, ItemCategory itemCategory, bool h
 				itemButton->SetLabel("\t\tUse\t\t");
 
 				game.getItems()[Item::Coin] -= price;
-				++game.getItems()[static_cast<Item>(item)];
+				++game.getItems()[Item{ item }];
 
 				this->coinDisplay.setNumberOfCoins(game.getItems()[Item::Coin]);
 
@@ -249,7 +250,7 @@ void ShopState::transitionToMenu()
 	pauseMenu->showWidgets(true);
 }
 
-ShopGraphics::ShopGraphics(ItemCategory category, std::size_t price) :
+ShopData::ShopData(ItemCategory category, std::size_t price) :
 	itemButton(sfg::Button::Create()),
 	category(category),
 	price(price)

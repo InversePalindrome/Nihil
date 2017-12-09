@@ -178,7 +178,7 @@ void ItemsSystem::handleItemDrop(Entity dropper)
 	{
 		if (auto item = dropper.get_component<DropComponent>().getDrop())
 		{
-			this->events.broadcast(CreateEntity{ this->itemNames[item.value()],
+			this->events.broadcast(CreateEntity{ -1, this->itemNames[item.value()],
 				dropper.get_component<PositionComponent>().getPosition() });
 		}
 	}

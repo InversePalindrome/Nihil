@@ -98,9 +98,7 @@ void AchievementsState::loadAchievements(const std::string& fileName)
 	auto table = sfg::Table::Create();
 
 	std::string description;
-	std::size_t achievementID = 0u, imageID = 0u;
-
-	std::size_t row = 0u, column = 0u;
+	std::size_t achievementID = 0u, imageID = 0u, row = 0u, column = 0u;
 
 	const auto& achievements = this->stateData.games.front().getAchievements();
 
@@ -109,7 +107,7 @@ void AchievementsState::loadAchievements(const std::string& fileName)
 		boost::replace_all(description, "\\n", "\n");
 		boost::replace_all(description, "_", " ");
 
-		auto achievement = static_cast<Achievement>(achievementID);
+		auto achievement = Achievement{ achievementID };
 
 		auto image = sfg::Image::Create(this->stateData.resourceManager.getImage(ImagesID{ imageID }));
 

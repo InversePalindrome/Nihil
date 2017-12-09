@@ -97,7 +97,7 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 	for (auto& object : objectLayer->getObjects())
 	{
 		const auto& AABB = object.getAABB();
-		
+
 		Properties properties;
 
 		for (const auto& property : object.getProperties())
@@ -137,7 +137,7 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 			b2PolygonShape polygon;
 			b2CircleShape circle;
 			b2ChainShape chain;
-			
+
 			switch (object.getShape())
 			{
 			case tmx::Object::Shape::Rectangle:
@@ -145,17 +145,17 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 				polygon.SetAsBox(UnitConverter::pixelsToMeters(AABB.width / 2.f), UnitConverter::pixelsToMeters(AABB.height / 2.f));
 				fixtureDef.shape = &polygon;
 			}
-				break;
+			break;
 			case tmx::Object::Shape::Ellipse:
 			{
 				circle.m_radius = UnitConverter::pixelsToMeters(AABB.width / 2.f);
 				fixtureDef.shape = &circle;
 			}
-				break;
+			break;
 			case tmx::Object::Shape::Polygon:
 			{
 				std::vector<b2Vec2> points;
-				
+
 				for (const auto& point : object.getPoints())
 				{
 					points.push_back({ UnitConverter::pixelsToMeters(point.x), UnitConverter::pixelsToMeters(-point.y) });
@@ -164,7 +164,7 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 				polygon.Set(points.data(), points.size());
 				fixtureDef.shape = &polygon;
 			}
-				break;
+			break;
 			case tmx::Object::Shape::Polyline:
 			{
 				std::vector<b2Vec2> points;
@@ -175,7 +175,7 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 				}
 
 				chain.CreateChain(points.data(), points.size());
-				
+
 				fixtureDef.shape = &chain;
 				break;
 			}
@@ -188,10 +188,10 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 
 			auto* staticObject = this->world.CreateBody(&bodyDefinition);
 			auto* fixture = staticObject->CreateFixture(&fixtureDef);
-			
-;			for (const auto& property : properties)
+
+			;			for (const auto& property : properties)
 			{
-				if(property.second.getName() == "PathwayData")
+				if (property.second.getName() == "PathwayData")
 				{
 					std::string pathwayData = property.second.getStringValue();
 					std::istringstream iStream(pathwayData);
@@ -207,15 +207,15 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 					}
 
 					this->pathways[pathwayIndex].addWaypoint(Waypoint(
-					{ object.getPosition().x + AABB.width / 2.f, object.getPosition().y + AABB.height / 2.f }, waypointStep));
+						{ object.getPosition().x + AABB.width / 2.f, object.getPosition().y + AABB.height / 2.f }, waypointStep));
 				}
 			}
 
-           if (properties.count("ID"))
-           {
-	          this->collisionsData.push_back(CollisionData(fixture, static_cast<ObjectType>(properties["ID"].getIntValue()), properties));
-	          this->collisionsData.back().fixture->SetUserData(&this->collisionsData.back());
-           }
+			if (properties.count("ID"))
+			{
+				this->collisionsData.push_back(CollisionData(fixture, static_cast<ObjectType>(properties["ID"].getIntValue()), properties));
+				this->collisionsData.back().fixture->SetUserData(&this->collisionsData.back());
+			}
 		}
 	}
 

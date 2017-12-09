@@ -34,6 +34,7 @@ CombatSystem::CombatSystem(Entities& entities, Events& events, ComponentParser& 
 void CombatSystem::update(float deltaTime)
 {
 	this->callbacks.update();
+	this->callbacks.clearCallbacks();
 }
 
 void CombatSystem::handleCombat(Entity attacker, Entity victim)
@@ -44,17 +45,13 @@ void CombatSystem::handleCombat(Entity attacker, Entity victim)
 	{
 		damagePoints = attacker.get_component<MeleeAttackComponent>().getDamagePoints();
 	}
-	else if ((attacker.has_component<ChildComponent>() && victim.has_component<ParentComponent>() &&
-		attacker.get_component<ChildComponent>().getParentID() != victim.get_component<ParentComponent>().getChildID()) || !victim.has_component<ParentComponent>())
+	else if (attacker.has_component<BulletComponent>())
 	{
-		if (attacker.has_component<BulletComponent>())
-		{
-			damagePoints = attacker.get_component<BulletComponent>().getDamagePoints();
-		}
-		else if (attacker.has_component<BombComponent>())
-		{
-			damagePoints = attacker.get_component<BombComponent>().getDamagePoints();
-		}
+		damagePoints = attacker.get_component<BulletComponent>().getDamagePoints();
+	}
+	else if (attacker.has_component<BombComponent>())
+	{
+		damagePoints = attacker.get_component<BombComponent>().getDamagePoints();
 	}
 
 	if (victim.has_component<HealthComponent>())
@@ -70,7 +67,7 @@ void CombatSystem::handleCombat(Entity attacker, Entity victim)
 			this->events.broadcast(DisplayHealthBar{ health });
 		}
 		if (health.getHitpoints() <= 0)
-		{
+	    {
 			if (victim.has_component<DropComponent>())
 			{
 				this->events.broadcast(DroppedItem{ victim });
@@ -94,11 +91,18 @@ void CombatSystem::handleExplosion(Entity bomb, Entity explosion)
 
 void CombatSystem::shootProjectile(Entity shooter, const std::string& projectileID, const sf::Vector2f& targetPosition)
 {
-	auto projectileEntity = this->componentParser.parseComponents(-1, projectileID + ".txt");
+	auto projectileEntity = this->componentParser.parseEntity(-1, projectileID + ".txt");
+
+	this->events.broadcast(ManageCollision{ shooter, projectileEntity, false });
 
 	if (shooter.has_component<ParentComponent>() && projectileEntity.has_component<ChildComponent>())
 	{
-		this->events.broadcast(CreateTransform{ projectileEntity, shooter });
+		this->events.broadcast(CreateTransform{ projectileEntity, shooter, this->getProjectileOffset(shooter) });
+
+		if (shooter.has_tag<Turret>())
+		{
+			this->events.broadcast(PlayAnimation{ shooter, { EntityState::Attacking, Direction::Right }, false });
+		}
 	}
 	if (shooter.has_component<PhysicsComponent>() && projectileEntity.has_component<PhysicsComponent>() && projectileEntity.has_component<SpriteComponent>())
 	{
@@ -122,12 +126,10 @@ void CombatSystem::shootBullet(const PhysicsComponent& shooterPhysics, BulletCom
 	switch (shooterPhysics.getDirection())
 	{
 	case Direction::Left:
-		projectilePhysics.setPosition({ projectilePhysics.getPosition().x - projectilePhysics.getBodySize().x - shooterPhysics.getBodySize().x - 0.1f, projectilePhysics.getPosition().y });
 		projectilePhysics.applyForce({ -bulletComponent.getForce(), 0.f });
 		projectileSprite.setRotation(180.f);
 		break;
 	case Direction::Right:
-		projectilePhysics.setPosition({ projectilePhysics.getPosition().x + projectilePhysics.getBodySize().x + shooterPhysics.getBodySize().x + 0.1f, projectilePhysics.getPosition().y });
 		projectilePhysics.applyForce({ bulletComponent.getForce(), 0.f });
 		projectileSprite.setRotation(0.f);
 		break;
@@ -182,43 +184,13 @@ void CombatSystem::addExplosion(Entity bomb)
 			{
 				auto& bombComponent = bomb.get_component<BombComponent>();
 
-				auto explosion = this->componentParser.parseComponents(bombComponent.getExplosionID() + ".txt");
+				auto explosion = this->componentParser.parseEntity(-1, bombComponent.getExplosionID() + ".txt");
 
-				this->componentParser.setComponentsID(explosion, -1);
-
-				this->events.broadcast(CreateTransform{ explosion, bomb });
+				this->events.broadcast(CreateTransform{ explosion, bomb, {0.f, 0.f} });
 				this->events.broadcast(BombExploded{ bomb, explosion });
 				this->events.broadcast(PlaySound{ bombComponent.getSoundID(), false });
 			}
 		}, bomb.get_component<BombComponent>().getExplosionTime());
-	}
-}
-
-void CombatSystem::applyBlastImpact(Entity explosion, Entity victim)
-{
-	if (explosion.has_component<PhysicsComponent>() && explosion.has_component<ChildComponent>() && victim.has_component<PhysicsComponent>())
-	{
-		auto& explosionChild = explosion.get_component<ChildComponent>();
-
-		auto& bombs = entities.get_entities<BombComponent, ParentComponent>();
-
-		auto foundBomb = std::find_if(std::begin(bombs), std::end(bombs), [&explosionChild](auto& bomb)
-		{ 
-			return explosionChild.getParentID() != -1 && explosionChild.getParentID() == bomb.get_component<ParentComponent>().getChildID(); 
-		});
-
-		if (foundBomb != std::end(bombs))
-		{
-			auto bombKnockback = foundBomb->get_component<BombComponent>().getExplosionKnockback();
-
-			auto& victimPhysics = victim.get_component<PhysicsComponent>();
-
-			const auto& blastDistance = victimPhysics.getPosition() - explosion.get_component<PhysicsComponent>().getPosition();
-
-			victimPhysics.applyImpulse({ Utility::sign(blastDistance.x) * bombKnockback, 0.f });
-
-			this->handleCombat(*foundBomb, victim);
-		}
 	}
 }
 
@@ -241,4 +213,34 @@ void CombatSystem::applyKnockback(Entity attacker, Entity victim)
 			break;
 		}
 	}
+}
+
+sf::Vector2f CombatSystem::getProjectileOffset(Entity entity)
+{
+	if (entity.has_component<PhysicsComponent>())
+	{
+		auto& physics = entity.get_component<PhysicsComponent>();
+
+		auto direction = physics.getDirection();
+		const auto& size = physics.getBodySize();
+
+		if (direction == Direction::Left)
+		{
+			return { UnitConverter::metersToPixels(-size.x), 0.f };
+		}
+		else if (direction == Direction::Right)
+		{
+			return {UnitConverter::metersToPixels(size.x), 0.f };
+		}
+		else if (direction == Direction::Up)
+		{
+			return { 0.f, UnitConverter::metersToPixels(size.y) };
+		}
+		else if (direction == Direction::Down)
+		{
+			return { 0.f, UnitConverter::metersToPixels(-size.y) }; 
+		}
+	}
+
+	return {};
 }
