@@ -8,9 +8,8 @@ InversePalindrome.com
 #pragma once
 
 #include "Item.hpp"
+#include "Animation.hpp"
 #include "ResourceManager.hpp"
-
-#include <Thor/Animations/Animator.hpp>
 
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Drawable.hpp>
@@ -51,7 +50,7 @@ struct PowerUpGraphics : public sf::Drawable, public sf::Transformable
 	PowerUpGraphics(ResourceManager& resourceManager, Item item, const PowerUpData& data);
 
 	sf::Sprite sprite;
-	thor::Animator<sf::Sprite, std::size_t> animator;
+	Animator animator;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

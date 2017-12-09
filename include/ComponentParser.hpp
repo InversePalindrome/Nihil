@@ -23,15 +23,12 @@ class ComponentParser
 public:
 	ComponentParser(Entities& entities, ResourceManager& resourceManager, b2World& world);
 	
-	Entity parseComponents(const std::string& fileName);
-	Entity parseComponents(std::int32_t entityID, const std::string& fileName);
+	Entity parseEntity(std::int32_t entityType, const std::string& fileName);
 
 	void parseBlueprint(const std::string& fileName);
 	void parseEntities(const std::string& fileName);
 
 	void copyBlueprint(const std::string& fileName, const std::string& copiedFileName);
-
-	void setComponentsID(Entity entity, std::int32_t entityID);
 
 private:
 	Entities& entities;
@@ -41,6 +38,8 @@ private:
 	std::unordered_map<std::string, std::function<void(Entity&, const std::string&)>> componentParsers;
 
 	Entity createEntity();
+	Entity parseComponents(std::int32_t entityID, const std::string& fileName);
+	void setComponentsID(Entity entity, std::int32_t entityID);
 
 	template <typename T> 
 	std::tuple<T> parse(std::istream& iStream);

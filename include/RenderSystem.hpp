@@ -28,5 +28,5 @@ public:
 private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
-	void setParentTransforms(Entity childEntity, Entity parentEntity);
+	void setParentTransforms(Entity childEntity, Entity parentEntity, const sf::Vector2f& offset);
 };

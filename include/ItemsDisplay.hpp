@@ -9,6 +9,7 @@ InversePalindrome.com
 
 #include "Item.hpp"
 #include "Renderable.hpp"
+#include "Animation.hpp"
 #include "ResourceManager.hpp"
 
 #include <Thor/Animations/Animator.hpp>
@@ -23,14 +24,14 @@ InversePalindrome.com
 #include <unordered_map>
 
 
-struct ItemsGraphics;
+struct ItemData;
 
 class ItemsDisplay : public Renderable
 {
 public:
 	ItemsDisplay(ResourceManager& resourceManager);
 
-	ItemsGraphics& operator[](Item item);
+	ItemData& operator[](Item item);
 
 	void update(float deltaTime);
 
@@ -42,24 +43,24 @@ public:
 
 private:
 	bool isVisible;
-	std::unordered_map<Item, ItemsGraphics> itemsData;
+	std::unordered_map<Item, ItemData> itemsData;
 
 	void loadItems(ResourceManager& resourceManager, const std::string& fileName);
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
 
-struct ItemsGraphics : public sf::Drawable, public sf::Transformable
+struct ItemData : public sf::Drawable, public sf::Transformable
 {
-	ItemsGraphics() = default;
-	ItemsGraphics(ResourceManager& resourceManager, const std::string& itemData);
+	ItemData() = default;
+	ItemData(ResourceManager& resourceManager, const std::string& itemData);
 
 	sf::Sprite sprite;
 	std::string animationFile;
 	sf::Text info;
 	std::size_t quantity;
 	std::size_t maxQuantity;
-	thor::Animator<sf::Sprite, std::size_t> animator;
+	Animator animator;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

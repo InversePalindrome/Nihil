@@ -8,4 +8,7 @@ InversePalindrome.com
 #pragma once
 
 
-enum class ItemCategory { Characters, Weapons };
+enum class ItemCategory : std::size_t
+{
+	Characters, Weapons 
+};

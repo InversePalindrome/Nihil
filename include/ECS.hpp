@@ -35,6 +35,7 @@ InversePalindrome.com
 #include "DialogComponent.hpp"
 #include "Direction.hpp"
 #include "Achievement.hpp"
+#include "Animation.hpp"
 
 #include <brigand/sequences/list.hpp>
 
@@ -49,16 +50,19 @@ struct CreateEntity;
 struct DestroyBody;
 struct UpdateAchievement;
 struct UpdateConversation;
+struct ChangeDirection;
 struct DirectionChanged;
 struct Jumped;
 struct StopMovement;
 struct StopSound;
+struct StopAnimation;
 struct CombatOcurred;
 struct ChangeState;
 struct StateChanged;
 struct ChangeLevel;
 struct DestroyEntity;
 struct PlaySound;
+struct PlayAnimation;
 struct PickedUpItem;
 struct DroppedItem;
 struct DisplayHealthBar;
@@ -89,6 +93,7 @@ struct AddUnderWaterTimer;
 struct RemoveUnderWaterTimer;
 struct PropelFromWater;
 struct AddedUserData;
+struct ManageCollision;
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
 	HealthComponent, MeleeAttackComponent, RangeAttackComponent, BulletComponent, BombComponent, SpriteComponent, TextComponent, 
@@ -99,11 +104,12 @@ using Tags = entityplus::tag_list<AI, Turret>;
 
 using Entities = entityplus::entity_manager<Components, Tags>;
 
-using Events = entityplus::event_manager<Components, Tags, CreateEntity, DestroyBody, UpdateAchievement, UpdateConversation, DirectionChanged, Jumped,
-	StopMovement, StopSound, CombatOcurred, ChangeState,StateChanged, ChangeLevel, DestroyEntity, PlaySound, PickedUpItem, DroppedItem, DisplayHealthBar,
-	DisplayCoins, DisplayPowerUp, DisplayConversation, HidePowerUp, CrossedCheckpoint, CrossedWaypoint, ShootProjectile, ActivateBomb, BombExploded, CreateTransform,
-	ApplyForce, ApplyImpulse, ApplyBlastImpact, ApplyKnockback, SetUserData, SetGravityScale, SetLinearDamping, SetVelocity, SetPosition, SetAngle, SetMidAirStatus,
-	SetUnderWaterStatus, SetFriction, AddUnderWaterTimer, RemoveUnderWaterTimer, PropelFromWater, AddedUserData>;
+using Events = entityplus::event_manager<Components, Tags, CreateEntity, DestroyBody, UpdateAchievement, UpdateConversation, ChangeDirection, DirectionChanged, 
+	Jumped, StopMovement, StopSound, StopAnimation, CombatOcurred, ChangeState, StateChanged, ChangeLevel, DestroyEntity, PlaySound, PlayAnimation, PickedUpItem, 
+	DroppedItem, DisplayHealthBar, DisplayCoins, DisplayPowerUp, DisplayConversation, HidePowerUp, CrossedCheckpoint, CrossedWaypoint, ShootProjectile, ActivateBomb,
+	BombExploded, CreateTransform, ApplyForce, ApplyImpulse, ApplyBlastImpact, ApplyKnockback, SetUserData, SetGravityScale, SetLinearDamping, SetVelocity,
+	SetPosition, SetAngle, SetMidAirStatus, SetUnderWaterStatus, SetFriction, AddUnderWaterTimer, RemoveUnderWaterTimer, PropelFromWater, AddedUserData,
+	ManageCollision>;
 
 using Entity = Entities::entity_t;
 
@@ -112,9 +118,9 @@ using ComponentList = brigand::list<PositionComponent, StateComponent, PhysicsCo
 	AnimationComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, ChaseComponent, 
 	PickupComponent, PowerUpComponent, DropComponent, InventoryComponent, LockComponent, KeyComponent, DialogComponent>;
 
-
 struct CreateEntity
 {
+	std::int32_t entityType;
 	std::string fileName;
 	sf::Vector2f position;
 };
@@ -132,6 +138,12 @@ struct UpdateAchievement
 struct UpdateConversation
 {
 	Entity entity;
+};
+
+struct ChangeDirection
+{
+	Entity entity;
+	Direction direction;
 };
 
 struct DirectionChanged
@@ -153,6 +165,11 @@ struct StopMovement
 struct StopSound
 {
 	SoundBuffersID soundID;
+};
+
+struct StopAnimation
+{
+	Entity entity;
 };
 
 struct CombatOcurred
@@ -187,6 +204,13 @@ struct DestroyEntity
 struct PlaySound
 {
 	SoundBuffersID soundBuffer;
+	bool loop;
+};
+
+struct PlayAnimation
+{
+	Entity entity;
+	Animation animation;
 	bool loop;
 };
 
@@ -262,6 +286,7 @@ struct CreateTransform
 {
 	Entity childEntity;
 	Entity parentEntity;
+	sf::Vector2f offset;
 };
 
 struct ApplyForce
@@ -360,4 +385,11 @@ struct PropelFromWater
 struct AddedUserData
 {
 	Entity entity;
+};
+
+struct ManageCollision
+{
+	Entity entityA;
+	Entity entityB;
+	bool collisionStatus;
 };

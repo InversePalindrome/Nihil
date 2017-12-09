@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #pragma once
 
+#include "ECS.hpp"
 #include "ObjectType.hpp"
 
 #include <Box2D/Dynamics/b2Fixture.h>
@@ -22,10 +23,14 @@ struct CollisionPair;
 class CollisionFilter : public b2ContactFilter
 {
 public:
-	CollisionFilter();
+	CollisionFilter(Events& events);
 
 private:
-	std::unordered_set<std::pair<ObjectType, ObjectType>, boost::hash<std::pair<ObjectType, ObjectType>>> collisions;
+	Events& events;
+	std::unordered_set<std::pair<ObjectType, ObjectType>, boost::hash<std::pair<ObjectType, ObjectType>>> collisionTypes;
+	std::unordered_set<std::pair<std::size_t, std::size_t>, boost::hash<std::pair<std::size_t, std::size_t>>> collisionIDs;
 
 	virtual bool ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB) override;
+
+	void manageCollisionIDs(Entity entityA, Entity entityB, bool collisionStatus);
 };

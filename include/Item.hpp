@@ -11,7 +11,7 @@ InversePalindrome.com
 #include <unordered_map>
 
 
-enum class Item
+enum class Item : std::size_t
 {
 	Coin, OrangeGem, RedGem, PurpleGem, BlueGem, YellowGem, WhiteGem, SpeedBoost, JumpBoost, Laser, Heart, Character1, Character2
 };

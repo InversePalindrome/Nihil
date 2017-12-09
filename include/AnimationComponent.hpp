@@ -7,45 +7,39 @@ InversePalindrome.com
 
 #pragma once
 
-#include "Direction.hpp"
+#include "Animation.hpp"
 #include "Component.hpp"
-#include "StateComponent.hpp"
 
 #include <Thor/Animations/Animator.hpp>
 #include <Thor/Animations/FrameAnimation.hpp>
 
 #include <SFML/Graphics/Sprite.hpp>
 
-#include <map>
-#include <optional>
+#include <unordered_map>
 
 
 class AnimationComponent : public Component
 {
 	friend std::ostream& operator<<(std::ostream& os, const AnimationComponent& component);
-	using Animation = std::pair<EntityState, Direction>;
 
 public:
-	AnimationComponent(bool hasMultipleAnimations, const std::string& animationsFile);
+	AnimationComponent(const std::string& animationsFile);
 
-	void setAnimations(bool hasMultipleAnimations, const std::string& animationsFile);
-
-	std::optional<std::pair<EntityState, Direction>> getCurrentAnimation() const;
+	void setAnimations(const std::string& animationsFile);
 
 	void update(float deltaTime);
 	void animate(sf::Sprite& sprite);
 
-	void playAnimation(EntityState state, Direction direction, bool loop);
+	void playAnimation(const Animation& animation, bool loop);
+	void stopAnimation();
 
 	bool isPlayingAnimation() const;
 	bool hasAnimation(const Animation& animation) const;
 
 private:
 	std::string animationsFile;
-	bool hasMultipleAnimations;
-	std::map<Animation, std::pair<thor::FrameAnimation, float>> animations;
-	thor::Animator<sf::Sprite, std::pair<EntityState, Direction>> stateAnimator;
-	thor::Animator<sf::Sprite, std::size_t> singleAnimator;
+	Animator animator;
+	Animations animations;
 };
 
 std::ostream& operator<<(std::ostream& os, const AnimationComponent& component);

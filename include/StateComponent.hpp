@@ -8,12 +8,8 @@ InversePalindrome.com
 #pragma once
 
 #include "Component.hpp"
+#include "EntityState.hpp"
 
-
-enum class EntityState : std::size_t
-{ 
-	Idle, Walking, Jumping, Attacking
-};
 
 class StateComponent : public Component
 {

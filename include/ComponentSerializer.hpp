@@ -34,6 +34,6 @@ public:
 	void setProperties(const EntityProperties& properties);
 
 private:
-	Entities& entities;
+	Entities & entities;
 	EntityProperties properties;
 };

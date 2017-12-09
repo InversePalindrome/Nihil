@@ -21,13 +21,13 @@ InversePalindrome.com
 using Properties = std::unordered_map<std::string, tmx::Property>;
 using EntityProperties = std::unordered_map<std::int32_t, Properties>;
 
-
 struct CollisionData
 {
 	CollisionData(b2Fixture* fixture, ObjectType objectType, const Properties& properties) :
 		fixture(fixture),
 		objectType(objectType),
-		properties(properties)
+		properties(properties),
+		isEntity(false)
 	{
 	}
 
@@ -35,14 +35,16 @@ struct CollisionData
 		entity(entity),
 		fixture(fixture),
 		objectType(objectType),
-		properties(properties)
+		properties(properties),
+		isEntity(true)
 	{
 	}
 
 	CollisionData(Entity entity, b2Fixture* fixture, ObjectType objectType) :
 		entity(entity),
 		fixture(fixture),
-		objectType(objectType)
+		objectType(objectType),
+		isEntity(true)
 	{
 	}
 
@@ -50,6 +52,7 @@ struct CollisionData
 	b2Fixture* fixture;
 	ObjectType objectType;
 	Properties properties;
+	bool isEntity;
 };
 
 using CollisionsData = std::list<CollisionData>;

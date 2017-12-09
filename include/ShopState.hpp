@@ -21,7 +21,7 @@ InversePalindrome.com
 #include <unordered_map>
 
 
-struct ShopGraphics;
+struct ShopData;
 
 class ShopState : public State
 {
@@ -43,8 +43,8 @@ private:
 
 	sfg::Button::Ptr backButton;
 
-	std::unordered_map<Item, ShopGraphics> shopGraphics;
-	std::unordered_map<Item, std::any> shopData;
+	std::unordered_map<Item, ShopData> shopData;
+	std::unordered_map<Item, std::any> itemData;
 	std::unordered_map<ItemCategory, std::string> categoryNames;
 
 	void loadShopData(const std::string& fileName);
@@ -54,10 +54,10 @@ private:
 	void transitionToMenu();
 };
 
-struct ShopGraphics
+struct ShopData
 {
-	ShopGraphics() = default;
-	ShopGraphics(ItemCategory category, std::size_t price);
+	ShopData() = default;
+	ShopData(ItemCategory category, std::size_t price);
 
 	sfg::Button::Ptr itemButton;
 	ItemCategory category;

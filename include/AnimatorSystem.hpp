@@ -8,6 +8,7 @@ InversePalindrome.com
 #pragma once
 
 #include "System.hpp"
+#include "Animation.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
 
@@ -22,6 +23,11 @@ public:
 	void animate(sf::RenderTarget& target);
 
 private:
+	void playAnimation(Entity entity, const Animation& animation, bool loop);
+	void stopAnimation(Entity entity);
+
 	void changeAnimationState(Entity entity, EntityState state);
 	void changeAnimationDirection(Entity entity, Direction direction);
+
+	void playStartingAnimation(Entity entity, AnimationComponent& animation);
 };

@@ -16,5 +16,5 @@ InversePalindrome.com
 namespace Utility
 {
 	void setFriction(Entity entity, float friction);
-	void setFriction(CollisionData* collisionData, b2Contact* contact, float friction);
+	void setFriction(const CollisionData* collisionData, b2Contact* contact, float friction);
 }

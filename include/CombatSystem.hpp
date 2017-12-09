@@ -22,8 +22,8 @@ public:
 	virtual void update(float deltaTime) override;
 
 private:
-	ComponentParser& componentParser;
 	Callbacks callbacks;
+	ComponentParser& componentParser;
 
 	void handleCombat(Entity attacker, Entity victim);
 	void handleExplosion(Entity bomb, Entity explosion);
@@ -37,5 +37,6 @@ private:
 	void addExplosion(Entity bomb);
 
 	void applyKnockback(Entity attacker, Entity victim);
-	void applyBlastImpact(Entity explosion, Entity victim);
+
+	sf::Vector2f getProjectileOffset(Entity entity);
 };

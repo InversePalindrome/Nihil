@@ -48,8 +48,8 @@ public:
 
 	void update(float deltaTime);
 
-	Entity createEntity(const std::string& fileName);
-	Entity createEntity(const std::string& fileName, const sf::Vector2f& position);
+	Entity createEntity(std::int32_t entityType, const std::string& fileName);
+	Entity createEntity(std::int32_t entityType, const std::string& fileName, const sf::Vector2f& position);
 
 	void parseEntities(const std::string& fileName);
 	void parseBlueprint(const std::string& fileName);

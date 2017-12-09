@@ -9,6 +9,7 @@ InversePalindrome.com
 
 #include "ResourceManager.hpp"
 #include "Renderable.hpp"
+#include "Animation.hpp"
 
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/Sprite.hpp>
@@ -33,7 +34,7 @@ private:
 	sf::Sprite coin;
 	sf::Text text;
 
-	thor::Animator<sf::Sprite, std::string> animator;
+	Animator animator;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
