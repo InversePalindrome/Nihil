@@ -74,7 +74,6 @@ struct CrossedCheckpoint;
 struct CrossedWaypoint;
 struct ShootProjectile;
 struct ActivateBomb;
-struct BombExploded;
 struct CreateTransform;
 struct ApplyForce;
 struct ApplyImpulse;
@@ -107,9 +106,8 @@ using Entities = entityplus::entity_manager<Components, Tags>;
 using Events = entityplus::event_manager<Components, Tags, CreateEntity, DestroyBody, UpdateAchievement, UpdateConversation, ChangeDirection, DirectionChanged, 
 	Jumped, StopMovement, StopSound, StopAnimation, CombatOcurred, ChangeState, StateChanged, ChangeLevel, DestroyEntity, PlaySound, PlayAnimation, PickedUpItem, 
 	DroppedItem, DisplayHealthBar, DisplayCoins, DisplayPowerUp, DisplayConversation, HidePowerUp, CrossedCheckpoint, CrossedWaypoint, ShootProjectile, ActivateBomb,
-	BombExploded, CreateTransform, ApplyForce, ApplyImpulse, ApplyBlastImpact, ApplyKnockback, SetUserData, SetGravityScale, SetLinearDamping, SetVelocity,
-	SetPosition, SetAngle, SetMidAirStatus, SetUnderWaterStatus, SetFriction, AddUnderWaterTimer, RemoveUnderWaterTimer, PropelFromWater, AddedUserData,
-	ManageCollision>;
+	CreateTransform, ApplyForce, ApplyImpulse, ApplyBlastImpact, ApplyKnockback, SetUserData, SetGravityScale, SetLinearDamping, SetVelocity, SetPosition, SetAngle, 
+	SetMidAirStatus, SetUnderWaterStatus, SetFriction, AddUnderWaterTimer, RemoveUnderWaterTimer, PropelFromWater, AddedUserData, ManageCollision>;
 
 using Entity = Entities::entity_t;
 
@@ -268,18 +266,11 @@ struct ShootProjectile
 {
 	Entity shooter;
 	std::string projectileID; 
-	sf::Vector2f targetPosition;
 };
 
 struct ActivateBomb
 {
 	Entity bomb;
-};
-
-struct BombExploded
-{
-	Entity bomb;
-	Entity explosion;
 };
 
 struct CreateTransform

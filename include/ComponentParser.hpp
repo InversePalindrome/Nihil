@@ -39,6 +39,7 @@ private:
 
 	Entity createEntity();
 	Entity parseComponents(std::int32_t entityID, const std::string& fileName);
+
 	void setComponentsID(Entity entity, std::int32_t entityID);
 
 	template <typename T> 
@@ -52,7 +53,6 @@ private:
 };
 
 template <typename T>
-
 std::tuple<T> ComponentParser::parse(std::istream& iStream)
 {
 	T value;
@@ -70,9 +70,7 @@ std::tuple<T, Arg, Args...> ComponentParser::parse(std::istream& iStream)
 
 	iStream >> value;
 
-	return std::tuple_cat(std::tuple<T>(std::move(value)),
-
-		parse<Arg, Args...>(iStream));
+	return std::tuple_cat(std::tuple<T>(std::move(value)), parse<Arg, Args...>(iStream));
 }
 
 template <typename... Args>

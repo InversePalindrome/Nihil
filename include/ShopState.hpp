@@ -66,16 +66,12 @@ struct ShopData
 
 struct CharacterData
 {
-	CharacterData(const std::string& spriteFile, const std::string& animationsFile);
-
 	std::string spriteFile;
 	std::string animationsFile;
 };
 
 struct WeaponData
 {
-	WeaponData(const std::string& weaponID, float reloadTime);
-
 	std::string weaponID;
 	float reloadTime;
 };

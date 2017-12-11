@@ -21,9 +21,7 @@ InversePalindrome.com
 
 
 struct PowerUpGraphics;
-struct PowerUpGraphicsData;
-
-using PowerUpData = std::unordered_map<Item, PowerUpGraphicsData>;
+struct PowerUpData;
 
 class PowerUpDisplay : public sf::Drawable, public sf::Transformable
 {
@@ -38,7 +36,7 @@ public:
 
 private:
 	std::unordered_map<Item, PowerUpGraphics> powerUps;
-	PowerUpData powerUpData;
+	std::unordered_map<Item, PowerUpData> powerUpData;
 
 	ResourceManager& resourceManager;
 
@@ -47,7 +45,7 @@ private:
 
 struct PowerUpGraphics : public sf::Drawable, public sf::Transformable
 {
-	PowerUpGraphics(ResourceManager& resourceManager, Item item, const PowerUpData& data);
+	PowerUpGraphics(ResourceManager& resourceManager, Item item, const std::unordered_map<Item, PowerUpData>& data);
 
 	sf::Sprite sprite;
 	Animator animator;
@@ -55,10 +53,8 @@ struct PowerUpGraphics : public sf::Drawable, public sf::Transformable
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
 
-struct PowerUpGraphicsData
+struct PowerUpData
 {
-	PowerUpGraphicsData(const std::string& animationFile, const sf::IntRect& textureRect, float scale);
-
 	std::string animationFile;
 	sf::IntRect textureRect;
 	float scale;

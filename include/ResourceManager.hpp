@@ -23,7 +23,7 @@ enum class TexturesID : std::size_t
 {
 	SplashScreen, StartBackground, Particles, Character, Mushroom, RedMonster, MenuBackground,                 
     City, Desert, MushroomLand, PinkTown, FlowerLand, DarkTown, Coin, Heart, Laser, Gems, MistZone,
-	Bombs, PowerUps, Keys, DialogBox, Panels, RectangularBoxes, Jungle, Moon, PinkRocks, Plain, SkyZone,
+	Artillery, PowerUps, Keys, DialogBox, Panels, RectangularBoxes, Jungle, Moon, PinkRocks, Plain, SkyZone,
 	IceZone, Tileset, Bubble, Platforms, Skeleton, Goblin, Wizard, GreenMonster, PurpleMonster, Cannons
 };
 enum class ImagesID : std::size_t
@@ -36,7 +36,7 @@ enum class FontsID : std::size_t
 };
 enum class SoundBuffersID : std::size_t
 { 
-	Jump, Footsteps, Coin, Laser, SmallExplosion, Gem, Achievement, Swimming, Trampoline 
+	Jump, Footsteps, Coin, Laser, SmallExplosion, Gem, Achievement, Swimming, Trampoline, CannonBall
 };
 
 class ResourceManager
