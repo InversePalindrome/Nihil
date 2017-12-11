@@ -189,15 +189,13 @@ void Map::addObjects(tmx::ObjectGroup* objectLayer)
 			auto* staticObject = this->world.CreateBody(&bodyDefinition);
 			auto* fixture = staticObject->CreateFixture(&fixtureDef);
 
-			;			for (const auto& property : properties)
+			for (const auto& property : properties)
 			{
 				if (property.second.getName() == "PathwayData")
 				{
-					std::string pathwayData = property.second.getStringValue();
-					std::istringstream iStream(pathwayData);
+					std::istringstream iStream(property.second.getStringValue());
 
-					std::size_t pathwayIndex = 0u;
-					std::size_t waypointStep = 0u;
+					std::size_t pathwayIndex = 0u, waypointStep = 0u;
 
 					iStream >> pathwayIndex >> waypointStep;
 

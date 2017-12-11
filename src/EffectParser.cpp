@@ -16,7 +16,7 @@ InversePalindrome.com
 
 #include <fstream>
 #include <sstream>
-
+#include <iostream>
 
 void Parsers::parseParticleSystem(ResourceManager& resourceManager, const std::string& fileName, thor::ParticleSystem& particleSystem)
 {
@@ -163,11 +163,11 @@ thor::UniversalEmitter Parsers::parseEmitter(const std::string& fileName)
 		}
 		else if (category == "Color")
 		{
-			sf::Uint8 R = 0u, G = 0u, B = 0u;
+			std::size_t R = 0u, G = 0u, B = 0u;
 
 			iStream >> R >> G >> B;
 		
-			emitter.setParticleColor(sf::Color(R, G, B));
+			emitter.setParticleColor(sf::Color(static_cast<sf::Uint8>(R), static_cast<sf::Uint8>(G), static_cast<sf::Uint8>(B)));
 		}
 		else if (category == "TextureIndex")
 		{
@@ -180,4 +180,21 @@ thor::UniversalEmitter Parsers::parseEmitter(const std::string& fileName)
 	}
 
 	return emitter;
+}
+
+thor::ColorGradient Parsers::parseColors(const std::string& fileName)
+{
+	thor::ColorGradient colors;
+
+	std::ifstream inFile(Path::miscellaneous / fileName);
+
+	float gradientPosition = 0.f;
+	std::size_t R = 0u, G = 0u, B = 0u;
+
+	while (inFile >> gradientPosition >> R >> G >> B)
+	{
+		colors[gradientPosition] = sf::Color(static_cast<sf::Uint8>(R), static_cast<sf::Uint8>(G), static_cast<sf::Uint8>(B));
+	}
+
+	return colors;
 }

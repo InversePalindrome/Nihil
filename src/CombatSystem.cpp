@@ -23,12 +23,17 @@ CombatSystem::CombatSystem(Entities& entities, Events& events, ComponentParser& 
 		}
 	});
 
+	events.subscribe<entityplus::component_added<Entity, ControllableComponent>>([this](const auto& event)
+	{
+		targetEntity = event.entity;
+	});
+
 	events.subscribe<entityplus::component_added<Entity, RangeAttackComponent>>([this](const auto& event) { addReloadTimer(event.entity); });
 	events.subscribe<CombatOcurred>([this](const auto& event) { handleCombat(event.attacker, event.victim); });
-	events.subscribe<BombExploded>([this](const auto& event) { handleExplosion(event.bomb, event.explosion); });
-	events.subscribe<ShootProjectile>([this](const auto& event) { shootProjectile(event.shooter, event.projectileID, event.targetPosition ); });
+	events.subscribe<ShootProjectile>([this](const auto& event) { shootProjectile(event.shooter, event.projectileID); });
 	events.subscribe<ActivateBomb>([this](const auto& event) { addExplosion(event.bomb); });
 	events.subscribe<ApplyKnockback>([this](const auto& event) { applyKnockback(event.attacker, event.victim); });
+	events.subscribe<ApplyBlastImpact>([this](const auto& event) { applyBlastImpact(event.explosion, event.victim); });
 }
 
 void CombatSystem::update(float deltaTime)
@@ -89,34 +94,37 @@ void CombatSystem::handleExplosion(Entity bomb, Entity explosion)
 	}, explosionTime);
 }
 
-void CombatSystem::shootProjectile(Entity shooter, const std::string& projectileID, const sf::Vector2f& targetPosition)
+void CombatSystem::shootProjectile(Entity shooter, const std::string& projectileID)
 {
-	auto projectileEntity = this->componentParser.parseEntity(-1, projectileID + ".txt");
-
-	this->events.broadcast(ManageCollision{ shooter, projectileEntity, false });
-
-	if (shooter.has_component<ParentComponent>() && projectileEntity.has_component<ChildComponent>())
+	if (this->canShoot(shooter))
 	{
-		this->events.broadcast(CreateTransform{ projectileEntity, shooter, this->getProjectileOffset(shooter) });
+		auto projectileEntity = this->componentParser.parseEntity(-1, projectileID + ".txt");
 
-		if (shooter.has_tag<Turret>())
-		{
-			this->events.broadcast(PlayAnimation{ shooter, { EntityState::Attacking, Direction::Right }, false });
-		}
-	}
-	if (shooter.has_component<PhysicsComponent>() && projectileEntity.has_component<PhysicsComponent>() && projectileEntity.has_component<SpriteComponent>())
-	{
-		const auto& shooterPhysics = shooter.get_component<PhysicsComponent>();
-		auto& projectilePhysics = projectileEntity.get_component<PhysicsComponent>();
-		auto& projectileSprite = projectileEntity.get_component<SpriteComponent>();
+		this->events.broadcast(ManageCollision{ shooter, projectileEntity, false });
 
-		if (projectileEntity.has_component<BulletComponent>())
+		if (shooter.has_component<ParentComponent>() && projectileEntity.has_component<ChildComponent>())
 		{
-			this->shootBullet(shooter.get_component<PhysicsComponent>(), projectileEntity.get_component<BulletComponent>(), projectilePhysics, projectileSprite);
+			this->events.broadcast(CreateTransform{ projectileEntity, shooter, this->getProjectileOffset(shooter) });
+
+			if (shooter.has_tag<Turret>())
+			{
+				this->events.broadcast(PlayAnimation{ shooter, { EntityState::Attacking, Direction::Right }, false });
+			}
 		}
-		else if (projectileEntity.has_component<BombComponent>())
+		if (shooter.has_component<PhysicsComponent>() && projectileEntity.has_component<PhysicsComponent>() && projectileEntity.has_component<SpriteComponent>())
 		{
-			this->shootBomb(shooter.get_component<PhysicsComponent>(), projectileEntity.get_component<BombComponent>(), projectilePhysics, projectileSprite, targetPosition);
+			const auto& shooterPhysics = shooter.get_component<PhysicsComponent>();
+			auto& projectilePhysics = projectileEntity.get_component<PhysicsComponent>();
+			auto& projectileSprite = projectileEntity.get_component<SpriteComponent>();
+
+			if (projectileEntity.has_component<BulletComponent>())
+			{
+				this->shootBullet(shooterPhysics, projectileEntity.get_component<BulletComponent>(), projectilePhysics, projectileSprite);
+			}
+			else if (projectileEntity.has_component<BombComponent>())
+			{
+				this->shootBomb(shooterPhysics, projectilePhysics);
+			}
 		}
 	}
 }
@@ -138,24 +146,27 @@ void CombatSystem::shootBullet(const PhysicsComponent& shooterPhysics, BulletCom
 	this->events.broadcast(PlaySound{ bulletComponent.getSoundID(), false });
 }
 
-void CombatSystem::shootBomb(const PhysicsComponent& shooterPhysics, BombComponent& bombComponent, PhysicsComponent& projectilePhysics, SpriteComponent& spriteComponent, const sf::Vector2f& targetPosition)
+void CombatSystem::shootBomb(const PhysicsComponent& shooterPhysics, PhysicsComponent& projectilePhysics)
 {
-	projectilePhysics.setPosition({ projectilePhysics.getPosition().x, projectilePhysics.getPosition().y + projectilePhysics.getBodySize().y + 0.1f });
-
-	const auto xDistance = projectilePhysics.getPosition().x - UnitConverter::pixelsToMeters(targetPosition.x);
-	const float angle = 45.f;
-
-	const auto velocity = Utility::calculateRequiredVelocity(9.8f, std::abs(xDistance), angle, std::abs(projectilePhysics.getPosition().y));
-
-	if (!std::isnan(velocity))
+	if (this->targetEntity.sync() && this->targetEntity.has_component<PhysicsComponent>())
 	{
-		if (shooterPhysics.getPosition().x > UnitConverter::pixelsToMeters(targetPosition.x))
+		const auto& targetPhysics = this->targetEntity.get_component<PhysicsComponent>();
+
+		const auto xDistance = projectilePhysics.getPosition().x - targetPhysics.getPosition().x;
+		const auto angle = 45.f;
+
+		const auto velocity = Utility::calculateRequiredVelocity(9.8f, std::abs(xDistance), angle, std::abs(projectilePhysics.getPosition().y));
+
+		if (!std::isnan(velocity))
 		{
-			projectilePhysics.setVelocity({ -velocity * std::cos(angle), velocity * std::sin(angle) });
-		}
-		else
-		{
-			projectilePhysics.setVelocity({ velocity * std::cos(angle), velocity * std::sin(angle) });
+			if (shooterPhysics.getPosition().x > targetPhysics.getPosition().x)
+			{
+				projectilePhysics.setVelocity({ -velocity * std::cos(angle), velocity * std::sin(angle) });
+			}
+			else
+			{
+				projectilePhysics.setVelocity({ velocity * std::cos(angle), velocity * std::sin(angle) });
+			}
 		}
 	}
 }
@@ -187,8 +198,9 @@ void CombatSystem::addExplosion(Entity bomb)
 				auto explosion = this->componentParser.parseEntity(-1, bombComponent.getExplosionID() + ".txt");
 
 				this->events.broadcast(CreateTransform{ explosion, bomb, {0.f, 0.f} });
-				this->events.broadcast(BombExploded{ bomb, explosion });
 				this->events.broadcast(PlaySound{ bombComponent.getSoundID(), false });
+
+				this->handleExplosion(bomb, explosion);
 			}
 		}, bomb.get_component<BombComponent>().getExplosionTime());
 	}
@@ -196,22 +208,54 @@ void CombatSystem::addExplosion(Entity bomb)
 
 void CombatSystem::applyKnockback(Entity attacker, Entity victim)
 {
-	if (attacker.has_component<PhysicsComponent>() && attacker.has_component<MeleeAttackComponent>() &&  victim.has_component<PhysicsComponent>())
+	if (attacker.has_component<PhysicsComponent>() && victim.has_component<PhysicsComponent>())
 	{
+		const auto& attackerPhysics = attacker.get_component<PhysicsComponent>();
 		auto& victimPhysics = victim.get_component<PhysicsComponent>();
 
-		auto attackingDirection = attacker.get_component<PhysicsComponent>().getDirection();
-		auto knockback = attacker.get_component<MeleeAttackComponent>().getKnockback();
+		float knockback = 0.f;
 
-		switch (attackingDirection)
+		if (attacker.has_component<MeleeAttackComponent>())
 		{
-		case Direction::Left:
-			victimPhysics.applyImpulse({ -knockback, 0.f });
-			break;
-		case Direction::Right:
-			victimPhysics.applyImpulse({ knockback, 0.f });
-			break;
+			knockback = attacker.get_component<MeleeAttackComponent>().getKnockback();
+
+			switch (attackerPhysics.getDirection())
+			{
+			case Direction::Left:
+				victimPhysics.applyImpulse({ -knockback, 0.f });
+				break;
+			case Direction::Right:
+				victimPhysics.applyImpulse({ knockback, 0.f });
+				break;
+			}
 		}
+		else if (attacker.has_component<BombComponent>())
+		{
+			knockback = attacker.get_component<BombComponent>().getExplosionKnockback();
+
+			const auto& blastDistance = victimPhysics.getPosition() - attackerPhysics.getPosition();
+
+			victimPhysics.applyImpulse({ Utility::sign(blastDistance.x) * knockback, 0.f });
+
+			this->handleCombat(attacker, victim);
+		}
+	}
+}
+
+void CombatSystem::applyBlastImpact(Entity explosion, Entity victim)
+{
+	if (explosion.has_component<ChildComponent>())
+	{
+		auto childID = explosion.get_component<ChildComponent>().getEntityID();
+
+		this->entities.for_each<BombComponent, ParentComponent>([this, victim, childID](auto entity, const auto& bomb, const auto& parent, entityplus::control_block_t& control)
+		{
+			if (parent.getChildID() == childID)
+			{
+				this->applyKnockback(entity, victim);
+				control.breakout = true;
+			}
+		});
 	}
 }
 
@@ -243,4 +287,17 @@ sf::Vector2f CombatSystem::getProjectileOffset(Entity entity)
 	}
 
 	return {};
+}
+
+bool CombatSystem::canShoot(Entity shooter) 
+{
+	if (this->targetEntity.sync() && shooter.has_component<PhysicsComponent>() && this->targetEntity.has_component<PhysicsComponent>() && shooter.has_tag<Turret>())
+	{
+		const auto& shooterPhysics = shooter.get_component<PhysicsComponent>();
+		const auto& targetPhysics = this->targetEntity.get_component<PhysicsComponent>();
+
+		return std::abs(shooterPhysics.getPosition().x - targetPhysics.getPosition().x) >= shooterPhysics.getBodySize().x;
+	}
+
+	return true;
 }

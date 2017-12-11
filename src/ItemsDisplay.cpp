@@ -39,12 +39,12 @@ void ItemsDisplay::update(float deltaTime)
 {
 	if (this->isVisible)
 	{
-		for (auto& [itemID, itemData] : this->itemsData)
+		for (auto& itemData : this->itemsData)
 		{
-			if (itemData.animator.isPlayingAnimation())
+			if (itemData.second.animator.isPlayingAnimation())
 			{
-				itemData.animator.update(sf::seconds(deltaTime));
-				itemData.animator.animate(itemData.sprite);
+				itemData.second.animator.update(sf::seconds(deltaTime));
+				itemData.second.animator.animate(itemData.second.sprite);
 			}
 		}
 	}
@@ -102,11 +102,8 @@ ItemData::ItemData(ResourceManager& resourceManager, const std::string& itemData
 
 	std::size_t item = 0u, textureID = 0u;
 	float scale = 0.f, xPosition = 0.f, yPosition = 0.f, textOffset = 0.f;
-	std::string iAnimationFile;
 
-	iStream >> item >> textureID >> scale >> xPosition >> yPosition >> textOffset >> maxQuantity >> iAnimationFile;
-
-	animationFile = iAnimationFile;
+	iStream >> item >> textureID >> scale >> xPosition >> yPosition >> textOffset >> maxQuantity >> animationFile;
 
 	sprite.setTexture(resourceManager.getTexture(TexturesID{ textureID }));
 	sprite.setScale(scale, scale);

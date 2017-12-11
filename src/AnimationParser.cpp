@@ -8,6 +8,9 @@ InversePalindrome.com
 #include "AnimationParser.hpp"
 #include "FilePaths.hpp"
 
+#include <fstream>
+#include <sstream>
+
 
 Animations Parsers::parseAnimations(const std::string& fileName, Animator& animator)
 {
@@ -51,21 +54,4 @@ Animations Parsers::parseAnimations(const std::string& fileName, Animator& anima
 	}
 
 	return animations;
-}
-
-thor::ColorGradient Parsers::parseColors(const std::string& fileName)
-{
-	thor::ColorGradient colors;
-
-	std::ifstream inFile(Path::miscellaneous / fileName);
-
-	float gradientPosition = 0.f;
-	std::size_t R = 0u, G = 0u, B = 0u;
-
-	while (inFile >> gradientPosition >> R >> G >> B)
-	{
-		colors[gradientPosition] = sf::Color(static_cast<sf::Uint8>(R), static_cast<sf::Uint8>(G), static_cast<sf::Uint8>(B));
-	}
-
-	return colors;
 }

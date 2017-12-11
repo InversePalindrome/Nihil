@@ -21,8 +21,8 @@ CollisionFilter::CollisionFilter(Events& events) :
 
 	while(inFile >> objectANum >> objectBNum)
 	{
-		auto objectA = static_cast<ObjectType>(objectANum);
-		auto objectB = static_cast<ObjectType>(objectBNum);
+		auto objectA = ObjectType{ objectANum };
+		auto objectB = ObjectType{ objectBNum };
 
 		collisionTypes.emplace(objectA, objectB);
 		collisionTypes.emplace(objectB, objectA);

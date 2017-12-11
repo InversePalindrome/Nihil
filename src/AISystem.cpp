@@ -22,7 +22,7 @@ AISystem::AISystem(Entities& entities, Events& events, Pathways& pathways) :
 		targetEntity = event.entity;
 	});
 
-	events.subscribe<AddedUserData>([this](auto& event){ addProperties(event.entity); });
+	events.subscribe<AddedUserData>([this](const auto& event){ addProperties(event.entity); });
 	events.subscribe<CrossedWaypoint>([this](const auto& event) { changeWaypoint(event.entity); });
 }
 
@@ -48,7 +48,7 @@ void AISystem::update(float deltaTime)
 			if (timer.hasTimer("Reload") && timer.hasTimerExpired("Reload") && this->isFacingTarget(entity) &&
 				this->isWithinRange(entity, position.getPosition(), targetPosition.value(), rangeAttack.getAttackRange()))
 			{
-				this->events.broadcast(ShootProjectile{ entity, rangeAttack.getProjectileID(), targetPosition.value() });
+				this->events.broadcast(ShootProjectile{ entity, rangeAttack.getProjectileID() }); 
 			
 				timer.restartTimer("Reload");
 			}
@@ -145,13 +145,14 @@ std::optional<Pathway> AISystem::getPathway(Entity entity)
 {
 	if (entity.has_component<PhysicsComponent>())
 	{
-		auto pathwayID = static_cast<CollisionData*>(entity.get_component<PhysicsComponent>().getUserData(ObjectType::Enemy))->properties["PathwayID"].getIntValue();
+		auto entityPathwayID = static_cast<std::size_t>(static_cast<CollisionData*>(entity.get_component<PhysicsComponent>()
+			.getUserData(ObjectType::Enemy))->properties["PathwayID"].getIntValue());
 
-		for (const auto& pathway : this->pathways)
+		for (const auto& [pathwayID, pathway] : this->pathways)
 		{
-			if (pathway.first == pathwayID)
+			if (pathwayID == entityPathwayID)
 			{
-				return pathway.second;
+				return pathway;
 			}
 		}
 	}
@@ -188,15 +189,18 @@ bool AISystem::isWithinRange(Entity AI, const sf::Vector2f& AIPosition, const sf
 
 bool AISystem::isFacingTarget(Entity entity)
 {
-	if (this->targetEntity.sync() && this->targetEntity.has_component<PositionComponent>() && entity.has_component<PositionComponent>()  && entity.has_component<PhysicsComponent>())
+	if (this->targetEntity.sync() && this->targetEntity.has_component<PhysicsComponent>() && entity.has_component<PhysicsComponent>())
 	{
-		auto entityDirection = entity.get_component<PhysicsComponent>().getDirection();
-		const auto& targetPosition = this->targetEntity.get_component<PositionComponent>().getPosition();
-		const auto& entityPosition = entity.get_component<PositionComponent>().getPosition();
+		const auto& entityPhysics = entity.get_component<PhysicsComponent>();
 
-		return   (entityDirection == Direction::Right && targetPosition.x > entityPosition.x) 
-			  || (entityDirection == Direction::Left && targetPosition.x < entityPosition.x);
+		const auto& entityPosition = entityPhysics.getPosition();
+		const auto& targetPosition = this->targetEntity.get_component<PhysicsComponent>().getPosition();
+	
+		return   (((entityPhysics.getDirection() == Direction::Right && targetPosition.x > entityPosition.x)
+			|| (entityPhysics.getDirection() == Direction::Left && targetPosition.x < entityPosition.x)) &&
+			   std::abs(entityPosition.y - targetPosition.y) <= entityPhysics.getBodySize().y)
+			|| entityPhysics.getDirection() == Direction::Up;
 	}
 	
 	return false;
-}
+} 

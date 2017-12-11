@@ -38,7 +38,7 @@ StartState::StartState(StateMachine& stateMachine, StateData& stateData) :
 	continueLabel.setOrigin(continueLabel.getLocalBounds().width / 2.f, continueLabel.getLocalBounds().height / 2.f);
 	continueLabel.setPosition(this->view.getCenter().x, 1250.f);
 
-	stateData.soundManager.playMusic("StartElectro.wav", true);
+	stateData.soundManager.playMusic("StartMusic.wav", true);
 }
 
 void StartState::handleEvent(const sf::Event& event)

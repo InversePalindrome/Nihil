@@ -25,37 +25,37 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 	world(world),
 	currentEntityID(0)
 {
-	componentParsers["AI"] = [this](auto& entity, auto& line)
+	componentParsers["AI"] = [this](auto& entity, const auto& line)
 	{
 		entity.set_tag<AI>(true);
 	};
 
-	componentParsers["Turret"] = [this](auto& entity, auto& line)
+	componentParsers["Turret"] = [this](auto& entity, const auto& line)
 	{
 		entity.set_tag<Turret>(true);
 	};
 
-	componentParsers["Controllable"] = [this](auto& entity, auto& line)
+	componentParsers["Controllable"] = [this](auto& entity, const auto& line)
 	{
 		entity.add_component<ControllableComponent>();
 	};
 
-	componentParsers["TimerA"] = [this](auto& entity, auto& line)
+	componentParsers["TimerA"] = [this](auto& entity, const auto& line)
 	{
 		entity.add_component<TimerComponent>();
 	};
 
-	componentParsers["TimerB"] = [this](auto& entity, auto& line)
+	componentParsers["TimerB"] = [this](auto& entity, const auto& line)
 	{
 		entity.add_component(std::make_from_tuple<TimerComponent>(parse<std::string>(line)));
 	};
 
-	componentParsers["PositionA"] = [this](auto& entity, auto& line)
+	componentParsers["PositionA"] = [this](auto& entity, const auto& line)
 	{
 		entity.add_component(std::make_from_tuple<PositionComponent>(parse<float, float>(line)));
 	};
 
-	componentParsers["PositionB"] = [this](auto& entity, auto& line)
+	componentParsers["PositionB"] = [this](auto& entity, const auto& line)
 	{
 		entity.add_component<PositionComponent>();
 	};
@@ -65,27 +65,27 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 		entity.add_component<StateComponent>();
 	};
 
-	componentParsers["Physics"] = [this, &world](auto& entity, auto& line)
+	componentParsers["Physics"] = [this, &world](auto& entity, const auto& line)
 	{
 		const auto& [bodySizeX, bodySizeY, bodyType, objectType, maxVelocityX, maxVelocityY, accelerationX, accelerationY, jumpVelocity] 
 			= parse<float, float, std::size_t, std::size_t, float, float, float, float, float>(line);
 
 		entity.add_component<PhysicsComponent>(world, b2Vec2(bodySizeX, bodySizeY),
-			static_cast<b2BodyType>(bodyType), static_cast<ObjectType>(objectType),
+			static_cast<b2BodyType>(bodyType), ObjectType{ objectType },
 			b2Vec2(maxVelocityX, maxVelocityY), b2Vec2(accelerationX, accelerationY), jumpVelocity);
 	};
 
-	componentParsers["Patrol"] = [this](auto& entity, auto& line)
+	componentParsers["Patrol"] = [this](auto& entity, const auto& line)
 	{
 		entity.add_component<PatrolComponent>();
 	};
 
-	componentParsers["Chase"] = [this](auto& entity, auto& line)
+	componentParsers["Chase"] = [this](auto& entity, const auto& line)
 	{
 		entity.add_component(std::make_from_tuple<ChaseComponent>(parse<float>(line)));
 	};
 
-	componentParsers["SpriteA"] = [this, &resourceManager](auto& entity, auto& line)
+	componentParsers["SpriteA"] = [this, &resourceManager](auto& entity, const auto& line)
 	{
 		const auto& [textureID, scaleX, scaleY] = parse<std::size_t, float, float>(line);
 
@@ -93,30 +93,30 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 			sf::Vector2f(scaleX, scaleY));
 	};
 
-	componentParsers["SpriteB"] = [this, &resourceManager](auto& entity, auto& line)
+	componentParsers["SpriteB"] = [this, &resourceManager](auto& entity, const auto& line)
 	{
 		const auto& [textureID, left, top, width, height, scaleX, scaleY] 
-			= parse<std::size_t , std::size_t, std::size_t, std::size_t, std::size_t, float, float> (line);
+			= parse<std::size_t , std::size_t, std::size_t, std::size_t, std::size_t, float, float>(line);
 
 		entity.add_component<SpriteComponent>(resourceManager, TexturesID{ textureID },
 			sf::IntRect(left, top, width, height), sf::Vector2f(scaleX, scaleY));
 	};
 
-	componentParsers["SpriteC"] = [this, &resourceManager](auto& entity, auto& line)
+	componentParsers["SpriteC"] = [this, &resourceManager](auto& entity, const auto& line)
 	{
 		const auto& [fileName] = parse<std::string>(line);
 
 		entity.add_component<SpriteComponent>(resourceManager, fileName);
 	};
 
-	componentParsers["Text"] = [this, &resourceManager](auto& entity, auto& line)
+	componentParsers["Text"] = [this, &resourceManager](auto& entity, const auto& line)
 	{
 		const auto& [inputText, fileName] = parse<std::string, std::string>(line);
 
 		entity.add_component<TextComponent>(resourceManager, inputText, fileName);
 	};
 
-	componentParsers["Dialog"] = [this, &resourceManager](auto& entity, auto& line)
+	componentParsers["Dialog"] = [this, &resourceManager](auto& entity, const auto& line)
 	{
 		const auto& [dialogueTime, dialogFile, textStyleFile, spriteFile, textOffsetX, textOffsetY, offsetX, offsetY]
 			= parse<float, std::string, std::string, std::string, float, float, float, float>(line);
@@ -126,108 +126,108 @@ ComponentParser::ComponentParser(Entities& entities, ResourceManager& resourceMa
 			sf::Vector2f(offsetX, offsetY));
 	};
 
-	componentParsers["Health"] = [this](auto& entity, auto& line)
+	componentParsers["Health"] = [this](auto& entity, const auto& line)
 	{
 		entity.add_component(std::make_from_tuple<HealthComponent>(parse<std::int32_t>(line)));
 	};
 
-	componentParsers["MeleeA"] = [this](auto& entity, auto& line)
+	componentParsers["MeleeA"] = [this](auto& entity, const auto& line)
 	{
 		entity.add_component(std::make_from_tuple<MeleeAttackComponent>(parse<std::int32_t>(line)));
 	};
 
-	componentParsers["MeleeB"] = [this](auto& entity, auto& line)
+	componentParsers["MeleeB"] = [this](auto& entity, const auto& line)
 	{
 		entity.add_component(std::make_from_tuple<MeleeAttackComponent>(parse<std::int32_t, float>(line)));
 	};
 
-	componentParsers["Range"] = [this](auto& entity, auto& line)
+	componentParsers["Range"] = [this](auto& entity, const auto& line)
 	{
 		entity.add_component(std::make_from_tuple<RangeAttackComponent>(parse<std::string, float, float>(line)));
 	};
 
-	componentParsers["Bullet"] = [this](auto& entity, auto& line)
+	componentParsers["Bullet"] = [this](auto& entity, const auto& line)
 	{
 		const auto& [damagePoints, soundID, force] = this->parse<std::int32_t, std::size_t, float>(line);
 
 		entity.add_component<BulletComponent>(damagePoints, SoundBuffersID{ soundID }, force);
 	};
 
-	componentParsers["Bomb"] = [this](auto& entity, auto& line)
+	componentParsers["Bomb"] = [this](auto& entity, const auto& line)
 	{
 		const auto& [damagePoints, soundID, explosionTime, explosionKnockback, explosionID] 
-			= this->parse<std::int32_t, std::size_t, float, float, std::string>(line);
+			= parse<std::int32_t, std::size_t, float, float, std::string>(line);
 
 		entity.add_component<BombComponent>(damagePoints, SoundBuffersID{ soundID }, explosionTime, explosionKnockback, explosionID);
 	};
 
-	componentParsers["Animation"] = [this](auto& entity, auto& line)
+	componentParsers["Animation"] = [this](auto& entity, const auto& line)
 	{
-		entity.add_component(std::make_from_tuple<AnimationComponent>(parse< std::string>(line)));
+		entity.add_component(std::make_from_tuple<AnimationComponent>(parse<std::string>(line)));
 	};
 
-	componentParsers["Particle"] = [this, &resourceManager](auto& entity, auto& line)
+	componentParsers["Particle"] = [this, &resourceManager](auto& entity, const auto& line)
 	{
 		const auto& [effectRangeX, effectRangeY, particleFile, emitterFile] = parse<float, float, std::string, std::string>(line);
 
 		entity.add_component<ParticleComponent>(resourceManager, sf::Vector2f(effectRangeX, effectRangeY), particleFile, emitterFile);
 	};
 
-	componentParsers["ParentA"] = [this](auto& entity, auto& line)
+	componentParsers["ParentA"] = [this](auto& entity, const auto& line)
 	{
 		entity.add_component<ParentComponent>();
 	};
 
-	componentParsers["ParentB"] = [this](auto& entity, auto& line)
+	componentParsers["ParentB"] = [this](auto& entity, const auto& line)
 	{
 		entity.add_component(std::make_from_tuple<ParentComponent>(parse<std::int32_t>(line)));
 	};
 
-	componentParsers["ChildA"] = [this](auto& entity, auto& line)
+	componentParsers["ChildA"] = [this](auto& entity, const auto& line)
 	{
 		entity.add_component<ChildComponent>();
 	};
 
-	componentParsers["ChildB"] = [this](auto& entity, auto& line)
+	componentParsers["ChildB"] = [this](auto& entity, const auto& line)
 	{
 		entity.add_component(std::make_from_tuple<ChildComponent>(parse<std::int32_t>(line)));
 	};
 
-	componentParsers["Automated"] = [this](auto& entity, auto& line)
+	componentParsers["Automated"] = [this](auto& entity, const auto& line)
 	{
 		entity.add_component<AutomatedComponent>();
 	};
 
-	componentParsers["Pickup"] = [this](auto& entity, auto& line)
+	componentParsers["Pickup"] = [this](auto& entity, const auto& line)
 	{
 		const auto& [itemID, soundID] = this->parse<std::size_t, std::size_t>(line);
 
 		entity.add_component<PickupComponent>(Item{ itemID }, SoundBuffersID{ soundID });
 	};
 
-	componentParsers["PowerUp"] = [this](auto& entity, auto& line)
+	componentParsers["PowerUp"] = [this](auto& entity, const auto& line)
 	{
 		const auto& [itemID, soundID, effectTime, effectBoost] = this->parse<std::size_t, std::size_t, float, float>(line);
 
 		entity.add_component<PowerUpComponent>(Item{ itemID }, SoundBuffersID{ soundID }, effectTime, effectBoost);
 	};
 
-	componentParsers["Drop"] = [this](auto& entity, auto& line)
+	componentParsers["Drop"] = [this](auto& entity, const auto& line)
 	{
 		entity.add_component(std::make_from_tuple<DropComponent>(parse<std::string>(line)));
 	};
 
-	componentParsers["Inventory"] = [this](auto& entity, auto& line)
+	componentParsers["Inventory"] = [this](auto& entity, const auto& line)
 	{
 		entity.add_component<InventoryComponent>();
 	};
 
-	componentParsers["Lock"] = [this](auto& entity, auto& line)
+	componentParsers["Lock"] = [this](auto& entity, const auto& line)
 	{
 		entity.add_component(std::make_from_tuple<LockComponent>(parse<std::size_t, std::string>(line)));
 	};
 
-	componentParsers["Key"] = [this](auto& entity, auto& line)
+	componentParsers["Key"] = [this](auto& entity, const auto& line)
 	{
 		entity.add_component(std::make_from_tuple<KeyComponent>(parse<std::size_t>(line)));
 	};

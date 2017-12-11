@@ -132,7 +132,7 @@ void ShopState::loadShopData(const std::string& fileName)
 
 			iStream >> spriteFile >> animationsFile;
 
-			this->itemData.emplace(item, CharacterData(spriteFile, animationsFile));
+			this->itemData.emplace(item, CharacterData{ spriteFile, animationsFile });
 		}
 			break;
 		case ItemCategory::Weapons:
@@ -142,7 +142,7 @@ void ShopState::loadShopData(const std::string& fileName)
 
 			iStream >> weaponID >> reloadTime;
 			
-			this->itemData.emplace(item, WeaponData(weaponID, reloadTime));
+			this->itemData.emplace(item, WeaponData{ weaponID, reloadTime });
 		}
 			break;
 		}
@@ -254,17 +254,5 @@ ShopData::ShopData(ItemCategory category, std::size_t price) :
 	itemButton(sfg::Button::Create()),
 	category(category),
 	price(price)
-{
-}
-
-CharacterData::CharacterData(const std::string& spriteFile, const std::string& animationsFile) :
-	spriteFile(spriteFile),
-	animationsFile(animationsFile)
-{
-}
-
-WeaponData::WeaponData(const std::string& weaponID, float reloadTime) :
-	weaponID(weaponID),
-	reloadTime(reloadTime)
 {
 }

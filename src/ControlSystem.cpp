@@ -75,7 +75,7 @@ void ControlSystem::addControl(Entity entity)
 		{
 			this->callbacks.addCallback([this, entity]()
 			{
-				this->events.broadcast(ShootProjectile{ entity, entity.get_component<RangeAttackComponent>().getProjectileID(), { 0.f, 0.f } });
+				this->events.broadcast(ShootProjectile{ entity, entity.get_component<RangeAttackComponent>().getProjectileID()});
 			});
 
 			entity.get_component<TimerComponent>().restartTimer("Reload");

@@ -47,7 +47,7 @@ MenuState::MenuState(StateMachine& stateMachine, StateData& stateData) :
 	stateData.guiManager.addWidget(settingsButton);
 	stateData.guiManager.addWidget(quitButton);
 
-	stateData.soundManager.playMusic("MenuDisco.wav", true);
+	stateData.soundManager.playMusic("MenuMusic.wav", true);
 
 	Parsers::parseParticleSystem(stateData.resourceManager, "MenuParticles.txt", particleSystem);
 	particleSystem.addEmitter(Parsers::parseEmitter("MenuEmitters.txt"));

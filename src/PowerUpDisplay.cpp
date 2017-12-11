@@ -30,7 +30,7 @@ PowerUpDisplay::PowerUpDisplay(ResourceManager& resourceManager) :
 
 		iStream >> itemID >> animationFile >> left >> top >> width >> height >> scale;
 
-		powerUpData.emplace(Item{ itemID }, PowerUpGraphicsData(animationFile, { left, top, width, height }, scale));
+		powerUpData.emplace(Item{ itemID }, PowerUpData{ animationFile, { left, top, width, height }, scale });
 	}
 }
 
@@ -70,7 +70,7 @@ void PowerUpDisplay::draw(sf::RenderTarget& target, sf::RenderStates states) con
 	}
 }
 
-PowerUpGraphics::PowerUpGraphics(ResourceManager& resourceManager, Item item, const PowerUpData& powerUpData) 
+PowerUpGraphics::PowerUpGraphics(ResourceManager& resourceManager, Item item, const std::unordered_map<Item, PowerUpData>& powerUpData)
 {
 	const auto& graphicData = powerUpData.at(item);
 
@@ -91,12 +91,4 @@ void PowerUpGraphics::draw(sf::RenderTarget& target, sf::RenderStates states) co
 	states.transform *= this->getTransform();
 	
 	target.draw(this->sprite, states);
-}
-
-PowerUpGraphicsData::PowerUpGraphicsData(const std::string& animationFile, 
-	const sf::IntRect& textureRect, float scale) :
-	animationFile(animationFile),
-	textureRect(textureRect),
-	scale(scale)
-{
 }

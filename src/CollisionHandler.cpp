@@ -69,6 +69,7 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 		const auto& [movable, trampoline] = *orderedCollision;
 
 		this->events.broadcast(ApplyImpulse{ movable.entity, { 0.f, trampoline.properties.at("Impulse").getFloatValue() } });
+		this->events.broadcast(PlaySound{ SoundBuffersID::Trampoline, false });
 	}
 	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Feet, ObjectType::Waypoint))
 	{
@@ -78,15 +79,15 @@ void CollisionHandler::BeginContact(b2Contact* contact)
 	}
 	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Bullet, ObjectType::Alive))
 	{
-		const auto& [bullet, alive] = *orderedCollision;
+		const auto& [projectile, alive] = *orderedCollision;
 		
-		this->events.broadcast(CombatOcurred{ bullet.entity, alive.entity });
+		this->events.broadcast(CombatOcurred{ projectile.entity, alive.entity });
 		this->events.broadcast(StopMovement{ alive.entity });
 	}
 	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Explosion, ObjectType::Alive))
 	{
 		const auto& [explosion, alive] = *orderedCollision;
-
+		
 		this->events.broadcast(ApplyBlastImpact{ explosion.entity, alive.entity });
 	}
 	else if (const auto& orderedCollision = this->getOrderedCollision(objectA, objectB, ObjectType::Player, ObjectType::Character))

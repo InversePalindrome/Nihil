@@ -57,8 +57,6 @@ bool InventoryComponent::hasItem(Item item) const
 	{
 		return this->items->count(item);
 	}
-	else
-	{
-		return false;
-	}
+	
+	return false;
 }

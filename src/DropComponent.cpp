@@ -22,7 +22,7 @@ DropComponent::DropComponent(const std::string& fileName) :
 
 	while (inFile >> itemID >> odds)
 	{
-		drops.push_back({ static_cast<Item>(itemID), odds });
+		drops.push_back({ Item{itemID}, odds });
 	}
 }
 

@@ -132,7 +132,7 @@ void ItemsSystem::handleItemPickup(Entity collector, Entity item)
 
 			if (inventory.hasItem(pickup.getItem()))
 			{
-				inventory[pickup.getItem()]++;
+				++inventory[pickup.getItem()];
 			}
 			else
 			{
