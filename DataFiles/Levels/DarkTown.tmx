@@ -1,0 +1,790 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="180" height="12" tilewidth="128" tileheight="128" nextobjectid="213">
+ <tileset firstgid="1" source="Tileset1.tsx"/>
+ <tileset firstgid="50" source="BasicColorsTileset.tsx"/>
+ <imagelayer name="Background">
+  <image source="../../Resources/Textures/DarkTown.png" width="2048" height="1536"/>
+  <properties>
+   <property name="ID" type="int" value="12"/>
+  </properties>
+ </imagelayer>
+ <objectgroup name="Objects">
+  <object id="62" x="2" y="1206" width="2060" height="76">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="63" x="2" y="-2">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+   <polyline points="0,0 -2,1542"/>
+  </object>
+  <object id="64" x="32756" y="2">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+   <polyline points="0,0 6,1524"/>
+  </object>
+  <object id="65" x="2" y="1530">
+   <properties>
+    <property name="ID" type="int" value="128"/>
+   </properties>
+   <polyline points="0,0 32750,-4"/>
+  </object>
+  <object id="66" x="18430" y="1206" width="4612" height="76">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="67" x="2054" y="1148" width="254" height="138">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="68" x="2304" y="1018" width="516" height="138">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="69" x="2690" y="892" width="514" height="120">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="71" x="3074" y="774" width="380" height="114">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="72" x="3336" y="894" width="370" height="134">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="73" x="3594" y="1022" width="1654" height="126">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="74" x="3970" y="896" width="254" height="122">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="75" x="4486" y="890" width="250" height="140">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="76" x="4996" y="898" width="254" height="116">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="77" x="5124" y="1162" width="124" height="250">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="79" x="5252" y="1278" width="3456" height="128">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="80" x="5686" y="384" width="536" height="114">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="81" x="5688" y="910" width="532" height="118">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="82" x="6720" y="394" width="504" height="124">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="83" x="6710" y="898" width="516" height="124">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="84" x="7740" y="386" width="508" height="126">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="85" x="7738" y="908" width="528" height="126">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="86" x="5644" y="462">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+   <polygon points="0,0 44,-64 44,40"/>
+  </object>
+  <object id="87" x="5642" y="960">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+   <polygon points="0,0 52,-60 46,68"/>
+  </object>
+  <object id="88" x="6224" y="924">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+   <polygon points="0,0 -10,128 44,42"/>
+  </object>
+  <object id="89" x="6658" y="436">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+   <polygon points="0,0 64,-40 68,52"/>
+  </object>
+  <object id="90" x="6266" y="458">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+   <polygon points="0,0 -40,-66 -50,48"/>
+  </object>
+  <object id="91" x="6660" y="964">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+   <polygon points="0,0 54,-66 54,56"/>
+  </object>
+  <object id="92" x="7294" y="437.446">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+   <polygon points="0,0 -66,-47.4457 -64,73.8043"/>
+  </object>
+  <object id="93" x="7234" y="908">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+   <polygon points="0,0 -8,130 56,50"/>
+  </object>
+  <object id="94" x="7684" y="451.543">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+   <polygon points="0,0 54,-65.5429 54,58.4571"/>
+  </object>
+  <object id="95" x="7692" y="960">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+   <polygon points="0,0 48,-64 48,90"/>
+  </object>
+  <object id="96" x="8318" y="453.153">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+   <polygon points="0,0 -80,-79.1528 -64,59.8472"/>
+  </object>
+  <object id="97" x="8314" y="962">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+   <polygon points="0,0 -52,-52 -46,58"/>
+  </object>
+  <object id="98" x="8706" y="-2" width="124" height="1538">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="99" x="8828" y="-6" width="3842" height="136">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="100" x="8830" y="1412" width="3842" height="122">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="101" x="12550" y="134" width="120" height="1270">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="102" x="12674" y="638" width="256" height="128">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="103" x="12674" y="1156" width="128" height="250">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="104" x="12802" y="1278" width="5626" height="134">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="105" x="18304" y="1156" width="130" height="118">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="106" x="14208.4" y="1152.28" width="132" height="122">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="107" x="8832" y="764" width="3198" height="124">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="108" x="11904" y="648" width="130" height="112">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="109" x="10244" y="646" width="122" height="128">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="110" x="10624" y="518" width="128" height="116">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="111" x="10882" y="388" width="126" height="130">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="112" x="11136" y="512" width="256" height="122">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="113" x="11646" y="390" width="134" height="128">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="114" x="12290" y="898" width="126" height="124">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="115" x="12036" y="1158" width="128" height="116">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="116" x="11906" y="1282" width="128" height="126">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="117" x="11018" y="1282" width="500" height="132">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="118" x="10886" y="1158" width="250" height="114">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="119" x="10630" y="1290" width="250" height="118">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="120" x="11260" y="1026" width="262" height="132">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="121" x="10632" y="898" width="630" height="134">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="122" x="10372" y="1024" width="378" height="128">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="123" x="10112" y="1156" width="384" height="124">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="124" x="9852" y="1032" width="260" height="120">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="125" x="9852" y="1282" width="130" height="122">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="126" type="Sensor" x="9858" y="1152" width="250" height="124">
+   <properties>
+    <property name="ID" type="int" value="32768"/>
+   </properties>
+  </object>
+  <object id="127" type="Sensor" x="9988" y="1268" width="634" height="148">
+   <properties>
+    <property name="ID" type="int" value="32768"/>
+   </properties>
+  </object>
+  <object id="128" type="Sensor" x="10494" y="1140" width="388" height="142">
+   <properties>
+    <property name="ID" type="int" value="32768"/>
+   </properties>
+  </object>
+  <object id="129" type="Sensor" x="10748" y="1030" width="512" height="126">
+   <properties>
+    <property name="ID" type="int" value="32768"/>
+   </properties>
+  </object>
+  <object id="130" type="Sensor" x="11136" y="1152" width="380" height="140">
+   <properties>
+    <property name="ID" type="int" value="32768"/>
+   </properties>
+  </object>
+  <object id="131" x="3708" y="916" width="264" height="114">
+   <properties>
+    <property name="ID" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="132" x="4226" y="916" width="262" height="104">
+   <properties>
+    <property name="ID" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="133" x="4738.67" y="922.667" width="254.667" height="94.6667">
+   <properties>
+    <property name="ID" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="134" x="5248" y="1181.33" width="3456" height="97.3333">
+   <properties>
+    <property name="ID" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="135" x="10370" y="666" width="1530" height="110">
+   <properties>
+    <property name="ID" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="136" x="12042" y="1298" width="498" height="104">
+   <properties>
+    <property name="ID" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="137" x="12806" y="1192" width="1390" height="84">
+   <properties>
+    <property name="ID" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="138" x="15106" y="1182" width="126" height="92">
+   <properties>
+    <property name="ID" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="139" x="17018" y="1178" width="134" height="108">
+   <properties>
+    <property name="ID" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="140" x="22398" y="770" width="642" height="508">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="141" x="22270" y="769.5" width="128" height="512.5">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="142" x="22142" y="768" width="128" height="514">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="143" x="22016" y="906" width="130" height="376">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="144" x="21894" y="1026" width="118" height="258">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="145" x="21756" y="1156" width="140" height="130">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="146" x="8830" y="882" width="516" height="524">
+   <properties>
+    <property name="ID" type="int" value="8192"/>
+    <property name="xPosition" type="float" value="12800"/>
+    <property name="yPosition" type="float" value="560"/>
+   </properties>
+  </object>
+  <object id="148" x="5890" y="252" width="132" height="126">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="149" x="5886" y="768" width="136" height="132">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="150" x="6916" y="770" width="122" height="124">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="151" x="6912" y="258" width="126" height="130">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="152" x="7938" y="766" width="126" height="124">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="153" x="7942" y="258" width="126" height="120">
+   <properties>
+    <property name="ID" type="int" value="8192"/>
+    <property name="xPosition" type="float" value="9000"/>
+    <property name="yPosition" type="float" value="680"/>
+   </properties>
+  </object>
+  <object id="154" x="23030" y="-2">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+   <polyline points="0,0 6,1540"/>
+  </object>
+  <object id="155" type="Entity" x="5458.67" y="685.67" width="48" height="37.3333">
+   <properties>
+    <property name="File" value="StoneBrickPlatform.txt"/>
+    <property name="TaskFile" value="MP_DT1.txt"/>
+   </properties>
+  </object>
+  <object id="157" type="Entity" x="8438.33" y="685.33" width="48" height="37.3333">
+   <properties>
+    <property name="File" value="StoneBrickPlatform.txt"/>
+    <property name="TaskFile" value="MP_DT2.txt"/>
+   </properties>
+  </object>
+  <object id="159" type="Sensor" x="5121.33" y="-2.66667">
+   <properties>
+    <property name="ID" type="int" value="131072"/>
+    <property name="xPosition" type="float" value="5070"/>
+    <property name="yPosition" type="float" value="800"/>
+   </properties>
+   <polyline points="0,0 14.6667,1568"/>
+  </object>
+  <object id="160" x="5164" y="868" width="37.3333" height="25.3333">
+   <properties>
+    <property name="ID" type="int" value="64"/>
+    <property name="Impulse" type="float" value="330"/>
+   </properties>
+  </object>
+  <object id="161" type="Entity" x="13000" y="673" width="56" height="50.6667">
+   <properties>
+    <property name="File" value="DarkPlatform.txt"/>
+    <property name="TaskFile" value="MP_DT3.txt"/>
+   </properties>
+  </object>
+  <object id="162" type="Entity" x="14130" y="673" width="56" height="50.6667">
+   <properties>
+    <property name="File" value="DarkPlatform.txt"/>
+    <property name="TaskFile" value="MP_DT4.txt"/>
+   </properties>
+  </object>
+  <object id="164" type="Sensor" x="12824.6" y="2.9697">
+   <properties>
+    <property name="ID" type="int" value="131072"/>
+    <property name="xPosition" type="float" value="12800"/>
+    <property name="yPosition" type="float" value="560"/>
+   </properties>
+   <polyline points="0,0 0,1515.15"/>
+  </object>
+  <object id="166" x="14331.6" y="1152.07" width="762.667" height="122.667">
+   <properties>
+    <property name="ID" type="int" value="524288"/>
+   </properties>
+  </object>
+  <object id="167" x="15233.3" y="1150.67" width="1789.33" height="125.333">
+   <properties>
+    <property name="ID" type="int" value="524288"/>
+   </properties>
+  </object>
+  <object id="168" x="17150.7" y="1153.33" width="1149.33" height="132">
+   <properties>
+    <property name="ID" type="int" value="524288"/>
+   </properties>
+  </object>
+  <object id="169" type="Entity" x="1824.55" y="1136.18" width="90.9091" height="69.697">
+   <properties>
+    <property name="File" value="Skeleton.txt"/>
+    <property name="PathwayID" type="int" value="0"/>
+   </properties>
+  </object>
+  <object id="170" type="Sensor" x="202" y="1170" width="48" height="44">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="0 0"/>
+   </properties>
+  </object>
+  <object id="171" type="Sensor" x="1978" y="1168" width="48" height="44">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="0 1"/>
+   </properties>
+  </object>
+  <object id="172" type="Entity" x="14408.5" y="1094.18" width="90.9091" height="69.697">
+   <properties>
+    <property name="File" value="Skeleton.txt"/>
+    <property name="PathwayID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="173" type="Sensor" x="14340" y="1118" width="48" height="44">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="1 0"/>
+   </properties>
+  </object>
+  <object id="175" type="Sensor" x="15050" y="1112" width="48" height="44">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="1 1"/>
+   </properties>
+  </object>
+  <object id="176" type="Sensor" x="15144" y="1048" width="48" height="44">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="1 2"/>
+   </properties>
+  </object>
+  <object id="177" type="Sensor" x="15264" y="1110" width="48" height="44">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="1 3"/>
+   </properties>
+  </object>
+  <object id="178" type="Sensor" x="16970" y="1112" width="48" height="44">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="1 4"/>
+   </properties>
+  </object>
+  <object id="179" type="Sensor" x="17074" y="1030" width="48" height="44">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="1 5"/>
+   </properties>
+  </object>
+  <object id="180" type="Sensor" x="17192" y="1108" width="48" height="44">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="1 6"/>
+   </properties>
+  </object>
+  <object id="181" type="Sensor" x="18260" y="1124" width="48" height="44">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="1 7"/>
+   </properties>
+  </object>
+  <object id="182" type="Sensor" x="9287.33" y="7.33333">
+   <properties>
+    <property name="ID" type="int" value="131072"/>
+    <property name="xPosition" type="float" value="9000"/>
+    <property name="yPosition" type="float" value="700"/>
+   </properties>
+   <polyline points="0,0 14.6667,1568"/>
+  </object>
+  <object id="183" type="Object" x="930" y="1036" width="58" height="56">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="184" type="Object" x="2186" y="1062" width="58" height="56">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="185" type="Object" x="2970" y="812" width="58" height="56">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="186" type="Object" x="2758" y="810" width="58" height="56">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="187" type="Object" x="3870" y="672" width="58" height="56">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="188" type="Entity" x="4378" y="674" width="58" height="56">
+   <properties>
+    <property name="ObjectFile" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="189" type="Object" x="5764" y="282" width="58" height="56">
+   <properties>
+    <property name="File" value="GreenGem.txt"/>
+   </properties>
+  </object>
+  <object id="190" type="Object" x="7828" y="802" width="58" height="56">
+   <properties>
+    <property name="File" value="GreenGem.txt"/>
+   </properties>
+  </object>
+  <object id="191" type="Object" x="8880" y="586" width="58" height="56">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="192" type="Object" x="10654" y="421" width="58" height="56">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="193" type="Object" x="11680" y="310" width="58" height="56">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="194" type="Object" x="10776" y="1192" width="58" height="56">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="195" type="Object" x="10118" y="1320" width="58" height="56">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="196" type="Object" x="12444" y="678" width="58" height="56">
+   <properties>
+    <property name="File" value="PurpleGem.txt"/>
+   </properties>
+  </object>
+  <object id="197" type="Object" x="13184" y="464" width="58" height="56">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="198" type="Object" x="13868" y="468" width="58" height="56">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="199" type="Object" x="15136" y="892" width="58" height="56">
+   <properties>
+    <property name="File" value="GreenGem.txt"/>
+   </properties>
+  </object>
+  <object id="200" type="Object" x="14718" y="1058" width="58" height="56">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="201" type="Object" x="15960" y="1076" width="58" height="56">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="202" type="Object" x="16508" y="1072" width="58" height="56">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="203" type="Object" x="17764" y="1086" width="58" height="56">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="204" type="Object" x="19691.3" y="941.333" width="58" height="56">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="205" type="Object" x="20696" y="1112" width="58" height="56">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="206" type="Object" x="21500" y="1112" width="58" height="56">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="207" type="Object" x="22036" y="808" width="58" height="56">
+   <properties>
+    <property name="File" value="GreenGem.txt"/>
+   </properties>
+  </object>
+  <object id="208" type="Entity" x="22303.2" y="704.167" width="54" height="56">
+   <properties>
+    <property name="File" value="PurpleMonster.txt"/>
+   </properties>
+  </object>
+  <object id="210" type="Entity" x="10125.5" y="692" width="58" height="56">
+   <properties>
+    <property name="Angle" type="float" value="180"/>
+    <property name="Direction" type="int" value="1"/>
+    <property name="File" value="PurpleCannon.txt"/>
+   </properties>
+  </object>
+  <object id="211" x="22657.3" y="390.667" width="394.667" height="378.667">
+   <properties>
+    <property name="Destination" value="Plain"/>
+    <property name="ID" type="int" value="16"/>
+    <property name="xPosition" type="float" value="31350"/>
+    <property name="yPosition" type="float" value="980"/>
+   </properties>
+  </object>
+  <object id="212" type="Object" x="22782.7" y="510.667" width="129.333" height="124">
+   <properties>
+    <property name="File" value="PlainPortal.txt"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="Main" width="180" height="12">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,27,44,44,44,29,0,0,0,27,44,44,44,29,0,0,0,27,44,44,44,29,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,19,0,0,0,0,0,19,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,1,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,19,0,0,0,19,19,0,0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,20,2,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,6,43,43,43,30,31,43,36,31,31,43,43,43,6,0,0,0,0,6,6,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,1,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,19,19,19,0,0,0,0,0,0,0,0,0,0,0,0,0,45,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,19,19,19,19,0,19,19,19,31,31,19,19,43,43,19,19,43,43,19,19,0,0,0,27,44,44,44,29,0,0,0,27,44,44,44,29,0,0,0,27,44,44,44,29,0,0,0,6,1,2,2,1,0,0,0,0,0,0,0,0,0,0,19,19,19,19,19,0,0,0,0,0,0,0,0,19,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,19,19,19,19,0,0,0,0,0,0,19,19,19,19,19,19,19,19,19,19,19,19,19,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,2,20,20,2,0,0,0,0,19,19,0,0,19,19,19,55,55,55,55,19,19,0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,19,19,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,19,43,31,31,43,43,43,43,43,36,36,43,43,43,43,43,31,31,43,43,43,43,43,36,43,43,30,43,6,2,20,20,2,0,0,0,0,55,55,19,19,19,55,55,55,19,19,55,55,55,0,0,0,0,19,0,0,0,6,6,43,43,31,43,43,43,36,31,43,43,30,6,20,20,20,20,20,20,43,20,20,20,20,20,20,20,20,20,20,20,20,20,20,43,20,20,20,20,20,20,20,20,20,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,6,1,2,1,1,0,0,0,0,19,55,55,55,55,55,19,19,0,19,19,19,19,0,0,0,6,43,36,36,43,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+</map>

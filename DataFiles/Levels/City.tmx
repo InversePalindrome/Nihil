@@ -1,0 +1,754 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="120" height="12" tilewidth="128" tileheight="128" nextobjectid="156">
+ <tileset firstgid="1" source="Tileset1.tsx"/>
+ <tileset firstgid="50" source="BasicColorsTileset.tsx"/>
+ <layer name="Main" width="120" height="12">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,6,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,6,6,6,6,55,6,6,6,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,1,2,1,0,0,0,0,0,0,0,0,0,6,55,55,55,55,55,55,55,55,55,6,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,10,10,10,10,10,10,10,10,10,10,10,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,2,20,2,0,0,0,0,0,0,0,0,0,0,55,55,55,55,55,55,6,6,55,0,6,6,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,1,2,1,0,0,0,0,0,0,0,0,0,0,6,6,6,6,6,6,55,55,55,55,55,55,6,6,6,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,19,19,19,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,10,10,10,10,10,10,10,0,0,6,6,0,0,0,0,0,0,0,0,55,55,55,55,6,55,6,55,55,55,55,6,6,6,6,6,6,6,6,0,0,0,0,0,0,0,0,0,0,0,6,0,0,6,0,0,19,0,0,0,0,0,0,0,19,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,10,10,10,10,10,10,10,10,10,10,10,0,0,0,0,10,10,10,10,10,10,0,0,
+0,0,0,6,6,6,6,6,6,6,43,43,6,6,6,6,0,0,0,0,0,0,6,6,6,6,26,6,6,6,55,55,55,55,55,55,55,55,55,55,0,0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,19,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,6,6,1,2,1,0,6,6,6,6,6,6,6,6,6,6,6,6,6,6,55,55,55,0,6,55,55,55,55,55,55,6,6,6,6,6,6,6,6,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,19,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,6,6,2,20,2,0,0,0,0,0,0,0,0,0,0,0,0,55,55,55,55,6,6,55,55,55,55,55,6,6,6,6,0,0,0,0,0,0,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,10,10,10,10,10,10,10,10,10,10,10,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,6,6,1,2,1,0,0,0,0,0,0,0,0,0,0,0,0,6,6,6,6,0,6,6,6,6,6,6,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,19,30,43,19,31,19,43,43,19,43,19,43,31,19,43,30,19,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="1" x="14341.3" y="768" width="769.333" height="129.333">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="2" x="12282.3" y="384" width="1536" height="141.333">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="3" x="12281.7" y="765.333" width="1541.33" height="128">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="4" x="12290.3" y="1154" width="1529.33" height="134.667">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="5" x="13315" y="1036" width="130.667" height="114.667">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="6" x="12546.7" y="642.667" width="129.333" height="120">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="7" x="12929.3" y="257.666" width="129.333" height="117.333">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="8" type="Entity" x="14022" y="1200" width="62" height="45">
+   <properties>
+    <property name="File" value="MechanicalPlatform.txt"/>
+    <property name="TaskFile" value="MP_CT1.txt"/>
+   </properties>
+  </object>
+  <object id="9" x="1.33333" y="1528">
+   <properties>
+    <property name="ID" type="int" value="128"/>
+   </properties>
+   <polyline points="0,0 32758.7,5.33333"/>
+  </object>
+  <object id="10" x="3.0303" y="0">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+   <polyline points="0,0 6.06061,1551.52"/>
+  </object>
+  <object id="11" x="29981.5" y="-86">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+   <polyline points="0,0 9.09091,1542.42"/>
+  </object>
+  <object id="12" type="Entity" x="12176.5" y="821.212" width="62" height="45">
+   <properties>
+    <property name="File" value="MechanicalPlatform.txt"/>
+    <property name="TaskFile" value="MP_CT2.txt"/>
+   </properties>
+  </object>
+  <object id="13" x="12294" y="1282" width="126" height="252">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="14" x="10256" y="1412" width="2038" height="128">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="15" x="10093.3" y="1158" width="144.667" height="248">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="16" x="10244" y="1280" width="124" height="122">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="17" x="10622" y="1288" width="124" height="122">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="18" x="10902" y="1284" width="124" height="122">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="19" x="11264" y="1280" width="124" height="122">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="20" x="11538" y="1278" width="124" height="122">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="21" x="11912" y="1284" width="124" height="122">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="22" x="5124" y="1158" width="4970" height="126">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="23" x="9230" y="1036" width="116" height="114">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="24" x="8834" y="888" width="128" height="144">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="25" x="8454" y="774" width="124" height="122">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="26" x="7806" y="654" width="398" height="118">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="27" x="7434" y="776" width="120" height="126">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="28" x="7058" y="774" width="114" height="130">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="29" x="6666" y="772" width="120" height="140">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="30" x="6282" y="898" width="124" height="130">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="31" x="6024" y="1026" width="124" height="128">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="34" x="4232" y="1030" width="1018.67" height="132">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="35" x="4224" y="656" width="130" height="240">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="36" x="4352" y="774" width="894" height="122">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="37" x="3846" y="642" width="404" height="120">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="38" x="3602" y="514" width="368" height="134">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="39" x="3462" y="384" width="250" height="118">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="40" x="3074" y="258" width="514" height="120">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="41" x="2822" y="138" width="384" height="122">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="42" x="2320" y="268" width="626" height="114">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="43" x="2186" y="390" width="114" height="116">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="44" x="3078" y="514" width="250" height="124">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="45" x="2310" y="644" width="754" height="118">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="46" x="3594" y="770" width="130" height="122">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="47" x="2828" y="892" width="1018" height="136">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="48" x="3336" y="776" width="128" height="368">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="49" x="2052" y="1034" width="766" height="112">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="50" x="3852" y="1156" width="496" height="124">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="51" x="3078" y="1286" width="890" height="118">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="52" x="2944" y="1152" width="264" height="120">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="53" x="2440" y="1288" width="512" height="118">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="54" x="278" y="1408" width="2284" height="122">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="55" x="262" y="1026" width="258" height="376">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="56" type="Sensor" x="3814.67" y="766" width="417.333" height="378">
+   <properties>
+    <property name="ID" type="int" value="32768"/>
+   </properties>
+  </object>
+  <object id="57" type="Sensor" x="4226" y="904" width="894" height="126">
+   <properties>
+    <property name="ID" type="int" value="32768"/>
+   </properties>
+  </object>
+  <object id="58" type="Sensor" x="3716" y="644" width="134" height="254">
+   <properties>
+    <property name="ID" type="int" value="32768"/>
+   </properties>
+  </object>
+  <object id="59" type="Sensor" x="3436.67" y="998.667" width="415.333" height="275.333">
+   <properties>
+    <property name="ID" type="int" value="32768"/>
+   </properties>
+  </object>
+  <object id="60" type="Sensor" x="3208" y="1140" width="268" height="134">
+   <properties>
+    <property name="ID" type="int" value="32768"/>
+   </properties>
+  </object>
+  <object id="61" type="Sensor" x="2824" y="1026" width="381.333" height="120">
+   <properties>
+    <property name="ID" type="int" value="32768"/>
+   </properties>
+  </object>
+  <object id="62" type="Sensor" x="2428" y="1150" width="524" height="126">
+   <properties>
+    <property name="ID" type="int" value="32768"/>
+   </properties>
+  </object>
+  <object id="63" type="Sensor" x="3064" y="638" width="652" height="136">
+   <properties>
+    <property name="ID" type="int" value="32768"/>
+   </properties>
+  </object>
+  <object id="64" type="Sensor" x="2818" y="770" width="514" height="122">
+   <properties>
+    <property name="ID" type="int" value="32768"/>
+   </properties>
+  </object>
+  <object id="65" type="Sensor" x="3468" y="764" width="124" height="138">
+   <properties>
+    <property name="ID" type="int" value="32768"/>
+   </properties>
+  </object>
+  <object id="66" type="Sensor" x="2310" y="388" width="770" height="242">
+   <properties>
+    <property name="ID" type="int" value="32768"/>
+   </properties>
+  </object>
+  <object id="67" type="Sensor" x="2948" y="272" width="130" height="120">
+   <properties>
+    <property name="ID" type="int" value="32768"/>
+   </properties>
+  </object>
+  <object id="68" type="Sensor" x="3082" y="378" width="374" height="142">
+   <properties>
+    <property name="ID" type="int" value="32768"/>
+   </properties>
+  </object>
+  <object id="69" type="Sensor" x="3328" y="520" width="134" height="130">
+   <properties>
+    <property name="ID" type="int" value="32768"/>
+   </properties>
+  </object>
+  <object id="70" x="10369" y="1288" width="250" height="131">
+   <properties>
+    <property name="ID" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="71" x="10748" y="1296" width="151" height="110">
+   <properties>
+    <property name="ID" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="72" x="11025" y="1297" width="239" height="111">
+   <properties>
+    <property name="ID" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="73" x="11391" y="1291" width="148" height="122">
+   <properties>
+    <property name="ID" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="74" x="11661" y="1290" width="256" height="119">
+   <properties>
+    <property name="ID" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="75" x="12037" y="1297" width="255" height="109">
+   <properties>
+    <property name="ID" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="76" x="640" y="381" width="389" height="382">
+   <properties>
+    <property name="Destination" value="DarkTown"/>
+    <property name="ID" type="int" value="16"/>
+    <property name="xPosition" type="float" value="200"/>
+    <property name="yPosition" type="float" value="980"/>
+   </properties>
+  </object>
+  <object id="77" x="517" y="1033" width="383" height="372">
+   <properties>
+    <property name="Destination" value="Plain"/>
+    <property name="ID" type="int" value="16"/>
+    <property name="xPosition" type="float" value="15000"/>
+    <property name="yPosition" type="float" value="470"/>
+   </properties>
+  </object>
+  <object id="78" x="382" y="766" width="901" height="262">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="79" x="1033" y="1035" width="1025" height="109">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="80" x="1289" y="890" width="253" height="139">
+   <properties>
+    <property name="ID" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="81" x="1542" y="773" width="242" height="372">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="82" x="1781" y="897" width="270" height="248">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="83" type="Object" x="768" y="512" width="129.67" height="132">
+   <properties>
+    <property name="File" value="DarkTownPortal.txt"/>
+   </properties>
+  </object>
+  <object id="84" type="Object" x="642.667" y="1153.33" width="130.667" height="132">
+   <properties>
+    <property name="File" value="PlainPortal.txt"/>
+   </properties>
+  </object>
+  <object id="87" type="Sensor" x="9928" y="16">
+   <properties>
+    <property name="ID" type="int" value="131072"/>
+    <property name="xPosition" type="float" value="9300"/>
+    <property name="yPosition" type="float" value="1050"/>
+   </properties>
+   <polyline points="0,0 12,1504"/>
+  </object>
+  <object id="88" x="15348.5" y="3.0303">
+   <properties>
+    <property name="ID" type="int" value="1"/>
+   </properties>
+   <polyline points="0,0 0,1590.91"/>
+  </object>
+  <object id="89" type="Entity" x="6210" y="1102" width="42" height="34">
+   <properties>
+    <property name="File" value="Goblin.txt"/>
+    <property name="PathwayID" type="int" value="0"/>
+   </properties>
+  </object>
+  <object id="90" type="Sensor" x="6166" y="1116" width="30" height="32">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="0 0"/>
+   </properties>
+  </object>
+  <object id="91" type="Sensor" x="9186" y="1112" width="30" height="32">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="0 1"/>
+   </properties>
+  </object>
+  <object id="92" type="Entity" x="13698" y="734" width="42" height="34">
+   <properties>
+    <property name="File" value="Goblin.txt"/>
+    <property name="PathwayID" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="93" type="Sensor" x="12304" y="756" width="30" height="32">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="1 0"/>
+   </properties>
+  </object>
+  <object id="94" type="Sensor" x="12507.8" y="743.939" width="30" height="32">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="1 1"/>
+   </properties>
+  </object>
+  <object id="95" type="Sensor" x="12592.1" y="585.606" width="30" height="32">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="1 2"/>
+   </properties>
+  </object>
+  <object id="96" type="Sensor" x="12689.8" y="746.939" width="30" height="32">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="1 3"/>
+   </properties>
+  </object>
+  <object id="97" type="Sensor" x="13776.8" y="748.939" width="30" height="32">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="1 4"/>
+   </properties>
+  </object>
+  <object id="98" type="Entity" x="12368" y="350" width="42" height="34">
+   <properties>
+    <property name="File" value="Goblin.txt"/>
+    <property name="PathwayID" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="99" type="Sensor" x="13068.8" y="369.939" width="30" height="32">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="2 1"/>
+   </properties>
+  </object>
+  <object id="102" type="Sensor" x="13781.8" y="371.939" width="30" height="32">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="2 0"/>
+   </properties>
+  </object>
+  <object id="103" type="Sensor" x="12978.1" y="205.939" width="30" height="32">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="2 2"/>
+   </properties>
+  </object>
+  <object id="105" type="Sensor" x="12874.8" y="370.939" width="30" height="32">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="2 3"/>
+   </properties>
+  </object>
+  <object id="106" type="Sensor" x="12302.8" y="374.939" width="30" height="32">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="2 4"/>
+   </properties>
+  </object>
+  <object id="107" type="Entity" x="12353" y="1118" width="42" height="34">
+   <properties>
+    <property name="File" value="Goblin.txt"/>
+    <property name="PathwayID" type="int" value="3"/>
+   </properties>
+  </object>
+  <object id="108" type="Sensor" x="13765.8" y="1143.94" width="30" height="32">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="3 0"/>
+   </properties>
+  </object>
+  <object id="110" type="Sensor" x="13459.8" y="1136.94" width="30" height="32">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="3 1"/>
+   </properties>
+  </object>
+  <object id="112" type="Sensor" x="13355.8" y="980.607" width="30" height="32">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="3 2"/>
+   </properties>
+  </object>
+  <object id="113" type="Sensor" x="13272.8" y="1129.94" width="30" height="32">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="3 3"/>
+   </properties>
+  </object>
+  <object id="114" type="Sensor" x="12304.8" y="1138.94" width="30" height="32">
+   <properties>
+    <property name="ID" type="int" value="512"/>
+    <property name="PathwayData" value="3 4"/>
+   </properties>
+  </object>
+  <object id="115" type="Object" x="13545.3" y="321.333" width="46.6667" height="34.6667">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="122" type="Object" x="12970.6" y="204" width="46.6667" height="34.6667">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="123" type="Object" x="12585.3" y="588" width="46.6667" height="34.6667">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="125" type="Object" x="12537.3" y="1090.67" width="46.6667" height="34.6667">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="126" type="Object" x="12164" y="186.667" width="46.6667" height="34.6667">
+   <properties>
+    <property name="File" value="PurpleGem.txt"/>
+   </properties>
+  </object>
+  <object id="127" type="Object" x="11388" y="589.333" width="46.6667" height="48">
+   <properties>
+    <property name="File" value="YellowGem.txt"/>
+   </properties>
+  </object>
+  <object id="128" type="Object" x="11713.3" y="594.667" width="46.6667" height="48">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="129" type="Object" x="11096" y="585.333" width="46.6667" height="48">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="130" type="Object" x="10937.3" y="1208" width="46.6667" height="48">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="131" type="Object" x="11565.3" y="1212" width="46.6667" height="48">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="132" type="Object" x="10281.3" y="1220" width="46.6667" height="48">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="133" type="Object" x="8494.67" y="696" width="46.6667" height="48">
+   <properties>
+    <property name="File" value="YellowGem.txt"/>
+   </properties>
+  </object>
+  <object id="134" type="Object" x="7974.67" y="590.667" width="46.6667" height="48">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="135" type="Object" x="7812" y="1076" width="46.6667" height="48">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="136" type="Object" x="7950.67" y="1077.33" width="46.6667" height="48">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="137" type="Object" x="6696" y="704" width="46.6667" height="48">
+   <properties>
+    <property name="File" value="PurpleGem.txt"/>
+   </properties>
+  </object>
+  <object id="138" type="Object" x="5166.67" y="957.333" width="46.6667" height="48">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="139" type="Entity" x="3778.67" y="820" width="46.6667" height="48">
+   <properties>
+    <property name="ObjectFile" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="140" type="Object" x="3778.67" y="820" width="46.6667" height="48">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="141" type="Object" x="3493.33" y="1082.67" width="46.6667" height="48">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="142" type="Object" x="2653.33" y="929.333" width="46.6667" height="48">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="143" type="Object" x="2326.67" y="553.333" width="46.6667" height="48">
+   <properties>
+    <property name="File" value="YellowGem.txt"/>
+   </properties>
+  </object>
+  <object id="144" type="Object" x="2121.33" y="1308" width="46.6667" height="48">
+   <properties>
+    <property name="File" value="PurpleGem.txt"/>
+   </properties>
+  </object>
+  <object id="145" type="Object" x="1600" y="708" width="46.6667" height="48">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="146" type="Object" x="1592" y="1333.33" width="46.6667" height="48">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="147" type="Entity" x="1038.67" y="1318.67" width="46.6667" height="48">
+   <properties>
+    <property name="ObjectFile" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="148" type="Object" x="1038.67" y="1318.67" width="46.6667" height="48">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="150" type="Object" x="2994.67" y="413.333" width="46.6667" height="48">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="151" type="Object" x="3141.33" y="745.333" width="46.6667" height="48">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="152" type="Object" x="14005.3" y="310.667" width="46.6667" height="34.6667">
+   <properties>
+    <property name="File" value="Coin.txt"/>
+   </properties>
+  </object>
+  <object id="153" type="Entity" x="9506.67" y="309.333" width="58.6667" height="57.3333">
+   <properties>
+    <property name="Angle" type="float" value="270"/>
+    <property name="Direction" type="int" value="2"/>
+    <property name="File" value="RedCannon.txt"/>
+   </properties>
+  </object>
+  <object id="155" type="Entity" x="6306.67" y="311.333" width="58.6667" height="57.3333">
+   <properties>
+    <property name="Angle" type="float" value="270"/>
+    <property name="Direction" type="int" value="2"/>
+    <property name="File" value="RedCannon.txt"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <imagelayer name="Images">
+  <image source="../../Resources/Textures/City.png" width="2048" height="1536"/>
+  <properties>
+   <property name="ID" type="int" value="7"/>
+  </properties>
+ </imagelayer>
+</map>

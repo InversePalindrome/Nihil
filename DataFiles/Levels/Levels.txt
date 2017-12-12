@@ -1,1 +1,9 @@
-DarkForest
+Plain 0 0 -9.8 100 950 Plain.wav
+DarkTown 0 0 -9.8 200 1000 DarkTown.wav
+Tower 1 0 -4 1135 2439 Tower.wav
+City 0 0 -9.8 14800 700 City.wav
+Desert 0 0 -9.8 Desert.wav
+FlowerLand 0 0 -9.8 FlowerLand.wav
+IceZone 1 0 -4 IceZone.wav
+SkyZone 1 0 -8 600 7000 SkyZone.wav
+Jungle 0 0 -9.8 Jungle.wav
