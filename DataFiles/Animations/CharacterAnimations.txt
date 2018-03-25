@@ -1,0 +1,28 @@
+Animation 0 0 1
+Frame 1 5 100 20 32
+Frame 1 38 100 20 32
+Frame 1 70 100 20 32
+Frame 1 102 100 20 32
+Animation 0 1 1
+Frame 1 5 67 20 32
+Frame 1 38 67 20 32
+Frame 1 70 67 20 32
+Frame 1 102 67 20 32
+Animation 1 0 1
+Frame 1 5 34 20 32
+Frame 1 38 34 20 32
+Frame 1 70 34 20 32
+Frame 1 102 34 20 32
+Frame 1 134 34 20 32
+Frame 1 165 34 20 32
+Animation 1 1 1
+Frame 1 5 2 20 32
+Frame 1 38 2 20 32
+Frame 1 70 2 20 32
+Frame 1 102 2 20 32
+Frame 1 134 2 20 32
+Frame 1 165 2 20 32
+Animation 2 0 1
+Frame 1 85 144 20 32
+Animation 2 1 1
+Frame 1 22 146 20 32

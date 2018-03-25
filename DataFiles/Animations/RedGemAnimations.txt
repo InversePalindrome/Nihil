@@ -1,4 +1,4 @@
-Animation 0 0.8
+Animation 0 0 0.8
 Frame 1 0 1028 256 256
 Frame 1 286 1028 217 256 
 Frame 1 548 1028 188 256
