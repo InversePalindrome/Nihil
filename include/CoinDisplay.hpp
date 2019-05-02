@@ -24,17 +24,17 @@ InversePalindrome.com
 class CoinDisplay : public Renderable
 {
 public:
-	CoinDisplay(ResourceManager& resourceManager);
+    CoinDisplay(ResourceManager& resourceManager);
 
-	void update(float deltaTime);
+    void update(float deltaTime);
 
-	void setNumberOfCoins(std::size_t coins);
+    void setNumberOfCoins(std::size_t coins);
 
 private:
-	sf::Sprite coin;
-	sf::Text text;
+    sf::Sprite coin;
+    sf::Text text;
 
-	Animator animator;
+    Animator animator;
 
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

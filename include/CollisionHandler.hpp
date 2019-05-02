@@ -19,21 +19,21 @@ InversePalindrome.com
 
 class CollisionHandler : public b2ContactListener
 {
-	using OrderedCollision = std::pair<CollisionData, CollisionData>;
+    using OrderedCollision = std::pair<CollisionData, CollisionData>;
 
 public:
-	CollisionHandler(Events& events);
+    CollisionHandler(Events& events);
 
 private:
     Events& events;
 
-	virtual void BeginContact(b2Contact* contact) override;
-	virtual void EndContact(b2Contact* contact) override;
+    virtual void BeginContact(b2Contact* contact) override;
+    virtual void EndContact(b2Contact* contact) override;
 
-	virtual void PreSolve(b2Contact* contact, const b2Manifold* oldManifold) override;
-	virtual void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) override;
-	
-	std::optional<CollisionData> getCollider(CollisionData* objectA, CollisionData* objectB, ObjectType type);
-	
-   std::optional<OrderedCollision> getOrderedCollision(CollisionData* objectA, CollisionData* objectB, ObjectType type1, ObjectType type2);
+    virtual void PreSolve(b2Contact* contact, const b2Manifold* oldManifold) override;
+    virtual void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) override;
+
+    std::optional<CollisionData> getCollider(CollisionData* objectA, CollisionData* objectB, ObjectType type);
+
+    std::optional<OrderedCollision> getOrderedCollision(CollisionData* objectA, CollisionData* objectB, ObjectType type1, ObjectType type2);
 };

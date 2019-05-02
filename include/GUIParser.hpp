@@ -14,5 +14,5 @@ InversePalindrome.com
 
 namespace Parsers
 {
-	void parseGUIProperties(GUIManager& guiManager, const std::string& fileName);
+    void parseGUIProperties(GUIManager& guiManager, const std::string& fileName);
 }

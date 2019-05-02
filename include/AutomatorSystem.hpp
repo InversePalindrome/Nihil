@@ -16,16 +16,16 @@ InversePalindrome.com
 class AutomatorSystem : public System
 {
 public:
-	AutomatorSystem(Entities& entities, Events& events);
+    AutomatorSystem(Entities& entities, Events& events);
 
-	virtual void update(float deltaTime) override;
+    virtual void update(float deltaTime) override;
 
 private:
-	std::unordered_map<Direction, std::function<void(Entity)>> registeredTasks;
+    std::unordered_map<Direction, std::function<void(Entity)>> registeredTasks;
 
-	void addTasks(Entity entity);
+    void addTasks(Entity entity);
 
-	void sendTask(Entity entity, AutomatedComponent& automated);
+    void sendTask(Entity entity, AutomatedComponent& automated);
 
-	bool hasCompletedTask(Entity entity, const b2Vec2& target) const;
+    bool hasCompletedTask(Entity entity, const b2Vec2& target) const;
 };

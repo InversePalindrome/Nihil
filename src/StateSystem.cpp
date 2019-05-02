@@ -10,9 +10,9 @@ InversePalindrome.com
 
 
 StateSystem::StateSystem(Entities& entities, Events& events) :
-	System(entities, events)
+    System(entities, events)
 {
-	events.subscribe<ChangeState>([this](const auto& event) { changeState(event.entity, event.state); });
+    events.subscribe<ChangeState>([this](const auto & event) { changeState(event.entity, event.state); });
 }
 
 void StateSystem::update(float deltaTime)
@@ -21,15 +21,15 @@ void StateSystem::update(float deltaTime)
 
 void StateSystem::changeState(Entity entity, EntityState state)
 {
-	if (entity.has_component<StateComponent>())
-	{
-		auto& stateComponent = entity.get_component<StateComponent>();
+    if (entity.has_component<StateComponent>())
+    {
+        auto& stateComponent = entity.get_component<StateComponent>();
 
-		if (stateComponent.getState() != state)
-		{
-			stateComponent.setState(state);
+        if (stateComponent.getState() != state)
+        {
+            stateComponent.setState(state);
 
-			this->events.broadcast(StateChanged{ entity, state });
-		}
-	}
+            this->events.broadcast(StateChanged{ entity, state });
+        }
+    }
 }

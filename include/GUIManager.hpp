@@ -20,35 +20,35 @@ InversePalindrome.com
 
 class GUIManager
 {
-	using widgetPtr = std::shared_ptr<sfg::Widget>;
+    using widgetPtr = std::shared_ptr<sfg::Widget>;
 
 public:
-	GUIManager(sf::RenderWindow& window);
+    GUIManager(sf::RenderWindow& window);
 
-	void update(float deltaTime);
-	void handleEvent(const sf::Event& event);
-	void display();
+    void update(float deltaTime);
+    void handleEvent(const sf::Event& event);
+    void display();
 
-	void addWidget(widgetPtr widget);
+    void addWidget(widgetPtr widget);
 
-	void removeAllWidgets();
+    void removeAllWidgets();
 
-	void hideAllWidgets();
+    void hideAllWidgets();
 
-	template<typename T>
-	void setProperty(const std::string& selector, const std::string& property, const T& value);
+    template<typename T>
+    void setProperty(const std::string& selector, const std::string& property, const T& value);
 
 private:
-	std::vector<widgetPtr> widgets;
-	sfg::SFGUI gui;
-	sfg::Desktop hud;
+    std::vector<widgetPtr> widgets;
+    sfg::SFGUI gui;
+    sfg::Desktop hud;
 
-	sf::RenderWindow& window;
+    sf::RenderWindow& window;
 };
 
 
 template<typename T>
 void GUIManager::setProperty(const std::string& selector, const std::string& property, const T& value)
 {
-	this->hud.SetProperty(selector, property, value);
+    this->hud.SetProperty(selector, property, value);
 }

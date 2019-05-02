@@ -19,24 +19,24 @@ InversePalindrome.com
 
 class ParticleComponent : public Component, public Renderable
 {
-	friend std::ostream& operator<<(std::ostream& os, const ParticleComponent& component);
+    friend std::ostream& operator<<(std::ostream& os, const ParticleComponent& component);
 
 public:
-	ParticleComponent(ResourceManager& resourceManager, const sf::Vector2f& effectRange, 
-		const std::string& particleFile, const std::string& emitterFile);
+    ParticleComponent(ResourceManager& resourceManager, const sf::Vector2f& effectRange,
+        const std::string& particleFile, const std::string& emitterFile);
 
-	void update(float deltaTime);
-    
-	sf::FloatRect getGlobalBounds() const;
+    void update(float deltaTime);
+
+    sf::FloatRect getGlobalBounds() const;
 
 private:
-	sf::Vector2f effectRange;
-	std::string particleFile;
-	std::string emitterFile;
+    sf::Vector2f effectRange;
+    std::string particleFile;
+    std::string emitterFile;
 
-	thor::ParticleSystem particleSystem;
+    thor::ParticleSystem particleSystem;
 
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
 
 std::ostream& operator<<(std::ostream& os, const ParticleComponent& component);

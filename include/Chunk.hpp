@@ -24,17 +24,17 @@ InversePalindrome.com
 
 class Chunk : public sf::Transformable, public sf::Drawable
 {
-	using Tile = std::array<sf::Vertex, 4u>;
-	using Textures = std::map<std::string, std::unique_ptr<sf::Texture>>;
+    using Tile = std::array<sf::Vertex, 4u>;
+    using Textures = std::map<std::string, std::unique_ptr<sf::Texture>>;
 
 public:
-	Chunk(const tmx::TileLayer& layer, std::vector<const tmx::Tileset*> tilesets,
-		const sf::Vector2f& position, const sf::Vector2f& tileCount, std::size_t rowSize, Textures& textureResource);
+    Chunk(const tmx::TileLayer& layer, std::vector<const tmx::Tileset*> tilesets,
+        const sf::Vector2f& position, const sf::Vector2f& tileCount, std::size_t rowSize, Textures& textureResource);
 
-	bool isEmpty() const;
+    bool isEmpty() const;
 
 private:
-	std::vector<std::unique_ptr<ChunkTiles>> chunkTilesContainer;
+    std::vector<std::unique_ptr<ChunkTiles>> chunkTilesContainer;
 
-	void draw(sf::RenderTarget& rt, sf::RenderStates states) const override;
+    void draw(sf::RenderTarget& rt, sf::RenderStates states) const override;
 };

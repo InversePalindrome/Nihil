@@ -14,5 +14,5 @@ InversePalindrome.com
 
 namespace Parsers
 {
-	void parseStyle(ResourceManager& resourceManager, const std::string& fileName, sf::Text& text);
+    void parseStyle(ResourceManager& resourceManager, const std::string& fileName, sf::Text& text);
 }

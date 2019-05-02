@@ -10,5 +10,5 @@ InversePalindrome.com
 
 enum class ItemCategory : std::size_t
 {
-	Characters, Weapons 
+    Characters, Weapons
 };

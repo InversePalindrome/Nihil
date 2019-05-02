@@ -14,48 +14,48 @@ InversePalindrome.com
 
 void Parsers::parseSprite(ResourceManager& resourceManager, const std::string& fileName, sf::Sprite& sprite)
 {
-	std::ifstream inFile(Path::spriteInfo / fileName);
-	std::string line;
+    std::ifstream inFile(Path::spriteInfo / fileName);
+    std::string line;
 
-	while (std::getline(inFile, line))
-	{
-		std::istringstream iStream(line);
-		
-		std::string category;
+    while (std::getline(inFile, line))
+    {
+        std::istringstream iStream(line);
 
-		iStream >> category;
+        std::string category;
 
-		if (category == "Texture")
-		{
-			std::size_t textureID = 0u;
+        iStream >> category;
 
-			iStream >> textureID;
+        if (category == "Texture")
+        {
+            std::size_t textureID = 0u;
 
-			sprite.setTexture(resourceManager.getTexture(TexturesID{ textureID }));
-		}
-		else if (category == "SubRect")
-		{
-			int left = 0, top = 0, width = 0, height = 0;
+            iStream >> textureID;
 
-			iStream >> left >> top >> width >> height;
+            sprite.setTexture(resourceManager.getTexture(TexturesID{ textureID }));
+        }
+        else if (category == "SubRect")
+        {
+            int left = 0, top = 0, width = 0, height = 0;
 
-			sprite.setTextureRect({ left, top, width, height });
-		}
-		else if (category == "Scale")
-		{
-			float xScale = 0.f, yScale = 0.f;
+            iStream >> left >> top >> width >> height;
 
-			iStream >> xScale >> yScale;
+            sprite.setTextureRect({ left, top, width, height });
+        }
+        else if (category == "Scale")
+        {
+            float xScale = 0.f, yScale = 0.f;
 
-			sprite.setScale(xScale, yScale);
-		}
-		else if (category == "Rotate")
-		{
-			float angle = 0.f;
+            iStream >> xScale >> yScale;
 
-			iStream >> angle;
+            sprite.setScale(xScale, yScale);
+        }
+        else if (category == "Rotate")
+        {
+            float angle = 0.f;
 
-			sprite.setRotation(angle);
-		}
-	}
+            iStream >> angle;
+
+            sprite.setRotation(angle);
+        }
+    }
 }

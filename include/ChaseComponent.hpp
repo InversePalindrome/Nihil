@@ -12,16 +12,16 @@ InversePalindrome.com
 
 class ChaseComponent : public Component
 {
-	friend std::ostream& operator<<(std::ostream& os, const ChaseComponent& component);
+    friend std::ostream& operator<<(std::ostream& os, const ChaseComponent& component);
 
 public:
-	ChaseComponent(float visionRange);
+    ChaseComponent(float visionRange);
 
-	float getVisionRange() const;
+    float getVisionRange() const;
 
-	void setVisionRange(float visionRange);
+    void setVisionRange(float visionRange);
 
 private:
-	float visionRange;
+    float visionRange;
 };
 

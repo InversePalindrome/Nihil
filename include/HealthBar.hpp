@@ -18,12 +18,12 @@ InversePalindrome.com
 class HealthBar : public Renderable
 {
 public:
-	HealthBar(ResourceManager& resourceManager);
+    HealthBar(ResourceManager& resourceManager);
 
-	void setHitpointsDisplay(std::size_t hitpoints);
+    void setHitpointsDisplay(std::size_t hitpoints);
 
 private:
-	sf::Sprite heart;
+    sf::Sprite heart;
 
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

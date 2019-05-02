@@ -15,14 +15,14 @@ InversePalindrome.com
 class ControlSystem : public System
 {
 public:
-	ControlSystem(Entities& entities, Events& events, InputHandler& inputHandler);
+    ControlSystem(Entities& entities, Events& events, InputHandler& inputHandler);
 
-	void addControl(Entity entity);
+    void addControl(Entity entity);
 
-	virtual void update(float deltaTime) override;
+    virtual void update(float deltaTime) override;
 
 private:
-	Callbacks callbacks;
-	InputHandler& inputHandler;
-	Entity player;
+    Callbacks callbacks;
+    InputHandler& inputHandler;
+    Entity player;
 };

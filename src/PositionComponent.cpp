@@ -9,34 +9,34 @@ InversePalindrome.com
 
 
 PositionComponent::PositionComponent() :
-	PositionComponent(0.f, 0.f)
+    PositionComponent(0.f, 0.f)
 {
 }
 
 PositionComponent::PositionComponent(float xPosition, float yPosition) :
-	Component("PositionA"),
-	position(xPosition, yPosition)
+    Component("PositionA"),
+    position(xPosition, yPosition)
 {
 }
 
 std::ostream& operator<<(std::ostream& os, const PositionComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.position.x << ' ' << component.position.y;
+    os << component.getEntityID() << ' ' << component.getName() << ' ' << component.position.x << ' ' << component.position.y;
 
-	return os;
+    return os;
 }
 
 sf::Vector2f PositionComponent::getPosition() const
 {
-	return this->position;
+    return this->position;
 }
 
 void PositionComponent::setPosition(const sf::Vector2f& position)
 {
-	this->position = position;
+    this->position = position;
 }
 
 void PositionComponent::move(const sf::Vector2f& displacement)
 {
-	this->position += displacement;
+    this->position += displacement;
 }

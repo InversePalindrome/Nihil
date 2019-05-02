@@ -3,7 +3,7 @@ Copyright (c) 2017 InversePalindrome
 Nihil - PickupComponent.hpp
 InversePalindrome.com
 */
-	
+
 
 #pragma once
 
@@ -14,20 +14,20 @@ InversePalindrome.com
 
 class PickupComponent : public Component
 {
-	friend std::ostream& operator<<(std::ostream& os, const PickupComponent& component);
+    friend std::ostream& operator<<(std::ostream& os, const PickupComponent& component);
 
 public:
-	PickupComponent(Item item, SoundBuffersID soundID);
+    PickupComponent(Item item, SoundBuffersID soundID);
 
-	Item getItem() const;
-	SoundBuffersID getSoundID() const;
+    Item getItem() const;
+    SoundBuffersID getSoundID() const;
 
-	void setItem(Item item);
-	void setSoundID(SoundBuffersID soundID);
+    void setItem(Item item);
+    void setSoundID(SoundBuffersID soundID);
 
 private:
-	Item item;
-	SoundBuffersID soundID;
+    Item item;
+    SoundBuffersID soundID;
 };
 
 std::ostream& operator<<(std::ostream& os, const PickupComponent& component);

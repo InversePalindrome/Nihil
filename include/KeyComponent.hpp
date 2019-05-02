@@ -12,17 +12,17 @@ InversePalindrome.com
 
 class KeyComponent : public Component
 {
-	friend std::ostream& operator<<(std::ostream& os, const KeyComponent& component);
+    friend std::ostream& operator<<(std::ostream& os, const KeyComponent& component);
 
 public:
-	KeyComponent(std::size_t keyID);
+    KeyComponent(std::size_t keyID);
 
-	std::size_t getKeyID() const;
+    std::size_t getKeyID() const;
 
-	void setKeyID(std::size_t keyID);
+    void setKeyID(std::size_t keyID);
 
 private:
-	std::size_t keyID;
+    std::size_t keyID;
 };
 
 std::ostream& operator<<(std::ostream& os, const KeyComponent& component);

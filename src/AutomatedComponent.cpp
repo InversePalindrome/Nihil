@@ -14,45 +14,45 @@ InversePalindrome.com
 
 
 AutomatedComponent::AutomatedComponent() :
-	Component("Automated"),
-	taskIndex(0u)
+    Component("Automated"),
+    taskIndex(0u)
 {
 }
 
 std::ostream& operator<<(std::ostream& os, const AutomatedComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName();
+    os << component.getEntityID() << ' ' << component.getName();
 
-	return os;
+    return os;
 }
 
 void AutomatedComponent::loadTasks(const std::string& fileName)
 {
-	std::ifstream inFile(Path::miscellaneous / fileName);
+    std::ifstream inFile(Path::miscellaneous / fileName);
 
-	std::size_t direction = 0u;
-	float xDestination = 0.f, yDestination = 0.f;
+    std::size_t direction = 0u;
+    float xDestination = 0.f, yDestination = 0.f;
 
-	while (inFile >> direction >> xDestination >> yDestination)
-	{
-		this->tasks.push_back({ Direction{direction}, { UnitConverter::pixelsToMeters(xDestination), UnitConverter::pixelsToMeters(-yDestination) } });
-	}
+    while (inFile >> direction >> xDestination >> yDestination)
+    {
+        this->tasks.push_back({ Direction{direction}, { UnitConverter::pixelsToMeters(xDestination), UnitConverter::pixelsToMeters(-yDestination) } });
+    }
 }
 
 void AutomatedComponent::pushNextTask()
 {
-	if (++this->taskIndex == this->tasks.size())
-	{
-		this->taskIndex = 0u;
-	}
+    if (++this->taskIndex == this->tasks.size())
+    {
+        this->taskIndex = 0u;
+    }
 }
 
 AutomatedComponent::Task AutomatedComponent::getCurrentTask() const
 {
-	return this->tasks[this->taskIndex];
+    return this->tasks[this->taskIndex];
 }
 
 bool AutomatedComponent::hasTasks() const
 {
-	return !this->tasks.empty();
+    return !this->tasks.empty();
 }

@@ -21,15 +21,15 @@ InversePalindrome.com
 
 struct StateData
 {
-	StateData(std::vector<Game>& games, ResourceManager& resourceManager, SoundManager& soundManager,
-		GUIManager& guiManager, InputHandler& inputHandler, sf::RenderWindow& window);
+    StateData(std::vector<Game>& games, ResourceManager& resourceManager, SoundManager& soundManager,
+        GUIManager& guiManager, InputHandler& inputHandler, sf::RenderWindow& window);
 
-	std::vector<Game>& games;
+    std::vector<Game>& games;
 
-	ResourceManager& resourceManager;
-	SoundManager& soundManager;
-	GUIManager& guiManager;
-	InputHandler& inputHandler;
+    ResourceManager& resourceManager;
+    SoundManager& soundManager;
+    GUIManager& guiManager;
+    InputHandler& inputHandler;
 
-	sf::RenderWindow& window;
-}; 
+    sf::RenderWindow& window;
+};

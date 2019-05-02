@@ -29,38 +29,38 @@ struct ItemData;
 class ItemsDisplay : public Renderable
 {
 public:
-	ItemsDisplay(ResourceManager& resourceManager);
+    ItemsDisplay(ResourceManager& resourceManager);
 
-	ItemData& operator[](Item item);
+    ItemData& operator[](Item item);
 
-	void update(float deltaTime);
+    void update(float deltaTime);
 
-	bool getVisibility() const;
+    bool getVisibility() const;
 
-	void setVisibility(bool isVisible);
+    void setVisibility(bool isVisible);
 
-	bool hasItem(Item item) const;
+    bool hasItem(Item item) const;
 
 private:
-	bool isVisible;
-	std::unordered_map<Item, ItemData> itemsData;
+    bool isVisible;
+    std::unordered_map<Item, ItemData> itemsData;
 
-	void loadItems(ResourceManager& resourceManager, const std::string& fileName);
+    void loadItems(ResourceManager& resourceManager, const std::string& fileName);
 
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
 
 struct ItemData : public sf::Drawable, public sf::Transformable
 {
-	ItemData() = default;
-	ItemData(ResourceManager& resourceManager, const std::string& itemData);
+    ItemData() = default;
+    ItemData(ResourceManager& resourceManager, const std::string& itemData);
 
-	sf::Sprite sprite;
-	std::string animationFile;
-	sf::Text info;
-	std::size_t quantity;
-	std::size_t maxQuantity;
-	Animator animator;
+    sf::Sprite sprite;
+    std::string animationFile;
+    sf::Text info;
+    std::size_t quantity;
+    std::size_t maxQuantity;
+    Animator animator;
 
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

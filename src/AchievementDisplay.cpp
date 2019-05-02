@@ -11,37 +11,37 @@ InversePalindrome.com
 
 
 AchievementDisplay::AchievementDisplay(ResourceManager& resourceManager) :
-	achievementNames({ {Achievement::Annihilator, "Annihilator"}, {Achievement::BigSpender, "BigSpender"},
-	{ Achievement::Collector, "Collector"}, {Achievement::Traveler, "Traveler"} })
+    achievementNames({ {Achievement::Annihilator, "Annihilator"}, {Achievement::BigSpender, "BigSpender"},
+    { Achievement::Collector, "Collector"}, {Achievement::Traveler, "Traveler"} })
 {
-	setVisibilityStatus(false);
+    setVisibilityStatus(false);
 
-	Parsers::parseSprite(resourceManager, "AchievementBackground.txt", background);
-	 
-	Parsers::parseStyle(resourceManager, "AchievementText.txt", text);
-	text.setPosition(118.f, 40.f);
+    Parsers::parseSprite(resourceManager, "AchievementBackground.txt", background);
+
+    Parsers::parseStyle(resourceManager, "AchievementText.txt", text);
+    text.setPosition(118.f, 40.f);
 }
 
 void AchievementDisplay::displayAchievement(Achievement achievement)
 {
-	this->text.setString(this->achievementNames[achievement]);
-	this->setVisibilityStatus(true);
+    this->text.setString(this->achievementNames[achievement]);
+    this->setVisibilityStatus(true);
 
-	this->displayTimer.addCallbackTimer([this]() { this->setVisibilityStatus(false); }, 5.f);
+    this->displayTimer.addCallbackTimer([this]() { this->setVisibilityStatus(false); }, 5.f);
 }
 
 void AchievementDisplay::update()
 {
-	this->displayTimer.update();
+    this->displayTimer.update();
 }
 
 void AchievementDisplay::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	if (this->isVisible())
-	{
-		states.transform *= this->getTransform();
+    if (this->isVisible())
+    {
+        states.transform *= this->getTransform();
 
-		target.draw(this->background, states);
-		target.draw(this->text, states);
-	}
+        target.draw(this->background, states);
+        target.draw(this->text, states);
+    }
 }

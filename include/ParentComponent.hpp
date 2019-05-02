@@ -17,18 +17,18 @@ InversePalindrome.com
 
 class ParentComponent : public Component
 {
-	friend std::ostream& operator<<(std::ostream& os, const ParentComponent& component);
+    friend std::ostream& operator<<(std::ostream& os, const ParentComponent& component);
 
 public:
-	ParentComponent();
-	ParentComponent(std::int32_t childID);
+    ParentComponent();
+    ParentComponent(std::int32_t childID);
 
-	std::int32_t getChildID() const;
+    std::int32_t getChildID() const;
 
-	void setChildID(std::int32_t childID);
+    void setChildID(std::int32_t childID);
 
 private:
-	std::int32_t childID;
+    std::int32_t childID;
 };
 
 std::ostream& operator<<(std::ostream& os, const ParentComponent& component);

@@ -18,24 +18,24 @@ InversePalindrome.com
 
 class AutomatedComponent : public Component
 {
-	friend std::ostream& operator<<(std::ostream& os, const AutomatedComponent& component);
-	using Task = std::pair<Direction, b2Vec2>;
+    friend std::ostream& operator<<(std::ostream& os, const AutomatedComponent& component);
+    using Task = std::pair<Direction, b2Vec2>;
 
 public:
-	AutomatedComponent();
+    AutomatedComponent();
 
-	void loadTasks(const std::string& fileName);
+    void loadTasks(const std::string& fileName);
 
-	void pushNextTask();
+    void pushNextTask();
 
-	Task getCurrentTask() const;
+    Task getCurrentTask() const;
 
-	bool hasTasks() const;
+    bool hasTasks() const;
 
 private:
-	std::vector<Task> tasks;
+    std::vector<Task> tasks;
 
-	std::size_t taskIndex;
+    std::size_t taskIndex;
 };
 
 std::ostream& operator<<(std::ostream& os, const AutomatedComponent& component);

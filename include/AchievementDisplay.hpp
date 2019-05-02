@@ -21,19 +21,19 @@ InversePalindrome.com
 class AchievementDisplay : public Renderable
 {
 public:
-	AchievementDisplay(ResourceManager& resourceManager);
+    AchievementDisplay(ResourceManager& resourceManager);
 
-	void displayAchievement(Achievement achievement);
+    void displayAchievement(Achievement achievement);
 
-	void update();
+    void update();
 
 private:
-	sf::Text text;
-	sf::Sprite background;
+    sf::Text text;
+    sf::Sprite background;
 
-	std::unordered_map<Achievement, std::string> achievementNames;
+    std::unordered_map<Achievement, std::string> achievementNames;
 
-	Callbacks displayTimer;
+    Callbacks displayTimer;
 
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

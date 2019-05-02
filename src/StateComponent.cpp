@@ -9,24 +9,24 @@ InversePalindrome.com
 
 
 StateComponent::StateComponent() :
-	Component("State"),
-	state(EntityState::Idle)
+    Component("State"),
+    state(EntityState::Idle)
 {
 }
 
 std::ostream& operator<<(std::ostream& os, const StateComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName() << ' ' << static_cast<std::size_t>(component.state);
+    os << component.getEntityID() << ' ' << component.getName() << ' ' << static_cast<std::size_t>(component.state);
 
-	return os;
+    return os;
 }
 
 EntityState StateComponent::getState() const
 {
-	return this->state;
+    return this->state;
 }
 
 void StateComponent::setState(EntityState state)
 {
-	this->state = state;
+    this->state = state;
 }

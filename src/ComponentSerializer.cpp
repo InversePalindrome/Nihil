@@ -18,76 +18,76 @@ InversePalindrome.com
 
 
 ComponentSerializer::ComponentSerializer(Entities& entities) :
-	entities(entities)
+    entities(entities)
 {
 }
 
 EntityProperties& ComponentSerializer::getProperties()
 {
-	return this->properties;
+    return this->properties;
 }
 
 void ComponentSerializer::serialize(const std::string& fileName)
 {
-	std::multimap<std::int32_t, std::string> entities;
+    std::multimap<std::int32_t, std::string> entities;
 
-	brigand::for_each<ComponentList>([this, &entities](auto componentType)
-	{
-		using Type = decltype(componentType)::type;
+    brigand::for_each<ComponentList>([this, &entities](auto componentType)
+        {
+            using Type = decltype(componentType)::type;
 
-		this->entities.for_each<Type>([&entities](auto entity, auto& component)
-		{
-			std::stringstream stream;
+            this->entities.for_each<Type>([&entities](auto entity, auto & component)
+                {
+                    std::stringstream stream;
 
-			std::int32_t entityID;
-			std::string componentData;
+                    std::int32_t entityID;
+                    std::string componentData;
 
-			stream << component;
+                    stream << component;
 
-			stream >> entityID;
+                    stream >> entityID;
 
-			if (entityID > 0)
-			{
-				std::getline(stream, componentData);
+                    if (entityID > 0)
+                    {
+                        std::getline(stream, componentData);
 
-				boost::trim_left(componentData);
+                        boost::trim_left(componentData);
 
-				entities.emplace(entityID, componentData);
-			}
-		});
-	});
+                        entities.emplace(entityID, componentData);
+                    }
+                });
+        });
 
-	std::ofstream outFile(Path::games / fileName);
+    std::ofstream outFile(Path::games / fileName);
 
-	for (auto entityItr = std::begin(entities); entityItr != std::end(entities);)
-	{
-		auto entityID = entityItr->first;
+    for (auto entityItr = std::begin(entities); entityItr != std::end(entities);)
+    {
+        auto entityID = entityItr->first;
 
-		outFile << "Entity " << entityID << '\n';
+        outFile << "Entity " << entityID << '\n';
 
-		do
-		{
-			outFile << entityItr->second << '\n';
+        do
+        {
+            outFile << entityItr->second << '\n';
 
-			++entityItr;
-		} while (entityItr != std::end(entities) && entityID == entityItr->first);
+            ++entityItr;
+        } while (entityItr != std::end(entities) && entityID == entityItr->first);
 
-		outFile << '\n';
-	}
+        outFile << '\n';
+    }
 }
 
-void ComponentSerializer::saveBlueprint(const std::string& fileName, const std::vector<std::tuple<std::int32_t, std::string, sf::Vector2f>>& entitiesData)
+void ComponentSerializer::saveBlueprint(const std::string & fileName, const std::vector<std::tuple<std::int32_t, std::string, sf::Vector2f>> & entitiesData)
 {
-	std::ofstream outFile(Path::blueprints / fileName);
+    std::ofstream outFile(Path::blueprints / fileName);
 
-	for (const auto& [entityID, fileName, position] : entitiesData)
-	{
-		outFile << entityID << ' ' << fileName << ' ' << position.x << ' ' << position.y << '\n';
-	}
+    for (const auto& [entityID, fileName, position] : entitiesData)
+    {
+        outFile << entityID << ' ' << fileName << ' ' << position.x << ' ' << position.y << '\n';
+    }
 }
 
 
-void ComponentSerializer::setProperties(const EntityProperties& properties)
+void ComponentSerializer::setProperties(const EntityProperties & properties)
 {
-	this->properties = properties;
+    this->properties = properties;
 }

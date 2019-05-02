@@ -23,17 +23,17 @@ InversePalindrome.com
 class ComponentSerializer
 {
 public:
-	ComponentSerializer(Entities& entities);
+    ComponentSerializer(Entities& entities);
 
-	EntityProperties& getProperties();
+    EntityProperties& getProperties();
 
-	void serialize(const std::string& fileName);
+    void serialize(const std::string& fileName);
 
-	void saveBlueprint(const std::string& fileName, const std::vector<std::tuple<std::int32_t, std::string, sf::Vector2f>>& entitiesData);
+    void saveBlueprint(const std::string& fileName, const std::vector<std::tuple<std::int32_t, std::string, sf::Vector2f>>& entitiesData);
 
-	void setProperties(const EntityProperties& properties);
+    void setProperties(const EntityProperties& properties);
 
 private:
-	Entities & entities;
-	EntityProperties properties;
+    Entities& entities;
+    EntityProperties properties;
 };

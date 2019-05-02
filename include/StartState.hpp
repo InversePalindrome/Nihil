@@ -20,23 +20,23 @@ InversePalindrome.com
 class StartState : public State
 {
 public:
-	StartState(StateMachine& stateMachine, StateData& stateData);
+    StartState(StateMachine& stateMachine, StateData& stateData);
 
-	virtual void handleEvent(const sf::Event& event) override;
-	virtual void update(float deltaTime) override;
-	virtual void draw() override;
+    virtual void handleEvent(const sf::Event& event) override;
+    virtual void update(float deltaTime) override;
+    virtual void draw() override;
 
 private:
-	static constexpr float viewSpeed = -200.f;
+    static constexpr float viewSpeed = -200.f;
 
-	sf::Sprite background;
-	sf::View view;
+    sf::Sprite background;
+    sf::View view;
 
-	sf::Text titleLabel;
-	sf::Text continueLabel;
+    sf::Text titleLabel;
+    sf::Text continueLabel;
 
-	thor::ParticleSystem particleSystem;
-	thor::UniversalEmitter emitter;
+    thor::ParticleSystem particleSystem;
+    thor::UniversalEmitter emitter;
 
-	void transitionToMenu();
+    void transitionToMenu();
 };

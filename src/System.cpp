@@ -9,7 +9,7 @@ InversePalindrome.com
 
 
 System::System(Entities& entities, Events& events) :
-	entities(entities),
-	events(events)
+    entities(entities),
+    events(events)
 {
 }

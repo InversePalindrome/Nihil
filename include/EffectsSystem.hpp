@@ -13,7 +13,7 @@ InversePalindrome.com
 class EffectsSystem : public System
 {
 public:
-	EffectsSystem(Entities& entities, Events& events);
+    EffectsSystem(Entities& entities, Events& events);
 
-	virtual void update(float deltaTime) override;
+    virtual void update(float deltaTime) override;
 };

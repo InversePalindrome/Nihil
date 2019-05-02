@@ -16,5 +16,5 @@ InversePalindrome.com
 
 namespace Parsers
 {
-	void parseSprite(ResourceManager& resourceManager, const std::string& fileName, sf::Sprite& sprite);
+    void parseSprite(ResourceManager& resourceManager, const std::string& fileName, sf::Sprite& sprite);
 }

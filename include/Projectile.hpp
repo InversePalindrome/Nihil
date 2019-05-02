@@ -10,18 +10,18 @@ InversePalindrome.com
 #include "ResourceManager.hpp"
 
 
-class Projectile 
+class Projectile
 {
 public:
-	Projectile(std::int32_t damagePoints, SoundBuffersID soundID);
+    Projectile(std::int32_t damagePoints, SoundBuffersID soundID);
 
-	std::int32_t getDamagePoints() const;
-	SoundBuffersID getSoundID() const;
+    std::int32_t getDamagePoints() const;
+    SoundBuffersID getSoundID() const;
 
-	void setDamagePoints(std::int32_t damagePoints);
-	void setSoundID(SoundBuffersID soundID);
+    void setDamagePoints(std::int32_t damagePoints);
+    void setSoundID(SoundBuffersID soundID);
 
 private:
-	std::int32_t damagePoints;
-	SoundBuffersID soundID;
+    std::int32_t damagePoints;
+    SoundBuffersID soundID;
 };

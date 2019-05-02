@@ -9,51 +9,51 @@ InversePalindrome.com
 
 
 RangeAttackComponent::RangeAttackComponent(const std::string& projectileID, float reloadTime) :
-	RangeAttackComponent(projectileID, reloadTime, 0.f)
+    RangeAttackComponent(projectileID, reloadTime, 0.f)
 {
 }
 
 RangeAttackComponent::RangeAttackComponent(const std::string& projectileID, float reloadTime, float attackRange) :
-	Component("Range"),
-	projectileID(projectileID),
-	reloadTime(reloadTime),
-	attackRange(attackRange)
+    Component("Range"),
+    projectileID(projectileID),
+    reloadTime(reloadTime),
+    attackRange(attackRange)
 {
 }
 
 std::ostream& operator<<(std::ostream& os, const RangeAttackComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.projectileID << ' ' << component.reloadTime << ' ' << component.attackRange;
+    os << component.getEntityID() << ' ' << component.getName() << ' ' << component.projectileID << ' ' << component.reloadTime << ' ' << component.attackRange;
 
-	return os;
+    return os;
 }
 
 std::string RangeAttackComponent::getProjectileID() const
 {
-	return this->projectileID;
+    return this->projectileID;
 }
 
 float RangeAttackComponent::getReloadTime() const
 {
-	return this->reloadTime;
+    return this->reloadTime;
 }
 
 float RangeAttackComponent::getAttackRange() const
 {
-	return this->attackRange;
+    return this->attackRange;
 }
 
 void RangeAttackComponent::setProjectileID(const std::string& projectileID)
 {
-	this->projectileID = projectileID;
+    this->projectileID = projectileID;
 }
 
 void RangeAttackComponent::setReloadTime(float reloadTime)
 {
-	this->reloadTime = reloadTime;
+    this->reloadTime = reloadTime;
 }
 
 void RangeAttackComponent::setAttackRange(float attackRange)
 {
-	this->attackRange = attackRange;
+    this->attackRange = attackRange;
 }

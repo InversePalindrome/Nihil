@@ -20,181 +20,181 @@ InversePalindrome.com
 
 void Parsers::parseParticleSystem(ResourceManager& resourceManager, const std::string& fileName, thor::ParticleSystem& particleSystem)
 {
-	std::ifstream inFile(Path::particles / fileName);
-	std::string line;
+    std::ifstream inFile(Path::particles / fileName);
+    std::string line;
 
-	while (std::getline(inFile, line))
-	{
-		std::istringstream iStream(line);
+    while (std::getline(inFile, line))
+    {
+        std::istringstream iStream(line);
 
-		std::string category;
+        std::string category;
 
-		iStream >> category;
-		
-		if (category == "Texture")
-		{
-			std::size_t textureID = 0u;
+        iStream >> category;
 
-			iStream >> textureID;
+        if (category == "Texture")
+        {
+            std::size_t textureID = 0u;
 
-			particleSystem.setTexture(resourceManager.getTexture(TexturesID{ textureID }));
-		}
-		else if (category == "SubRect")
-		{
-			int left = 0, top = 0, width = 0, height = 0;
+            iStream >> textureID;
 
-			iStream >> left >> top >> width >> height;
+            particleSystem.setTexture(resourceManager.getTexture(TexturesID{ textureID }));
+        }
+        else if (category == "SubRect")
+        {
+            int left = 0, top = 0, width = 0, height = 0;
 
-			particleSystem.addTextureRect({ left, top, width, height });
-		}
-		else if(category == "ForceAffector")
-		{
-			float xForce = 0.f, yForce = 0.f;
+            iStream >> left >> top >> width >> height;
 
-			iStream >> xForce >> yForce;
+            particleSystem.addTextureRect({ left, top, width, height });
+        }
+        else if (category == "ForceAffector")
+        {
+            float xForce = 0.f, yForce = 0.f;
 
-			particleSystem.addAffector(thor::ForceAffector({ xForce, yForce }));
-		}
-		else if (category == "ScaleAffector")
-		{
-			float xScale = 0.f, yScale = 0.f;
+            iStream >> xForce >> yForce;
 
-			iStream >> xScale >> yScale;
+            particleSystem.addAffector(thor::ForceAffector({ xForce, yForce }));
+        }
+        else if (category == "ScaleAffector")
+        {
+            float xScale = 0.f, yScale = 0.f;
 
-			particleSystem.addAffector(thor::ScaleAffector({ xScale, yScale }));
-		}
-		else if (category == "TorqueAffector")
-		{
-			float angularAcceleration = 0.f;
+            iStream >> xScale >> yScale;
 
-			iStream >> angularAcceleration;
+            particleSystem.addAffector(thor::ScaleAffector({ xScale, yScale }));
+        }
+        else if (category == "TorqueAffector")
+        {
+            float angularAcceleration = 0.f;
 
-			particleSystem.addAffector(thor::TorqueAffector(angularAcceleration));
-		}
-		else if (category == "FadeAffector")
-		{
-			float startingFade = 0.f, finalFade = 0.f;
+            iStream >> angularAcceleration;
 
-			iStream >> startingFade >> finalFade;
+            particleSystem.addAffector(thor::TorqueAffector(angularAcceleration));
+        }
+        else if (category == "FadeAffector")
+        {
+            float startingFade = 0.f, finalFade = 0.f;
 
-			particleSystem.addAffector(thor::AnimationAffector(thor::FadeAnimation(startingFade, finalFade)));
-		}
-		else if (category == "ColorAffector")
-		{
-			std::string colorFile;
+            iStream >> startingFade >> finalFade;
 
-			iStream >> colorFile;
+            particleSystem.addAffector(thor::AnimationAffector(thor::FadeAnimation(startingFade, finalFade)));
+        }
+        else if (category == "ColorAffector")
+        {
+            std::string colorFile;
 
-			particleSystem.addAffector(thor::AnimationAffector(thor::ColorAnimation(Parsers::parseColors(colorFile))));
-		}
-	}
+            iStream >> colorFile;
+
+            particleSystem.addAffector(thor::AnimationAffector(thor::ColorAnimation(Parsers::parseColors(colorFile))));
+        }
+    }
 }
 
 thor::UniversalEmitter Parsers::parseEmitter(const std::string& fileName)
 {
-	thor::UniversalEmitter emitter;
+    thor::UniversalEmitter emitter;
 
-	std::ifstream inFile(Path::particles / fileName);
-	std::string line;
+    std::ifstream inFile(Path::particles / fileName);
+    std::string line;
 
-	while (std::getline(inFile, line))
-	{
-		std::istringstream iStream(line);
+    while (std::getline(inFile, line))
+    {
+        std::istringstream iStream(line);
 
-		std::string category;
+        std::string category;
 
-		iStream >> category;
+        iStream >> category;
 
-		if (category == "EmissionRate")
-		{
-			float minParticlesPerSecond = 0.f, maxParticlesPerSecond = 0.f;
+        if (category == "EmissionRate")
+        {
+            float minParticlesPerSecond = 0.f, maxParticlesPerSecond = 0.f;
 
-			iStream >> minParticlesPerSecond >> maxParticlesPerSecond;
+            iStream >> minParticlesPerSecond >> maxParticlesPerSecond;
 
-			emitter.setEmissionRate(thor::Distributions::uniform(minParticlesPerSecond, maxParticlesPerSecond)());
-		}
-		else if (category == "Lifetime")
-		{
-			float startingTime = 0.f, finalTime = 0.f;
+            emitter.setEmissionRate(thor::Distributions::uniform(minParticlesPerSecond, maxParticlesPerSecond)());
+        }
+        else if (category == "Lifetime")
+        {
+            float startingTime = 0.f, finalTime = 0.f;
 
-			iStream >> startingTime >> finalTime;
+            iStream >> startingTime >> finalTime;
 
-			emitter.setParticleLifetime(thor::Distributions::uniform(sf::seconds(startingTime), sf::seconds(finalTime)));
-		}
-		else if (category == "Position")
-		{
-			float centerX = 0.f, centerY = 0.f, halfWidth = 0.f, halfHeight = 0.f;
+            emitter.setParticleLifetime(thor::Distributions::uniform(sf::seconds(startingTime), sf::seconds(finalTime)));
+        }
+        else if (category == "Position")
+        {
+            float centerX = 0.f, centerY = 0.f, halfWidth = 0.f, halfHeight = 0.f;
 
-			iStream >> centerX >> centerY >> halfWidth >> halfHeight;
+            iStream >> centerX >> centerY >> halfWidth >> halfHeight;
 
-			emitter.setParticlePosition(thor::Distributions::rect({ centerX, centerY }, { halfWidth, halfHeight }));
-		}
-		else if (category == "Velocity")
-		{
-			float meanXVelocity = 0.f, meanYVelocity = 0.f, deltaXVelocity = 0.f, deltaYVelocity = 0.f;
+            emitter.setParticlePosition(thor::Distributions::rect({ centerX, centerY }, { halfWidth, halfHeight }));
+        }
+        else if (category == "Velocity")
+        {
+            float meanXVelocity = 0.f, meanYVelocity = 0.f, deltaXVelocity = 0.f, deltaYVelocity = 0.f;
 
-			iStream >> meanXVelocity >> meanYVelocity >> deltaXVelocity >> deltaYVelocity;
+            iStream >> meanXVelocity >> meanYVelocity >> deltaXVelocity >> deltaYVelocity;
 
-			emitter.setParticleVelocity(thor::Distributions::rect({ meanXVelocity, meanYVelocity }, { deltaXVelocity, deltaYVelocity }));
-		}
-		else if (category == "Rotation")
-		{
-			float initialMinRotation = 0.f, initialMaxRotation = 0.f;
+            emitter.setParticleVelocity(thor::Distributions::rect({ meanXVelocity, meanYVelocity }, { deltaXVelocity, deltaYVelocity }));
+        }
+        else if (category == "Rotation")
+        {
+            float initialMinRotation = 0.f, initialMaxRotation = 0.f;
 
-			iStream >> initialMinRotation >> initialMaxRotation;
+            iStream >> initialMinRotation >> initialMaxRotation;
 
-			emitter.setParticleRotation(thor::Distributions::uniform(initialMinRotation, initialMaxRotation));
-		}
-		else if (category == "RotationSpeed")
-		{
-			float minRotationSpeed = 0.f, maxRotationSpeed = 0.f;
+            emitter.setParticleRotation(thor::Distributions::uniform(initialMinRotation, initialMaxRotation));
+        }
+        else if (category == "RotationSpeed")
+        {
+            float minRotationSpeed = 0.f, maxRotationSpeed = 0.f;
 
-			iStream >> minRotationSpeed >> maxRotationSpeed;
+            iStream >> minRotationSpeed >> maxRotationSpeed;
 
-			emitter.setParticleRotationSpeed(thor::Distributions::uniform(minRotationSpeed, maxRotationSpeed));
-		}
-		else if (category == "Scale")
-		{
-			float meanXScale = 0.f, meanYScale = 0.f, deltaXScale = 0.f, deltaYScale = 0.f;
+            emitter.setParticleRotationSpeed(thor::Distributions::uniform(minRotationSpeed, maxRotationSpeed));
+        }
+        else if (category == "Scale")
+        {
+            float meanXScale = 0.f, meanYScale = 0.f, deltaXScale = 0.f, deltaYScale = 0.f;
 
-			iStream >> meanXScale >> meanYScale >> deltaXScale >> deltaYScale;
+            iStream >> meanXScale >> meanYScale >> deltaXScale >> deltaYScale;
 
-			emitter.setParticleScale(thor::Distributions::rect({ meanXScale, meanYScale }, { deltaXScale, deltaYScale }));
-		}
-		else if (category == "Color")
-		{
-			std::size_t R = 0u, G = 0u, B = 0u;
+            emitter.setParticleScale(thor::Distributions::rect({ meanXScale, meanYScale }, { deltaXScale, deltaYScale }));
+        }
+        else if (category == "Color")
+        {
+            std::size_t R = 0u, G = 0u, B = 0u;
 
-			iStream >> R >> G >> B;
-		
-			emitter.setParticleColor(sf::Color(static_cast<sf::Uint8>(R), static_cast<sf::Uint8>(G), static_cast<sf::Uint8>(B)));
-		}
-		else if (category == "TextureIndex")
-		{
-			std::size_t numberOfParticles = 0u;
+            iStream >> R >> G >> B;
 
-			iStream >> numberOfParticles;
+            emitter.setParticleColor(sf::Color(static_cast<sf::Uint8>(R), static_cast<sf::Uint8>(G), static_cast<sf::Uint8>(B)));
+        }
+        else if (category == "TextureIndex")
+        {
+            std::size_t numberOfParticles = 0u;
 
-			emitter.setParticleTextureIndex(thor::Distributions::uniform(0u, numberOfParticles - 1u));
-		}
-	}
+            iStream >> numberOfParticles;
 
-	return emitter;
+            emitter.setParticleTextureIndex(thor::Distributions::uniform(0u, numberOfParticles - 1u));
+        }
+    }
+
+    return emitter;
 }
 
-thor::ColorGradient Parsers::parseColors(const std::string& fileName)
+thor::ColorGradient Parsers::parseColors(const std::string & fileName)
 {
-	thor::ColorGradient colors;
+    thor::ColorGradient colors;
 
-	std::ifstream inFile(Path::miscellaneous / fileName);
+    std::ifstream inFile(Path::miscellaneous / fileName);
 
-	float gradientPosition = 0.f;
-	std::size_t R = 0u, G = 0u, B = 0u;
+    float gradientPosition = 0.f;
+    std::size_t R = 0u, G = 0u, B = 0u;
 
-	while (inFile >> gradientPosition >> R >> G >> B)
-	{
-		colors[gradientPosition] = sf::Color(static_cast<sf::Uint8>(R), static_cast<sf::Uint8>(G), static_cast<sf::Uint8>(B));
-	}
+    while (inFile >> gradientPosition >> R >> G >> B)
+    {
+        colors[gradientPosition] = sf::Color(static_cast<sf::Uint8>(R), static_cast<sf::Uint8>(G), static_cast<sf::Uint8>(B));
+    }
 
-	return colors;
+    return colors;
 }

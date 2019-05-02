@@ -14,5 +14,5 @@ InversePalindrome.com
 
 namespace Utility
 {
-	bool isInsideView(const sf::View& view, const sf::Vector2f& position, const sf::FloatRect& globalBounds);
+    bool isInsideView(const sf::View& view, const sf::Vector2f& position, const sf::FloatRect& globalBounds);
 }

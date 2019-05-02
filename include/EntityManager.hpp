@@ -34,51 +34,51 @@ InversePalindrome.com
 class EntityManager : public sf::Drawable
 {
 public:
-	EntityManager(b2World& world, ResourceManager& resourceManager, SoundManager& soundManager, 
-		InputHandler& inputHandler, CollisionsData& collisionsData, Pathways& pathways);
-	EntityManager(const EntityManager& entityManager) = delete;
+    EntityManager(b2World& world, ResourceManager& resourceManager, SoundManager& soundManager,
+        InputHandler& inputHandler, CollisionsData& collisionsData, Pathways& pathways);
+    EntityManager(const EntityManager& entityManager) = delete;
     EntityManager& operator=(const EntityManager& entityManager) = delete;
 
-	Entities& getEntities();
-	Events& getEvents();
-	ComponentSerializer& getComponentSerializer();
+    Entities& getEntities();
+    Events& getEvents();
+    ComponentSerializer& getComponentSerializer();
 
-	template<typename T> 
-	T* getSystem();
+    template<typename T>
+    T* getSystem();
 
-	void update(float deltaTime);
+    void update(float deltaTime);
 
-	Entity createEntity(std::int32_t entityType, const std::string& fileName);
-	Entity createEntity(std::int32_t entityType, const std::string& fileName, const sf::Vector2f& position);
+    Entity createEntity(std::int32_t entityType, const std::string& fileName);
+    Entity createEntity(std::int32_t entityType, const std::string& fileName, const sf::Vector2f& position);
 
-	void parseEntities(const std::string& fileName);
-	void parseBlueprint(const std::string& fileName);
+    void parseEntities(const std::string& fileName);
+    void parseBlueprint(const std::string& fileName);
 
-	void loadEntityProperties();
+    void loadEntityProperties();
 
-	void copyBlueprint(const std::string& fileName, const std::string& copiedFileName);
+    void copyBlueprint(const std::string& fileName, const std::string& copiedFileName);
 
-	void destroyEntity(Entity entity);
-	void destroyEntities();
+    void destroyEntity(Entity entity);
+    void destroyEntities();
 
-	void saveEntities(const std::string& fileName);
+    void saveEntities(const std::string& fileName);
 
 private:
-	Entities entityManager;
-	Events eventManager;
+    Entities entityManager;
+    Events eventManager;
 
-	b2World& world;
+    b2World& world;
 
-	ComponentParser componentParser;
-	ComponentSerializer componentSerializer;
+    ComponentParser componentParser;
+    ComponentSerializer componentSerializer;
 
-	std::unordered_map<std::string, std::unique_ptr<System>> systems;
+    std::unordered_map<std::string, std::unique_ptr<System>> systems;
 
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
 
 template<typename T>
 T* EntityManager::getSystem()
 {
-	return dynamic_cast<T*>(this->systems.at(typeid(T).name()).get());
+    return dynamic_cast<T*>(this->systems.at(typeid(T).name()).get());
 }

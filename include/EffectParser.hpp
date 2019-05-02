@@ -18,8 +18,8 @@ InversePalindrome.com
 
 namespace Parsers
 {
-	void parseParticleSystem(ResourceManager& resourceManager, const std::string& fileName, thor::ParticleSystem& particleSystem);
-	thor::UniversalEmitter parseEmitter(const std::string& fileName);
+    void parseParticleSystem(ResourceManager& resourceManager, const std::string& fileName, thor::ParticleSystem& particleSystem);
+    thor::UniversalEmitter parseEmitter(const std::string& fileName);
 
-	thor::ColorGradient parseColors(const std::string& fileName);
+    thor::ColorGradient parseColors(const std::string& fileName);
 }

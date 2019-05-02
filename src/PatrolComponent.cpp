@@ -10,58 +10,58 @@ InversePalindrome.com
 
 
 PatrolComponent::PatrolComponent() :
-	Component("Patrol")
+    Component("Patrol")
 {
 }
 
 std::ostream& operator<<(std::ostream& os, const PatrolComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName();
+    os << component.getEntityID() << ' ' << component.getName();
 
-	return os;
+    return os;
 }
 
 Waypoint PatrolComponent::operator[](std::size_t index)
 {
-	return this->pathway.getWaypoints()[index];
+    return this->pathway.getWaypoints()[index];
 }
 
 Pathway PatrolComponent::getPathway() const
 {
-	return this->pathway;
+    return this->pathway;
 }
 
 Waypoint PatrolComponent::getCurrentWaypoint() const
 {
-	return this->pathway.getCurrentWaypoint();
+    return this->pathway.getCurrentWaypoint();
 }
 
 std::size_t PatrolComponent::getCurrentWaypointIndex() const
 {
-	return this->pathway.getCurrentWaypointIndex();
+    return this->pathway.getCurrentWaypointIndex();
 }
 
 std::pair<float, float> PatrolComponent::getRange() const
 {
-	return this->pathway.getRange();
+    return this->pathway.getRange();
 }
 
 void PatrolComponent::setPathway(const Pathway& pathway)
 {
-	this->pathway = pathway;
+    this->pathway = pathway;
 }
 
 void PatrolComponent::setCurrentWaypointIndex(std::size_t currentWaypointIndex)
 {
-	this->pathway.setCurrentWaypointIndex(currentWaypointIndex);
+    this->pathway.setCurrentWaypointIndex(currentWaypointIndex);
 }
 
 void PatrolComponent::moveToNextWaypoint()
 {
-	this->pathway.moveToNextWaypoint();
+    this->pathway.moveToNextWaypoint();
 }
 
 bool PatrolComponent::hasWaypoints() const
 {
-	return this->pathway.hasWaypoints();
+    return this->pathway.hasWaypoints();
 }

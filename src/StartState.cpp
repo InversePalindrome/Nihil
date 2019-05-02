@@ -15,74 +15,74 @@ InversePalindrome.com
 
 
 StartState::StartState(StateMachine& stateMachine, StateData& stateData) :
-	State(stateMachine, stateData),
-	view(stateData.window.getDefaultView()),
-	emitter(Parsers::parseEmitter("StartEmitters.txt"))
+    State(stateMachine, stateData),
+    view(stateData.window.getDefaultView()),
+    emitter(Parsers::parseEmitter("StartEmitters.txt"))
 {
-	auto& backgroundTexture = stateData.resourceManager.getTexture(TexturesID::StartBackground);
+    auto& backgroundTexture = stateData.resourceManager.getTexture(TexturesID::StartBackground);
 
-	backgroundTexture.setRepeated(true);
-	
-	background.setTexture(backgroundTexture);
+    backgroundTexture.setRepeated(true);
 
-	Parsers::parseParticleSystem(stateData.resourceManager, "StartParticles.txt", particleSystem);
-	particleSystem.addEmitter(thor::refEmitter(emitter));
+    background.setTexture(backgroundTexture);
 
-	Parsers::parseStyle(stateData.resourceManager, "TitleStyle.txt", titleLabel);
-	titleLabel.setString("Nihil");
-	titleLabel.setOrigin(titleLabel.getLocalBounds().width / 2.f, titleLabel.getLocalBounds().height / 2.f);
-	titleLabel.setPosition(this->view.getCenter());
+    Parsers::parseParticleSystem(stateData.resourceManager, "StartParticles.txt", particleSystem);
+    particleSystem.addEmitter(thor::refEmitter(emitter));
 
-	Parsers::parseStyle(stateData.resourceManager, "ContinueLabelStyle.txt", continueLabel);
-	continueLabel.setString("Press A Key To Continue");
-	continueLabel.setOrigin(continueLabel.getLocalBounds().width / 2.f, continueLabel.getLocalBounds().height / 2.f);
-	continueLabel.setPosition(this->view.getCenter().x, 1250.f);
+    Parsers::parseStyle(stateData.resourceManager, "TitleStyle.txt", titleLabel);
+    titleLabel.setString("Nihil");
+    titleLabel.setOrigin(titleLabel.getLocalBounds().width / 2.f, titleLabel.getLocalBounds().height / 2.f);
+    titleLabel.setPosition(this->view.getCenter());
 
-	stateData.soundManager.playMusic("StartMusic.wav", true);
+    Parsers::parseStyle(stateData.resourceManager, "ContinueLabelStyle.txt", continueLabel);
+    continueLabel.setString("Press A Key To Continue");
+    continueLabel.setOrigin(continueLabel.getLocalBounds().width / 2.f, continueLabel.getLocalBounds().height / 2.f);
+    continueLabel.setPosition(this->view.getCenter().x, 1250.f);
+
+    stateData.soundManager.playMusic("StartMusic.wav", true);
 }
 
-void StartState::handleEvent(const sf::Event& event)
+void StartState::handleEvent(const sf::Event & event)
 {
-	if (event.type == sf::Event::KeyPressed)
-	{
-		this->transitionToMenu();
-	}
+    if (event.type == sf::Event::KeyPressed)
+    {
+        this->transitionToMenu();
+    }
 }
 
 void StartState::update(float deltaTime)
 {
-	this->stateData.guiManager.update(deltaTime);
+    this->stateData.guiManager.update(deltaTime);
 
-	this->particleSystem.update(sf::seconds(deltaTime));
+    this->particleSystem.update(sf::seconds(deltaTime));
 
-	this->view.move(this->viewSpeed * deltaTime, 0.f);
+    this->view.move(this->viewSpeed * deltaTime, 0.f);
 
-	this->background.setTextureRect({ static_cast<int>(this->view.getCenter().x - this->view.getSize().x / 2.f), 0,
-		static_cast<int>(this->view.getSize().x), static_cast<int>(this->view.getSize().y) });
+    this->background.setTextureRect({ static_cast<int>(this->view.getCenter().x - this->view.getSize().x / 2.f), 0,
+        static_cast<int>(this->view.getSize().x), static_cast<int>(this->view.getSize().y) });
 
-	this->background.setPosition(this->view.getCenter().x - this->view.getSize().x / 2.f, 0.f);
+    this->background.setPosition(this->view.getCenter().x - this->view.getSize().x / 2.f, 0.f);
 
-	this->emitter.setParticlePosition(thor::Distributions::rect({this->view.getCenter().x - this->view.getSize().x / 2.f - 200.f,
-		0.f }, {this->view.getSize().x, this->view.getSize().y - 200.f} ));
+    this->emitter.setParticlePosition(thor::Distributions::rect({ this->view.getCenter().x - this->view.getSize().x / 2.f - 200.f,
+        0.f }, { this->view.getSize().x, this->view.getSize().y - 200.f }));
 }
 
 void StartState::draw()
 {
-	this->stateData.window.setView(this->view);
+    this->stateData.window.setView(this->view);
 
-	this->stateData.window.draw(this->background);
-	this->stateData.window.draw(this->particleSystem);
+    this->stateData.window.draw(this->background);
+    this->stateData.window.draw(this->particleSystem);
 
-	this->stateData.window.setView(this->stateData.window.getDefaultView());
+    this->stateData.window.setView(this->stateData.window.getDefaultView());
 
-	this->stateData.window.draw(this->titleLabel);
-	this->stateData.window.draw(this->continueLabel);
+    this->stateData.window.draw(this->titleLabel);
+    this->stateData.window.draw(this->continueLabel);
 }
 
 void StartState::transitionToMenu()
 {
-	this->stateData.soundManager.stopAllMusic();
+    this->stateData.soundManager.stopAllMusic();
 
-	this->stateData.window.setView(this->stateData.window.getDefaultView());
-	this->stateMachine.changeState(StateID::Menu);
+    this->stateData.window.setView(this->stateData.window.getDefaultView());
+    this->stateMachine.changeState(StateID::Menu);
 }

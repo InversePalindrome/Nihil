@@ -14,16 +14,16 @@ InversePalindrome.com
 class SoundSystem : public System
 {
 public:
-	SoundSystem(Entities& entities, Events& event, SoundManager& soundManager);
+    SoundSystem(Entities& entities, Events& event, SoundManager& soundManager);
 
-	virtual void update(float deltaTime) override;
+    virtual void update(float deltaTime) override;
 
 private:
-	SoundManager& soundManager;
-	Entity listenerEntity;
+    SoundManager& soundManager;
+    Entity listenerEntity;
 
-	void playSound(SoundBuffersID soundBufferID, bool loop);
-	void stopSound(SoundBuffersID soundID);
+    void playSound(SoundBuffersID soundBufferID, bool loop);
+    void stopSound(SoundBuffersID soundID);
 
-	void updateListenerPosition();
+    void updateListenerPosition();
 };

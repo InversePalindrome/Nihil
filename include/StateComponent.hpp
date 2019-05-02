@@ -13,17 +13,17 @@ InversePalindrome.com
 
 class StateComponent : public Component
 {
-	friend std::ostream& operator<<(std::ostream& os, const StateComponent& component);
+    friend std::ostream& operator<<(std::ostream& os, const StateComponent& component);
 
 public:
-	StateComponent();
+    StateComponent();
 
-	EntityState getState() const;
+    EntityState getState() const;
 
-	void setState(EntityState state);
+    void setState(EntityState state);
 
 private:
-	EntityState state;
+    EntityState state;
 };
 
 std::ostream& operator<<(std::ostream& os, const StateComponent& component);

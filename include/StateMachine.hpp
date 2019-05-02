@@ -19,45 +19,45 @@ InversePalindrome.com
 
 class StateMachine
 {
-	using StatePtr = std::unique_ptr<State>;
+    using StatePtr = std::unique_ptr<State>;
 
 public:
-	StateMachine(StateData& stateData);
+    StateMachine(StateData& stateData);
 
-	void handleEvent(const sf::Event& event);
-	void update(float deltaTime);
-	void draw();
+    void handleEvent(const sf::Event& event);
+    void update(float deltaTime);
+    void draw();
 
-	StatePtr& operator[](std::size_t statePosition);
-	std::size_t size() const;
+    StatePtr& operator[](std::size_t statePosition);
+    std::size_t size() const;
 
-	void changeState(StateID stateID);
+    void changeState(StateID stateID);
 
-	void pushState(StateID stateID);
-	void popState();
-	void clearStates();
+    void pushState(StateID stateID);
+    void popState();
+    void clearStates();
 
-	template<typename T>
-	void registerState(StateID stateID);
+    template<typename T>
+    void registerState(StateID stateID);
 
 private:
-	StateData& stateData;
+    StateData& stateData;
 
-	std::vector<std::pair<StateID, StatePtr>> states;
-	std::vector<std::function<void()>> stateActions;
-	std::unordered_map<StateID, std::function<StatePtr()>> stateFactory;
+    std::vector<std::pair<StateID, StatePtr>> states;
+    std::vector<std::function<void()>> stateActions;
+    std::unordered_map<StateID, std::function<StatePtr()>> stateFactory;
 
-	StatePtr getState(StateID stateID);
+    StatePtr getState(StateID stateID);
 
-	void processStateActions();
+    void processStateActions();
 };
 
 
 template<typename T>
 void StateMachine::registerState(StateID stateID)
 {
-	this->stateFactory[stateID] = [this]()
-	{
-		return std::make_unique<T>(*this, this->stateData);
-	};
+    this->stateFactory[stateID] = [this]()
+    {
+        return std::make_unique<T>(*this, this->stateData);
+    };
 }

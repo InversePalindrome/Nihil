@@ -10,21 +10,21 @@ InversePalindrome.com
 
 
 State::State(StateMachine& stateMachine, StateData& stateData) :
-	stateMachine(stateMachine),
-	stateData(stateData)
+    stateMachine(stateMachine),
+    stateData(stateData)
 {
 }
 
-void State::showWidgets(bool showStatus) 
+void State::showWidgets(bool showStatus)
 {
 }
 
 bool State::isTransparent() const
 {
-	return false;
+    return false;
 }
 
 bool State::isDependent() const
 {
-	return false;
+    return false;
 }

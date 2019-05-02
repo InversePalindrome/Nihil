@@ -17,37 +17,37 @@ InversePalindrome.com
 
 
 enum class Action : std::size_t
-{ 
-	MoveLeft, MoveRight, MoveDown, MoveUp, Jump, Shoot, Escape, Inventory, Size 
+{
+    MoveLeft, MoveRight, MoveDown, MoveUp, Jump, Shoot, Escape, Inventory, Size
 };
 
 class InputHandler
 {
 public:
-	InputHandler();
+    InputHandler();
 
-	void update(sf::Window& window);
-	void invokeCallbacks();
-	void invokeCallbacks(sf::Window& window);
+    void update(sf::Window& window);
+    void invokeCallbacks();
+    void invokeCallbacks(sf::Window& window);
 
-	void pushEvent(const sf::Event& event);
+    void pushEvent(const sf::Event& event);
 
-	bool isActive() const;
-	bool isActive(Action action) const;
+    bool isActive() const;
+    bool isActive(Action action) const;
 
-	void addCallback(Action action, const std::function<void()>& callback);
-	void removeCallback(Action action);
+    void addCallback(Action action, const std::function<void()>& callback);
+    void removeCallback(Action action);
 
-	void changeKey(Action action, sf::Keyboard::Key key);
+    void changeKey(Action action, sf::Keyboard::Key key);
 
-	void clearEvents();
-	void clearCallbacks();
+    void clearEvents();
+    void clearCallbacks();
 
-	void saveData();
+    void saveData();
 
 private:
-	thor::ActionMap<Action> keyBindings;
-	thor::ActionMap<Action>::CallbackSystem keyCallbacks;
+    thor::ActionMap<Action> keyBindings;
+    thor::ActionMap<Action>::CallbackSystem keyCallbacks;
 
-	std::unordered_map<Action, std::pair<std::size_t, std::size_t>> keyCodes;
+    std::unordered_map<Action, std::pair<std::size_t, std::size_t>> keyCodes;
 };

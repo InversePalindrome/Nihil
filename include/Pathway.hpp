@@ -16,37 +16,37 @@ InversePalindrome.com
 
 struct Waypoint
 {
-	Waypoint(const sf::Vector2f& point, std::size_t step);
+    Waypoint(const sf::Vector2f& point, std::size_t step);
 
-	bool operator<(const Waypoint& rhs) const;
+    bool operator<(const Waypoint& rhs) const;
 
-	sf::Vector2f point;
-	std::size_t step;
+    sf::Vector2f point;
+    std::size_t step;
 };
 
 class Pathway
 {
 public:
-	Pathway();
+    Pathway();
 
-	std::vector<Waypoint> getWaypoints() const;
-	Waypoint getCurrentWaypoint() const;
-	std::size_t getCurrentWaypointIndex() const;
-	std::pair<float, float> getRange() const;
+    std::vector<Waypoint> getWaypoints() const;
+    Waypoint getCurrentWaypoint() const;
+    std::size_t getCurrentWaypointIndex() const;
+    std::pair<float, float> getRange() const;
 
-	void setCurrentWaypointIndex(std::size_t currentWaypointIndex);
+    void setCurrentWaypointIndex(std::size_t currentWaypointIndex);
 
-	void moveToNextWaypoint();
-	void addWaypoint(const Waypoint& waypoint);
+    void moveToNextWaypoint();
+    void addWaypoint(const Waypoint& waypoint);
 
-	void sortWaypoints();
+    void sortWaypoints();
 
-	bool hasWaypoints() const;
+    bool hasWaypoints() const;
 
 private:
-	std::vector<Waypoint> waypoints;
-	std::size_t currentWaypointIndex;
-	std::pair<float, float> range;
+    std::vector<Waypoint> waypoints;
+    std::size_t currentWaypointIndex;
+    std::pair<float, float> range;
 };
 
 using Pathways = std::unordered_map<std::size_t, Pathway>;

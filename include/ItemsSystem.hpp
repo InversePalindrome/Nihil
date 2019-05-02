@@ -20,18 +20,18 @@ InversePalindrome.com
 class ItemsSystem : public System
 {
 public:
-	ItemsSystem(Entities& entities, Events& events);
+    ItemsSystem(Entities& entities, Events& events);
 
-	virtual void update(float deltaTime);
+    virtual void update(float deltaTime);
 
 private:
-	std::unordered_map<Item, std::string> itemNames;
-	std::vector<thor::CallbackTimer> powerUpTimers;
-	std::unordered_map<Item, std::function<void(Entity, PowerUpComponent&)>> powerUpEffects;
+    std::unordered_map<Item, std::string> itemNames;
+    std::vector<thor::CallbackTimer> powerUpTimers;
+    std::unordered_map<Item, std::function<void(Entity, PowerUpComponent&)>> powerUpEffects;
 
-	Callbacks callbacks;
+    Callbacks callbacks;
 
-	void handleItemPickup(Entity collector, Entity item);
-	void handleItemDrop(Entity dropper);
-	void handleKeyPickup(const KeyComponent& key);
+    void handleItemPickup(Entity collector, Entity item);
+    void handleItemDrop(Entity dropper);
+    void handleKeyPickup(const KeyComponent& key);
 };

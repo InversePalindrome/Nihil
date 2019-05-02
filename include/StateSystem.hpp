@@ -14,10 +14,10 @@ InversePalindrome.com
 class StateSystem : public System
 {
 public:
-	StateSystem(Entities& entities, Events& events);
+    StateSystem(Entities& entities, Events& events);
 
-	virtual void update(float deltaTime) override;
+    virtual void update(float deltaTime) override;
 
 private:
-	void changeState(Entity entity, EntityState state);
+    void changeState(Entity entity, EntityState state);
 };

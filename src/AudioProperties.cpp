@@ -13,22 +13,22 @@ InversePalindrome.com
 
 AudioProperties::AudioProperties(const std::string& fileName)
 {
-	std::ifstream inFile(Path::miscellaneous / fileName);
+    std::ifstream inFile(Path::miscellaneous / fileName);
 
-	inFile >> volume >> pitch >> attenuation >> minDistance;
+    inFile >> volume >> pitch >> attenuation >> minDistance;
 }
 
 AudioProperties::AudioProperties(float volume, float pitch, float attenuation, float minDistance) :
-	volume(volume),
-	pitch(pitch),
-	attenuation(attenuation),
-	minDistance(minDistance)
+    volume(volume),
+    pitch(pitch),
+    attenuation(attenuation),
+    minDistance(minDistance)
 {
 }
 
-void AudioProperties::saveData(const std::string& fileName) const
+void AudioProperties::saveData(const std::string & fileName) const
 {
-	std::ofstream outFile(Path::miscellaneous / fileName);
+    std::ofstream outFile(Path::miscellaneous / fileName);
 
-	outFile << this->volume << ' ' << this->pitch << ' ' << this->attenuation << ' ' << this->minDistance;
+    outFile << this->volume << ' ' << this->pitch << ' ' << this->attenuation << ' ' << this->minDistance;
 }

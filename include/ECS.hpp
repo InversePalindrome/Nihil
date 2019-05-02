@@ -95,132 +95,132 @@ struct AddedUserData;
 struct ManageCollision;
 
 using Components = entityplus::component_list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
-	HealthComponent, MeleeAttackComponent, RangeAttackComponent, BulletComponent, BombComponent, SpriteComponent, TextComponent, 
-	AnimationComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, ChaseComponent,
-	PickupComponent, PowerUpComponent, DropComponent, InventoryComponent, LockComponent, KeyComponent, DialogComponent>;
+    HealthComponent, MeleeAttackComponent, RangeAttackComponent, BulletComponent, BombComponent, SpriteComponent, TextComponent,
+    AnimationComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, ChaseComponent,
+    PickupComponent, PowerUpComponent, DropComponent, InventoryComponent, LockComponent, KeyComponent, DialogComponent>;
 
 using Tags = entityplus::tag_list<AI, Turret>;
 
 using Entities = entityplus::entity_manager<Components, Tags>;
 
-using Events = entityplus::event_manager<Components, Tags, CreateEntity, DestroyBody, UpdateAchievement, UpdateConversation, ChangeDirection, DirectionChanged, 
-	Jumped, StopMovement, StopSound, StopAnimation, CombatOcurred, ChangeState, StateChanged, ChangeLevel, DestroyEntity, PlaySound, PlayAnimation, PickedUpItem, 
-	DroppedItem, DisplayHealthBar, DisplayCoins, DisplayPowerUp, DisplayConversation, HidePowerUp, CrossedCheckpoint, CrossedWaypoint, ShootProjectile, ActivateBomb,
-	CreateTransform, ApplyForce, ApplyImpulse, ApplyBlastImpact, ApplyKnockback, SetUserData, SetGravityScale, SetLinearDamping, SetVelocity, SetPosition, SetAngle, 
-	SetMidAirStatus, SetUnderWaterStatus, SetFriction, AddUnderWaterTimer, RemoveUnderWaterTimer, PropelFromWater, AddedUserData, ManageCollision>;
+using Events = entityplus::event_manager<Components, Tags, CreateEntity, DestroyBody, UpdateAchievement, UpdateConversation, ChangeDirection, DirectionChanged,
+    Jumped, StopMovement, StopSound, StopAnimation, CombatOcurred, ChangeState, StateChanged, ChangeLevel, DestroyEntity, PlaySound, PlayAnimation, PickedUpItem,
+    DroppedItem, DisplayHealthBar, DisplayCoins, DisplayPowerUp, DisplayConversation, HidePowerUp, CrossedCheckpoint, CrossedWaypoint, ShootProjectile, ActivateBomb,
+    CreateTransform, ApplyForce, ApplyImpulse, ApplyBlastImpact, ApplyKnockback, SetUserData, SetGravityScale, SetLinearDamping, SetVelocity, SetPosition, SetAngle,
+    SetMidAirStatus, SetUnderWaterStatus, SetFriction, AddUnderWaterTimer, RemoveUnderWaterTimer, PropelFromWater, AddedUserData, ManageCollision>;
 
 using Entity = Entities::entity_t;
 
 using ComponentList = brigand::list<PositionComponent, StateComponent, PhysicsComponent, PatrolComponent, TimerComponent,
-	HealthComponent, MeleeAttackComponent, RangeAttackComponent, BulletComponent, BombComponent, SpriteComponent, TextComponent, 
-	AnimationComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, ChaseComponent, 
-	PickupComponent, PowerUpComponent, DropComponent, InventoryComponent, LockComponent, KeyComponent, DialogComponent>;
+    HealthComponent, MeleeAttackComponent, RangeAttackComponent, BulletComponent, BombComponent, SpriteComponent, TextComponent,
+    AnimationComponent, ParticleComponent, ParentComponent, ChildComponent, AutomatedComponent, ControllableComponent, ChaseComponent,
+    PickupComponent, PowerUpComponent, DropComponent, InventoryComponent, LockComponent, KeyComponent, DialogComponent>;
 
 struct CreateEntity
 {
-	std::int32_t entityType;
-	std::string fileName;
-	sf::Vector2f position;
+    std::int32_t entityType;
+    std::string fileName;
+    sf::Vector2f position;
 };
 
 struct DestroyBody
 {
-	PhysicsComponent& physics;
+    PhysicsComponent& physics;
 };
 
 struct UpdateAchievement
 {
-	Achievement achievement;
+    Achievement achievement;
 };
 
 struct UpdateConversation
 {
-	Entity entity;
+    Entity entity;
 };
 
 struct ChangeDirection
 {
-	Entity entity;
-	Direction direction;
+    Entity entity;
+    Direction direction;
 };
 
 struct DirectionChanged
 {
-	Entity entity;
-	Direction direction;
+    Entity entity;
+    Direction direction;
 };
 
 struct Jumped
 {
-	Entity entity;
+    Entity entity;
 };
 
 struct StopMovement
 {
-	Entity entity;
+    Entity entity;
 };
 
 struct StopSound
 {
-	SoundBuffersID soundID;
+    SoundBuffersID soundID;
 };
 
 struct StopAnimation
 {
-	Entity entity;
+    Entity entity;
 };
 
 struct CombatOcurred
 {
-	Entity attacker;
-	Entity victim;
+    Entity attacker;
+    Entity victim;
 };
 
 struct ChangeState
 {
-	Entity entity;
-	EntityState state;
+    Entity entity;
+    EntityState state;
 };
 
 struct StateChanged
 {
-	Entity entity; 
-	EntityState state;
+    Entity entity;
+    EntityState state;
 };
 
 struct ChangeLevel
 {
-	std::string level;
-	sf::Vector2f position;
+    std::string level;
+    sf::Vector2f position;
 };
 
 struct DestroyEntity
 {
-	Entity entity;
+    Entity entity;
 };
 
 struct PlaySound
 {
-	SoundBuffersID soundBuffer;
-	bool loop;
+    SoundBuffersID soundBuffer;
+    bool loop;
 };
 
 struct PlayAnimation
 {
-	Entity entity;
-	Animation animation;
-	bool loop;
+    Entity entity;
+    Animation animation;
+    bool loop;
 };
 
 struct PickedUpItem
 {
-	Entity collector;
-	Entity item;
+    Entity collector;
+    Entity item;
 };
 
 struct DroppedItem
 {
-	Entity dropper;
+    Entity dropper;
 };
 
 struct GameOver
@@ -229,7 +229,7 @@ struct GameOver
 
 struct DisplayHealthBar
 {
-	const HealthComponent& health;
+    const HealthComponent& health;
 };
 
 struct DisplayCoins
@@ -238,149 +238,149 @@ struct DisplayCoins
 
 struct DisplayPowerUp
 {
-	Item item;
+    Item item;
 };
 
 struct DisplayConversation
 {
-	Entity entity;
-	bool visibilityStatus;
+    Entity entity;
+    bool visibilityStatus;
 };
 
 struct HidePowerUp
 {
-	Item item;
+    Item item;
 };
 
 struct CrossedCheckpoint
 {
-	sf::Vector2f position;
+    sf::Vector2f position;
 };
 
 struct CrossedWaypoint
 {
-	Entity entity;
+    Entity entity;
 };
 
 struct ShootProjectile
 {
-	Entity shooter;
-	std::string projectileID; 
+    Entity shooter;
+    std::string projectileID;
 };
 
 struct ActivateBomb
 {
-	Entity bomb;
+    Entity bomb;
 };
 
 struct CreateTransform
 {
-	Entity childEntity;
-	Entity parentEntity;
-	sf::Vector2f offset;
+    Entity childEntity;
+    Entity parentEntity;
+    sf::Vector2f offset;
 };
 
 struct ApplyForce
 {
-	Entity entity;
-	b2Vec2 force;
+    Entity entity;
+    b2Vec2 force;
 };
 
 struct ApplyImpulse
 {
-	Entity entity;
-	b2Vec2 impulse;
+    Entity entity;
+    b2Vec2 impulse;
 };
 
 struct ApplyBlastImpact
 {
-	Entity explosion;
-	Entity victim;
+    Entity explosion;
+    Entity victim;
 };
 
 struct ApplyKnockback
 {
-	Entity attacker;
-	Entity victim;
+    Entity attacker;
+    Entity victim;
 };
 
 struct SetUserData
 {
-	Entity entity;
+    Entity entity;
 };
 
 struct SetGravityScale
 {
-	Entity entity;
-	float gravity;
+    Entity entity;
+    float gravity;
 };
 
 struct SetLinearDamping
 {
-	Entity entity;
-	float linearDamping;
+    Entity entity;
+    float linearDamping;
 };
 
 struct SetVelocity
 {
-	Entity entity;
-	Direction direction;
+    Entity entity;
+    Direction direction;
 };
 
 struct SetPosition
 {
-	Entity entity;
-	sf::Vector2f position;
+    Entity entity;
+    sf::Vector2f position;
 };
 
 struct SetAngle
 {
-	Entity entity;
-	float angle;
+    Entity entity;
+    float angle;
 };
 
 struct SetMidAirStatus
 {
-	Entity entity;
-	bool midAirStatus;
+    Entity entity;
+    bool midAirStatus;
 };
 
 struct SetUnderWaterStatus
 {
-	Entity entity;
-	bool underWaterStatus;
+    Entity entity;
+    bool underWaterStatus;
 };
 
 struct SetFriction
 {
-	Entity entity;
-	ObjectType fixtureType;
-	float friction;
+    Entity entity;
+    ObjectType fixtureType;
+    float friction;
 };
 
 struct AddUnderWaterTimer
 {
-	Entity entity;
+    Entity entity;
 };
 
 struct RemoveUnderWaterTimer
 {
-	Entity entity;
+    Entity entity;
 };
 
 struct PropelFromWater
 {
-	Entity entity;
+    Entity entity;
 };
 
 struct AddedUserData
 {
-	Entity entity;
+    Entity entity;
 };
 
 struct ManageCollision
 {
-	Entity entityA;
-	Entity entityB;
-	bool collisionStatus;
+    Entity entityA;
+    Entity entityB;
+    bool collisionStatus;
 };

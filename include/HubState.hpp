@@ -22,42 +22,42 @@ InversePalindrome.com
 class HubState : public State
 {
 public:
-	HubState(StateMachine& stateMachine, StateData& stateData);
+    HubState(StateMachine& stateMachine, StateData& stateData);
 
-	virtual void handleEvent(const sf::Event& event) override;
-	virtual void update(float deltaTime) override;
-	virtual void draw() override;
+    virtual void handleEvent(const sf::Event& event) override;
+    virtual void update(float deltaTime) override;
+    virtual void draw() override;
 
-	virtual bool isTransparent() const override;
-	virtual bool isDependent() const override;
+    virtual bool isTransparent() const override;
+    virtual bool isDependent() const override;
 
 private:
-	sf::Sprite titleBar;
-	sf::Sprite addGameBackground;
-	sf::Sprite addGameTitleBar;
-	sf::Text title;
+    sf::Sprite titleBar;
+    sf::Sprite addGameBackground;
+    sf::Sprite addGameTitleBar;
+    sf::Text title;
 
-	sfg::ScrolledWindow::Ptr scrolledWindow;
-	sfg::Entry::Ptr nameEntry;
+    sfg::ScrolledWindow::Ptr scrolledWindow;
+    sfg::Entry::Ptr nameEntry;
 
-	sfg::Button::Ptr backButton;
-	sfg::Button::Ptr playButton;
-	sfg::Button::Ptr addButton;
-	sfg::Button::Ptr deleteButton;
-	sfg::Box::Ptr selectionBox;
-	sfg::Box::Ptr gamePopupBox;
-	sfg::RadioButtonGroup::Ptr selectionButtons;
+    sfg::Button::Ptr backButton;
+    sfg::Button::Ptr playButton;
+    sfg::Button::Ptr addButton;
+    sfg::Button::Ptr deleteButton;
+    sfg::Box::Ptr selectionBox;
+    sfg::Box::Ptr gamePopupBox;
+    sfg::RadioButtonGroup::Ptr selectionButtons;
 
-	bool isAddingGame;
+    bool isAddingGame;
 
-	void addGames();
+    void addGames();
 
-	void showAddGamePopup();
-	void addGame();
-	void deleteGame();
+    void showAddGamePopup();
+    void addGame();
+    void deleteGame();
 
-	void saveGames(const std::string& fileName);
+    void saveGames(const std::string& fileName);
 
-	void transitionToMenu();
-	void transitionToPlay();
+    void transitionToMenu();
+    void transitionToPlay();
 };

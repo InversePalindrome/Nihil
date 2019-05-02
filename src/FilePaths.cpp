@@ -9,13 +9,13 @@ InversePalindrome.com
 
 
 Path::FilePath::FilePath(const std::string& fileName) :
-	path(fileName)
+    path(fileName)
 {
 }
 
 std::string Path::FilePath::operator/(const std::string& extension)
 {
-	return (this->path / extension).generic_string();
+    return (this->path / extension).generic_string();
 }
 
 extern Path::FilePath Path::files("DataFiles/");

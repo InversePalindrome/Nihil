@@ -32,54 +32,54 @@ InversePalindrome.com
 class GameState : public State
 {
 public:
-	GameState(StateMachine& stateMachine, StateData& stateData);
+    GameState(StateMachine& stateMachine, StateData& stateData);
 
-	virtual void handleEvent(const sf::Event& event) override;
-	virtual void update(float deltaTime) override;
-	virtual void draw() override;
+    virtual void handleEvent(const sf::Event& event) override;
+    virtual void update(float deltaTime) override;
+    virtual void draw() override;
 
-	virtual void showWidgets(bool showStatus) override;
+    virtual void showWidgets(bool showStatus) override;
 
 private:
     b2World world;
-	EntityManager entityManager;
-	CollisionsData collisionsData;
+    EntityManager entityManager;
+    CollisionsData collisionsData;
 
-	Map map;
-	Entity player;
-	sf::View camera;
-	Callbacks callbacks;
+    Map map;
+    Entity player;
+    sf::View camera;
+    Callbacks callbacks;
     Pathways pathways;
 
-	CollisionHandler collisionHandler;
-	CollisionFilter collisionFilter;
+    CollisionHandler collisionHandler;
+    CollisionFilter collisionFilter;
 
-	HealthBar healthBar;
-	CoinDisplay coinDisplay;
-	ItemsDisplay itemsDisplay;
-	PowerUpDisplay powerUpDisplay;
-	UnderWaterDisplay underWaterDisplay;
-	AchievementDisplay achievementDisplay;
+    HealthBar healthBar;
+    CoinDisplay coinDisplay;
+    ItemsDisplay itemsDisplay;
+    PowerUpDisplay powerUpDisplay;
+    UnderWaterDisplay underWaterDisplay;
+    AchievementDisplay achievementDisplay;
 
-	void updateCamera();
-	void updateAchievements(Achievement achievement);
-	void updateHealthBar(const HealthComponent& health);
-	void updateCoinDisplay();
-	void updateItemsDisplay(Entity item);
-	void updateConversationDisplay(Entity entity);
+    void updateCamera();
+    void updateAchievements(Achievement achievement);
+    void updateHealthBar(const HealthComponent& health);
+    void updateCoinDisplay();
+    void updateItemsDisplay(Entity item);
+    void updateConversationDisplay(Entity entity);
 
-	void displayConversation(Entity entity, bool visibilityStatus);
+    void displayConversation(Entity entity, bool visibilityStatus);
 
-	void changeLevel(const std::string& level, const sf::Vector2f& spawnpoint);
+    void changeLevel(const std::string& level, const sf::Vector2f& spawnpoint);
 
-	void setCheckpoint(const sf::Vector2f& position);
+    void setCheckpoint(const sf::Vector2f& position);
 
-	void destroyEntity(Entity entity);
-	void destroyBody(PhysicsComponent& physics);
+    void destroyEntity(Entity entity);
+    void destroyBody(PhysicsComponent& physics);
 
-	void manageUnderWaterTimer(Entity entity);
-	void addUnderWaterTimer(Entity entity, std::size_t numberOfBubbles, float timePerBubble);
-	void removeUnderWaterTimer(Entity entity);
+    void manageUnderWaterTimer(Entity entity);
+    void addUnderWaterTimer(Entity entity, std::size_t numberOfBubbles, float timePerBubble);
+    void removeUnderWaterTimer(Entity entity);
 
-	void saveData(const std::string& fileName);
+    void saveData(const std::string& fileName);
 };

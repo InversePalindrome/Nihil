@@ -26,36 +26,36 @@ struct PowerUpData;
 class PowerUpDisplay : public sf::Drawable, public sf::Transformable
 {
 public:
-	PowerUpDisplay(ResourceManager& resourceManager);
+    PowerUpDisplay(ResourceManager& resourceManager);
 
-	void update(float deltaTime);
+    void update(float deltaTime);
 
-	void addPowerUp(Item powerUp);
-	void removePowerUp(Item powerUp);
-	void clearPowerUps();
+    void addPowerUp(Item powerUp);
+    void removePowerUp(Item powerUp);
+    void clearPowerUps();
 
 private:
-	std::unordered_map<Item, PowerUpGraphics> powerUps;
-	std::unordered_map<Item, PowerUpData> powerUpData;
+    std::unordered_map<Item, PowerUpGraphics> powerUps;
+    std::unordered_map<Item, PowerUpData> powerUpData;
 
-	ResourceManager& resourceManager;
+    ResourceManager& resourceManager;
 
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
 
 struct PowerUpGraphics : public sf::Drawable, public sf::Transformable
 {
-	PowerUpGraphics(ResourceManager& resourceManager, Item item, const std::unordered_map<Item, PowerUpData>& data);
+    PowerUpGraphics(ResourceManager& resourceManager, Item item, const std::unordered_map<Item, PowerUpData>& data);
 
-	sf::Sprite sprite;
-	Animator animator;
+    sf::Sprite sprite;
+    Animator animator;
 
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
 
 struct PowerUpData
 {
-	std::string animationFile;
-	sf::IntRect textureRect;
-	float scale;
+    std::string animationFile;
+    sf::IntRect textureRect;
+    float scale;
 };

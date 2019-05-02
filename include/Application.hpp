@@ -24,29 +24,29 @@ InversePalindrome.com
 class Application
 {
 public:
-	Application();
-	Application(const Application& application) = delete;
-	Application& operator=(const Application& application) = delete;
+    Application();
+    Application(const Application& application) = delete;
+    Application& operator=(const Application& application) = delete;
 
-	void run();
+    void run();
 
 private:
-	std::vector<Game> games;
+    std::vector<Game> games;
 
-	InputHandler inputHandler;
+    InputHandler inputHandler;
 
-	ResourceManager resourceManager;
-	SoundManager soundManager;
-	GUIManager guiManager;
+    ResourceManager resourceManager;
+    SoundManager soundManager;
+    GUIManager guiManager;
 
-	sf::RenderWindow window;
+    sf::RenderWindow window;
 
-	StateData stateData;
-	StateMachine stateMachine;
+    StateData stateData;
+    StateMachine stateMachine;
 
-	void handleEvents();
-	void update(float deltaTime);
-	void render();
+    void handleEvents();
+    void update(float deltaTime);
+    void render();
 
-	void loadGames(const std::string& fileName);
+    void loadGames(const std::string& fileName);
 };

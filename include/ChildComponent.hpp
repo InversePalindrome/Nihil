@@ -17,21 +17,21 @@ InversePalindrome.com
 
 class ChildComponent : public Component
 {
-	friend std::ostream& operator<<(std::ostream& os, const ChildComponent& component);
+    friend std::ostream& operator<<(std::ostream& os, const ChildComponent& component);
 
 public:
-	ChildComponent();
-	ChildComponent(std::int32_t parentID);
+    ChildComponent();
+    ChildComponent(std::int32_t parentID);
 
-	std::int32_t getParentID() const;
-	const sf::Transform& getTransform() const;
+    std::int32_t getParentID() const;
+    const sf::Transform& getTransform() const;
 
-	void setParentID(std::int32_t parentID);
-	void setTransform(const sf::Transform& transform);
+    void setParentID(std::int32_t parentID);
+    void setTransform(const sf::Transform& transform);
 
 private:
-	std::int32_t parentID;
-	const sf::Transform* transform;
+    std::int32_t parentID;
+    const sf::Transform* transform;
 };
 
 std::ostream& operator<<(std::ostream& os, const ChildComponent& component);

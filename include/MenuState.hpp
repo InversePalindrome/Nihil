@@ -21,25 +21,25 @@ InversePalindrome.com
 class MenuState : public State
 {
 public:
-	MenuState(StateMachine& stateMachine, StateData& stateData);
+    MenuState(StateMachine& stateMachine, StateData& stateData);
 
-	virtual void handleEvent(const sf::Event& event) override;
-	virtual void update(float deltaTime) override;
-	virtual void draw() override;
+    virtual void handleEvent(const sf::Event& event) override;
+    virtual void update(float deltaTime) override;
+    virtual void draw() override;
 
-	virtual void showWidgets(bool showStatus) override;
+    virtual void showWidgets(bool showStatus) override;
 
 private:
-	sf::Sprite background;
-	sf::Text titleLabel;
-	
-	sfg::Button::Ptr playButton;
-	sfg::Button::Ptr settingsButton;
-	sfg::Button::Ptr quitButton;
+    sf::Sprite background;
+    sf::Text titleLabel;
 
-	thor::ParticleSystem particleSystem;
+    sfg::Button::Ptr playButton;
+    sfg::Button::Ptr settingsButton;
+    sfg::Button::Ptr quitButton;
 
-	bool isTitleVisible;
-	
-	void transitionToState(StateID stateID);
+    thor::ParticleSystem particleSystem;
+
+    bool isTitleVisible;
+
+    void transitionToState(StateID stateID);
 };

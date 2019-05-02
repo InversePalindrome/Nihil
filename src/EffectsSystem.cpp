@@ -9,16 +9,16 @@ InversePalindrome.com
 
 
 EffectsSystem::EffectsSystem(Entities& entities, Events& events) :
-	System(entities, events)
+    System(entities, events)
 {
 }
 
 void EffectsSystem::update(float deltaTime)
 {
-	entities.for_each<ParticleComponent>(
-		[this, deltaTime](auto entity, auto& particle)
-	{
-		particle.update(deltaTime);
-	});
+    entities.for_each<ParticleComponent>(
+        [this, deltaTime](auto entity, auto & particle)
+        {
+            particle.update(deltaTime);
+        });
 }
 

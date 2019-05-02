@@ -12,10 +12,10 @@ InversePalindrome.com
 
 class ControllableComponent : public Component
 {
-	friend std::ostream& operator<<(std::ostream& os, const ControllableComponent& component);
+    friend std::ostream& operator<<(std::ostream& os, const ControllableComponent& component);
 
 public:
-	ControllableComponent();
+    ControllableComponent();
 };
 
 std::ostream& operator<<(std::ostream& os, const ControllableComponent& component);

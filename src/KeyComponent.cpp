@@ -9,24 +9,24 @@ InversePalindrome.com
 
 
 KeyComponent::KeyComponent(std::size_t keyID) :
-	Component("Key"),
-	keyID(keyID)
+    Component("Key"),
+    keyID(keyID)
 {
 }
 
 std::ostream& operator<<(std::ostream& os, const KeyComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.keyID;
+    os << component.getEntityID() << ' ' << component.getName() << ' ' << component.keyID;
 
-	return os;
+    return os;
 }
 
 std::size_t KeyComponent::getKeyID() const
 {
-	return this->keyID;
+    return this->keyID;
 }
 
 void KeyComponent::setKeyID(std::size_t keyID)
 {
-	this->keyID = keyID;
+    this->keyID = keyID;
 }

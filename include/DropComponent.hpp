@@ -16,15 +16,15 @@ InversePalindrome.com
 
 class DropComponent : public Component
 {
-	friend std::ostream& operator<<(std::ostream& os, const DropComponent& component);
+    friend std::ostream& operator<<(std::ostream& os, const DropComponent& component);
 
 public:
-	DropComponent(const std::string& fileName);
+    DropComponent(const std::string& fileName);
 
-	std::optional<Item> getDrop() const;
+    std::optional<Item> getDrop() const;
 
 private:
-	std::vector<std::pair<Item, float>> drops;
+    std::vector<std::pair<Item, float>> drops;
 };
 
 std::ostream& operator<<(std::ostream& os, const DropComponent& component);

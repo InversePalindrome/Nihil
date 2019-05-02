@@ -9,13 +9,13 @@ InversePalindrome.com
 
 
 ControllableComponent::ControllableComponent() :
-	Component("Controllable")
+    Component("Controllable")
 {
 }
 
 std::ostream& operator<<(std::ostream& os, const ControllableComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName();
+    os << component.getEntityID() << ' ' << component.getName();
 
-	return os;
+    return os;
 }

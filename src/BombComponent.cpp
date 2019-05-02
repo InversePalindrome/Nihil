@@ -9,59 +9,59 @@ InversePalindrome.com
 
 
 BombComponent::BombComponent(std::int32_t damagePoints, SoundBuffersID soundID, float explosionTime, float explosionKnockback, const std::string& explosionID) :
-	Component("Bomb"),
-	Projectile(damagePoints, soundID),
-	explosionTime(explosionTime),
-	explosionKnockback(explosionKnockback),
-	explosionID(explosionID),
-	activationStatus(false)
+    Component("Bomb"),
+    Projectile(damagePoints, soundID),
+    explosionTime(explosionTime),
+    explosionKnockback(explosionKnockback),
+    explosionID(explosionID),
+    activationStatus(false)
 {
 }
 
 std::ostream& operator<<(std::ostream& os, const BombComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.getDamagePoints() << ' ' << static_cast<std::size_t>(component.getSoundID())
-		<< ' ' << component.explosionTime << ' ' << component.explosionID;
+    os << component.getEntityID() << ' ' << component.getName() << ' ' << component.getDamagePoints() << ' ' << static_cast<std::size_t>(component.getSoundID())
+        << ' ' << component.explosionTime << ' ' << component.explosionID;
 
-	return os;
+    return os;
 }
 
 float BombComponent::getExplosionTime() const
 {
-	return this->explosionTime;
+    return this->explosionTime;
 }
 
 float BombComponent::getExplosionKnockback() const
 {
-	return this->explosionKnockback;
+    return this->explosionKnockback;
 }
 
 std::string BombComponent::getExplosionID() const
 {
-	return this->explosionID;
+    return this->explosionID;
 }
 
 void BombComponent::setExplosionTime(float explsionTime)
 {
-	this->explosionTime = explosionTime;
+    this->explosionTime = explosionTime;
 }
 
 void BombComponent::setExplosionKnockback(float explosionKnockback)
 {
-	this->explosionKnockback = explosionKnockback;
+    this->explosionKnockback = explosionKnockback;
 }
 
 void BombComponent::setExplosionID(const std::string& explosionID)
 {
-	this->explosionID = explosionID;
+    this->explosionID = explosionID;
 }
 
 void BombComponent::setActivationStatus(bool explosionStatus)
 {
-	this->activationStatus = explosionStatus;
+    this->activationStatus = explosionStatus;
 }
 
 bool BombComponent::hasActivated() const
 {
-	return this->activationStatus;
+    return this->activationStatus;
 }

@@ -9,24 +9,24 @@ InversePalindrome.com
 
 
 ChaseComponent::ChaseComponent(float visionRange) :
-	Component("Chase"),
-	visionRange(visionRange)
+    Component("Chase"),
+    visionRange(visionRange)
 {
 }
 
 std::ostream& operator<<(std::ostream& os, const ChaseComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.visionRange;
+    os << component.getEntityID() << ' ' << component.getName() << ' ' << component.visionRange;
 
-	return os;
+    return os;
 }
 
 float ChaseComponent::getVisionRange() const
 {
-	return this->visionRange;
+    return this->visionRange;
 }
 
 void ChaseComponent::setVisionRange(float visionRange)
 {
-	this->visionRange = visionRange;
+    this->visionRange = visionRange;
 }

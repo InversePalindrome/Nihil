@@ -17,32 +17,32 @@ InversePalindrome.com
 
 class TimerComponent : public Component
 {
-	friend std::ostream& operator<<(std::ostream& os, const TimerComponent& component);
+    friend std::ostream& operator<<(std::ostream& os, const TimerComponent& component);
 
 public:
-	TimerComponent();
-	TimerComponent(const std::string& fileName);
+    TimerComponent();
+    TimerComponent(const std::string& fileName);
 
-	void update();
+    void update();
 
-	void addTimer(const std::string& timer, float time);
-	void addCallbackTimer(std::function<void()> function, float callbackTime);
+    void addTimer(const std::string& timer, float time);
+    void addCallbackTimer(std::function<void()> function, float callbackTime);
 
-	void removeTimer(const std::string& timer);
+    void removeTimer(const std::string& timer);
 
-	void restartTimer(const std::string& timer);
-	void startTimer(const std::string& timer);
-	void stopTimer(const std::string& timer);
+    void restartTimer(const std::string& timer);
+    void startTimer(const std::string& timer);
+    void stopTimer(const std::string& timer);
 
-	bool hasTimer(const std::string& timer) const;
-	bool hasTimerExpired(const std::string& timer) const;
+    bool hasTimer(const std::string& timer) const;
+    bool hasTimerExpired(const std::string& timer) const;
 
-	void disconnectCallbackTimers();
+    void disconnectCallbackTimers();
 
 private:
-	std::string fileName;
-	std::unordered_map<std::string, std::pair<thor::Timer, float>> timers;
-	Callbacks callbacks;
+    std::string fileName;
+    std::unordered_map<std::string, std::pair<thor::Timer, float>> timers;
+    Callbacks callbacks;
 };
 
 std::ostream& operator<<(std::ostream& os, const TimerComponent& component);

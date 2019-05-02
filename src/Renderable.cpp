@@ -9,26 +9,26 @@ InversePalindrome.com
 
 
 Renderable::Renderable() :
-	visibilityStatus(true)
+    visibilityStatus(true)
 {
 }
 
 sf::Vector2f Renderable::getOffset() const
 {
-	return this->offset;
+    return this->offset;
 }
 
 bool Renderable::isVisible() const
 {
-	return this->visibilityStatus;
+    return this->visibilityStatus;
 }
 
 void Renderable::setOffset(const sf::Vector2f& offset)
 {
-	this->offset = offset;
+    this->offset = offset;
 }
 
 void Renderable::setVisibilityStatus(bool visibilityStatus)
 {
-	this->visibilityStatus = visibilityStatus;
+    this->visibilityStatus = visibilityStatus;
 }

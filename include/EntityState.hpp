@@ -12,5 +12,5 @@ InversePalindrome.com
 
 enum class EntityState : std::size_t
 {
-	Idle, Walking, Jumping, Attacking
+    Idle, Walking, Jumping, Attacking
 };

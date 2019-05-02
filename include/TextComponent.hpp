@@ -16,20 +16,20 @@ InversePalindrome.com
 
 class TextComponent : public Component, public Renderable
 {
-	friend std::ostream& operator<<(std::ostream& os, const TextComponent& component);
+    friend std::ostream& operator<<(std::ostream& os, const TextComponent& component);
 
 public:
-	TextComponent(ResourceManager& resourceManager, const std::string& inputText, const std::string& fileName);
+    TextComponent(ResourceManager& resourceManager, const std::string& inputText, const std::string& fileName);
 
-	sf::FloatRect getGlobalBounds() const;
+    sf::FloatRect getGlobalBounds() const;
 
-	void setText(const std::string& text);
+    void setText(const std::string& text);
 
 private:
-	sf::Text text;
-	std::string fileName;
+    sf::Text text;
+    std::string fileName;
 
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
 
 std::ostream& operator<<(std::ostream& os, const TextComponent& component);

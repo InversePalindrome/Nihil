@@ -10,9 +10,9 @@ InversePalindrome.com
 
 int main()
 {
-	Application app;
+    Application app;
 
-	app.run();
+    app.run();
 
-	return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }

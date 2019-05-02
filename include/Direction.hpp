@@ -11,10 +11,10 @@ InversePalindrome.com
 
 
 enum class Direction : std::size_t
-{ 
-	Right, Left, Up, Down, RightUp, RightDown, LeftUp, LeftDown, Size 
+{
+    Right, Left, Up, Down, RightUp, RightDown, LeftUp, LeftDown, Size
 };
 enum class DirectionType : std::size_t
 {
-	Horizontal, Vertical
+    Horizontal, Vertical
 };

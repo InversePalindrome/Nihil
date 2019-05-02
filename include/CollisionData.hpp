@@ -23,36 +23,36 @@ using EntityProperties = std::unordered_map<std::int32_t, Properties>;
 
 struct CollisionData
 {
-	CollisionData(b2Fixture* fixture, ObjectType objectType, const Properties& properties) :
-		fixture(fixture),
-		objectType(objectType),
-		properties(properties),
-		isEntity(false)
-	{
-	}
+    CollisionData(b2Fixture* fixture, ObjectType objectType, const Properties& properties) :
+        fixture(fixture),
+        objectType(objectType),
+        properties(properties),
+        isEntity(false)
+    {
+    }
 
-	CollisionData(Entity entity, b2Fixture* fixture, ObjectType objectType, const Properties& properties) :
-		entity(entity),
-		fixture(fixture),
-		objectType(objectType),
-		properties(properties),
-		isEntity(true)
-	{
-	}
+    CollisionData(Entity entity, b2Fixture* fixture, ObjectType objectType, const Properties& properties) :
+        entity(entity),
+        fixture(fixture),
+        objectType(objectType),
+        properties(properties),
+        isEntity(true)
+    {
+    }
 
-	CollisionData(Entity entity, b2Fixture* fixture, ObjectType objectType) :
-		entity(entity),
-		fixture(fixture),
-		objectType(objectType),
-		isEntity(true)
-	{
-	}
+    CollisionData(Entity entity, b2Fixture* fixture, ObjectType objectType) :
+        entity(entity),
+        fixture(fixture),
+        objectType(objectType),
+        isEntity(true)
+    {
+    }
 
-	Entity entity;
-	b2Fixture* fixture;
-	ObjectType objectType;
-	Properties properties;
-	bool isEntity;
+    Entity entity;
+    b2Fixture* fixture;
+    ObjectType objectType;
+    Properties properties;
+    bool isEntity;
 };
 
 using CollisionsData = std::list<CollisionData>;

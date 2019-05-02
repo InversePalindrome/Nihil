@@ -14,17 +14,17 @@ InversePalindrome.com
 
 class HealthComponent : public Component
 {
-	friend std::ostream& operator<<(std::ostream& os, const HealthComponent& component);
+    friend std::ostream& operator<<(std::ostream& os, const HealthComponent& component);
 
 public:
-	HealthComponent(std::int32_t hitpoints);
+    HealthComponent(std::int32_t hitpoints);
 
-	std::int32_t getHitpoints() const;
+    std::int32_t getHitpoints() const;
 
-	void setHitpoints(std::int32_t hitpoints);
+    void setHitpoints(std::int32_t hitpoints);
 
 private:
-	std::int32_t hitpoints;
+    std::int32_t hitpoints;
 };
 
 std::ostream& operator<<(std::ostream& os, const HealthComponent& component);

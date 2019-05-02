@@ -9,27 +9,27 @@ InversePalindrome.com
 
 
 Projectile::Projectile(std::int32_t damagePoints, SoundBuffersID soundID) :
-	damagePoints(damagePoints),
-	soundID(soundID)
+    damagePoints(damagePoints),
+    soundID(soundID)
 {
 }
 
 std::int32_t Projectile::getDamagePoints() const
 {
-	return this->damagePoints;
+    return this->damagePoints;
 }
 
 SoundBuffersID Projectile::getSoundID() const
 {
-	return this->soundID;
+    return this->soundID;
 }
 
 void Projectile::setDamagePoints(std::int32_t damagePoints)
 {
-	this->damagePoints = damagePoints;
+    this->damagePoints = damagePoints;
 }
 
 void Projectile::setSoundID(SoundBuffersID soundID)
 {
-	this->soundID = soundID;
+    this->soundID = soundID;
 }

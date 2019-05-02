@@ -13,27 +13,27 @@ InversePalindrome.com
 
 class PatrolComponent : public Component
 {
-	friend std::ostream& operator<<(std::ostream& os, const PatrolComponent& component);
+    friend std::ostream& operator<<(std::ostream& os, const PatrolComponent& component);
 
 public:
-	PatrolComponent();
+    PatrolComponent();
 
-	Waypoint operator[](std::size_t index);
+    Waypoint operator[](std::size_t index);
 
-	Pathway getPathway() const;
-	Waypoint getCurrentWaypoint() const;
-	std::size_t getCurrentWaypointIndex() const;
-	std::pair<float, float> getRange() const;
+    Pathway getPathway() const;
+    Waypoint getCurrentWaypoint() const;
+    std::size_t getCurrentWaypointIndex() const;
+    std::pair<float, float> getRange() const;
 
-	void setPathway(const Pathway& pathway);
-	void setCurrentWaypointIndex(std::size_t currentWaypointIndex);
+    void setPathway(const Pathway& pathway);
+    void setCurrentWaypointIndex(std::size_t currentWaypointIndex);
 
-	void moveToNextWaypoint();
+    void moveToNextWaypoint();
 
-	bool hasWaypoints() const;
-	
+    bool hasWaypoints() const;
+
 private:
-	Pathway pathway;
+    Pathway pathway;
 };
 
 std::ostream& operator<<(std::ostream& os, const PatrolComponent& component);

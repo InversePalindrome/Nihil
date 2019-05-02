@@ -18,37 +18,37 @@ InversePalindrome.com
 class PhysicsSystem : public System
 {
 public:
-	PhysicsSystem(Entities& entities, Events& events, b2World& world, CollisionsData& collisionsData);
+    PhysicsSystem(Entities& entities, Events& events, b2World& world, CollisionsData& collisionsData);
 
-	virtual void update(float deltaTime) override;
+    virtual void update(float deltaTime) override;
 
-	void setEntitiesProperties(const EntityProperties& entitiesProperties);
+    void setEntitiesProperties(const EntityProperties& entitiesProperties);
 
 private:
-	b2World& world;
+    b2World& world;
 
-	void moveEntity(Entity entity, Direction direction);
-	void stopEntity(Entity entity);
-	void makeJump(Entity entity);
+    void moveEntity(Entity entity, Direction direction);
+    void stopEntity(Entity entity);
+    void makeJump(Entity entity);
 
-	void propelFromWater(Entity entity);
+    void propelFromWater(Entity entity);
 
-	void setUserData(Entity entity);
-	void setGravityScale(Entity entity, float gravityScale);
-	void setLinearDamping(Entity entity, float linearDamping);
-	void setVelocity(Entity entity, Direction direction);
-	void setFriction(Entity entity, ObjectType fixtureType, float friction);
-	void setMidAirStatus(Entity entity, bool midAirStatus);
-	void setUnderWaterStatus(Entity entity, bool underWaterStatus);
+    void setUserData(Entity entity);
+    void setGravityScale(Entity entity, float gravityScale);
+    void setLinearDamping(Entity entity, float linearDamping);
+    void setVelocity(Entity entity, Direction direction);
+    void setFriction(Entity entity, ObjectType fixtureType, float friction);
+    void setMidAirStatus(Entity entity, bool midAirStatus);
+    void setUnderWaterStatus(Entity entity, bool underWaterStatus);
 
-	void applyImpulse(Entity entity, const b2Vec2& impulse);
-	void applyForce(Entity entity, const b2Vec2& force);
+    void applyImpulse(Entity entity, const b2Vec2& impulse);
+    void applyForce(Entity entity, const b2Vec2& force);
 
-	void convertPositionCoordinates(const PhysicsComponent& physics, PositionComponent& position);
-	void checkPhysicalStatus(Entity entity, PhysicsComponent& physics);
+    void convertPositionCoordinates(const PhysicsComponent& physics, PositionComponent& position);
+    void checkPhysicalStatus(Entity entity, PhysicsComponent& physics);
 
-	CollisionsData& collisionsData;
-	EntityProperties entitiesProperties;
-	
-	Callbacks callbacks;
+    CollisionsData& collisionsData;
+    EntityProperties entitiesProperties;
+
+    Callbacks callbacks;
 };

@@ -26,52 +26,52 @@ struct ShopData;
 class ShopState : public State
 {
 public:
-	ShopState(StateMachine& stateMachine, StateData& stateData);
+    ShopState(StateMachine& stateMachine, StateData& stateData);
 
-	virtual void handleEvent(const sf::Event& event) override;
-	virtual void update(float deltaTime) override;
-	virtual void draw() override;
+    virtual void handleEvent(const sf::Event& event) override;
+    virtual void update(float deltaTime) override;
+    virtual void draw() override;
 
-	virtual bool isTransparent() const override;
+    virtual bool isTransparent() const override;
 
 private:
-	sf::Sprite background;
-	sf::Sprite titleBar;
-	sf::Text title;
+    sf::Sprite background;
+    sf::Sprite titleBar;
+    sf::Text title;
 
-	CoinDisplay coinDisplay;
+    CoinDisplay coinDisplay;
 
-	sfg::Button::Ptr backButton;
+    sfg::Button::Ptr backButton;
 
-	std::unordered_map<Item, ShopData> shopData;
-	std::unordered_map<Item, std::any> itemData;
-	std::unordered_map<ItemCategory, std::string> categoryNames;
+    std::unordered_map<Item, ShopData> shopData;
+    std::unordered_map<Item, std::any> itemData;
+    std::unordered_map<ItemCategory, std::string> categoryNames;
 
-	void loadShopData(const std::string& fileName);
+    void loadShopData(const std::string& fileName);
 
-	void loadButtonFunctions(Item item, ItemCategory itemCategory, bool hasBeenPurchased, std::size_t price, sfg::Button::Ptr itemButton);
+    void loadButtonFunctions(Item item, ItemCategory itemCategory, bool hasBeenPurchased, std::size_t price, sfg::Button::Ptr itemButton);
 
-	void transitionToMenu();
+    void transitionToMenu();
 };
 
 struct ShopData
 {
-	ShopData() = default;
-	ShopData(ItemCategory category, std::size_t price);
+    ShopData() = default;
+    ShopData(ItemCategory category, std::size_t price);
 
-	sfg::Button::Ptr itemButton;
-	ItemCategory category;
-	std::size_t price;
+    sfg::Button::Ptr itemButton;
+    ItemCategory category;
+    std::size_t price;
 };
 
 struct CharacterData
 {
-	std::string spriteFile;
-	std::string animationsFile;
+    std::string spriteFile;
+    std::string animationsFile;
 };
 
 struct WeaponData
 {
-	std::string weaponID;
-	float reloadTime;
+    std::string weaponID;
+    float reloadTime;
 };

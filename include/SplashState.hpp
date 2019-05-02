@@ -17,14 +17,14 @@ InversePalindrome.com
 class SplashState : public State
 {
 public:
-	SplashState(StateMachine& stateMachine, StateData& stateData);
+    SplashState(StateMachine& stateMachine, StateData& stateData);
 
-	virtual void handleEvent(const sf::Event& event) override;
-	virtual void update(float deltaTime) override;
-	virtual void draw() override;
+    virtual void handleEvent(const sf::Event& event) override;
+    virtual void update(float deltaTime) override;
+    virtual void draw() override;
 
 private:
-	float splashTime;
+    float splashTime;
 
-	sf::Sprite splashScreen;
+    sf::Sprite splashScreen;
 };

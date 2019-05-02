@@ -9,30 +9,30 @@ InversePalindrome.com
 
 
 LockComponent::LockComponent(std::size_t unlockID, const std::string& newSpriteFile) :
-	Component("Lock"),
-	unlockID(unlockID),
-	newSpriteFile(newSpriteFile)
+    Component("Lock"),
+    unlockID(unlockID),
+    newSpriteFile(newSpriteFile)
 {
 }
 
 std::ostream& operator<<(std::ostream& os, const LockComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.unlockID << ' ' << component.newSpriteFile;
+    os << component.getEntityID() << ' ' << component.getName() << ' ' << component.unlockID << ' ' << component.newSpriteFile;
 
-	return os;
+    return os;
 }
 
 std::size_t LockComponent::getUnlockID() const
 {
-	return this->unlockID;
+    return this->unlockID;
 }
 
 std::string LockComponent::getNewSpriteFile() const
 {
-	return this->newSpriteFile;
+    return this->newSpriteFile;
 }
 
 void LockComponent::setUnlockID(std::size_t unlockID)
 {
-	this->unlockID = unlockID;
+    this->unlockID = unlockID;
 }

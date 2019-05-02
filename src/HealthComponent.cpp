@@ -9,24 +9,24 @@ InversePalindrome.com
 
 
 HealthComponent::HealthComponent(std::int32_t hitpoints) :
-	Component("Health"),
-	hitpoints(hitpoints)
+    Component("Health"),
+    hitpoints(hitpoints)
 {
 }
 
 std::ostream& operator<<(std::ostream& os, const HealthComponent& component)
 {
-	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.hitpoints;
+    os << component.getEntityID() << ' ' << component.getName() << ' ' << component.hitpoints;
 
-	return os;
+    return os;
 }
 
 std::int32_t HealthComponent::getHitpoints() const
 {
-	return this->hitpoints;
+    return this->hitpoints;
 }
 
 void HealthComponent::setHitpoints(std::int32_t hitpoints)
 {
-	this->hitpoints = hitpoints;
+    this->hitpoints = hitpoints;
 }

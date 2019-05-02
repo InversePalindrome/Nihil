@@ -16,17 +16,17 @@ InversePalindrome.com
 class Callbacks
 {
 public:
-	void update();
+    void update();
 
-	void addCallback(std::function<void()> callback);
-	void addCallbackTimer(std::function<void()> callback, float callbackTime);
+    void addCallback(std::function<void()> callback);
+    void addCallbackTimer(std::function<void()> callback, float callbackTime);
 
-	void clearCallbacks();
-	void clearCallbackTimers();
+    void clearCallbacks();
+    void clearCallbackTimers();
 
-	void disconnectCallbackTimers();
+    void disconnectCallbackTimers();
 
 private:
-	std::list<std::function<void()>> callbacks;
-	std::list<thor::CallbackTimer> callbackTimers;
+    std::list<std::function<void()>> callbacks;
+    std::list<thor::CallbackTimer> callbackTimers;
 };

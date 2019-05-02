@@ -22,26 +22,26 @@ InversePalindrome.com
 class AchievementsState : public State
 {
 public:
-	AchievementsState(StateMachine& stateMachine, StateData& stateData);
+    AchievementsState(StateMachine& stateMachine, StateData& stateData);
 
-	virtual void handleEvent(const sf::Event& event) override;
-	virtual void update(float deltaTime) override;
-	virtual void draw() override;
+    virtual void handleEvent(const sf::Event& event) override;
+    virtual void update(float deltaTime) override;
+    virtual void draw() override;
 
-	virtual bool isTransparent() const override;
-	virtual bool isDependent() const override;
+    virtual bool isTransparent() const override;
+    virtual bool isDependent() const override;
 
 private:
-	sfg::Button::Ptr backButton;
-	sfg::ScrolledWindow::Ptr scrolledWindow;
+    sfg::Button::Ptr backButton;
+    sfg::ScrolledWindow::Ptr scrolledWindow;
 
-	sf::Sprite background;
-	sf::Sprite titleBar;
-	sf::Text title;
+    sf::Sprite background;
+    sf::Sprite titleBar;
+    sf::Text title;
 
-	std::unordered_map<Achievement, std::string> achievementIDs;
+    std::unordered_map<Achievement, std::string> achievementIDs;
 
-	void loadAchievements(const std::string& fileName);
+    void loadAchievements(const std::string& fileName);
 
-	void transitionToMenu();
+    void transitionToMenu();
 };

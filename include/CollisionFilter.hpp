@@ -23,14 +23,14 @@ struct CollisionPair;
 class CollisionFilter : public b2ContactFilter
 {
 public:
-	CollisionFilter(Events& events);
+    CollisionFilter(Events& events);
 
 private:
-	Events& events;
-	std::unordered_set<std::pair<ObjectType, ObjectType>, boost::hash<std::pair<ObjectType, ObjectType>>> collisionTypes;
-	std::unordered_set<std::pair<std::size_t, std::size_t>, boost::hash<std::pair<std::size_t, std::size_t>>> collisionIDs;
+    Events& events;
+    std::unordered_set<std::pair<ObjectType, ObjectType>, boost::hash<std::pair<ObjectType, ObjectType>>> collisionTypes;
+    std::unordered_set<std::pair<std::size_t, std::size_t>, boost::hash<std::pair<std::size_t, std::size_t>>> collisionIDs;
 
-	virtual bool ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB) override;
+    virtual bool ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB) override;
 
-	void manageCollisionIDs(Entity entityA, Entity entityB, bool collisionStatus);
+    void manageCollisionIDs(Entity entityA, Entity entityB, bool collisionStatus);
 };

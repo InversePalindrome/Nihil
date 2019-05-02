@@ -18,29 +18,29 @@ InversePalindrome.com
 class PauseState : public State
 {
 public:
-	PauseState(StateMachine& stateMachine, StateData& stateData);
+    PauseState(StateMachine& stateMachine, StateData& stateData);
 
-	virtual void handleEvent(const sf::Event& event) override;
-	virtual void update(float deltaTime) override;
-	virtual void draw() override;
+    virtual void handleEvent(const sf::Event& event) override;
+    virtual void update(float deltaTime) override;
+    virtual void draw() override;
 
-	virtual bool isTransparent() const override;
-	virtual void showWidgets(bool showStatus) override;
+    virtual bool isTransparent() const override;
+    virtual void showWidgets(bool showStatus) override;
 
 private:
-	sf::Text title;
-	sf::Sprite titleBar;
-	sf::Sprite background;
+    sf::Text title;
+    sf::Sprite titleBar;
+    sf::Sprite background;
 
-	sfg::Button::Ptr resumeButton;
-	sfg::Button::Ptr shopButton;
-	sfg::Button::Ptr achievementsButton;
-	sfg::Button::Ptr settingsButton;
-	sfg::Button::Ptr quitButton;
+    sfg::Button::Ptr resumeButton;
+    sfg::Button::Ptr shopButton;
+    sfg::Button::Ptr achievementsButton;
+    sfg::Button::Ptr settingsButton;
+    sfg::Button::Ptr quitButton;
 
-	bool isBackgroundVisible;
+    bool isBackgroundVisible;
 
-	void resumeGame();
+    void resumeGame();
 
-	void transitionToMenu();
+    void transitionToMenu();
 };

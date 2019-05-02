@@ -18,12 +18,12 @@ InversePalindrome.com
 class UnderWaterDisplay : public Renderable
 {
 public:
-	UnderWaterDisplay(ResourceManager& resourceManager);
+    UnderWaterDisplay(ResourceManager& resourceManager);
 
-	void setNumberOfBubbles(std::size_t numberOfBubbles);
+    void setNumberOfBubbles(std::size_t numberOfBubbles);
 
 private:
-	sf::Sprite bubbleSprite;
+    sf::Sprite bubbleSprite;
 
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

@@ -12,11 +12,11 @@ InversePalindrome.com
 class System
 {
 public:
-	System(Entities& entities, Events& events);
+    System(Entities& entities, Events& events);
 
-	virtual void update(float deltaTime) = 0;
+    virtual void update(float deltaTime) = 0;
 
 protected:
-	Entities& entities;
-	Events& events;
+    Entities& entities;
+    Events& events;
 };

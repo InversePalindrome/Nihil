@@ -20,18 +20,18 @@ InversePalindrome.com
 
 class ChunkTiles : public sf::Drawable
 {
-	using Tile = std::array<sf::Vertex, 4u>;
+    using Tile = std::array<sf::Vertex, 4u>;
 
 public:
-	ChunkTiles(const sf::Texture& texture);
+    ChunkTiles(const sf::Texture& texture);
 
-	void addTile(const Tile& tile);
+    void addTile(const Tile& tile);
 
-	sf::Vector2u getTextureSize() const;
+    sf::Vector2u getTextureSize() const;
 
 private:
-	const sf::Texture& texture;
-	std::vector<sf::Vertex> vertices;
+    const sf::Texture& texture;
+    std::vector<sf::Vertex> vertices;
 
-	void draw(sf::RenderTarget& renderTarget, sf::RenderStates states) const override;
+    void draw(sf::RenderTarget& renderTarget, sf::RenderStates states) const override;
 };

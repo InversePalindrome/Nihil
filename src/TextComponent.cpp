@@ -10,35 +10,35 @@ InversePalindrome.com
 
 
 TextComponent::TextComponent(ResourceManager& resourceManager, const std::string& inputText, const std::string& fileName) :
-	Component("Text"),
-	fileName(fileName)
+    Component("Text"),
+    fileName(fileName)
 {
-	Parsers::parseStyle(resourceManager, fileName, text);
+    Parsers::parseStyle(resourceManager, fileName, text);
 
-	text.setOrigin(text.getLocalBounds().width / 2.f, text.getLocalBounds().height / 2.f);
-	text.setString(inputText);
+    text.setOrigin(text.getLocalBounds().width / 2.f, text.getLocalBounds().height / 2.f);
+    text.setString(inputText);
 }
 
-std::ostream& operator<<(std::ostream& os, const TextComponent& component)
+std::ostream& operator<<(std::ostream & os, const TextComponent & component)
 {
-	os << component.getEntityID() << ' ' << component.getName() << ' ' << component.text.getString().toAnsiString() << ' ' << component.fileName;;
+    os << component.getEntityID() << ' ' << component.getName() << ' ' << component.text.getString().toAnsiString() << ' ' << component.fileName;;
 
-	return os;
+    return os;
 }
 
 sf::FloatRect TextComponent::getGlobalBounds() const
 {
-	return this->text.getGlobalBounds();
+    return this->text.getGlobalBounds();
 }
 
-void TextComponent::setText(const std::string& text)
+void TextComponent::setText(const std::string & text)
 {
-	this->text.setString(text);
+    this->text.setString(text);
 }
 
-void TextComponent::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void TextComponent::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
-	states.transform *= this->getTransform();
+    states.transform *= this->getTransform();
 
-	target.draw(this->text, states);
+    target.draw(this->text, states);
 }

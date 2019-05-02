@@ -13,17 +13,17 @@ InversePalindrome.com
 
 class BulletComponent : public Component, public Projectile
 {
-	friend std::ostream& operator<<(std::ostream& os, const BulletComponent& component);
+    friend std::ostream& operator<<(std::ostream& os, const BulletComponent& component);
 
 public:
-	BulletComponent(std::int32_t damagePoints, SoundBuffersID soundID, float force);
+    BulletComponent(std::int32_t damagePoints, SoundBuffersID soundID, float force);
 
-	float getForce() const;
+    float getForce() const;
 
-	void setForce(float force);
+    void setForce(float force);
 
 private:
-	float force;
+    float force;
 };
 
 std::ostream& operator<<(std::ostream& os, const BulletComponent& component);

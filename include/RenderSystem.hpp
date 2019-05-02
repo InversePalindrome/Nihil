@@ -18,15 +18,15 @@ InversePalindrome.com
 
 class RenderSystem : public System, public sf::Drawable
 {
-	using Renderables = brigand::list<SpriteComponent, TextComponent, DialogComponent, ParticleComponent>;
+    using Renderables = brigand::list<SpriteComponent, TextComponent, DialogComponent, ParticleComponent>;
 
 public:
-	RenderSystem(Entities& entities, Events& events);
+    RenderSystem(Entities& entities, Events& events);
 
-	virtual void update(float deltaTime) override;
+    virtual void update(float deltaTime) override;
 
 private:
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
-	void setParentTransforms(Entity childEntity, Entity parentEntity, const sf::Vector2f& offset);
+    void setParentTransforms(Entity childEntity, Entity parentEntity, const sf::Vector2f& offset);
 };

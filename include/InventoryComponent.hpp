@@ -13,23 +13,23 @@ InversePalindrome.com
 
 class InventoryComponent : public Component
 {
-	friend std::ostream& operator<<(std::ostream& os, const InventoryComponent& component);
+    friend std::ostream& operator<<(std::ostream& os, const InventoryComponent& component);
 
 public:
-	InventoryComponent();
+    InventoryComponent();
 
-	std::size_t& operator[](Item item);
-	const std::size_t& operator[](Item item) const;
+    std::size_t& operator[](Item item);
+    const std::size_t& operator[](Item item) const;
 
-	void setItems(Items& items);
+    void setItems(Items& items);
 
-	void addItem(Item item, std::size_t quantity);
-	void removeItem(Item item);
+    void addItem(Item item, std::size_t quantity);
+    void removeItem(Item item);
 
-	bool hasItem(Item item) const;
+    bool hasItem(Item item) const;
 
 private:
-	Items* items;
+    Items* items;
 };
 
 std::ostream& operator<<(std::ostream& os, const InventoryComponent& component);

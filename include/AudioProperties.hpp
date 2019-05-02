@@ -12,13 +12,13 @@ InversePalindrome.com
 
 struct AudioProperties
 {
-	AudioProperties(const std::string& fileName);
-	AudioProperties(float volume, float pitch, float attenuation, float minDistance);
+    AudioProperties(const std::string& fileName);
+    AudioProperties(float volume, float pitch, float attenuation, float minDistance);
 
-	void saveData(const std::string& fileName) const;
+    void saveData(const std::string& fileName) const;
 
-	float volume;
-	float pitch;
-	float attenuation;
-	float minDistance;
+    float volume;
+    float pitch;
+    float attenuation;
+    float minDistance;
 };

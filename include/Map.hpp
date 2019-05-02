@@ -29,32 +29,32 @@ InversePalindrome.com
 class Map : public sf::Drawable
 {
 public:
-	Map(Game& game, b2World& world, ComponentSerializer& componentSerializer,
-		ResourceManager& resourceManager, CollisionsData& collisionsData, Pathways& pathways);
+    Map(Game& game, b2World& world, ComponentSerializer& componentSerializer,
+        ResourceManager& resourceManager, CollisionsData& collisionsData, Pathways& pathways);
 
-	void load(const std::string& fileName);
-	
-	sf::FloatRect getBounds() const;
-	std::string getCurrentFilePath() const;
+    void load(const std::string& fileName);
+
+    sf::FloatRect getBounds() const;
+    std::string getCurrentFilePath() const;
 
 private:
-	tmx::Map map;
-	sf::Sprite background;
-	sf::FloatRect bounds;
-	std::string fileName;
-	std::vector<std::unique_ptr<Layer>> layers;
+    tmx::Map map;
+    sf::Sprite background;
+    sf::FloatRect bounds;
+    std::string fileName;
+    std::vector<std::unique_ptr<Layer>> layers;
 
-	Game& game;
-	b2World& world;
-	ComponentSerializer& componentSerializer;
-	ResourceManager& resourceManager;
-	CollisionsData& collisionsData;
-	Pathways& pathways;
+    Game& game;
+    b2World& world;
+    ComponentSerializer& componentSerializer;
+    ResourceManager& resourceManager;
+    CollisionsData& collisionsData;
+    Pathways& pathways;
 
-	void parseMap();
+    void parseMap();
 
-	void addImage(tmx::ImageLayer* imageLayer);
-	void addObjects(tmx::ObjectGroup* objectLayer);
+    void addImage(tmx::ImageLayer* imageLayer);
+    void addObjects(tmx::ObjectGroup* objectLayer);
 
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

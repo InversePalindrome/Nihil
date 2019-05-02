@@ -9,28 +9,28 @@ InversePalindrome.com
 
 
 Component::Component(const std::string& name) :
-	name(name),
-	entity(0)
+    name(name),
+    entity(0)
 {
 }
 
 std::string Component::getName() const
 {
-	return this->name;
+    return this->name;
 }
 
 std::int32_t Component::getEntityID() const
 {
-	return this->entity;
+    return this->entity;
 }
 
 
 void Component::setName(const std::string& name)
 {
-	this->name = name;
+    this->name = name;
 }
 
 void Component::setEntityID(std::int32_t entity)
 {
-	this->entity = entity;
+    this->entity = entity;
 }
